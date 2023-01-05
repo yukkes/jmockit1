@@ -123,7 +123,6 @@
                 <artifactId>maven-source-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>*</exclude>
                         <exclude>**/*.css</exclude>
                         <exclude>**/*.js</exclude>
                         <exclude>**/*.png</exclude>
