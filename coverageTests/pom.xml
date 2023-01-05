@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.jmockit</groupId>
     <artifactId>coverage-tests</artifactId>
     <version>1</version>
+
     <name>JMockit Coverage Tests</name>
+
+    <scm>
+        <url>https://github.com/hazendaz/jmockit1</url>
+        <connection>scm:git:https://github.com/hazendaz/jmockit1</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hazendaz/jmockit1.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmockit.version>1.49.4</jmockit.version>
     </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -37,6 +48,7 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>com.github.spotbugs</groupId>

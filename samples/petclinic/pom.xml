@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.github.hazendaz.jmockit</groupId>
     <artifactId>petclinic</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
+
     <description>
       A re-creation of the Spring PetClinic Sample Application, using Java EE 7 for UI controllers and business classes.
       JMockit is used for integration testing, instead of the Spring Test Context.
-   </description>
+    </description>
+
+    <scm>
+        <url>https://github.com/hazendaz/jmockit1</url>
+        <connection>scm:git:https://github.com/hazendaz/jmockit1</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hazendaz/jmockit1.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jmockit.version>1.49.4</jmockit.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -75,6 +87,7 @@
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

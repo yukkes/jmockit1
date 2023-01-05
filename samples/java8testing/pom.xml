@@ -9,6 +9,14 @@
     </parent>
     <artifactId>java8testing</artifactId>
     <name>Java 8 testing</name>
+
+    <scm>
+        <url>https://github.com/hazendaz/jmockit1</url>
+        <connection>scm:git:https://github.com/hazendaz/jmockit1</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hazendaz/jmockit1.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -21,6 +29,7 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

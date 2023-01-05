@@ -16,6 +16,13 @@
         <module>samples</module>
     </modules>
 
+    <scm>
+        <url>https://github.com/hazendaz/jmockit1</url>
+        <connection>scm:git:https://github.com/hazendaz/jmockit1</connection>
+        <developerConnection>scm:git:ssh://git@github.com/hazendaz/jmockit1.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <distributionManagement>
         <site>
             <id>gh-pages-scm</id>
