@@ -124,13 +124,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <nodeprecated>true</nodeprecated>
-                    <noindex>true</noindex>
-                    <notree>true</notree>
-                    <nohelp>true</nohelp>
-                    <notimestamp>true</notimestamp>
-                    <breakiterator>true</breakiterator>
-                    <use>false</use>
                     <source>1.8</source>
                     <windowtitle>JMockit Toolkit API</windowtitle>
                     <doctitle>JMockit Toolkit API Documentation</doctitle>
