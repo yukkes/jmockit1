@@ -148,7 +148,7 @@
                     <subpackages>mockit</subpackages>
                     <excludePackageNames>mockit.asm.*:mockit.coverage.*:mockit.internal.*:mockit.integration.*</excludePackageNames>
                     <links>
-                        <link>https://docs.oracle.com/javase/8/docs/api/<link>
+                        <link>https://docs.oracle.com/javase/8/docs/api/</link>
                     </links>
                 </configuration>
                 <executions>
