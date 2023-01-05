@@ -14,7 +14,7 @@
     <description>
       JMockit is a Java toolkit for automated developer testing.
       It contains APIs for the creation of the objects to be tested, for mocking dependencies, and for faking external
-      APIs; JUnit (4 &amp; 5) and TestNG test runners are supported.
+      APIs; JUnit (4 and 5) and TestNG test runners are supported.
       It also contains an advanced code coverage tool.
    </description>
     <url>http://jmockit.github.io</url>
