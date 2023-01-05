@@ -98,9 +98,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <arg>-Xlint:none</arg>
-                    </compilerArgs>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
                 </configuration>
             </plugin>
