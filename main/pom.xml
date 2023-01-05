@@ -149,10 +149,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
                     <windowtitle>JMockit Toolkit API</windowtitle>
                     <doctitle>JMockit Toolkit API Documentation</doctitle>
-                    <quiet>true</quiet>
                     <subpackages>mockit</subpackages>
                     <excludePackageNames>mockit.asm.*:mockit.coverage.*:mockit.internal.*:mockit.integration.*</excludePackageNames>
                     <links>
