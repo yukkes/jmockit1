@@ -18,6 +18,8 @@ This fork contains pull requests from main repo as well as updated libraries wit
   - [736](https://github.com/jmockit/jmockit1/pull/736) from fork [Col-E](https://github.com/Col-E/jmockit1) Add suport for Java 11+ based off this repo
   - [68](https://github.com/hazendaz/jmockit1/pull/68) from fork [Col-E](https://github.com/Col-E/jmockit1) after sync up from PR 736.
 
+This fork is the new home for jmockit continuation.  All pull requests are welcome including anyone that wants to bring back support that was deleted from original making upgrades difficult.
+
 Considerations
 
   - Testing confirmed to work through jdk 17
