@@ -109,7 +109,6 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
                         <manifestEntries>
                             <Main-Class>mockit.coverage.CodeCoverage</Main-Class>
                             <Premain-Class>mockit.internal.startup.Startup</Premain-Class>
@@ -124,9 +123,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                    </archive>
                     <excludes>
                         <exclude>*</exclude>
                         <exclude>**/*.css</exclude>
