@@ -136,8 +136,7 @@
                 <configuration>
                     <windowtitle>JMockit Toolkit API</windowtitle>
                     <doctitle>JMockit Toolkit API Documentation</doctitle>
-                    <subpackages>mockit</subpackages>
-                    <excludePackageNames>mockit.asm.*:mockit.coverage.*:mockit.internal.*:mockit.integration.*</excludePackageNames>
+                    <sourceFileExcludes>mockit/asm/**,mockit/coverage/**,mockit/integration/**,mockit/internal/**</sourceFileExcludes>
                     <links>
                         <link>https://docs.oracle.com/javase/8/docs/api/</link>
                     </links>
