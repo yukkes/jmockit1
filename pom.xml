@@ -12,7 +12,7 @@
 
     <groupId>com.github.hazendaz.jmockit</groupId>
     <artifactId>jmockit-launcher</artifactId>
-    <version>1.49.4-SNAPSHOT</version>
+    <version>1.49.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>jmockit-launcher</name>

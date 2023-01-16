@@ -14,7 +14,7 @@
 
     <groupId>com.github.hazendaz.jmockit</groupId>
     <artifactId>coverage-tests</artifactId>
-    <version>1</version>
+    <version>1.49.5-SNAPSHOT</version>
 
     <name>JMockit Coverage Tests</name>
 

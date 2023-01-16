@@ -13,7 +13,7 @@
 
     <groupId>com.github.hazendaz.jmockit</groupId>
     <artifactId>petclinic</artifactId>
-    <version>1.0</version>
+    <version>1.49.5-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <description>
