@@ -5,10 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.hazendaz</groupId>
-        <artifactId>base-parent</artifactId>
-        <version>36</version>
-        <relativePath />
+        <groupId>com.github.hazendaz.jmockit</groupId>
+        <artifactId>samples</artifactId>
+        <version>1.49.5-SNAPSHOT</version>
     </parent>
 
     <groupId>com.github.hazendaz.jmockit</groupId>

@@ -11,12 +11,12 @@
     </parent>
 
     <groupId>com.github.hazendaz.jmockit</groupId>
-    <artifactId>jmockit-launcher</artifactId>
+    <artifactId>jmockit-parent</artifactId>
     <version>1.49.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>jmockit-launcher</name>
-    <description>Launcher POM for JMOCKIT</description>
+    <name>jmockit-parent</name>
+    <description>Parent POM for JMOCKIT</description>
 
     <modules>
         <module>coverageTests</module>
