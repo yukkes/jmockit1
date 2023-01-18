@@ -73,12 +73,6 @@
                 <version>2.2</version>
                 <scope>test</scope>
             </dependency>
-            <!-- Mocking tools -->
-            <dependency>
-                <groupId>com.github.hazendaz.jmockit</groupId>
-                <artifactId>jmockit</artifactId>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
