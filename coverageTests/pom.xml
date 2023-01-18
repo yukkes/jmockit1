@@ -31,10 +31,6 @@
         </site>
     </distributionManagement>
 
-    <properties>
-        <jmockit.version>1.49.4</jmockit.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -46,7 +42,7 @@
                     <excludes>
                         <exclude>**/CoverageTest.class</exclude>
                     </excludes>
-                    <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar=coverage</argLine>
+                    <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${project.version}/jmockit-${project.version}.jar=coverage</argLine>
                 </configuration>
             </plugin>
         </plugins>
@@ -62,7 +58,7 @@
         <dependency>
             <groupId>com.github.hazendaz.jmockit</groupId>
             <artifactId>jmockit</artifactId>
-            <version>${jmockit.version}</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

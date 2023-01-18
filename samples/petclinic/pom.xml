@@ -35,10 +35,6 @@
         </site>
     </distributionManagement>
 
-    <properties>
-        <jmockit.version>1.49.4</jmockit.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.spotbugs</groupId>
@@ -88,7 +84,6 @@
         <dependency>
             <groupId>com.github.hazendaz.jmockit</groupId>
             <artifactId>jmockit</artifactId>
-            <version>${jmockit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -107,7 +102,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</argLine>
+                    <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${project.version}/jmockit-${project.version}.jar</argLine>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>logging.properties</java.util.logging.config.file>
                         <coverage-output>html-cp</coverage-output>

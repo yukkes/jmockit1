@@ -40,17 +40,13 @@
         </site>
     </distributionManagement>
 
-    <properties>
-        <jmockit.version>1.49.4</jmockit.version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M8</version>
                 <configuration>
-                    <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</argLine>
+                    <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${project.version}/jmockit-${project.version}.jar</argLine>
                     <disableXmlReport>true</disableXmlReport>
                 </configuration>
             </plugin>
@@ -81,7 +77,6 @@
             <dependency>
                 <groupId>com.github.hazendaz.jmockit</groupId>
                 <artifactId>jmockit</artifactId>
-                <version>${jmockit.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
