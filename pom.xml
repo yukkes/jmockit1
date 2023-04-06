@@ -42,6 +42,9 @@
     <properties>
         <!-- TODO: Remove after parent 40 -->
         <jacoco.plugin>0.8.9</jacoco.plugin>
+
+        <!-- Reproducible Builds -->
+        <project.build.outputTimestamp>1679577617</project.build.outputTimestamp>
     </properties>
 
 </project>
