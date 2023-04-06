@@ -39,4 +39,9 @@
         </site>
     </distributionManagement>
 
+    <properties>
+        <!-- TODO: Remove after parent 40 -->
+        <jacoco.plugin>0.8.9</jacoco.plugin>
+    </properties>
+
 </project>
