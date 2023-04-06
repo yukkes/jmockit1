@@ -40,6 +40,10 @@
     </distributionManagement>
 
     <properties>
+        <!-- Maven compiler options -->
+        <java.version>11</java.version>
+        <java.release.version>11</java.release.version>
+
         <!-- TODO: Remove after parent 40 -->
         <jacoco.plugin>0.8.9</jacoco.plugin>
 
