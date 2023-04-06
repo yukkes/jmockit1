@@ -16,7 +16,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>tutorial</module>
+        <!-- TODO: Tutorial is causing issues with release, skip for now -->
+        <!--<module>tutorial</module>-->
         <module>LoginService</module>
         <module>java8testing</module>
         <module>petclinic</module>
