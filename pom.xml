@@ -21,8 +21,7 @@
     <modules>
         <module>coverageTests</module>
         <module>main</module>
-        <!-- TODO: Tutorial is causing issues with release, skip for now -->
-        <!--<module>samples</module>-->
+        <module>samples</module>
     </modules>
 
     <scm>
