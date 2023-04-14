@@ -149,7 +149,6 @@
                 <configuration>
                     <disableXmlReport>true</disableXmlReport>
                     <runOrder>alphabetical</runOrder>
-                    <argLine>${argLine} -javaagent:../agent.jar</argLine>
                     <properties>
                         <property>
                             <name>junit</name>
