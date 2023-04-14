@@ -49,6 +49,9 @@
 
         <!-- Reproducible Builds -->
         <project.build.outputTimestamp>1679577617</project.build.outputTimestamp>
+
+        <!-- Automatic Module Name -->
+        <module.name>com.github.hazendaz.jmockit.parent</module.name>
     </properties>
 
 </project>

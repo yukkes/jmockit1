@@ -31,6 +31,10 @@
         <tag>HEAD</tag>
     </scm>
 
+    <properties>
+        <!-- Automatic Module Name -->
+        <module.name>com.github.hazendaz.jmockit.samples</module.name>
+    </properties>
 
     <build>
         <plugins>

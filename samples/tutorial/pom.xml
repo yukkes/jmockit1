@@ -18,6 +18,11 @@
         <tag>HEAD</tag>
     </scm>
 
+    <properties>
+        <!-- Automatic Module Name -->
+        <module.name>com.github.hazendaz.jmockit.tutorial</module.name>
+    </properties>
+
     <dependencies>
         <!-- Production code -->
         <dependency>

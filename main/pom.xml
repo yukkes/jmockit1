@@ -51,6 +51,8 @@
 
     <properties>
         <javadoc.plugin>3.4.1</javadoc.plugin>
+        <!-- Automatic Module Name -->
+        <module.name>com.github.hazendaz.jmockit</module.name>
     </properties>
 
     <build>
