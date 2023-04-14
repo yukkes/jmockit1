@@ -5,6 +5,7 @@
 package mockit.coverage.reporting;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.*;
 import javax.annotation.*;
 
@@ -16,7 +17,7 @@ public final class OutputFile extends PrintWriter
    private final boolean sourceFile;
 
    public OutputFile(@Nonnull File file) throws IOException {
-      super(file, "UTF-8");
+      super(file, StandardCharsets.UTF_8);
       relPathToOutDir = "";
       sourceFile = false;
    }

@@ -6,6 +6,7 @@ package mockit.internal.util;
 
 import javax.annotation.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.net.*;
@@ -96,7 +97,7 @@ public final class Utilities
    @Nonnull
    public static String getClassFileLocationPath(@Nonnull CodeSource codeSource) {
       String locationPath = codeSource.getLocation().getPath();
-      try { locationPath = URLDecoder.decode(locationPath, "UTF-8"); } catch (UnsupportedEncodingException ignore) {}
+      locationPath = URLDecoder.decode(locationPath, StandardCharsets.UTF_8);
       return locationPath;
    }
 }

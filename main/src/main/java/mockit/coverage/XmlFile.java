@@ -5,6 +5,7 @@
 package mockit.coverage;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map.*;
 import javax.annotation.*;
 
@@ -41,7 +42,7 @@ final class XmlFile
    }
 
    void generate() throws IOException {
-      try (Writer out = new FileWriter(outputFile)) {
+      try (Writer out = new FileWriter(outputFile, StandardCharsets.UTF_8)) {
          out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
          out.write("<coverage version=\"1\">\n");
 

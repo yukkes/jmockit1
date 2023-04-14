@@ -1,6 +1,7 @@
 package mockit;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import javax.annotation.*;
 import javax.ejb.*;
@@ -190,7 +191,7 @@ public final class TestedClassWithFullStandardDITest
 
       persistenceXmlFile = new File(tempFolder, "persistence.xml");
 
-      Writer xmlWriter = new FileWriter(persistenceXmlFile);
+      Writer xmlWriter = new FileWriter(persistenceXmlFile, StandardCharsets.UTF_8);
       xmlWriter.write("<persistence><persistence-unit name='default'/></persistence>");
       xmlWriter.close();
    }

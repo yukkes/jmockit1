@@ -5,6 +5,7 @@
 package mockit.coverage.reporting.sourceFiles;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import javax.annotation.*;
 
@@ -15,7 +16,7 @@ public final class InputFile
    @Nonnull private final BufferedReader input;
 
    @Nullable
-   public static InputFile createIfFileExists(@Nonnull List<File> sourceDirs, @Nonnull String filePath) throws FileNotFoundException {
+   public static InputFile createIfFileExists(@Nonnull List<File> sourceDirs, @Nonnull String filePath) throws FileNotFoundException, IOException {
       File sourceFile = findSourceFile(sourceDirs, filePath);
       return sourceFile == null ? null : new InputFile(filePath, sourceFile);
    }
@@ -90,10 +91,10 @@ public final class InputFile
       }
    }
 
-   private InputFile(@Nonnull String filePath, @Nonnull File sourceFile) throws FileNotFoundException {
+   private InputFile(@Nonnull String filePath, @Nonnull File sourceFile) throws FileNotFoundException, IOException {
       this.filePath = filePath;
       this.sourceFile = sourceFile;
-      input = new BufferedReader(new FileReader(sourceFile));
+      input = new BufferedReader(new FileReader(sourceFile, StandardCharsets.UTF_8));
    }
 
    @Nonnull String getSourceFileName() { return sourceFile.getName(); }
