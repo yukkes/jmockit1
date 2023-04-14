@@ -43,6 +43,18 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <additionalOptions combine.children="append">
+                        <option>--add-modules</option>
+                        <option>java.desktop</option>
+                        <option>--add-modules</option>
+                        <option>java.sql</option>
+                    </additionalOptions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
