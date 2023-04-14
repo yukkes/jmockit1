@@ -50,7 +50,6 @@
     </issueManagement>
 
     <properties>
-        <javadoc.plugin>3.4.1</javadoc.plugin>
         <!-- Automatic Module Name -->
         <module.name>com.github.hazendaz.jmockit</module.name>
     </properties>
@@ -75,7 +74,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
-                    <version>${enforcer.plugin}</version>
                     <configuration>
                         <rules>
                             <restrictImports>
