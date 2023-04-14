@@ -49,14 +49,6 @@
         <url>https://github.com/hazendaz/jmockit1/issues</url>
     </issueManagement>
 
-    <distributionManagement>
-        <site>
-            <id>gh-pages-scm</id>
-            <name>gh-pages-scm</name>
-            <url>scm:git:ssh://git@github.com/hazendaz/jmockit1.git</url>
-        </site>
-    </distributionManagement>
-
     <properties>
         <javadoc.plugin>3.4.1</javadoc.plugin>
     </properties>

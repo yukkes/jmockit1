@@ -31,13 +31,6 @@
         <tag>HEAD</tag>
     </scm>
 
-    <distributionManagement>
-        <site>
-            <id>gh-pages-scm</id>
-            <name>gh-pages-scm</name>
-            <url>scm:git:ssh://git@github.com/hazendaz/jmockit1.git</url>
-        </site>
-    </distributionManagement>
 
     <build>
         <plugins>
