@@ -156,7 +156,6 @@
                         <exclude>**/TestNGViolatedExpectationsTest.class</exclude>
                     </excludes>
                     <threadCount>1</threadCount>
-                    <forkCount>1C</forkCount>
                 </configuration>
                 <dependencies>
                     <dependency>
