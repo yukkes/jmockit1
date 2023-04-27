@@ -7,8 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import mockit.*;
 
+/**
+ * The Class TimeAPIFakingTest.
+ */
 final class TimeAPIFakingTest
 {
+   
+   /**
+    * Inject clock object.
+    */
    @Test
    void injectClockObject() {
       // Create a test clock with a fixed instant.
@@ -23,6 +30,9 @@ final class TimeAPIFakingTest
       assertEquals(testDateTime, now);
    }
 
+   /**
+    * Fake local date time.
+    */
    @Test
    void fakeLocalDateTime() {
       LocalDateTime testDateTime = LocalDateTime.parse("2014-05-10T09:35:12");
@@ -33,6 +43,9 @@ final class TimeAPIFakingTest
       assertSame(testDateTime, now);
    }
 
+   /**
+    * Fake instant.
+    */
    @Test
    void fakeInstant() {
       Instant testInstant = Instant.parse("2014-05-10T09:35:12Z");

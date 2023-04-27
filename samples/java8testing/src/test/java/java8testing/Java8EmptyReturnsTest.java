@@ -9,8 +9,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import mockit.*;
 
+/**
+ * The Class Java8EmptyReturnsTest.
+ */
 final class Java8EmptyReturnsTest
 {
+   
+   /**
+    * Mock methods returning java 8 objects which can be empty.
+    *
+    * @param stream the stream
+    * @param streamOfIntegers the stream of integers
+    * @param streamOfLongs the stream of longs
+    * @param streamOfDoubles the stream of doubles
+    */
    @Test
    void mockMethodsReturningJava8ObjectsWhichCanBeEmpty(
       @Injectable Stream<?> stream, @Injectable Stream<Integer> streamOfIntegers,
@@ -38,6 +50,13 @@ final class Java8EmptyReturnsTest
       assertSame(Collections.emptyIterator(), stream.iterator());
    }
 
+   /**
+    * Mock methods returning java 8 primitive specializations which can be empty.
+    *
+    * @param intStream the int stream
+    * @param longStream the long stream
+    * @param doubleStream the double stream
+    */
    @Test
    void mockMethodsReturningJava8PrimitiveSpecializationsWhichCanBeEmpty(
       @Injectable IntStream intStream, @Injectable LongStream longStream, @Injectable DoubleStream doubleStream
