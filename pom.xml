@@ -43,7 +43,6 @@
         <!-- Maven compiler options -->
         <java.version>11</java.version>
         <java.release.version>11</java.release.version>
-        <javadoc.java.release.version>11</javadoc.java.release.version>
 
         <!-- Javadoc Release is strict due to maven bug and automatic module naming; it needs extra help, see examples -->
         <javadoc.java.release.version>11</javadoc.java.release.version>
