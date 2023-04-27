@@ -11,18 +11,46 @@ import mockit.internal.expectations.invocation.*;
 
 import org.w3c.dom.*;
 
+/**
+ * The Class MockInstanceMatchingTest.
+ */
 public final class MockInstanceMatchingTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /** The value. */
       private int value;
+      
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       int getValue() { return value; }
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) { this.value = value; }
    }
 
+   /** The mock. */
    @Mocked Collaborator mock;
 
+   /**
+    * Match on mock instance.
+    *
+    * @param otherInstance the other instance
+    */
    @Test
    public void matchOnMockInstance(@Mocked Collaborator otherInstance) {
       new Expectations() {{ mock.getValue(); result = 12; }};
@@ -34,6 +62,11 @@ public final class MockInstanceMatchingTest
       assertEquals(0, another.getValue());
    }
 
+   /**
+    * Record on mock instance but replay on different instance.
+    *
+    * @param verifiedMock the verified mock
+    */
    @Test
    public void recordOnMockInstanceButReplayOnDifferentInstance(@Mocked final Collaborator verifiedMock) {
       thrown.expect(MissingInvocation.class);
@@ -44,6 +77,11 @@ public final class MockInstanceMatchingTest
       assertEquals(0, collaborator.getValue());
    }
 
+   /**
+    * Verify expectation matching on mock instance.
+    *
+    * @param verifiedMock the verified mock
+    */
    @Test
    public void verifyExpectationMatchingOnMockInstance(@Mocked final Collaborator verifiedMock) {
       new Collaborator().setValue(12);
@@ -52,6 +90,11 @@ public final class MockInstanceMatchingTest
       new Verifications() {{ verifiedMock.setValue(12); times = 1; }};
    }
 
+   /**
+    * Verify expectations on same method call for different mocked instances.
+    *
+    * @param verifiedMock the verified mock
+    */
    @Test
    public void verifyExpectationsOnSameMethodCallForDifferentMockedInstances(@Mocked final Collaborator verifiedMock) {
       final Collaborator c1 = new Collaborator();
@@ -67,6 +110,11 @@ public final class MockInstanceMatchingTest
       }};
    }
 
+   /**
+    * Verify on mock instance but replay on different instance.
+    *
+    * @param verifiedMock the verified mock
+    */
    @Test
    public void verifyOnMockInstanceButReplayOnDifferentInstance(@Mocked final Collaborator verifiedMock) {
       thrown.expect(MissingInvocation.class);
@@ -76,6 +124,11 @@ public final class MockInstanceMatchingTest
       new Verifications() {{ verifiedMock.setValue(12); }};
    }
 
+   /**
+    * Record expectations matching on multiple mock instances.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void recordExpectationsMatchingOnMultipleMockInstances(@Mocked final Collaborator mock2) {
       new Expectations() {{
@@ -89,6 +142,11 @@ public final class MockInstanceMatchingTest
       mock.setValue(20);
    }
 
+   /**
+    * Record on specific mock instances but replay on different ones.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void recordOnSpecificMockInstancesButReplayOnDifferentOnes(@Mocked final Collaborator mock2) {
       thrown.expect(MissingInvocation.class);
@@ -102,6 +160,11 @@ public final class MockInstanceMatchingTest
       mock.setValue(13);
    }
 
+   /**
+    * Verify expectations matching on multiple mock instances.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyExpectationsMatchingOnMultipleMockInstances(@Mocked final Collaborator mock2) {
       mock.setValue(12);
@@ -115,6 +178,11 @@ public final class MockInstanceMatchingTest
       }};
    }
 
+   /**
+    * Verify on specific mock instances but replay on different ones.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyOnSpecificMockInstancesButReplayOnDifferentOnes(@Mocked final Collaborator mock2) {
       thrown.expect(MissingInvocation.class);
@@ -128,6 +196,11 @@ public final class MockInstanceMatchingTest
       }};
    }
 
+   /**
+    * Match on two mock instances.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void matchOnTwoMockInstances(@Mocked final Collaborator mock2) {
       new Expectations() {{
@@ -139,6 +212,11 @@ public final class MockInstanceMatchingTest
       assertEquals(2, mock2.getValue());
    }
 
+   /**
+    * Match on two mock instances and replay in different order.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void matchOnTwoMockInstancesAndReplayInDifferentOrder(@Mocked final Collaborator mock2) {
       new Expectations() {{
@@ -152,6 +230,11 @@ public final class MockInstanceMatchingTest
       assertEquals(2, mock2.getValue());
    }
 
+   /**
+    * Match on two mock instances for otherwise identical expectations.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void matchOnTwoMockInstancesForOtherwiseIdenticalExpectations(@Mocked final Collaborator mock2) {
       mock.getValue();
@@ -170,6 +253,12 @@ public final class MockInstanceMatchingTest
       }};
    }
 
+   /**
+    * Verify expectations matching on multiple mock parameters but replayed out of order.
+    *
+    * @param es1 the es 1
+    * @param es2 the es 2
+    */
    @Test
    public void verifyExpectationsMatchingOnMultipleMockParametersButReplayedOutOfOrder(
       @Mocked final AbstractExecutorService es1, @Mocked final AbstractExecutorService es2
@@ -185,6 +274,9 @@ public final class MockInstanceMatchingTest
       }};
    }
 
+   /**
+    * Record expectation matching on instance created inside code under test.
+    */
    @Test
    public void recordExpectationMatchingOnInstanceCreatedInsideCodeUnderTest() {
       new Expectations() {{
@@ -194,6 +286,14 @@ public final class MockInstanceMatchingTest
       assertEquals(1, new Collaborator().getValue());
    }
 
+   /**
+    * Record expectations on two instances of same mocked interface.
+    *
+    * @param mockDS1 the mock DS 1
+    * @param mockDS2 the mock DS 2
+    * @param n the n
+    * @throws Exception the exception
+    */
    @Test
    public void recordExpectationsOnTwoInstancesOfSameMockedInterface(
       @Mocked final DataSource mockDS1, @Mocked final DataSource mockDS2, @Mocked Attr n
@@ -211,10 +311,39 @@ public final class MockInstanceMatchingTest
       new Verifications() {{ mockDS2.setLoginTimeout(anyInt); }};
    }
 
-   static class BaseClass { final void doSomething() {} }
-   static final class SubclassA extends BaseClass { void doSomethingElse() {} }
-   static final class SubclassB extends BaseClass { void doSomethingElse() {} }
+   /**
+    * The Class BaseClass.
+    */
+   static class BaseClass { /**
+  * Do something.
+  */
+ final void doSomething() {} }
+   
+   /**
+    * The Class SubclassA.
+    */
+   static final class SubclassA extends BaseClass { 
+ /**
+  * Do something else.
+  */
+ void doSomethingElse() {} }
+   
+   /**
+    * The Class SubclassB.
+    */
+   static final class SubclassB extends BaseClass { 
+ /**
+  * Do something else.
+  */
+ void doSomethingElse() {} }
 
+   /**
+    * Verifying calls on specific instances of different subclasses.
+    *
+    * @param anyA the any A
+    * @param a the a
+    * @param anyB the any B
+    */
    @Test
    public void verifyingCallsOnSpecificInstancesOfDifferentSubclasses(
       @Mocked SubclassA anyA, @Mocked final SubclassA a, @Mocked final SubclassB anyB

@@ -15,20 +15,60 @@ import static org.junit.Assert.*;
 
 import org.springframework.beans.factory.annotation.*;
 
+/**
+ * The Class TestedClassWithFullAnnotatedDITest.
+ */
 @SuppressWarnings("ParameterHidesMemberVariable")
 public final class TestedClassWithFullAnnotatedDITest
 {
+   
+   /**
+    * The Class DummyDataSource.
+    */
    public static class DummyDataSource implements DataSource {
+      
+      /** The url. */
       private String url;
+      
+      /** The user. */
       private String user;
+      
+      /** The password. */
       String password;
 
+      /**
+       * Gets the url.
+       *
+       * @return the url
+       */
       public String getUrl() { return url; }
+      
+      /**
+       * Sets the url.
+       *
+       * @param url the new url
+       */
       @SuppressWarnings("unused") public void setUrl(String url) { this.url = url; }
 
+      /**
+       * Gets the user.
+       *
+       * @return the user
+       */
       public String getUser() { return user; }
+      
+      /**
+       * Sets the user.
+       *
+       * @param user the new user
+       */
       @SuppressWarnings("unused") public void setUser(String user) { this.user = user; }
 
+      /**
+       * Sets the password.
+       *
+       * @param password the new password
+       */
       @SuppressWarnings("unused") public void setPassword(String password) { this.password = password; }
 
       @Override public Connection getConnection() { return null; }
@@ -42,31 +82,61 @@ public final class TestedClassWithFullAnnotatedDITest
       @Override public Logger getParentLogger() { return null; }
    }
 
+   /**
+    * The Class TestedClass.
+    */
    @DataSourceDefinition(
       name = "java:global/jdbc/testDS", className = "mockit.TestedClassWithFullAnnotatedDITest$DummyDataSource",
       url = "jdbc:testDb:test", user = "tests", password = "test123")
    static final class TestedClass {
+      
+      /** The action. */
       @Inject Runnable action;
+      
+      /** The dependency 1. */
       @Autowired ItfWithSingleImpl dependency1;
+      
+      /** The dependency 2. */
       @Resource ItfWithSingleImpl dependency2;
+      
+      /** The another dependency. */
       @Inject ItfWithTwoImpls anotherDependency;
+      
+      /** The log 1. */
       @Inject private Logger log1;
+      
+      /** The log 2. */
       @Inject private Logger log2;
+      
+      /** The collaborator. */
       Collaborator collaborator;
+      
+      /** The conversation. */
       @Inject Conversation conversation;
+      
+      /** The ds. */
       @Resource(lookup = "java:global/jdbc/testDS") DataSource ds;
    }
 
+   /**
+    * The Class PooledDataSource.
+    */
    public static final class PooledDataSource extends DummyDataSource implements ConnectionPoolDataSource {
       @Override public PooledConnection getPooledConnection() { return null; }
       @Override public PooledConnection getPooledConnection(String user, String password) { return null; }
    }
 
+   /**
+    * The Class DistributedDataSource.
+    */
    public static final class DistributedDataSource extends DummyDataSource implements XADataSource {
       @Override public XAConnection getXAConnection() { return null; }
       @Override public XAConnection getXAConnection(String user, String password) { return null; }
    }
 
+   /**
+    * The Class AnotherTestedClass.
+    */
    @DataSourceDefinitions({
       @DataSourceDefinition(
          name = "regularDS", className = "mockit.TestedClassWithFullAnnotatedDITest$DummyDataSource",
@@ -79,31 +149,79 @@ public final class TestedClassWithFullAnnotatedDITest
          url = "jdbc:postgresql:database", user = "xa", password = "test123")
    })
    static class AnotherTestedClass {
+      
+      /** The ds 1. */
       @Resource(lookup = "regularDS") DataSource ds1;
+      
+      /** The ds 2. */
       @Resource(lookup = "pooledDS") ConnectionPoolDataSource ds2;
+      
+      /** The ds 3. */
       @Resource(lookup = "distributedDS") XADataSource ds3;
+      
+      /** The ds 4. */
       @Resource(name = "regularDS") DataSource ds4;
    }
 
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {}
 
+   /**
+    * The Interface ItfWithSingleImpl.
+    */
    public interface ItfWithSingleImpl {}
-   public static final class SingleImpl implements ItfWithSingleImpl { @EJB ItfToBeMocked ejb; }
+   
+   /**
+    * The Class SingleImpl.
+    */
+   public static final class SingleImpl implements ItfWithSingleImpl { 
+ /** The ejb. */
+ @EJB ItfToBeMocked ejb; }
 
+   /**
+    * The Interface ItfWithTwoImpls.
+    */
    public interface ItfWithTwoImpls {}
+   
+   /**
+    * The Class Impl1.
+    */
    @SuppressWarnings("unused") public static final class Impl1 implements ItfWithTwoImpls {}
+   
+   /**
+    * The Class Impl2.
+    */
    public static final class Impl2 implements ItfWithTwoImpls {}
 
+   /**
+    * The Interface ItfToBeMocked.
+    */
    public interface ItfToBeMocked {}
 
+   /** The dep 1. */
    @Tested SingleImpl dep1;
+   
+   /** The another dep. */
    @Tested Impl2 anotherDep;
+   
+   /** The collaborator. */
    @Tested Collaborator collaborator;
+   
+   /** The tested. */
    @Tested(fullyInitialized = true) TestedClass tested;
+   
+   /** The action. */
    // Without these injectables, a "missing @Injectable" exception occurs for each unresolved field.
    @Injectable Runnable action;
+   
+   /** The ejb. */
    @Injectable ItfToBeMocked ejb;
 
+   /**
+    * Inject initialized dependencies for interfaces having tested objects of implementation class types.
+    */
    @Test
    public void injectInitializedDependenciesForInterfacesHavingTestedObjectsOfImplementationClassTypes() {
       assertSame(action, tested.action);
@@ -113,19 +231,29 @@ public final class TestedClassWithFullAnnotatedDITest
       assertSame(ejb, ((SingleImpl) tested.dependency1).ejb);
    }
 
+   /**
+    * Inject logger fields with logger created with tested class name.
+    */
    @Test
    public void injectLoggerFieldsWithLoggerCreatedWithTestedClassName() {
       assertEquals(TestedClass.class.getName(), tested.log1.getName());
       assertSame(tested.log2, tested.log1);
    }
 
+   /**
+    * Inject non annotated field from matching tested field.
+    */
    @Test
    public void injectNonAnnotatedFieldFromMatchingTestedField() {
       assertSame(collaborator, tested.collaborator);
    }
 
+   /** The conversation. */
    @Tested Conversation conversation;
 
+   /**
+    * Manage conversation context.
+    */
    @Test
    public void manageConversationContext() {
       assertNotNull(conversation);
@@ -151,6 +279,9 @@ public final class TestedClassWithFullAnnotatedDITest
       assertEquals("test", conversation.getId());
    }
 
+   /**
+    * Inject data source configured from single data source definition.
+    */
    @Test
    public void injectDataSourceConfiguredFromSingleDataSourceDefinition() {
       assertTrue(tested.ds instanceof DummyDataSource);
@@ -161,8 +292,12 @@ public final class TestedClassWithFullAnnotatedDITest
       assertEquals("test123", ds.password);
    }
 
+   /** The tested 2. */
    @Tested(fullyInitialized = true) AnotherTestedClass tested2;
 
+   /**
+    * Inject multiple data sources configured from different data source definitions.
+    */
    @Test
    public void injectMultipleDataSourcesConfiguredFromDifferentDataSourceDefinitions() {
       assertTrue(tested2.ds1 instanceof DummyDataSource);

@@ -7,10 +7,18 @@ import static org.junit.Assert.*;
 
 import mockit.*;
 
+/**
+ * The Class JUnit4Test.
+ */
 public final class JUnit4Test
 {
+   
+   /** The mock. */
    @Mocked ClassWithObjectOverrides mock;
 
+   /**
+    * Use mocked instance.
+    */
    @SuppressWarnings("EqualsBetweenInconvertibleTypes")
    @Test
    public void useMockedInstance() {
@@ -32,14 +40,42 @@ public final class JUnit4Test
       }};
    }
 
+   /**
+    * The Class AnotherClass.
+    */
    static class AnotherClass {
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       * @param l the l
+       * @param s the s
+       * @param b the b
+       * @param c the c
+       * @param d the d
+       * @param f the f
+       * @param str the str
+       */
       void doSomething(int i, long l, Short s, byte b, char c, double d, float f, String str) {
          System.out.println(i + l + s + b + d + f);
          System.out.println(c + str);
       }
+      
+      /**
+       * Gets the modified value.
+       *
+       * @param s the s
+       * @return the modified value
+       */
       String getModifiedValue(String s) { return s.toLowerCase(); }
    }
 
+   /**
+    * Use argument matching fields.
+    *
+    * @param anotherMock the another mock
+    */
    @Test
    public void useArgumentMatchingFields(@Injectable final AnotherClass anotherMock) {
       new Expectations() {{
@@ -49,6 +85,11 @@ public final class JUnit4Test
       anotherMock.doSomething(1, 2, (short) 3, (byte) 4, 'c', 1.2, 2.5F, "");
    }
 
+   /**
+    * Use argument matching methods.
+    *
+    * @param anotherMock the another mock
+    */
    @Test
    public void useArgumentMatchingMethods(@Injectable final AnotherClass anotherMock) {
       new Expectations() {{

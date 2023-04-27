@@ -6,16 +6,40 @@ import javax.servlet.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class TestedClassWithConstructorDI2Test.
+ */
 public final class TestedClassWithConstructorDI2Test
 {
+   
+   /**
+    * The Class TestedClass.
+    */
    public static final class TestedClass implements Servlet {
+      
+      /** The counter. */
       static int counter;
 
+      /** The config. */
       private ServletConfig config;
+      
+      /** The dependency 1. */
       private final Dependency dependency1;
+      
+      /** The dependency 2. */
       private final Dependency dependency2;
+      
+      /** The dependency 3. */
       private final Dependency dependency3;
 
+      /**
+       * Instantiates a new tested class.
+       *
+       * @param dependency1 the dependency 1
+       * @param r the r
+       * @param dependency2 the dependency 2
+       * @param dependency3 the dependency 3
+       */
       public TestedClass(Dependency dependency1, Runnable r, Dependency dependency2, Dependency dependency3) {
          this.dependency1 = dependency1;
          this.dependency2 = dependency2;
@@ -34,6 +58,11 @@ public final class TestedClassWithConstructorDI2Test
          }
       }
 
+      /**
+       * Do some operation.
+       *
+       * @return the int
+       */
       public int doSomeOperation() {
          return dependency1.doSomething() + dependency2.doSomething();
       }
@@ -53,6 +82,9 @@ public final class TestedClassWithConstructorDI2Test
          checkInetAddressMocking();
       }
 
+      /**
+       * Check inet address mocking.
+       */
       private void checkInetAddressMocking() {
          try {
             InetAddress inetAddress = InetAddress.getByName("testHost");
@@ -70,21 +102,48 @@ public final class TestedClassWithConstructorDI2Test
       }
    }
 
-   static class Dependency { int doSomething() { return -1; } }
+   /**
+    * The Class Dependency.
+    */
+   static class Dependency { /**
+  * Do something.
+  *
+  * @return the int
+  */
+ int doSomething() { return -1; } }
 
+   /** The tested. */
    @Tested TestedClass tested;
+   
+   /** The task. */
    @Injectable Runnable task;
+   
+   /** The dependency 1. */
    @Injectable Dependency dependency1;
+   
+   /** The dependency 2. */
    @Injectable Dependency dependency2;
+   
+   /** The config. */
    @Injectable ServletConfig config;
+   
+   /** The test host. */
    @Mocked InetAddress testHost;
 
+   /**
+    * Reset counter.
+    */
    @Before
    public void resetCounter() {
       TestedClass.counter = 0;
       new Expectations() {{ dependency1.doSomething(); result = 123; }};
    }
 
+   /**
+    * Exercise tested object with dependencies of same type injected through constructor.
+    *
+    * @param dependency3 the dependency 3
+    */
    @Test
    public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor(@Injectable Dependency dependency3) {
       assertTestedObjectWasInitialized();
@@ -98,6 +157,12 @@ public final class TestedClassWithConstructorDI2Test
       assertEquals(28, tested.doSomeOperation());
    }
 
+   /**
+    * Exercise tested object with extra injectable parameter.
+    *
+    * @param dependency3 the dependency 3
+    * @param mock4 the mock 4
+    */
    @Test
    public void exerciseTestedObjectWithExtraInjectableParameter(@Injectable Dependency dependency3, @Injectable Dependency mock4) {
       assertTestedObjectWasInitialized();
@@ -106,11 +171,17 @@ public final class TestedClassWithConstructorDI2Test
       assertSame(dependency3, tested.dependency3);
    }
 
+   /**
+    * Assert tested object was initialized.
+    */
    void assertTestedObjectWasInitialized() {
       assertSame(config, tested.getServletConfig());
       assertEquals(1, TestedClass.counter);
    }
 
+   /**
+    * Verify tested object after every test.
+    */
    @After
    public void verifyTestedObjectAfterEveryTest() {
       assertEquals(2, TestedClass.counter);

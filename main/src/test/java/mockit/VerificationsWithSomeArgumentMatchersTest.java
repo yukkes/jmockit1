@@ -7,30 +7,128 @@ import org.junit.rules.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class VerificationsWithSomeArgumentMatchersTest.
+ */
 public final class VerificationsWithSomeArgumentMatchersTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Collaborator.
+    */
    @SuppressWarnings("unused")
    static class Collaborator {
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(double value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(float value) {}
 
+      /**
+       * Sets the values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       */
       void setValues(long value1, Byte value2, double value3, Short value4) {}
+      
+      /**
+       * Boolean values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       * @return true, if successful
+       */
       boolean booleanValues(long value1, byte value2, double value3, short value4) { return true; }
+      
+      /**
+       * Static set values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       */
       static void staticSetValues(long value1, byte value2, double value3, short value4) {}
+      
+      /**
+       * Static long values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       * @return the long
+       */
       static long staticLongValues(long value1, byte value2, double value3, char value4) { return -2; }
 
+      /**
+       * Simple operation.
+       *
+       * @param a the a
+       * @param b the b
+       * @param c the c
+       */
       final void simpleOperation(int a, String b, Date c) {}
+      
+      /**
+       * Another operation.
+       *
+       * @param b the b
+       * @param l the l
+       * @return the long
+       */
       long anotherOperation(byte b, long l) { return -1; }
 
+      /**
+       * Static void method.
+       *
+       * @param l the l
+       * @param c the c
+       * @param f the f
+       */
       static void staticVoidMethod(long l, char c, float f) {}
+      
+      /**
+       * Static boolean method.
+       *
+       * @param b the b
+       * @param s the s
+       * @param array the array
+       * @return true, if successful
+       */
       static boolean staticBooleanMethod(boolean b, String s, int[] array) { return false; }
    }
 
+   /** The mock. */
    @Mocked Collaborator mock;
 
+   /**
+    * Use matcher only for one argument.
+    */
    @Test
    public void useMatcherOnlyForOneArgument() {
       mock.simpleOperation(1, "", null);
@@ -58,6 +156,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
+   /**
+    * Use matcher only for first argument with unexpected replay value.
+    */
    @Test
    public void useMatcherOnlyForFirstArgumentWithUnexpectedReplayValue() {
       thrown.expect(MissingInvocation.class);
@@ -69,6 +170,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
+   /**
+    * Use matcher only for second argument with unexpected replay value.
+    */
    @Test
    public void useMatcherOnlyForSecondArgumentWithUnexpectedReplayValue() {
       thrown.expect(MissingInvocation.class);
@@ -80,6 +184,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
+   /**
+    * Use matcher only for last argument with unexpected replay value.
+    */
    @Test
    public void useMatcherOnlyForLastArgumentWithUnexpectedReplayValue() {
       thrown.expect(MissingInvocation.class);
@@ -91,6 +198,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
+   /**
+    * Use matchers for parameters of all sizes.
+    */
    @Test
    public void useMatchersForParametersOfAllSizes() {
       mock.setValues(123L, (byte) 5, 6.4, (short) 41);
@@ -106,6 +216,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
+   /**
+    * Use any int field.
+    */
    @Test
    public void useAnyIntField() {
       mock.setValue(1);
@@ -113,6 +226,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       new FullVerifications() {{ mock.setValue(anyInt); }};
    }
 
+   /**
+    * Use several any fields.
+    */
    @Test
    public void useSeveralAnyFields() {
       final Date now = new Date();
@@ -139,6 +255,9 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
+   /**
+    * Use with methods mixed with any fields.
+    */
    @Test
    public void useWithMethodsMixedWithAnyFields() {
       Date now = new Date();
@@ -157,8 +276,24 @@ public final class VerificationsWithSomeArgumentMatchersTest
       }};
    }
 
-   public interface Scheduler { List<String> getAlerts(Object o, int i, boolean b); }
+   /**
+    * The Interface Scheduler.
+    */
+   public interface Scheduler { /**
+  * Gets the alerts.
+  *
+  * @param o the o
+  * @param i the i
+  * @param b the b
+  * @return the alerts
+  */
+ List<String> getAlerts(Object o, int i, boolean b); }
 
+   /**
+    * Use matchers in invocations to interface methods.
+    *
+    * @param scheduler the scheduler
+    */
    @Test
    public void useMatchersInInvocationsToInterfaceMethods(@Mocked final Scheduler scheduler) {
       scheduler.getAlerts("123", 1, true);

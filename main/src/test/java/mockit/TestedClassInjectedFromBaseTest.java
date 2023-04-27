@@ -8,12 +8,25 @@ class BaseTestClass {
    @Tested final Dependency dependency = new Dependency();
 }
 
+/**
+ * The Class TestedClassInjectedFromBaseTest.
+ */
 public final class TestedClassInjectedFromBaseTest extends BaseTestClass
 {
-   static final class TestedClass { Dependency dependency; }
+   
+   /**
+    * The Class TestedClass.
+    */
+   static final class TestedClass { 
+ /** The dependency. */
+ Dependency dependency; }
 
+   /** The tested. */
    @Tested(fullyInitialized = true) TestedClass tested;
 
+   /**
+    * Verify tested object injected with tested dependency provided by base test class.
+    */
    @Test
    public void verifyTestedObjectInjectedWithTestedDependencyProvidedByBaseTestClass() {
       assertSame(dependency, tested.dependency);

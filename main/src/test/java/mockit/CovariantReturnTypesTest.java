@@ -6,14 +6,35 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * The Class CovariantReturnTypesTest.
+ */
 public final class CovariantReturnTypesTest
 {
-   public static class SuperClass { public JTextField getTextField() { return null; } }
+   
+   /**
+    * The Class SuperClass.
+    */
+   public static class SuperClass { 
+ /**
+  * Gets the text field.
+  *
+  * @return the text field
+  */
+ public JTextField getTextField() { return null; } }
 
+   /**
+    * The Class SubClass.
+    */
    public static final class SubClass extends SuperClass {
       @Override public JPasswordField getTextField() { return null; }
    }
 
+   /**
+    * Method in class hierarchy using recorded expectation.
+    *
+    * @param mock the mock
+    */
    @Test
    public void methodInClassHierarchyUsingRecordedExpectation(@Mocked final SubClass mock) {
       final JPasswordField passwordField = new JPasswordField();
@@ -28,15 +49,36 @@ public final class CovariantReturnTypesTest
       assertSame(passwordField, ((SuperClass) subClassInstance).getTextField());
    }
 
+   /**
+    * The Class AbstractBaseClass.
+    */
    public abstract static class AbstractBaseClass {
+      
+      /**
+       * Instantiates a new abstract base class.
+       */
       protected AbstractBaseClass() {}
+      
+      /**
+       * Gets the text field.
+       *
+       * @return the text field
+       */
       public abstract JTextField getTextField();
    }
 
+   /**
+    * The Class ConcreteClass.
+    */
    public static class ConcreteClass extends AbstractBaseClass {
       @Override public JFormattedTextField getTextField() { return null; }
    }
 
+   /**
+    * Concrete method implementation using recorded expectation.
+    *
+    * @param mock the mock
+    */
    @Test
    public void concreteMethodImplementationUsingRecordedExpectation(@Mocked final ConcreteClass mock) {
       final JTextField formattedField1 = new JFormattedTextField();
@@ -50,6 +92,11 @@ public final class CovariantReturnTypesTest
       assertSame(formattedField2, ((AbstractBaseClass) mock).getTextField());
    }
 
+   /**
+    * Abstract method implementation using recorded expectation.
+    *
+    * @param mock the mock
+    */
    @Test
    public void abstractMethodImplementationUsingRecordedExpectation(@Capturing final AbstractBaseClass mock) {
       final JTextField regularField = new JTextField();
@@ -67,9 +114,32 @@ public final class CovariantReturnTypesTest
       assertSame(formattedField, firstInstance.getTextField());
    }
 
-   public interface SuperInterface { Object getValue(); }
-   public interface SubInterface extends SuperInterface { @Override String getValue(); }
+   /**
+    * The Interface SuperInterface.
+    */
+   public interface SuperInterface { /**
+  * Gets the value.
+  *
+  * @return the value
+  */
+ Object getValue(); }
+   
+   /**
+    * The Interface SubInterface.
+    */
+   public interface SubInterface extends SuperInterface { 
+ /**
+  * Gets the value.
+  *
+  * @return the value
+  */
+ @Override String getValue(); }
 
+   /**
+    * Method in super interface with varying return values using recorded expectation.
+    *
+    * @param mock the mock
+    */
    @Test
    public void methodInSuperInterfaceWithVaryingReturnValuesUsingRecordedExpectation(@Mocked final SuperInterface mock) {
       final Object value = new Object();
@@ -83,6 +153,11 @@ public final class CovariantReturnTypesTest
       assertSame(specificValue, mock.getValue());
    }
 
+   /**
+    * Method in sub interface using recorded expectations.
+    *
+    * @param mock the mock
+    */
    @Test
    public void methodInSubInterfaceUsingRecordedExpectations(@Mocked final SubInterface mock) {
       @SuppressWarnings("UnnecessaryLocalVariable") final SuperInterface base = mock;
@@ -102,6 +177,11 @@ public final class CovariantReturnTypesTest
       assertSame(specificValue2, mock.getValue());
    }
 
+   /**
+    * Method in sub interface replayed through super interface using recorded expectation.
+    *
+    * @param mock the mock
+    */
    @Test
    public void methodInSubInterfaceReplayedThroughSuperInterfaceUsingRecordedExpectation(@Mocked final SubInterface mock) {
       final String specificValue = "test";

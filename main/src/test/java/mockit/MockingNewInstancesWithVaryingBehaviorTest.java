@@ -6,14 +6,27 @@ import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+/**
+ * The Class MockingNewInstancesWithVaryingBehaviorTest.
+ */
 public final class MockingNewInstancesWithVaryingBehaviorTest
 {
+   
+   /** The Constant DATE_FORMAT. */
    static final String DATE_FORMAT = "yyyy-MM-dd";
+   
+   /** The Constant FORMATTED_DATE. */
    static final String FORMATTED_DATE = "2012-02-28";
 
+   /** The Constant TIME_FORMAT. */
    static final String TIME_FORMAT = "HH";
+   
+   /** The Constant FORMATTED_TIME. */
    static final String FORMATTED_TIME = "13";
 
+   /**
+    * Exercise and verify tested code.
+    */
    void exerciseAndVerifyTestedCode() {
       Date now = new Date();
 
@@ -26,9 +39,15 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
 
    /// Tests using the Faking API /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /** The date format. */
    DateFormat dateFormat;
+   
+   /** The hour format. */
    DateFormat hourFormat;
 
+   /**
+    * Using fakes with invocation parameter.
+    */
    @Test
    public void usingFakesWithInvocationParameter() {
       new MockUp<SimpleDateFormat>() {
@@ -56,6 +75,11 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
 
    /// Tests using the Mocking API ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Using instantiation recording.
+    *
+    * @param anyDateFormat the any date format
+    */
    @Test
    public void usingInstantiationRecording(@Mocked SimpleDateFormat anyDateFormat) {
       new Expectations() {{
@@ -69,18 +93,55 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
       exerciseAndVerifyTestedCode();
    }
 
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /** The value. */
       final int value;
+      
+      /**
+       * Instantiates a new collaborator.
+       */
       Collaborator() { value = -1; }
+      
+      /**
+       * Instantiates a new collaborator.
+       *
+       * @param value the value
+       */
       Collaborator(int value) { this.value = value; }
+      
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       int getValue() { return value; }
+      
+      /**
+       * Checks if is positive.
+       *
+       * @return true, if is positive
+       */
       boolean isPositive() { return value > 0; }
    }
 
+   /** The col. */
    Collaborator col;
+   
+   /** The col 5. */
    Collaborator col5;
+   
+   /** The col 6. */
    Collaborator col6;
 
+   /**
+    * Match method calls on instances created with specific constructor calls.
+    *
+    * @param anyCol the any col
+    */
    @Test
    public void matchMethodCallsOnInstancesCreatedWithSpecificConstructorCalls(@Mocked final Collaborator anyCol) {
       new Expectations() {{
@@ -113,6 +174,11 @@ public final class MockingNewInstancesWithVaryingBehaviorTest
       }};
    }
 
+   /**
+    * Record different results for instances created with different constructors.
+    *
+    * @param anyCol the any col
+    */
    @Test
    public void recordDifferentResultsForInstancesCreatedWithDifferentConstructors(@Mocked final Collaborator anyCol) {
       new Expectations() {{

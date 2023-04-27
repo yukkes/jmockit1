@@ -14,44 +14,158 @@ import static org.junit.runners.MethodSorters.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class CascadingParametersTest.
+ */
 @SuppressWarnings("ConstantConditions")
 @FixMethodOrder(NAME_ASCENDING)
 public final class CascadingParametersTest
 {
+   
+   /**
+    * The Class Foo.
+    */
    static class Foo {
+      
+      /**
+       * Gets the bar.
+       *
+       * @return the bar
+       */
       Bar getBar() { return null; }
 
+      /**
+       * Global bar.
+       *
+       * @return the bar
+       */
       static Bar globalBar() { return null; }
 
+      /**
+       * Do something.
+       *
+       * @param s the s
+       */
       void doSomething(String s) { throw new RuntimeException(s); }
+      
+      /**
+       * Gets the int value.
+       *
+       * @return the int value
+       */
       int getIntValue() { return 1; }
+      
+      /**
+       * Gets the boolean value.
+       *
+       * @return the boolean value
+       */
       Boolean getBooleanValue() { return true; }
+      
+      /**
+       * Gets the list.
+       *
+       * @return the list
+       */
       final List<Integer> getList() { return null; }
 
+      /**
+       * Gets the map.
+       *
+       * @return the map
+       */
       HashMap<?, ?> getMap() { return null; }
    }
 
+   /**
+    * The Class Bar.
+    */
    static class Bar {
+      
+      /**
+       * Instantiates a new bar.
+       */
       Bar() { throw new RuntimeException(); }
+      
+      /**
+       * Do something.
+       *
+       * @return the int
+       */
       int doSomething() { return 1; }
+      
+      /**
+       * Gets the baz.
+       *
+       * @return the baz
+       */
       Baz getBaz() { return null; }
+      
+      /**
+       * Gets the baz.
+       *
+       * @param i the i
+       * @return the baz
+       */
       Baz getBaz(@SuppressWarnings("unused") int i) { return null; }
+      
+      /**
+       * Gets the enum.
+       *
+       * @return the enum
+       */
       AnEnum getEnum() { return null; }
+      
+      /**
+       * Static method.
+       *
+       * @return the string
+       */
       static String staticMethod() { return "notMocked"; }
    }
 
+   /**
+    * The Class SubBar.
+    */
    static final class SubBar extends Bar {}
 
+   /**
+    * The Interface Baz.
+    */
    public interface Baz {
+      
+      /**
+       * Run it.
+       */
       void runIt();
+      
+      /**
+       * Gets the date.
+       *
+       * @return the date
+       */
       Date getDate();
    }
 
-   enum AnEnum { First, Second, Third }
+   /**
+    * The Enum AnEnum.
+    */
+   enum AnEnum { /** The First. */
+ First, /** The Second. */
+ Second, /** The Third. */
+ Third }
 
+   /** The cascaded bar 1. */
    static Bar cascadedBar1;
+   
+   /** The cascaded bar 2. */
    static Bar cascadedBar2;
 
+   /**
+    * Cascade one level during replay.
+    *
+    * @param foo the foo
+    */
    @Test
    public void cascadeOneLevelDuringReplay(@Mocked Foo foo) {
       cascadedBar1 = foo.getBar();
@@ -76,6 +190,11 @@ public final class CascadingParametersTest
       assertNull(map);
    }
 
+   /**
+    * Verify that previous cascaded instances have been discarded.
+    *
+    * @param foo the foo
+    */
    @Test
    public void verifyThatPreviousCascadedInstancesHaveBeenDiscarded(@Mocked Foo foo) {
       Bar bar = foo.getBar();
@@ -85,6 +204,11 @@ public final class CascadingParametersTest
       assertNotSame(cascadedBar2, globalBar);
    }
 
+   /**
+    * Verify that static methods and constructors are not mocked when cascading.
+    *
+    * @param foo the foo
+    */
    @Test
    public void verifyThatStaticMethodsAndConstructorsAreNotMockedWhenCascading(@Mocked Foo foo) {
       foo.getBar();
@@ -98,6 +222,12 @@ public final class CascadingParametersTest
       catch (RuntimeException ignored) {}
    }
 
+   /**
+    * Verify that static methods and constructors are mocked when cascaded mock is mocked normally.
+    *
+    * @param mockFoo the mock foo
+    * @param mockBar the mock bar
+    */
    @Test
    public void verifyThatStaticMethodsAndConstructorsAreMockedWhenCascadedMockIsMockedNormally(
       @Mocked Foo mockFoo, @Mocked Bar mockBar
@@ -108,6 +238,12 @@ public final class CascadingParametersTest
       new Bar();
    }
 
+   /**
+    * Use available mocked instance of subclass as cascaded instance.
+    *
+    * @param foo the foo
+    * @param bar the bar
+    */
    @Test
    public void useAvailableMockedInstanceOfSubclassAsCascadedInstance(@Mocked Foo foo, @Mocked SubBar bar) {
       Bar cascadedBar = foo.getBar();
@@ -115,6 +251,13 @@ public final class CascadingParametersTest
       assertSame(bar, cascadedBar);
    }
 
+   /**
+    * Replace cascaded instance with first one of two injectable instances.
+    *
+    * @param foo the foo
+    * @param bar1 the bar 1
+    * @param bar2 the bar 2
+    */
    @Test
    public void replaceCascadedInstanceWithFirstOneOfTwoInjectableInstances(
       @Mocked final Foo foo, @Injectable final Bar bar1, @Injectable Bar bar2
@@ -128,6 +271,11 @@ public final class CascadingParametersTest
       assertEquals(0, bar2.doSomething());
    }
 
+   /**
+    * Cascade one level during record.
+    *
+    * @param mockFoo the mock foo
+    */
    @Test
    public void cascadeOneLevelDuringRecord(@Mocked final Foo mockFoo) {
       final List<Integer> list = Arrays.asList(1, 2, 3);
@@ -151,6 +299,11 @@ public final class CascadingParametersTest
       assertSame(list, foo.getList());
    }
 
+   /**
+    * Cascade one level during verify.
+    *
+    * @param foo the foo
+    */
    @Test
    public void cascadeOneLevelDuringVerify(@Mocked final Foo foo) {
       Bar bar = foo.getBar();
@@ -175,11 +328,21 @@ public final class CascadingParametersTest
       }};
    }
 
+   /**
+    * Cascade two levels during replay.
+    *
+    * @param foo the foo
+    */
    @Test
    public void cascadeTwoLevelsDuringReplay(@Mocked Foo foo) {
       foo.getBar().getBaz().runIt();
    }
 
+   /**
+    * Cascade two levels during record.
+    *
+    * @param mockFoo the mock foo
+    */
    @Test
    public void cascadeTwoLevelsDuringRecord(@Mocked final Foo mockFoo) {
       new Expectations() {{
@@ -198,6 +361,12 @@ public final class CascadingParametersTest
       baz.runIt();
    }
 
+   /**
+    * Cascade one level and verify invocation on last mock only.
+    *
+    * @param foo the foo
+    * @param bar the bar
+    */
    @Test
    public void cascadeOneLevelAndVerifyInvocationOnLastMockOnly(@Mocked Foo foo, @Injectable final Bar bar) {
       Bar fooBar = foo.getBar();
@@ -207,6 +376,12 @@ public final class CascadingParametersTest
       new Verifications() {{ bar.doSomething(); }};
    }
 
+   /**
+    * Cascade two levels with invocation recorded on last mock only.
+    *
+    * @param foo the foo
+    * @param baz the baz
+    */
    @Test
    public void cascadeTwoLevelsWithInvocationRecordedOnLastMockOnly(@Mocked Foo foo, @Mocked final Baz baz) {
       new Expectations() {{
@@ -217,6 +392,12 @@ public final class CascadingParametersTest
       cascadedBaz.runIt();
    }
 
+   /**
+    * Cascade two levels and verify invocation on last mock only.
+    *
+    * @param foo the foo
+    * @param baz the baz
+    */
    @Test
    public void cascadeTwoLevelsAndVerifyInvocationOnLastMockOnly(@Mocked Foo foo, @Mocked final Baz baz) {
       Baz cascadedBaz = foo.getBar().getBaz();
@@ -228,6 +409,12 @@ public final class CascadingParametersTest
 
    // Tests using the java.lang.Process and java.lang.ProcessBuilder classes //////////////////////////////////////////
 
+   /**
+    * Cascade on JRE classes.
+    *
+    * @param pb the pb
+    * @throws Exception the exception
+    */
    @Test
    public void cascadeOnJREClasses(@Mocked final ProcessBuilder pb) throws Exception {
       new Expectations() {{
@@ -245,6 +432,12 @@ public final class CascadingParametersTest
       assertEquals(1, process.exitValue());
    }
 
+   /**
+    * Return same mocked instance through cascading even with multiple candidates available.
+    *
+    * @param pb1 the pb 1
+    * @param pb2 the pb 2
+    */
    @Test
    public void returnSameMockedInstanceThroughCascadingEvenWithMultipleCandidatesAvailable(
       @Injectable ProcessBuilder pb1, @Injectable ProcessBuilder pb2
@@ -253,6 +446,12 @@ public final class CascadingParametersTest
       assertSame(pb2, pb2.command("b"));
    }
 
+   /**
+    * Creates the OS process to copy temp files.
+    *
+    * @param pb the pb
+    * @throws Exception the exception
+    */
    @Test
    public void createOSProcessToCopyTempFiles(@Mocked final ProcessBuilder pb) throws Exception {
       // Code under test creates a new process to execute an OS-specific command.
@@ -271,6 +470,14 @@ public final class CascadingParametersTest
 
    // Tests using java.net classes ////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Record and verify expectations on cascaded mocks.
+    *
+    * @param anySocket the any socket
+    * @param cascadedChannel the cascaded channel
+    * @param inetAddr the inet addr
+    * @throws Exception the exception
+    */
    @Test
    public void recordAndVerifyExpectationsOnCascadedMocks(
       @Mocked Socket anySocket, @Mocked final SocketChannel cascadedChannel, @Mocked InetSocketAddress inetAddr
@@ -290,11 +497,35 @@ public final class CascadingParametersTest
       new Verifications() {{ cascadedChannel.connect((SocketAddress) withNotNull()); }};
    }
 
+   /**
+    * A factory for creating Socket objects.
+    */
    static final class SocketFactory {
+      
+      /**
+       * Creates a new Socket object.
+       *
+       * @return the socket
+       */
       public Socket createSocket() { return new Socket(); }
+      
+      /**
+       * Creates a new Socket object.
+       *
+       * @param host the host
+       * @param port the port
+       * @return the socket
+       * @throws IOException Signals that an I/O exception has occurred.
+       */
       public Socket createSocket(String host, int port) throws IOException { return new Socket(host, port); }
    }
 
+   /**
+    * Cascade one level with argument matchers.
+    *
+    * @param sf the sf
+    * @throws Exception the exception
+    */
    @Test
    public void cascadeOneLevelWithArgumentMatchers(@Mocked final SocketFactory sf) throws Exception {
       new Expectations() {{
@@ -305,6 +536,12 @@ public final class CascadingParametersTest
       assertNotNull(sf.createSocket("unexpected", 8080));
    }
 
+   /**
+    * Record and verify one level deep.
+    *
+    * @param sf the sf
+    * @throws Exception the exception
+    */
    @Test
    public void recordAndVerifyOneLevelDeep(@Mocked final SocketFactory sf) throws Exception {
       final OutputStream out = new ByteArrayOutputStream();
@@ -314,6 +551,13 @@ public final class CascadingParametersTest
       assertSame(out, sf.createSocket().getOutputStream());
    }
 
+   /**
+    * Record and verify on two cascading mocks of the same type.
+    *
+    * @param sf1 the sf 1
+    * @param sf2 the sf 2
+    * @throws Exception the exception
+    */
    @Test
    public void recordAndVerifyOnTwoCascadingMocksOfTheSameType(
       @Mocked final SocketFactory sf1, @Mocked final SocketFactory sf2
@@ -335,6 +579,12 @@ public final class CascadingParametersTest
       }};
    }
 
+   /**
+    * Record and verify same invocation on mocks returned from invocations with different arguments.
+    *
+    * @param sf the sf
+    * @throws Exception the exception
+    */
    @Test
    public void recordAndVerifySameInvocationOnMocksReturnedFromInvocationsWithDifferentArguments(
       @Mocked final SocketFactory sf
@@ -360,11 +610,22 @@ public final class CascadingParametersTest
       }};
    }
 
+   /**
+    * Cascade on inherited method.
+    *
+    * @param sc the sc
+    */
    @Test
    public void cascadeOnInheritedMethod(@Mocked SocketChannel sc) {
       assertNotNull(sc.provider());
    }
 
+   /**
+    * Record and verify with mixed cascade levels.
+    *
+    * @param sf the sf
+    * @throws Exception the exception
+    */
    @Test
    public void recordAndVerifyWithMixedCascadeLevels(@Mocked final SocketFactory sf) throws Exception {
       new Expectations() {{
@@ -383,8 +644,22 @@ public final class CascadingParametersTest
 
    // Cascading other Java SE types ///////////////////////////////////////////////////////////////////////////////////
 
-   static class SomeClass { Future<Foo> doSomething() { return null; } }
+   /**
+    * The Class SomeClass.
+    */
+   static class SomeClass { /**
+  * Do something.
+  *
+  * @return the future
+  */
+ Future<Foo> doSomething() { return null; } }
 
+   /**
+    * Cascade A future.
+    *
+    * @param mock the mock
+    * @throws Exception the exception
+    */
    @Test
    public void cascadeAFuture(@Mocked SomeClass mock) throws Exception {
       Future<Foo> f = mock.doSomething();
@@ -395,6 +670,12 @@ public final class CascadingParametersTest
 
    // Other tests /////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Record expectation on cascaded mock.
+    *
+    * @param foo the foo
+    * @param mockBar the mock bar
+    */
    @Test
    public void recordExpectationOnCascadedMock(@Mocked Foo foo, @Mocked final Bar mockBar) {
       new Expectations() {{
@@ -405,6 +686,14 @@ public final class CascadingParametersTest
       assertEquals(123, bar.doSomething());
    }
 
+   /**
+    * Override two cascaded mocks of the same type.
+    *
+    * @param foo1 the foo 1
+    * @param foo2 the foo 2
+    * @param mockBar1 the mock bar 1
+    * @param mockBar2 the mock bar 2
+    */
    @Test
    public void overrideTwoCascadedMocksOfTheSameType(
       @Mocked final Foo foo1, @Mocked final Foo foo2, @Mocked final Bar mockBar1, @Mocked final Bar mockBar2
@@ -422,6 +711,14 @@ public final class CascadingParametersTest
       bar2.doSomething();
    }
 
+   /**
+    * Override two cascaded mocks of the same type but replay in different order.
+    *
+    * @param foo1 the foo 1
+    * @param foo2 the foo 2
+    * @param mockBar1 the mock bar 1
+    * @param mockBar2 the mock bar 2
+    */
    @Test(expected = MissingInvocation.class)
    public void overrideTwoCascadedMocksOfTheSameTypeButReplayInDifferentOrder(
       @Mocked final Foo foo1, @Mocked final Foo foo2, @Injectable final Bar mockBar1, @Mocked final Bar mockBar2
@@ -442,6 +739,11 @@ public final class CascadingParametersTest
       }};
    }
 
+   /**
+    * Cascaded enum.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadedEnum(@Mocked final Foo mock) {
       new Expectations() {{
@@ -451,6 +753,11 @@ public final class CascadingParametersTest
       assertEquals(AnEnum.Second, mock.getBar().getEnum());
    }
 
+   /**
+    * Cascaded enum returning consecutive values through result field.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadedEnumReturningConsecutiveValuesThroughResultField(@Mocked final Foo mock) {
       new Expectations() {{
@@ -465,6 +772,11 @@ public final class CascadingParametersTest
       assertSame(AnEnum.Third, mock.getBar().getEnum());
    }
 
+   /**
+    * Cascaded enum returning consecutive values through returns method.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadedEnumReturningConsecutiveValuesThroughReturnsMethod(@Mocked final Foo mock) {
       new Expectations() {{
@@ -477,6 +789,11 @@ public final class CascadingParametersTest
       assertSame(AnEnum.Third, mock.getBar().getEnum());
    }
 
+   /**
+    * Override last cascaded object with non mocked instance.
+    *
+    * @param foo the foo
+    */
    @Test
    public void overrideLastCascadedObjectWithNonMockedInstance(@Mocked final Foo foo) {
       final Date newDate = new Date(123);
@@ -491,6 +808,12 @@ public final class CascadingParametersTest
       assertEquals(123, newDate.getTime());
    }
 
+   /**
+    * Return declared mocked instance from multi level cascading.
+    *
+    * @param mockedDate the mocked date
+    * @param foo the foo
+    */
    @Test
    public void returnDeclaredMockedInstanceFromMultiLevelCascading(@Mocked Date mockedDate, @Mocked Foo foo) {
       Date newDate = new Date(123);
@@ -503,6 +826,12 @@ public final class CascadingParametersTest
       assertEquals(0, mockedDate.getTime());
    }
 
+   /**
+    * Return injectable mock instance from multi level cascading.
+    *
+    * @param mockDate the mock date
+    * @param foo the foo
+    */
    @Test
    public void returnInjectableMockInstanceFromMultiLevelCascading(@Injectable Date mockDate, @Mocked Foo foo) {
       Date newDate = new Date(123);
@@ -515,33 +844,97 @@ public final class CascadingParametersTest
       assertEquals(0, mockDate.getTime());
    }
 
-   static class Factory { static Factory create() { return null; } }
-   static class Client { OtherClient getOtherClient() { return null; } }
-   static class OtherClient { static final Factory F = Factory.create(); }
+   /**
+    * The Class Factory.
+    */
+   static class Factory { /**
+  * Creates the.
+  *
+  * @return the factory
+  */
+ static Factory create() { return null; } }
+   
+   /**
+    * The Class Client.
+    */
+   static class Client { 
+ /**
+  * Gets the other client.
+  *
+  * @return the other client
+  */
+ OtherClient getOtherClient() { return null; } }
+   
+   /**
+    * The Class OtherClient.
+    */
+   static class OtherClient { 
+ /** The Constant F. */
+ static final Factory F = Factory.create(); }
 
+   /**
+    * Cascade during static initialization of cascading class.
+    *
+    * @param mock1 the mock 1
+    * @param mock2 the mock 2
+    */
    @Test
    public void cascadeDuringStaticInitializationOfCascadingClass(@Mocked Factory mock1, @Mocked Client mock2) {
       assertNotNull(mock2.getOtherClient());
       assertNotNull(OtherClient.F);
    }
 
-   public interface LevelZero { Runnable getFoo(); }
+   /**
+    * The Interface LevelZero.
+    */
+   public interface LevelZero { /**
+  * Gets the foo.
+  *
+  * @return the foo
+  */
+ Runnable getFoo(); }
+   
+   /**
+    * The Interface LevelOne.
+    */
    public interface LevelOne extends LevelZero {}
+   
+   /**
+    * The Interface LevelTwo.
+    */
    public interface LevelTwo extends LevelOne {}
 
+   /**
+    * Creates the cascaded mock from method defined two levels up an interface hierarchy.
+    *
+    * @param mock the mock
+    */
    @Test
    public void createCascadedMockFromMethodDefinedTwoLevelsUpAnInterfaceHierarchy(@Mocked LevelTwo mock) {
       assertNotNull(mock.getFoo());
    }
 
+   /**
+    * The Class AbstractClass.
+    */
    public abstract class AbstractClass implements LevelZero {}
 
+   /**
+    * Cascade type returned from interface implemented by abstract class.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadeTypeReturnedFromInterfaceImplementedByAbstractClass(@Mocked AbstractClass mock) {
       Runnable foo = mock.getFoo();
       assertNotNull(foo);
    }
 
+   /**
+    * Produce different cascaded instances of same interface from different invocations.
+    *
+    * @param bar the bar
+    */
    @Test
    public void produceDifferentCascadedInstancesOfSameInterfaceFromDifferentInvocations(@Mocked Bar bar) {
       Baz cascaded1 = bar.getBaz(1);
@@ -552,6 +945,11 @@ public final class CascadingParametersTest
       assertNotSame(cascaded1, cascaded2);
    }
 
+   /**
+    * Cascade from java management API.
+    *
+    * @param mngmntFactory the mngmnt factory
+    */
    @Test
    public void cascadeFromJavaManagementAPI(@Mocked ManagementFactory mngmntFactory) {
       CompilationMXBean compilation = ManagementFactory.getCompilationMXBean();
@@ -560,8 +958,21 @@ public final class CascadingParametersTest
       assertNull(compilation.getName());
    }
 
-   public interface AnInterface { NonPublicTestedClass getPackagePrivateClass(); }
+   /**
+    * The Interface AnInterface.
+    */
+   public interface AnInterface { /**
+  * Gets the package private class.
+  *
+  * @return the package private class
+  */
+ NonPublicTestedClass getPackagePrivateClass(); }
 
+   /**
+    * Cascade from method in public interface returning package private type.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadeFromMethodInPublicInterfaceReturningPackagePrivateType(@Mocked AnInterface mock) {
       NonPublicTestedClass ret = mock.getPackagePrivateClass();
@@ -569,9 +980,27 @@ public final class CascadingParametersTest
       assertNull(ret);
    }
 
+   /**
+    * The Class CustomException.
+    */
    public static final class CustomException extends Throwable  {}
-   static class AClass { CustomException getException() { return new CustomException(); } }
+   
+   /**
+    * The Class AClass.
+    */
+   static class AClass { 
+ /**
+  * Gets the exception.
+  *
+  * @return the exception
+  */
+ CustomException getException() { return new CustomException(); } }
 
+   /**
+    * Cascade from method returning A throwable subclass.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadeFromMethodReturningAThrowableSubclass(@Mocked AClass mock) {
       CustomException t = mock.getException();
@@ -579,9 +1008,34 @@ public final class CascadingParametersTest
       assertNull(t);
    }
 
-   static class First { <T extends Second> T getSecond(@SuppressWarnings("unused") Class<T> aClass) { return null; } }
-   static class Second { Runnable getSomething() { return null; }}
+   /**
+    * The Class First.
+    */
+   static class First { /**
+  * Gets the second.
+  *
+  * @param <T> the generic type
+  * @param aClass the a class
+  * @return the second
+  */
+ <T extends Second> T getSecond(@SuppressWarnings("unused") Class<T> aClass) { return null; } }
+   
+   /**
+    * The Class Second.
+    */
+   static class Second { 
+ /**
+  * Gets the something.
+  *
+  * @return the something
+  */
+ Runnable getSomething() { return null; }}
 
+   /**
+    * Cascade from method returning type provided by class parameter then from cascaded instance.
+    *
+    * @param first the first
+    */
    @Test
    public void cascadeFromMethodReturningTypeProvidedByClassParameterThenFromCascadedInstance(@Mocked First first) {
       Second second = first.getSecond(Second.class);
@@ -590,18 +1044,67 @@ public final class CascadingParametersTest
       assertNotNull(runnable);
    }
 
+   /**
+    * The Interface SubInterfaceOfSomeCollectionType.
+    *
+    * @param <T> the generic type
+    */
    public interface SubInterfaceOfSomeCollectionType<T> extends List<T> {}
+   
+   /**
+    * The Interface IteratorSubInterface.
+    */
    public interface IteratorSubInterface extends Iterator<String> {}
+   
+   /**
+    * The Interface ComparatorSubInterface.
+    */
    public interface ComparatorSubInterface extends Comparator<Integer>, Serializable {}
+   
+   /**
+    * The Interface EnumerationSubInterface.
+    */
    public interface EnumerationSubInterface extends Enumeration<Object> {}
 
+   /**
+    * The Class AnotherClass.
+    */
    static class AnotherClass {
+      
+      /**
+       * Gets the list.
+       *
+       * @return the list
+       */
       SubInterfaceOfSomeCollectionType<?> getList() { return null; }
+      
+      /**
+       * Gets the iterator.
+       *
+       * @return the iterator
+       */
       IteratorSubInterface getIterator() { return null; }
+      
+      /**
+       * Gets the comparator.
+       *
+       * @return the comparator
+       */
       ComparatorSubInterface getComparator() { return null; }
+      
+      /**
+       * Gets the enumeration.
+       *
+       * @return the enumeration
+       */
       EnumerationSubInterface getEnumeration() { return null; }
    }
 
+   /**
+    * Return null from mocked method returning subtype of unmockable type.
+    *
+    * @param mock the mock
+    */
    @Test
    public void returnNullFromMockedMethodReturningSubtypeOfUnmockableType(@Mocked AnotherClass mock) {
       List<?> l = mock.getList();
@@ -609,6 +1112,11 @@ public final class CascadingParametersTest
       assertNull(l);
    }
 
+   /**
+    * Mock method returning user defined subtypes of unmockable JRE interfaces.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockMethodReturningUserDefinedSubtypesOfUnmockableJREInterfaces(@Mocked AnotherClass mock) {
       assertNull(mock.getIterator());

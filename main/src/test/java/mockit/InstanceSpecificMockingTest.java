@@ -10,26 +10,69 @@ import org.junit.Test;
 import org.junit.runner.*;
 import org.junit.runners.*;
 
+/**
+ * The Class InstanceSpecificMockingTest.
+ */
 public final class InstanceSpecificMockingTest
 {
+   
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /** The value. */
       protected final int value;
 
+      /**
+       * Instantiates a new collaborator.
+       */
       Collaborator() { value = -1; }
+      
+      /**
+       * Instantiates a new collaborator.
+       *
+       * @param value the value
+       */
       Collaborator(int value) { this.value = value; }
 
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       int getValue() { return value; }
 
+      /**
+       * Simple operation.
+       *
+       * @param a the a
+       * @param b the b
+       * @param c the c
+       * @return true, if successful
+       */
       @SuppressWarnings("unused")
       final boolean simpleOperation(int a, String b, Date c) { return true; }
 
+      /**
+       * Do something.
+       *
+       * @param b the b
+       * @param s the s
+       */
       @SuppressWarnings("unused")
       static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
    }
 
+   /** The previous instance. */
    final Collaborator previousInstance = new Collaborator();
+   
+   /** The mock. */
    @Injectable Collaborator mock;
 
+   /**
+    * Exercise injected instance during replay only.
+    */
    @Test
    public void exerciseInjectedInstanceDuringReplayOnly() {
       assertThatPreviouslyCreatedInstanceIsNotMocked();
@@ -41,12 +84,18 @@ public final class InstanceSpecificMockingTest
       assertThatNewlyCreatedInstanceIsNotMocked();
    }
 
+   /**
+    * Assert that previously created instance is not mocked.
+    */
    void assertThatPreviouslyCreatedInstanceIsNotMocked() {
       assertEquals(-1, previousInstance.value);
       assertEquals(-1, previousInstance.getValue());
       assertTrue(previousInstance.simpleOperation(1, "test", null));
    }
 
+   /**
+    * Assert that newly created instance is not mocked.
+    */
    void assertThatNewlyCreatedInstanceIsNotMocked() {
       Collaborator newInstance = new Collaborator();
       assertEquals(-1, newInstance.value);
@@ -54,6 +103,9 @@ public final class InstanceSpecificMockingTest
       assertTrue(newInstance.simpleOperation(1, "test", null));
    }
 
+   /**
+    * Mock specific instance.
+    */
    @Test
    public void mockSpecificInstance() {
       new Expectations() {{
@@ -73,6 +125,11 @@ public final class InstanceSpecificMockingTest
       catch (IllegalStateException ignore) {}
    }
 
+   /**
+    * Use A second mock instance of the same type.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void useASecondMockInstanceOfTheSameType(@Injectable final Collaborator mock2) {
       assertThatPreviouslyCreatedInstanceIsNotMocked();
@@ -94,6 +151,11 @@ public final class InstanceSpecificMockingTest
 
    // Injectable mocks of unusual types ///////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Allow injectable mock of interface type.
+    *
+    * @param runnable the runnable
+    */
    @Test
    public void allowInjectableMockOfInterfaceType(@Injectable final Runnable runnable) {
       runnable.run();
@@ -102,6 +164,11 @@ public final class InstanceSpecificMockingTest
       new Verifications() {{ runnable.run(); minTimes = 1; maxTimes = 2; }};
    }
 
+   /**
+    * Allow injectable mock of annotation type.
+    *
+    * @param runWith the run with
+    */
    @Test
    public void allowInjectableMockOfAnnotationType(@Injectable final RunWith runWith) {
       new Expectations() {{ runWith.value(); result = BlockJUnit4ClassRunner.class; }};
@@ -111,6 +178,11 @@ public final class InstanceSpecificMockingTest
 
    // Mocking java.nio.ByteBuffer /////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Mock byte buffer as injectable.
+    *
+    * @param buf the buf
+    */
    @Test
    public void mockByteBufferAsInjectable(@Injectable final ByteBuffer buf) {
       ByteBuffer realBuf = ByteBuffer.allocateDirect(10);
@@ -128,6 +200,11 @@ public final class InstanceSpecificMockingTest
       buf.put("Test".getBytes());
    }
 
+   /**
+    * Mock byte buffer regularly.
+    *
+    * @param mockBuffer the mock buffer
+    */
    // TODO JWL 10/30/2022 Test is very flaky, ignore it
    @Ignore
    @Test
@@ -139,6 +216,11 @@ public final class InstanceSpecificMockingTest
       new Verifications() {{ ByteBuffer.allocateDirect(anyInt); }};
    }
 
+   /**
+    * Mock byte buffer as cascading.
+    *
+    * @param unused the unused
+    */
    // TODO JWL 10/30/2022 Test is very flaky, ignore it
    @Ignore
    @Test
@@ -148,8 +230,21 @@ public final class InstanceSpecificMockingTest
       assertEquals(0, cascadedBuf.capacity());
    }
 
-   static class BufferFactory { ByteBuffer createBuffer() { return null; } }
+   /**
+    * A factory for creating Buffer objects.
+    */
+   static class BufferFactory { /**
+  * Creates a new Buffer object.
+  *
+  * @return the byte buffer
+  */
+ ByteBuffer createBuffer() { return null; } }
 
+   /**
+    * Mock byte buffer as cascaded mock.
+    *
+    * @param cascadingMock the cascading mock
+    */
    @Test
    public void mockByteBufferAsCascadedMock(@Mocked BufferFactory cascadingMock) {
       ByteBuffer realBuf1 = ByteBuffer.allocateDirect(10);
@@ -164,10 +259,22 @@ public final class InstanceSpecificMockingTest
 
    // Mocking java.io.InputStream /////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * The Class ConcatenatingInputStream.
+    */
    public static final class ConcatenatingInputStream extends InputStream {
+      
+      /** The sequential inputs. */
       private final Queue<InputStream> sequentialInputs;
+      
+      /** The current input. */
       private InputStream currentInput;
 
+      /**
+       * Instantiates a new concatenating input stream.
+       *
+       * @param sequentialInputs the sequential inputs
+       */
       public ConcatenatingInputStream(InputStream... sequentialInputs) {
          this.sequentialInputs = new LinkedList<>(Arrays.asList(sequentialInputs));
          currentInput = this.sequentialInputs.poll();
@@ -189,6 +296,13 @@ public final class InstanceSpecificMockingTest
       }
    }
 
+   /**
+    * Concatenate input streams.
+    *
+    * @param input1 the input 1
+    * @param input2 the input 2
+    * @throws Exception the exception
+    */
    @Test
    public void concatenateInputStreams(@Injectable final InputStream input1, @Injectable final InputStream input2) throws Exception {
       new Expectations() {{

@@ -7,23 +7,71 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class FakeInvocationProceedTest.
+ */
 public final class FakeInvocationProceedTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class BaseClassToBeFaked.
+    */
    public static class BaseClassToBeFaked {
+      
+      /** The name. */
       protected String name;
 
+      /**
+       * Base method.
+       *
+       * @param i the i
+       * @return the int
+       */
       public final int baseMethod(int i) { return i + 1; }
+      
+      /**
+       * Method to be faked.
+       *
+       * @param i the i
+       * @return the int
+       */
       protected int methodToBeFaked(int i) { return i; }
    }
 
+   /**
+    * The Class ClassToBeFaked.
+    */
    public static class ClassToBeFaked extends BaseClassToBeFaked {
+      
+      /**
+       * Instantiates a new class to be faked.
+       */
       public ClassToBeFaked() { name = ""; }
+      
+      /**
+       * Instantiates a new class to be faked.
+       *
+       * @param name the name
+       */
       public ClassToBeFaked(String name) { this.name = name; }
 
+      /**
+       * Method to be faked.
+       *
+       * @return true, if successful
+       */
       public boolean methodToBeFaked() { return true; }
 
+      /**
+       * Method to be faked.
+       *
+       * @param i the i
+       * @param args the args
+       * @return the int
+       */
       protected int methodToBeFaked(int i, Object... args) {
          int result = i;
 
@@ -34,15 +82,35 @@ public final class FakeInvocationProceedTest
          return result;
       }
 
+      /**
+       * Another method to be faked.
+       *
+       * @param s the s
+       * @param b the b
+       * @param ints the ints
+       * @return the string
+       */
       public String anotherMethodToBeFaked(String s, boolean b, List<Integer> ints) {
          return (b ? s.toUpperCase() : s.toLowerCase()) + ints;
       }
 
+      /**
+       * Static method to be faked.
+       *
+       * @return true, if successful
+       * @throws FileNotFoundException the file not found exception
+       */
       public static boolean staticMethodToBeFaked() throws FileNotFoundException { throw new FileNotFoundException(); }
 
+      /**
+       * Native method.
+       */
       protected static native void nativeMethod();
    }
 
+   /**
+    * Proceed from fake method without parameters.
+    */
    @Test
    public void proceedFromFakeMethodWithoutParameters() {
       new MockUp<ClassToBeFaked>() {
@@ -52,6 +120,9 @@ public final class FakeInvocationProceedTest
       assertTrue(new ClassToBeFaked().methodToBeFaked());
    }
 
+   /**
+    * Proceed from fake method with parameters.
+    */
    @Test
    public void proceedFromFakeMethodWithParameters() {
       new MockUp<ClassToBeFaked>() {
@@ -71,6 +142,9 @@ public final class FakeInvocationProceedTest
       assertEquals(7, faked.methodToBeFaked(3, "Test", new Object(), null, 45));
    }
 
+   /**
+    * Proceed conditionally from fake method.
+    */
    @Test
    public void proceedConditionallyFromFakeMethod() {
       new MockUp<ClassToBeFaked>() {
@@ -98,6 +172,11 @@ public final class FakeInvocationProceedTest
       assertEquals("No proceed", mocked.anotherMethodToBeFaked("No proceed", false, null));
    }
 
+   /**
+    * Proceed from fake method which throws checked exception.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void proceedFromFakeMethodWhichThrowsCheckedException() throws Exception {
       new MockUp<ClassToBeFaked>() {
@@ -117,6 +196,9 @@ public final class FakeInvocationProceedTest
       ClassToBeFaked.staticMethodToBeFaked();
    }
 
+   /**
+    * Proceed from fake method into real method with modified arguments.
+    */
    @Test
    public void proceedFromFakeMethodIntoRealMethodWithModifiedArguments() {
       class FakeWhichModifiesArguments extends MockUp<ClassToBeFaked> {
@@ -137,6 +219,9 @@ public final class FakeInvocationProceedTest
       assertEquals(3, faked.methodToBeFaked(-2, null, "Abc", true, 'a'));
    }
 
+   /**
+    * Cannot proceed from fake method into native method.
+    */
    @Test
    public void cannotProceedFromFakeMethodIntoNativeMethod() {
       new MockUp<ClassToBeFaked>() {
@@ -154,6 +239,9 @@ public final class FakeInvocationProceedTest
       ClassToBeFaked.nativeMethod();
    }
 
+   /**
+    * Proceed from fake method into constructor.
+    */
    @Test
    public void proceedFromFakeMethodIntoConstructor() {
       new MockUp<ClassToBeFaked>() {
@@ -168,6 +256,9 @@ public final class FakeInvocationProceedTest
       assertEquals("", obj.name);
    }
 
+   /**
+    * Proceed conditionally from fake method into constructor.
+    */
    @Test
    public void proceedConditionallyFromFakeMethodIntoConstructor() {
       new MockUp<ClassToBeFaked>() {
@@ -185,6 +276,9 @@ public final class FakeInvocationProceedTest
       assertNull(new ClassToBeFaked("do not proceed").name);
    }
 
+   /**
+    * Proceed conditionally from fake method into JRE constructor.
+    */
    @Test
    public void proceedConditionallyFromFakeMethodIntoJREConstructor() {
       new MockUp<File>() {
@@ -200,6 +294,9 @@ public final class FakeInvocationProceedTest
       assertNull(new File("do not proceed").getPath());
    }
 
+   /**
+    * Proceed from fake method into method inherited from base class.
+    */
    @Test
    public void proceedFromFakeMethodIntoMethodInheritedFromBaseClass() {
       new MockUp<ClassToBeFaked>() {

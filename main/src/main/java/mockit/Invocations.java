@@ -330,6 +330,7 @@ class Invocations
     */
    protected int maxTimes;
 
+   /** The current phase. */
    @SuppressWarnings("NullableProblems") @Nonnull TestOnlyPhase currentPhase;
 
    /**
@@ -352,10 +353,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param objectWithDelegateMethod an instance of a class defining a single non-<code>private</code> delegate method
-    *
     * @return the default primitive value corresponding to <code>T</code> if it's a primitive wrapper type, or <code>null</code> otherwise
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nullable
@@ -380,6 +380,11 @@ class Invocations
       return DefaultValues.computeForWrapperType(parameterType);
    }
 
+   /**
+    * Adds the matcher.
+    *
+    * @param matcher the matcher
+    */
    private void addMatcher(@Nonnull ArgumentMatcher<?> matcher) {
       currentPhase.addArgMatcher(matcher);
    }
@@ -398,10 +403,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param arg an arbitrary value which will match any argument value in the replay phase
-    *
     * @return the input argument
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -435,10 +439,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param valueHolderForMultipleInvocations list into which the arguments received by matching invocations will be added
-    *
     * @return the default value for type <code>T</code>
-    *
     * @see Verifications#withCapture()
     * @see Verifications#withCapture(Object)
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withCapture" target="tutorial">Tutorial</a>
@@ -468,10 +471,9 @@ class Invocations
     * Only when specifying values for a <em>varargs</em> method it's useful, and even then only when some other argument matcher is also
     * used.
     *
+    * @param <T> the generic type
     * @param arg the expected argument value
-    *
     * @return the given argument
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -540,10 +542,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param object an instance of the desired class
-    *
     * @return the given instance
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -562,10 +563,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param argClass the desired class
-    *
     * @return always <code>null</code>; if you need a specific return value, use {@link #withInstanceLike(Object)}
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nullable
@@ -584,10 +584,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param arg an arbitrary value, but different from the ones expected to occur during replay
-    *
     * @return the given argument value
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -606,8 +605,8 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @return always <code>null</code>
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nullable
@@ -626,8 +625,8 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @return always <code>null</code>
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nullable
@@ -647,10 +646,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param object the desired instance
-
     * @return the given object
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -670,10 +668,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param text an arbitrary non-null textual value
-    *
     * @return the given text
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -692,10 +689,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param text an arbitrary non-null textual value
-    *
     * @return the given text
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -714,10 +710,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param text an arbitrary non-null textual value
-    *
     * @return the given text
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */
    @Nonnull
@@ -739,10 +734,9 @@ class Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @param regex an arbitrary (non-null) regular expression against which textual argument values will be matched
-    *
     * @return the given regex
-    *
     * @see Pattern#compile(String, int)
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withMethods" target="tutorial">Tutorial</a>
     */

@@ -26,8 +26,14 @@ import mockit.internal.*;
  */
 public class Invocation
 {
+   
+   /** The invoked instance. */
    @Nullable private final Object invokedInstance;
+   
+   /** The invoked arguments. */
    @Nonnull private final Object[] invokedArguments;
+   
+   /** The invocation count. */
    @Nonnegative private final int invocationCount;
 
    /**
@@ -57,6 +63,9 @@ public class Invocation
 
    /**
     * Returns the <code>Method</code> or <code>Constructor</code> object corresponding to the target method or constructor, respectively.
+    *
+    * @param <M> the generic type
+    * @return the invoked member
     */
    @Nonnull
    public final <M extends Member> M getInvokedMember() {
@@ -66,12 +75,16 @@ public class Invocation
 
    /**
     * Returns the actual argument values passed in the invocation to the target method/constructor.
+    *
+    * @return the invoked arguments
     */
    @Nonnull
    public final Object[] getInvokedArguments() { return invokedArguments; }
 
    /**
     * Returns the current invocation count. The first invocation starts at 1 (one).
+    *
+    * @return the invocation count
     */
    @Nonnegative
    public final int getInvocationCount() { return invocationCount; }
@@ -79,6 +92,8 @@ public class Invocation
    /**
     * Returns the index for the current invocation. The first invocation starts at 0 (zero).
     * Note that this is equivalent to {@link #getInvocationCount()} - 1.
+    *
+    * @return the invocation index
     */
    public final int getInvocationIndex() { return invocationCount - 1; }
 
@@ -95,17 +110,14 @@ public class Invocation
     * Contrary to proceeding into a method, it's not possible to actually execute test code inside the delegate or fake method after
     * proceeding into the real constructor, nor to proceed into it more than once.
     *
+    * @param <T> the return type of the target method
     * @param replacementArguments the argument values to be passed to the real method, as replacement for the values received by the
     *                             delegate or fake method; if those received values should be passed without replacement, then this method
     *                             should be called with no values
-    * @param <T> the return type of the target method
-    *
     * @return the same value returned by the target method, if any
-    *
     * @throws UnsupportedOperationException if attempting to proceed into a target method which does not belong to an
     * {@linkplain Injectable injectable mocked type} nor to a {@linkplain Expectations#Expectations(Object...) partially mocked object},
     * into a <code>native</code> method, or into an interface or abstract method
-    *
     * @see <a href="http://jmockit.github.io/tutorial/Faking.html#proceed" target="tutorial">Tutorial</a>
     */
    @Nullable

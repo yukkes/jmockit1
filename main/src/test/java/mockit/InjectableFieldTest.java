@@ -5,20 +5,70 @@ import java.util.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+/**
+ * The Class InjectableFieldTest.
+ */
 public final class InjectableFieldTest
 {
-   static class Base { protected int getValue() { return 1; } }
+   
+   /**
+    * The Class Base.
+    */
+   static class Base { 
+ /**
+  * Gets the value.
+  *
+  * @return the value
+  */
+ protected int getValue() { return 1; } }
 
+   /**
+    * The Class Foo.
+    */
    static class Foo extends Base {
+      
+      /**
+       * Do something.
+       *
+       * @param s the s
+       */
       void doSomething(String s) { throw new RuntimeException(s); }
+      
+      /**
+       * Gets the another value.
+       *
+       * @return the another value
+       */
       int getAnotherValue() { return 2; }
+      
+      /**
+       * Gets the boolean value.
+       *
+       * @return the boolean value
+       */
       Boolean getBooleanValue() { return true; }
+      
+      /**
+       * Gets the list.
+       *
+       * @return the list
+       */
       final List<Integer> getList() { return null; }
+      
+      /**
+       * Do something else.
+       *
+       * @return the string
+       */
       static String doSomethingElse() { return ""; }
    }
 
+   /** The foo. */
    @Injectable Foo foo;
 
+   /**
+    * Record common expectations.
+    */
    @Before
    public void recordCommonExpectations() {
       new Expectations() {{
@@ -32,6 +82,9 @@ public final class InjectableFieldTest
       assertEquals(2, new Foo().getAnotherValue());
    }
 
+   /**
+    * Cascade one level.
+    */
    @Test
    public void cascadeOneLevel() {
       try {
@@ -49,6 +102,9 @@ public final class InjectableFieldTest
       foo.doSomething("test");
    }
 
+   /**
+    * Override expectation recorded in before method.
+    */
    @Test
    public void overrideExpectationRecordedInBeforeMethod() {
       new Expectations() {{ foo.getAnotherValue(); result = 45; }};
@@ -57,6 +113,9 @@ public final class InjectableFieldTest
       foo.doSomething("sdf");
    }
 
+   /**
+    * Partially mock instance without affecting injectable instances.
+    */
    @Test
    public void partiallyMockInstanceWithoutAffectingInjectableInstances() {
       final Foo localFoo = new Foo();
@@ -73,10 +132,18 @@ public final class InjectableFieldTest
       foo.doSomething("");
    }
 
+   /** The primitive int. */
    @Injectable int primitiveInt = 123;
+   
+   /** The wrapper int. */
    @Injectable Integer wrapperInt = 45;
+   
+   /** The string. */
    @Injectable String string = "Abc";
 
+   /**
+    * Use non mockable injectables with values provided through field assignment.
+    */
    @Test
    public void useNonMockableInjectablesWithValuesProvidedThroughFieldAssignment() {
       assertEquals(123, primitiveInt);
@@ -84,11 +151,21 @@ public final class InjectableFieldTest
       assertEquals("Abc", string);
    }
 
+   /** The default int. */
    @Injectable int defaultInt;
+   
+   /** The null integer. */
    @Injectable Integer nullInteger;
+   
+   /** The null string. */
    @Injectable String nullString;
+   
+   /** The empty string. */
    @Injectable String emptyString = "";
 
+   /**
+    * Use null and empty injectables of non mockable types.
+    */
    @Test
    public void useNullAndEmptyInjectablesOfNonMockableTypes() {
       assertEquals(0, defaultInt);

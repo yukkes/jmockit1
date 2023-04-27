@@ -5,10 +5,18 @@ import javax.inject.*;
 import org.junit.*;
 import org.junit.rules.*;
 
+/**
+ * The Class TestedFieldWithFailedFullDITest.
+ */
 public final class TestedFieldWithFailedFullDITest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * Configure expected exception.
+    */
    @Before
    public void configureExpectedException() {
       thrown.expect(IllegalStateException.class);
@@ -19,14 +27,35 @@ public final class TestedFieldWithFailedFullDITest
       thrown.expectMessage("of @Tested object \"" + ClassWithFieldOfClassHavingParameterizedConstructor.class.getSimpleName() + " tested");
    }
 
-   static class ClassWithFieldOfClassHavingParameterizedConstructor { @Inject ClassWithParameterizedConstructor dependency; }
-   static class ClassWithParameterizedConstructor { ClassWithParameterizedConstructor(@SuppressWarnings("unused") int value) {} }
+   /**
+    * The Class ClassWithFieldOfClassHavingParameterizedConstructor.
+    */
+   static class ClassWithFieldOfClassHavingParameterizedConstructor { /** The dependency. */
+ @Inject ClassWithParameterizedConstructor dependency; }
+   
+   /**
+    * The Class ClassWithParameterizedConstructor.
+    */
+   static class ClassWithParameterizedConstructor { 
+ /**
+  * Instantiates a new class with parameterized constructor.
+  *
+  * @param value the value
+  */
+ ClassWithParameterizedConstructor(@SuppressWarnings("unused") int value) {} }
 
+   /** The tested. */
    @Tested(fullyInitialized = true) ClassWithFieldOfClassHavingParameterizedConstructor tested;
 
+   /**
+    * Attempt to use tested object whose creation failed due to injectable with null value.
+    */
    @Test
    public void attemptToUseTestedObjectWhoseCreationFailedDueToInjectableWithNullValue() {}
 
+   /**
+    * Attempt to use tested object whose creation failed due to injectable with null value 2.
+    */
    @Test
    public void attemptToUseTestedObjectWhoseCreationFailedDueToInjectableWithNullValue2() {}
 }

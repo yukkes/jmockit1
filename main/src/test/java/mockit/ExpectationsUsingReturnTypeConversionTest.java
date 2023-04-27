@@ -15,43 +15,210 @@ import static org.junit.Assume.*;
 
 import static mockit.internal.util.Utilities.*;
 
+/**
+ * The Class ExpectationsUsingReturnTypeConversionTest.
+ */
 @SuppressWarnings("Since15")
 public final class ExpectationsUsingReturnTypeConversionTest
 {
+   
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /**
+       * Gets the int.
+       *
+       * @return the int
+       */
       int getInt() { return -1; }
+      
+      /**
+       * Gets the integer.
+       *
+       * @return the integer
+       */
       Integer getInteger() { return -1; }
+      
+      /**
+       * Gets the short.
+       *
+       * @return the short
+       */
       short getShort() { return -1; }
+      
+      /**
+       * Gets the short wrapper.
+       *
+       * @return the short wrapper
+       */
       Short getShortWrapper() { return -1; }
+      
+      /**
+       * Gets the long.
+       *
+       * @return the long
+       */
       long getLong() { return -1; }
+      
+      /**
+       * Gets the long wrapper.
+       *
+       * @return the long wrapper
+       */
       Long getLongWrapper() { return -1L; }
+      
+      /**
+       * Gets the byte.
+       *
+       * @return the byte
+       */
       byte getByte() { return -1; }
+      
+      /**
+       * Gets the byte wrapper.
+       *
+       * @return the byte wrapper
+       */
       Byte getByteWrapper() { return -1; }
+      
+      /**
+       * Gets the float.
+       *
+       * @return the float
+       */
       float getFloat() { return -1.0F; }
+      
+      /**
+       * Gets the float wrapper.
+       *
+       * @return the float wrapper
+       */
       Float getFloatWrapper() { return -1.0F; }
+      
+      /**
+       * Gets the double.
+       *
+       * @return the double
+       */
       double getDouble() { return -1.0; }
+      
+      /**
+       * Gets the double wrapper.
+       *
+       * @return the double wrapper
+       */
       Double getDoubleWrapper() { return -1.0; }
+      
+      /**
+       * Gets the char.
+       *
+       * @return the char
+       */
       char getChar() { return '1'; }
+      
+      /**
+       * Gets the character.
+       *
+       * @return the character
+       */
       Character getCharacter() { return '1'; }
+      
+      /**
+       * Gets the boolean.
+       *
+       * @return the boolean
+       */
       boolean getBoolean() { return true; }
+      
+      /**
+       * Gets the boolean wrapper.
+       *
+       * @return the boolean wrapper
+       */
       Boolean getBooleanWrapper() { return Boolean.TRUE; }
 
+      /**
+       * Gets the string builder.
+       *
+       * @return the string builder
+       */
       StringBuilder getStringBuilder() { return null; }
+      
+      /**
+       * Gets the input stream.
+       *
+       * @return the input stream
+       */
       InputStream getInputStream() { return null; }
+      
+      /**
+       * Gets the byte array input stream.
+       *
+       * @return the byte array input stream
+       */
       ByteArrayInputStream getByteArrayInputStream() { return null; }
+      
+      /**
+       * Gets the byte array.
+       *
+       * @return the byte array
+       */
       byte[] getByteArray() { return null; }
+      
+      /**
+       * Gets the reader.
+       *
+       * @return the reader
+       */
       Reader getReader() { return null; }
+      
+      /**
+       * Gets the string reader.
+       *
+       * @return the string reader
+       */
       StringReader getStringReader() { return null; }
 
+      /**
+       * Gets the big decimal.
+       *
+       * @return the big decimal
+       */
       BigDecimal getBigDecimal() { return null; }
+      
+      /**
+       * Gets the big integer.
+       *
+       * @return the big integer
+       */
       BigInteger getBigInteger() { return null; }
+      
+      /**
+       * Gets the atomic integer.
+       *
+       * @return the atomic integer
+       */
       AtomicInteger getAtomicInteger() { return null; }
+      
+      /**
+       * Gets the atomic long.
+       *
+       * @return the atomic long
+       */
       AtomicLong getAtomicLong() { return null; }
    }
 
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
+   
+   /** The mock. */
    @Mocked Collaborator mock;
 
+   /**
+    * Attempt to return value not compatible with primitive return type.
+    */
    @Test
    public void attemptToReturnValueNotCompatibleWithPrimitiveReturnType() {
       thrown.expect(IllegalArgumentException.class);
@@ -61,6 +228,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       new Expectations() {{ mock.getInt(); result = "test"; }};
    }
 
+   /**
+    * Attempt to return value not compatible with primitive wrapper return type.
+    */
    @Test
    public void attemptToReturnValueNotCompatibleWithPrimitiveWrapperReturnType() {
       thrown.expect(IllegalArgumentException.class);
@@ -70,6 +240,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       new Expectations() {{ mock.getFloatWrapper(); result = true; }};
    }
 
+   /**
+    * Attempt to return value not compatible with boolean return type.
+    */
    @Test
    public void attemptToReturnValueNotCompatibleWithBooleanReturnType() {
       thrown.expect(IllegalArgumentException.class);
@@ -79,6 +252,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       new Expectations() {{ mock.getBoolean(); result = 123; }};
    }
 
+   /**
+    * Attempt to return value not compatible with boolean wrapper return type.
+    */
    @Test
    public void attemptToReturnValueNotCompatibleWithBooleanWrapperReturnType() {
       thrown.expect(IllegalArgumentException.class);
@@ -88,6 +264,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       new Expectations() {{ mock.getBooleanWrapper(); result = 'a'; }};
    }
 
+   /**
+    * Attempt to return value of reference type not assignable to return type.
+    */
    @Test
    public void attemptToReturnValueOfReferenceTypeNotAssignableToReturnType() {
       thrown.expect(IllegalArgumentException.class);
@@ -97,6 +276,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       new Expectations() {{ mock.getInputStream(); result = mock; }};
    }
 
+   /**
+    * Convert number value to wider numerical return type.
+    */
    @Test
    public void convertNumberValueToWiderNumericalReturnType() {
       new Expectations() {{
@@ -131,6 +313,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertEquals('0', mock.getCharacter().charValue());
    }
 
+   /**
+    * Convert number value to narrower numerical return type when the actual value fits the return type.
+    */
    @Test
    public void convertNumberValueToNarrowerNumericalReturnTypeWhenTheActualValueFitsTheReturnType() {
       new Expectations() {{
@@ -159,6 +344,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertEquals('0', mock.getCharacter().charValue());
    }
 
+   /**
+    * Convert number value to narrower numerical return type when the actual value does not fit the return type.
+    */
    @Test @SuppressWarnings({"NumericCastThatLosesPrecision", "CharUsedInArithmeticContext"})
    public void convertNumberValueToNarrowerNumericalReturnTypeWhenTheActualValueDoesNotFitTheReturnType() {
       new Expectations() {{
@@ -186,6 +374,11 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertEquals(0, mock.getCharacter().charValue());
    }
 
+   /**
+    * Convert recorded textual result for methods with eligible return types.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void convertRecordedTextualResultForMethodsWithEligibleReturnTypes() throws Exception {
       assertNull(mock.getStringBuilder());
@@ -221,6 +414,9 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertArrayEquals(text.toCharArray(), cbuf);
    }
 
+   /**
+    * Convert textual and numerical results to number subtypes.
+    */
    @Test
    public void convertTextualAndNumericalResultsToNumberSubtypes() {
       assertNull(mock.getBigDecimal());
@@ -245,11 +441,31 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertEquals(12345L, mock.getAtomicLong().longValue());
    }
 
+   /**
+    * The Class Java8Collaborator.
+    */
    static class Java8Collaborator {
+      
+      /**
+       * Gets the optional value.
+       *
+       * @return the optional value
+       */
       Optional<String> getOptionalValue() { return Optional.empty(); }
+      
+      /**
+       * Gets the stream.
+       *
+       * @return the stream
+       */
       Stream<String> getStream() { return null; }
    }
 
+   /**
+    * Convert value to optional of value.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void convertValueToOptionalOfValue(@Mocked final Java8Collaborator mock2) {
       assumeTrue(JAVA8);
@@ -261,6 +477,11 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertEquals("Test", value.get());
    }
 
+   /**
+    * Convert single value to stream.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void convertSingleValueToStream(@Mocked final Java8Collaborator mock2) {
       assumeTrue(JAVA8);
@@ -272,6 +493,11 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertFalse(values.hasNext());
    }
 
+   /**
+    * Convert collection to stream.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void convertCollectionToStream(@Mocked final Java8Collaborator mock2) {
       assumeTrue(JAVA8);
@@ -282,6 +508,11 @@ public final class ExpectationsUsingReturnTypeConversionTest
       assertEquals(2, values.count());
    }
 
+   /**
+    * Convert array to stream.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void convertArrayToStream(@Mocked final Java8Collaborator mock2) {
       assumeTrue(JAVA8);

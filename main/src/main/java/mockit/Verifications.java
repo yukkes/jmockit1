@@ -53,6 +53,12 @@ public class Verifications extends Invocations
     */
    protected Verifications() { this(false, (Object[]) null); }
 
+   /**
+    * Instantiates a new verifications.
+    *
+    * @param inOrder the in order
+    * @param mockedTypesAndInstancesToVerify the mocked types and instances to verify
+    */
    Verifications(boolean inOrder, @Nullable Object... mockedTypesAndInstancesToVerify) {
       RecordAndReplayExecution instance = TestRun.getRecordAndReplayForVerifications();
       currentPhase = instance.startVerifications(inOrder, mockedTypesAndInstancesToVerify);
@@ -65,7 +71,7 @@ public class Verifications extends Invocations
     * For example:
     * <pre>{@code
     * codeUnderTest.doSomething();
-    *
+    * 
     * new Verifications() {{
     *    String <strong>name</strong>;
     *    int <strong>age</strong>;
@@ -84,8 +90,8 @@ public class Verifications extends Invocations
     * In the special case of a varargs method, however, this flexibility is not available: if a matcher is used for any regular parameter,
     * or for any element in the varargs array, then a matcher <em>must</em> be used for every other parameter and varargs element.
     *
+    * @param <T> the generic type
     * @return the captured argument value
-    *
     * @see #withCapture(List)
     * @see #withCapture(Object)
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withCapture" target="tutorial">Tutorial</a>
@@ -103,23 +109,22 @@ public class Verifications extends Invocations
     * For example:
     * <pre>{@code
     * codeUnderTest.doSomething();
-    *
+    * 
     * new Verifications() {{
     *    <strong>List<Person> newPersons = withCapture(new Person());</strong>
     *    Person newPerson = newPersons.get(0);
-    *
+    * 
     *    Person personCreated;
     *    personDAOMock.create(personCreated = withCapture());
-    *
+    * 
     *    assertSame(newPerson, personCreated);
     * }};
     * }</pre>
     * Note this is not meant be used as an argument matcher.
     *
+    * @param <T> the generic type
     * @param constructorVerification a new instance of the desired mocked class, created through a regular constructor verification
-    *
     * @return a list with the (zero, one, or more) captured new instances that match the verified constructor invocation
-    *
     * @see #withCapture()
     * @see #withCapture(List)
     * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#withCapture" target="tutorial">Tutorial</a>

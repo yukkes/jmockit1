@@ -4,10 +4,18 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * The Class TestedFieldWithFailedConstructorDITest.
+ */
 public final class TestedFieldWithFailedConstructorDITest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * Configure expected exception.
+    */
    @Before
    public void configureExpectedException() {
       thrown.expect(IllegalArgumentException.class);
@@ -15,14 +23,33 @@ public final class TestedFieldWithFailedConstructorDITest
       thrown.expectMessage("ClassWithOneParameter(Integer value)");
    }
 
+   /**
+    * The Class ClassWithOneParameter.
+    */
    static class ClassWithOneParameter {
+      
+      /** The value. */
       Integer value;
+      
+      /**
+       * Instantiates a new class with one parameter.
+       *
+       * @param value the value
+       */
       ClassWithOneParameter(Integer value) { this.value = value; }
    }
 
+   /** The tested. */
    @Tested ClassWithOneParameter tested;
+   
+   /** The foo. */
    @Injectable Integer foo;
 
+   /**
+    * Attempt to use tested object whose creation failed due to injectable without A value.
+    *
+    * @param s the s
+    */
    @Test
    public void attemptToUseTestedObjectWhoseCreationFailedDueToInjectableWithoutAValue(@Injectable String s) {
       assertEquals("", s);

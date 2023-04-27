@@ -5,12 +5,30 @@ import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class FakeForGenericsTest.
+ */
 public final class FakeForGenericsTest
 {
+   
+   /**
+    * The Class Collaborator.
+    */
    public static final class Collaborator {
+      
+      /**
+       * Generic method.
+       *
+       * @param <N> the number type
+       * @param n the n
+       * @return the n
+       */
       public <N extends Number> N genericMethod(@SuppressWarnings("UnusedParameters") N n) { return null; }
    }
 
+   /**
+    * Fake generic method.
+    */
    @Test
    public void fakeGenericMethod() {
       new MockUp<Collaborator>() {
@@ -33,13 +51,46 @@ public final class FakeForGenericsTest
       assertEquals(0.5, d, 0);
    }
 
+   /**
+    * The Class GenericClass.
+    *
+    * @param <T1> the generic type
+    * @param <T2> the generic type
+    */
    @SuppressWarnings("UnusedParameters")
    public static final class GenericClass<T1, T2> {
+      
+      /**
+       * A method.
+       *
+       * @param t the t
+       */
       public void aMethod(T1 t) { throw new RuntimeException("t=" + t); }
+      
+      /**
+       * Another method.
+       *
+       * @param t the t
+       * @param i the i
+       * @param p the p
+       * @return the int
+       */
       public int anotherMethod(T1 t, int i, T2 p) { return 2 * i; }
+      
+      /**
+       * Another method.
+       *
+       * @param t the t
+       * @param i the i
+       * @param p the p
+       * @return the int
+       */
       public int anotherMethod(Integer t, int i, String p) { return -2 * i; }
    }
 
+   /**
+    * Fake generic class with unspecified type arguments.
+    */
    @Test
    public void fakeGenericClassWithUnspecifiedTypeArguments() {
       new MockUp<GenericClass<?, ?>>() {
@@ -74,6 +125,9 @@ public final class FakeForGenericsTest
       assertEquals(-130, r2);
    }
 
+   /**
+    * Fake both generic and non generic methods in generic class.
+    */
    @Test
    public void fakeBothGenericAndNonGenericMethodsInGenericClass() {
       new MockUp<GenericClass<String, Boolean>>() {
@@ -86,8 +140,23 @@ public final class FakeForGenericsTest
       assertEquals(2, o.anotherMethod(123, 2, "non generic"));
    }
 
-   static class GenericBaseClass<T, U> { public U find(@SuppressWarnings("UnusedParameters") T id) { return null; } }
+   /**
+    * The Class GenericBaseClass.
+    *
+    * @param <T> the generic type
+    * @param <U> the generic type
+    */
+   static class GenericBaseClass<T, U> { /**
+  * Find.
+  *
+  * @param id the id
+  * @return the u
+  */
+ public U find(@SuppressWarnings("UnusedParameters") T id) { return null; } }
 
+   /**
+    * Fake generic method with fake method having parameter types matching type arguments.
+    */
    @Test
    public void fakeGenericMethodWithFakeMethodHavingParameterTypesMatchingTypeArguments() {
       new MockUp<GenericBaseClass<String, Integer>>() {
@@ -99,6 +168,9 @@ public final class FakeForGenericsTest
       assertEquals("test".hashCode(), i);
    }
 
+   /**
+    * Cannot call generic method when some fake method expects different types.
+    */
    @Test
    public void cannotCallGenericMethodWhenSomeFakeMethodExpectsDifferentTypes() {
       new MockUp<GenericBaseClass<String, Integer>>() { @Mock Integer find(String id) { return 1; } };
@@ -112,9 +184,19 @@ public final class FakeForGenericsTest
       }
    }
 
+   /**
+    * The Class NonGenericSuperclass.
+    */
    static class NonGenericSuperclass extends GenericBaseClass<Integer, String> {}
+   
+   /**
+    * The Class NonGenericSubclass.
+    */
    final class NonGenericSubclass extends NonGenericSuperclass {}
 
+   /**
+    * Fake generic method from instantiation of non generic subclass.
+    */
    @Test
    public void fakeGenericMethodFromInstantiationOfNonGenericSubclass() {
       new MockUp<NonGenericSubclass>() {
@@ -126,9 +208,21 @@ public final class FakeForGenericsTest
       assertEquals("faked1", s);
    }
 
+   /**
+    * The Class GenericSuperclass.
+    *
+    * @param <I> the generic type
+    */
    static class GenericSuperclass<I> extends GenericBaseClass<I, String> {}
+   
+   /**
+    * The Class AnotherNonGenericSubclass.
+    */
    final class AnotherNonGenericSubclass extends GenericSuperclass<Integer> {}
 
+   /**
+    * Fake generic method from instantiation of non generic subclass which extends A generic intermediate superclass.
+    */
    @Test
    public void fakeGenericMethodFromInstantiationOfNonGenericSubclassWhichExtendsAGenericIntermediateSuperclass() {
       new MockUp<AnotherNonGenericSubclass>() {
@@ -140,13 +234,43 @@ public final class FakeForGenericsTest
       assertEquals("faked1", s);
    }
 
+   /**
+    * The Class NonGenericClassWithGenericMethods.
+    */
    @SuppressWarnings("UnusedParameters")
    public static class NonGenericClassWithGenericMethods {
+      
+      /**
+       * Static method.
+       *
+       * @param <T> the generic type
+       * @param cls the cls
+       * @param s the s
+       * @return the t
+       */
       public static <T> T staticMethod(Class<T> cls, String s) { throw new RuntimeException(); }
+      
+      /**
+       * Instance method.
+       *
+       * @param <C> the generic type
+       * @param cls the cls
+       * @param s the s
+       */
       public <C> void instanceMethod(Class<C> cls, String s) { throw new RuntimeException(); }
+      
+      /**
+       * Instance method.
+       *
+       * @param <N> the number type
+       * @param cls the cls
+       */
       public final <N extends Number> void instanceMethod(Class<N> cls) { throw new RuntimeException(); }
    }
 
+   /**
+    * Fake generic methods of non generic class.
+    */
    @Test
    public void fakeGenericMethodsOfNonGenericClass() {
       new MockUp<NonGenericClassWithGenericMethods>() {

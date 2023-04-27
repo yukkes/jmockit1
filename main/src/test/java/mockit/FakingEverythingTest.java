@@ -7,13 +7,35 @@ import static java.util.Arrays.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class FakingEverythingTest.
+ */
 public final class FakingEverythingTest
 {
+   
+   /** The traces. */
    final List<String> traces = new ArrayList<>();
 
+   /**
+    * Trace entry.
+    *
+    * @param inv the inv
+    */
    void traceEntry(Invocation inv) { traces.add("Entered " + getDescription(inv)); }
+   
+   /**
+    * Trace exit.
+    *
+    * @param inv the inv
+    */
    void traceExit(Invocation inv) { traces.add("Exited " + getDescription(inv)); }
 
+   /**
+    * Gets the description.
+    *
+    * @param inv the inv
+    * @return the description
+    */
    String getDescription(Invocation inv) {
       Member member = inv.getInvokedMember();
       String args = Arrays.toString(inv.getInvokedArguments());
@@ -21,6 +43,9 @@ public final class FakingEverythingTest
       return member.getDeclaringClass().getSimpleName() + '#' + member.getName() + " with " + args + " on " + instance;
    }
 
+   /**
+    * Fake every method in single class.
+    */
    @Test
    public void fakeEveryMethodInSingleClass() {
       new MockUp<TargetClass>() {
@@ -69,6 +94,9 @@ public final class FakingEverythingTest
       assertEquals(expectedTraces, traces);
    }
 
+   /**
+    * Fake every method in single class with advice only.
+    */
    @Test
    public void fakeEveryMethodInSingleClassWithAdviceOnly() {
       new MockUp<TargetClass>() {
@@ -82,6 +110,11 @@ public final class FakingEverythingTest
       assertEquals(1, new TargetClass().doSomething("", false));
    }
 
+   /**
+    * Fake every method in class hierarchy.
+    *
+    * @param <B> the generic type
+    */
    @Test
    public <B extends TargetClass> void fakeEveryMethodInClassHierarchy() {
       new MockUp<B>() {
@@ -134,7 +167,17 @@ public final class FakingEverythingTest
       assertEquals(expectedTraces, traces);
    }
 
+   /**
+    * The Class PublicFake.
+    */
    public static final class PublicFake extends MockUp<TargetClass> {
+      
+      /**
+       * $advice.
+       *
+       * @param inv the inv
+       * @return the object
+       */
       @Mock
       public static Object $advice(Invocation inv) {
          Object[] args = inv.getInvokedArguments();
@@ -148,6 +191,9 @@ public final class FakingEverythingTest
       }
    }
 
+   /**
+    * Public advice method in public fake class.
+    */
    @Test
    public void publicAdviceMethodInPublicFakeClass() {
       new PublicFake();

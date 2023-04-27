@@ -10,36 +10,93 @@ import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class PartialMockingTest.
+ */
 @SuppressWarnings("deprecation")
 public final class PartialMockingTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Collaborator.
+    */
    @Deprecated
    static class Collaborator {
+      
+      /** The value. */
       @Deprecated protected int value;
 
+      /**
+       * Instantiates a new collaborator.
+       */
       Collaborator() { value = -1; }
+      
+      /**
+       * Instantiates a new collaborator.
+       *
+       * @param value the value
+       */
       @Deprecated Collaborator(@Deprecated int value) { this.value = value; }
 
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       final int getValue() { return value; }
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) { this.value = value; }
 
+      /**
+       * Simple operation.
+       *
+       * @param a the a
+       * @param b the b
+       * @param c the c
+       * @return true, if successful
+       */
       @SuppressWarnings("unused")
       final boolean simpleOperation(int a, @XmlElement(name = "test") String b, Date c) { return true; }
 
+      /**
+       * Do something.
+       *
+       * @param b the b
+       * @param s the s
+       */
       static void doSomething(@SuppressWarnings("unused") boolean b, @SuppressWarnings("unused") String s) {
          throw new IllegalStateException();
       }
 
+      /**
+       * Method which calls another in the same class.
+       *
+       * @return true, if successful
+       */
       @Ignore("test")
       boolean methodWhichCallsAnotherInTheSameClass() {
          return simpleOperation(1, "internal", null);
       }
       
+      /**
+       * Overridable method.
+       *
+       * @return the string
+       */
       String overridableMethod() { return "base"; }
    }
 
+   /**
+    * Attempt to partially mock A class.
+    */
    @Test
    public void attemptToPartiallyMockAClass() {
       thrown.expect(IllegalArgumentException.class);
@@ -50,6 +107,9 @@ public final class PartialMockingTest
       new Expectations(Collaborator.class) {};
    }
 
+   /**
+    * Dynamic mock fully verified verify all recorded expectations but not all of the replayed ones.
+    */
    @Test
    public void dynamicMockFullyVerified_verifyAllRecordedExpectationsButNotAllOfTheReplayedOnes() {
       final Collaborator collaborator = new Collaborator(0);
@@ -66,6 +126,9 @@ public final class PartialMockingTest
       };
    }
 
+   /**
+    * Dynamic mock fully verified in order verify all recorded expectations but not all of the replayed ones.
+    */
    @Test
    public void dynamicMockFullyVerifiedInOrder_verifyAllRecordedExpectationsButNotAllOfTheReplayedOnes() {
       final Collaborator collaborator = new Collaborator(0);
@@ -88,6 +151,9 @@ public final class PartialMockingTest
       new FullVerifications() {};
    }
 
+   /**
+    * Expect two invocations on dynamic mock but replay once.
+    */
    @Test
    public void expectTwoInvocationsOnDynamicMockButReplayOnce() {
       final Collaborator collaborator = new Collaborator();
@@ -98,6 +164,9 @@ public final class PartialMockingTest
       thrown.expect(MissingInvocation.class);
    }
 
+   /**
+    * Expect one invocation on dynamic mock but replay twice.
+    */
    @Test
    public void expectOneInvocationOnDynamicMockButReplayTwice() {
       final Collaborator collaborator = new Collaborator(1);
@@ -112,6 +181,9 @@ public final class PartialMockingTest
       assertEquals(0, collaborator.getValue());
    }
 
+   /**
+    * Dynamically mock an instance.
+    */
    @Test
    public void dynamicallyMockAnInstance() {
       final Collaborator collaborator = new Collaborator(2);
@@ -139,6 +211,9 @@ public final class PartialMockingTest
       new Verifications() {{ collaborator.getValue(); times = 1; }};
    }
 
+   /**
+    * Mock method in same class.
+    */
    @Test
    public void mockMethodInSameClass() {
       final Collaborator collaborator = new Collaborator();
@@ -150,17 +225,42 @@ public final class PartialMockingTest
       assertFalse(collaborator.simpleOperation(1, "", null));
    }
 
+   /**
+    * The Class SubCollaborator.
+    */
    static final class SubCollaborator extends Collaborator {
+      
+      /**
+       * Instantiates a new sub collaborator.
+       */
       @SuppressWarnings("unused") SubCollaborator() { this(1); }
+      
+      /**
+       * Instantiates a new sub collaborator.
+       *
+       * @param value the value
+       */
       SubCollaborator(int value) { super(value); }
 
       @Override
       String overridableMethod() { return super.overridableMethod() + " overridden"; }
 
+      /**
+       * Format.
+       *
+       * @return the string
+       */
       String format() { return String.valueOf(value); }
+      
+      /**
+       * Cause failure.
+       */
       static void causeFailure() { throw new RuntimeException(); }
    }
 
+   /**
+    * Dynamically mock A sub collaborator instance.
+    */
    @Test
    public void dynamicallyMockASubCollaboratorInstance() {
       final SubCollaborator collaborator = new SubCollaborator();
@@ -187,11 +287,30 @@ public final class PartialMockingTest
       catch (IllegalStateException ignore) {}
    }
 
+   /**
+    * The Interface Dependency.
+    */
    interface Dependency {
+      
+      /**
+       * Do something.
+       *
+       * @return true, if successful
+       */
       boolean doSomething();
+      
+      /**
+       * Do something else.
+       *
+       * @param n the n
+       * @return the list
+       */
       List<?> doSomethingElse(int n);
    }
 
+   /**
+    * Dynamically mock an anonymous class instance through the implemented interface.
+    */
    @Test
    public void dynamicallyMockAnAnonymousClassInstanceThroughTheImplementedInterface() {
       final Collaborator collaborator = new Collaborator();
@@ -220,9 +339,22 @@ public final class PartialMockingTest
       }};
    }
 
+   /**
+    * The Interface AnotherInterface.
+    */
    public interface AnotherInterface {}
+   
+   /**
+    * The Interface NonPublicInterface.
+    */
    interface NonPublicInterface {}
 
+   /**
+    * Attempt to use dynamic mocking for invalid types.
+    *
+    * @param publicInterfaceMock the public interface mock
+    * @param nonPublicInterfaceMock the non public interface mock
+    */
    @Test
    public void attemptToUseDynamicMockingForInvalidTypes(
       @Mocked AnotherInterface publicInterfaceMock, @Injectable NonPublicInterface nonPublicInterfaceMock
@@ -235,6 +367,11 @@ public final class PartialMockingTest
       assertInvalidTypeForDynamicPartialMocking(nonPublicInterfaceMock);
    }
 
+   /**
+    * Assert invalid type for dynamic partial mocking.
+    *
+    * @param object the object
+    */
    void assertInvalidTypeForDynamicPartialMocking(Object object) {
       try {
          new Expectations(object) {};
@@ -245,6 +382,9 @@ public final class PartialMockingTest
       }
    }
 
+   /**
+    * Dynamic partial mocking with exact argument matching.
+    */
    @Test
    public void dynamicPartialMockingWithExactArgumentMatching() {
       final Collaborator collaborator = new Collaborator();
@@ -261,6 +401,9 @@ public final class PartialMockingTest
       new FullVerifications() {{ collaborator.simpleOperation(anyInt, null, null); }};
    }
 
+   /**
+    * Dynamic partial mocking with flexible argument matching.
+    */
    @Test
    public void dynamicPartialMockingWithFlexibleArgumentMatching() {
       final Collaborator mock = new Collaborator();
@@ -279,6 +422,9 @@ public final class PartialMockingTest
       assertTrue(collaborator.simpleOperation(-1, null, new Date()));
    }
 
+   /**
+    * Dynamic partial mocking with instance specific matching.
+    */
    @Test
    public void dynamicPartialMockingWithInstanceSpecificMatching() {
       final Collaborator collaborator1 = new Collaborator();
@@ -295,6 +441,9 @@ public final class PartialMockingTest
       }};
    }
 
+   /**
+    * Dynamic partial mocking with instance specific matching on two instances of same class.
+    */
    @Test
    public void dynamicPartialMockingWithInstanceSpecificMatchingOnTwoInstancesOfSameClass() {
       final Collaborator mock1 = new Collaborator();
@@ -309,6 +458,9 @@ public final class PartialMockingTest
       assertEquals(1, mock1.getValue());
    }
 
+   /**
+    * Method with no recorded expectation called twice during replay.
+    */
    @Test
    public void methodWithNoRecordedExpectationCalledTwiceDuringReplay() {
       final Collaborator collaborator = new Collaborator(123);
@@ -321,11 +473,29 @@ public final class PartialMockingTest
       new FullVerifications() {{ collaborator.getValue(); times = 2; }};
    }
 
+   /**
+    * The Class ClassWithNative.
+    */
    static final class ClassWithNative {
+      
+      /**
+       * Do something.
+       *
+       * @return the int
+       */
       int doSomething() { return nativeMethod(); }
+      
+      /**
+       * Native method.
+       *
+       * @return the int
+       */
       private native int nativeMethod();
    }
 
+   /**
+    * Attempt to partially mock native method.
+    */
    @Test
    public void attemptToPartiallyMockNativeMethod() {
       thrown.expect(UnsatisfiedLinkError.class);
@@ -339,6 +509,12 @@ public final class PartialMockingTest
       }};
    }
 
+   /**
+    * Mock annotated constructor.
+    *
+    * @param mock the mock
+    * @throws Exception the exception
+    */
    @Test
    public void mockAnnotatedConstructor(@Mocked Collaborator mock) throws Exception {
       Constructor<?> mockedConstructor = Collaborator.class.getDeclaredConstructor(int.class);
@@ -347,16 +523,59 @@ public final class PartialMockingTest
       assertTrue(mockedConstructor.getParameterAnnotations()[0][0] instanceof Deprecated);
    }
 
+   /**
+    * The Class TestedClass.
+    */
    static final class TestedClass {
+      
+      /**
+       * Instantiates a new tested class.
+       */
       TestedClass() { this(true); }
+      
+      /**
+       * Instantiates a new tested class.
+       *
+       * @param value the value
+       */
       TestedClass(boolean value) { initialize(value); }
+      
+      /**
+       * Initialize.
+       *
+       * @param flag the flag
+       */
       private void initialize(@SuppressWarnings("unused") boolean flag) {}
    }
 
-   static class BaseClass { @SuppressWarnings("unused") BaseClass(Object o) { assert o != null; } BaseClass() {} }
+   /**
+    * The Class BaseClass.
+    */
+   static class BaseClass { /**
+  * Instantiates a new base class.
+  *
+  * @param o the o
+  */
+ @SuppressWarnings("unused") BaseClass(Object o) { assert o != null; } /**
+  * Instantiates a new base class.
+  */
+ BaseClass() {} }
+   
+   /**
+    * The Class SubClass.
+    */
    static class SubClass extends BaseClass {}
+   
+   /**
+    * The Class SubSubClass.
+    */
    static class SubSubClass extends SubClass {}
 
+   /**
+    * Mock class indirectly extending base whose first constructor has more parameters than the second one.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockClassIndirectlyExtendingBaseWhoseFirstConstructorHasMoreParametersThanTheSecondOne(@Mocked SubSubClass mock) {
       new SubClass();

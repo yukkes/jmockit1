@@ -5,19 +5,71 @@ import java.io.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class ReentrantFakeTest.
+ */
 public final class ReentrantFakeTest
 {
+   
+   /**
+    * The Class RealClass.
+    */
    public static class RealClass {
+      
+      /**
+       * Foo.
+       *
+       * @return the string
+       */
       public String foo() { return "real value"; }
+      
+      /**
+       * Static recursive method.
+       *
+       * @param i the i
+       * @return the int
+       */
       protected static int staticRecursiveMethod(int i) { return i <= 0 ? 0 : 2 + staticRecursiveMethod(i - 1); }
+      
+      /**
+       * Recursive method.
+       *
+       * @param i the i
+       * @return the int
+       */
       public int recursiveMethod(int i) { return i <= 0 ? 0 : 2 + recursiveMethod(i - 1); }
+      
+      /**
+       * Non recursive static method.
+       *
+       * @param i the i
+       * @return the int
+       */
       protected static int nonRecursiveStaticMethod(int i) { return -i; }
+      
+      /**
+       * Non recursive method.
+       *
+       * @param i the i
+       * @return the int
+       */
       public int nonRecursiveMethod(int i) { return -i; }
    }
 
+   /**
+    * The Class AnnotatedFakeClass.
+    */
    public static class AnnotatedFakeClass extends MockUp<RealClass> {
+      
+      /** The fake it. */
       private static Boolean fakeIt;
 
+      /**
+       * Foo.
+       *
+       * @param inv the inv
+       * @return the string
+       */
       @Mock
       public String foo(Invocation inv) {
          if (fakeIt == null) {
@@ -32,6 +84,9 @@ public final class ReentrantFakeTest
       }
    }
 
+   /**
+    * Call fake method.
+    */
    @Test
    public void callFakeMethod() {
       new AnnotatedFakeClass();
@@ -42,6 +97,9 @@ public final class ReentrantFakeTest
       assertEquals("fake value", foo);
    }
 
+   /**
+    * Call original method.
+    */
    @Test
    public void callOriginalMethod() {
       new AnnotatedFakeClass();
@@ -52,6 +110,9 @@ public final class ReentrantFakeTest
       assertEquals("real value", foo);
    }
 
+   /**
+    * Called fake throws exception.
+    */
    @Test(expected = IllegalStateException.class)
    public void calledFakeThrowsException() {
       new AnnotatedFakeClass();
@@ -60,9 +121,19 @@ public final class ReentrantFakeTest
       new RealClass().foo();
    }
 
+   /**
+    * The Class FakeRuntime.
+    */
    public static class FakeRuntime extends MockUp<Runtime> {
+      
+      /** The run finalization count. */
       private int runFinalizationCount;
 
+      /**
+       * Run finalization.
+       *
+       * @param inv the inv
+       */
       @Mock
       public void runFinalization(Invocation inv) {
          if (runFinalizationCount < 2) {
@@ -72,6 +143,13 @@ public final class ReentrantFakeTest
          runFinalizationCount++;
       }
 
+      /**
+       * Removes the shutdown hook.
+       *
+       * @param inv the inv
+       * @param hook the hook
+       * @return true, if successful
+       */
       @Mock
       public boolean removeShutdownHook(Invocation inv, Thread hook) {
          if (hook == null) {
@@ -83,6 +161,9 @@ public final class ReentrantFakeTest
       }
    }
 
+   /**
+    * Call fake method for JRE class.
+    */
    @Test
    public void callFakeMethodForJREClass() {
       Runtime runtime = Runtime.getRuntime();
@@ -95,7 +176,17 @@ public final class ReentrantFakeTest
       assertFalse(runtime.removeShutdownHook(null));
    }
 
+   /**
+    * The Class ReentrantFakeForNativeMethod.
+    */
    public static class ReentrantFakeForNativeMethod extends MockUp<Runtime> {
+      
+      /**
+       * Available processors.
+       *
+       * @param inv the inv
+       * @return the int
+       */
       @Mock
       public int availableProcessors(Invocation inv) {
          assertNotNull(inv.getInvokedInstance());
@@ -103,6 +194,9 @@ public final class ReentrantFakeTest
       }
    }
 
+   /**
+    * Apply reentrant fake for native JRE method.
+    */
    @Test
    public void applyReentrantFakeForNativeJREMethod() {
       new ReentrantFakeForNativeMethod();
@@ -110,10 +204,22 @@ public final class ReentrantFakeTest
       assertEquals(5, Runtime.getRuntime().availableProcessors());
    }
 
+   /**
+    * The Class MultiThreadedFake.
+    */
    @SuppressWarnings("SynchronizeOnThis")
    static class MultiThreadedFake extends MockUp<RealClass> {
+      
+      /** The nobody entered. */
       private static boolean nobodyEntered = true;
 
+      /**
+       * Foo.
+       *
+       * @param inv the inv
+       * @return the string
+       * @throws InterruptedException the interrupted exception
+       */
       @Mock
       public String foo(Invocation inv) throws InterruptedException {
          String value = inv.proceed();
@@ -133,6 +239,11 @@ public final class ReentrantFakeTest
       }
    }
 
+   /**
+    * Two concurrent threads calling the same reentrant fake.
+    *
+    * @throws Exception the exception
+    */
    @Test(timeout = 1000)
    public void twoConcurrentThreadsCallingTheSameReentrantFake() throws Exception {
       new MultiThreadedFake();
@@ -159,11 +270,29 @@ public final class ReentrantFakeTest
       assertEquals("fake value", second.toString());
    }
 
+   /**
+    * The Class RealClass2.
+    */
    public static final class RealClass2 {
+      
+      /**
+       * First method.
+       *
+       * @return the int
+       */
       public int firstMethod() { return 1; }
+      
+      /**
+       * Second method.
+       *
+       * @return the int
+       */
       public int secondMethod() { return 2; }
    }
 
+   /**
+    * Reentrant fake for non JRE class which calls another from A different thread.
+    */
    @Test
    public void reentrantFakeForNonJREClassWhichCallsAnotherFromADifferentThread() {
       new MockUp<RealClass2>() {
@@ -191,6 +320,9 @@ public final class ReentrantFakeTest
       assertEquals(1, r.secondMethod());
    }
 
+   /**
+    * Reentrant fake for JRE class which calls another from A different thread.
+    */
    @Test
    public void reentrantFakeForJREClassWhichCallsAnotherFromADifferentThread() {
       System.setProperty("a", "1");
@@ -218,6 +350,9 @@ public final class ReentrantFakeTest
       assertEquals("2", System.clearProperty("b"));
    }
 
+   /**
+    * Fake file and force JRE to call reentrant faked method.
+    */
    @Test
    public void fakeFileAndForceJREToCallReentrantFakedMethod() {
       new MockUp<File>() {
@@ -231,10 +366,22 @@ public final class ReentrantFakeTest
       assertTrue(new File("noFile").exists());
    }
 
+   /**
+    * The Class RealClass3.
+    */
    public static final class RealClass3 {
+      
+      /**
+       * New instance.
+       *
+       * @return the real class 3
+       */
       public RealClass3 newInstance() { return new RealClass3(); }
    }
 
+   /**
+    * Reentrant fake for method which instantiates and returns new instance of the faked class.
+    */
    @Test
    public void reentrantFakeForMethodWhichInstantiatesAndReturnsNewInstanceOfTheFakedClass() {
       new MockUp<RealClass3>() {
@@ -245,14 +392,35 @@ public final class ReentrantFakeTest
       assertNull(new RealClass3().newInstance());
    }
 
+   /**
+    * The Class FakeClassWithReentrantFakeForRecursiveMethod.
+    */
    public static final class FakeClassWithReentrantFakeForRecursiveMethod extends MockUp<RealClass> {
+      
+      /**
+       * Recursive method.
+       *
+       * @param inv the inv
+       * @param i the i
+       * @return the int
+       */
       @Mock
       int recursiveMethod(Invocation inv, int i) { int j = inv.proceed(); return 1 + j; }
 
+      /**
+       * Static recursive method.
+       *
+       * @param inv the inv
+       * @param i the i
+       * @return the int
+       */
       @Mock
       static int staticRecursiveMethod(Invocation inv, int i) { int j = inv.proceed(); return 1 + j; }
    }
 
+   /**
+    * Reentrant fake method for recursive methods.
+    */
    @Test
    public void reentrantFakeMethodForRecursiveMethods() {
       assertEquals(0, RealClass.staticRecursiveMethod(0));
@@ -270,6 +438,9 @@ public final class ReentrantFakeTest
       assertEquals(4, r.recursiveMethod(1));
    }
 
+   /**
+    * Fake that proceeds into recursive method.
+    */
    @Test
    public void fakeThatProceedsIntoRecursiveMethod() {
       RealClass r = new RealClass();
@@ -288,6 +459,9 @@ public final class ReentrantFakeTest
       assertEquals(4, r.recursiveMethod(1));
    }
 
+   /**
+    * Recursive fake method without invocation parameter.
+    */
    @Test
    public void recursiveFakeMethodWithoutInvocationParameter() {
       new MockUp<RealClass>() {
@@ -302,6 +476,9 @@ public final class ReentrantFakeTest
       assertEquals(2, result);
    }
 
+   /**
+    * Recursive fake method with invocation parameter not used for proceeding.
+    */
    @Test
    public void recursiveFakeMethodWithInvocationParameterNotUsedForProceeding() {
       new MockUp<RealClass>() {
@@ -317,6 +494,9 @@ public final class ReentrantFakeTest
       assertEquals(2, result);
    }
 
+   /**
+    * Non recursive fake method with invocation parameter used for proceeding.
+    */
    @Test
    public void nonRecursiveFakeMethodWithInvocationParameterUsedForProceeding() {
       new MockUp<RealClass>() {

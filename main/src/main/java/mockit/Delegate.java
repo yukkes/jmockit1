@@ -20,7 +20,7 @@ package mockit;
  *          }
  *       };
  *    }};
- *
+ * 
  *    tested.exerciseCodeUnderTest();
  * }</pre>
  * The delegate class (either named or anonymous) must contain exactly one non-<code>private</code> instance method to be executed when the
@@ -37,8 +37,7 @@ package mockit;
  * When used with the <code>with(Delegate)</code> method, the delegate method must return a <code>boolean</code>, being <code>true</code> for a
  * successfully matched argument or <code>false</code> otherwise.
  *
- * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#delegates" target="tutorial">Tutorial</a>
- *
  * @param <T> the type of the argument to be matched, when used with the <code>with(Delegate)</code> method
+ * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#delegates" target="tutorial">Tutorial</a>
  */
 public interface Delegate<T> {}

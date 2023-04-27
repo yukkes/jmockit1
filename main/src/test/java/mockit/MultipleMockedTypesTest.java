@@ -7,30 +7,84 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * The Class MultipleMockedTypesTest.
+ */
 public final class MultipleMockedTypesTest
 {
-   public static class FirstDependency { public int getValue() { return 1; } }
+   
+   /**
+    * The Class FirstDependency.
+    */
+   public static class FirstDependency { 
+ /**
+  * Gets the value.
+  *
+  * @return the value
+  */
+ public int getValue() { return 1; } }
 
+   /**
+    * The Class SecondDependency.
+    */
    public static class SecondDependency {
+      
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       public int getValue() { return 2; }
+      
+      /**
+       * Gets the different value.
+       *
+       * @return the different value
+       */
       public int getDifferentValue() { return 3; }
    }
 
+   /**
+    * The Class TestedUnit.
+    */
    public static class TestedUnit {
+      
+      /**
+       * Validate.
+       *
+       * @param first the first
+       * @return true, if successful
+       */
       public boolean validate(FirstDependency first) {
          SecondDependency second = new SecondDependency();
          return first.getValue() + second.getValue() <= 0;
       }
 
+      /**
+       * Validate with different value.
+       *
+       * @param first the first
+       * @return true, if successful
+       */
       public boolean validateWithDifferentValue(FirstDependency first) {
          SecondDependency second = new SecondDependency();
          return first.getValue() + second.getDifferentValue() <= 0;
       }
 
+      /**
+       * Validate.
+       *
+       * @param first the first
+       * @param second the second
+       * @return true, if successful
+       */
       public boolean validate(FirstDependency first, SecondDependency second) {
          return first.getValue() + second.getValue() <= 0;
       }
 
+      /**
+       * Do something with internally created implementations.
+       */
       static void doSomethingWithInternallyCreatedImplementations() {
          new Observer() {
             @Override
@@ -44,8 +98,14 @@ public final class MultipleMockedTypesTest
       }
    }
 
+   /** The mock 1. */
    @Mocked FirstDependency mock1;
 
+   /**
+    * Invocations on methods of different classes with different signatures.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void invocationsOnMethodsOfDifferentClassesWithDifferentSignatures(@Mocked final SecondDependency mock2) {
       new Expectations() {{
@@ -56,6 +116,11 @@ public final class MultipleMockedTypesTest
       assertTrue(new TestedUnit().validateWithDifferentValue(mock1));
    }
 
+   /**
+    * Invocations on methods of different classes but same signature.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void invocationsOnMethodsOfDifferentClassesButSameSignature(@Mocked final SecondDependency mock2) {
       new Expectations() {{
@@ -71,9 +136,21 @@ public final class MultipleMockedTypesTest
       }};
    }
 
+   /**
+    * The Class SubDependencyThatInherits.
+    */
    public static final class SubDependencyThatInherits extends SecondDependency {}
+   
+   /**
+    * The Class SubDependencyThatOverrides.
+    */
    public static final class SubDependencyThatOverrides extends SecondDependency { @Override public int getValue() { return 1; } }
 
+   /**
+    * Invocation on base type with replay on subtype that overrides the invoked method.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void invocationOnBaseTypeWithReplayOnSubtypeThatOverridesTheInvokedMethod(@Mocked final SecondDependency mock2) {
       new Expectations() {{ mock1.getValue(); result = 15; }};
@@ -84,6 +161,11 @@ public final class MultipleMockedTypesTest
       new FullVerifications() {{ mock2.getValue(); times = 0; }};
    }
 
+   /**
+    * Invocation on base type with capturing of subtype that inherits the invoked method.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void invocationOnBaseTypeWithCapturingOfSubtypeThatInheritsTheInvokedMethod(@Capturing final SecondDependency mock2) {
       new Expectations() {{
@@ -94,6 +176,11 @@ public final class MultipleMockedTypesTest
       assertTrue(new TestedUnit().validate(mock1, new SubDependencyThatInherits()));
    }
 
+   /**
+    * Invocation on base type with capturing of subtype that overrides the invoked method.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void invocationOnBaseTypeWithCapturingOfSubtypeThatOverridesTheInvokedMethod(@Capturing final SecondDependency mock2) {
       new Expectations() {{
@@ -109,6 +196,13 @@ public final class MultipleMockedTypesTest
       }};
    }
 
+   /**
+    * Invocations on captured implementations of interfaces.
+    *
+    * @param callable the callable
+    * @param observer the observer
+    * @throws Exception the exception
+    */
    @Test
    public void invocationsOnCapturedImplementationsOfInterfaces(
       @Capturing final Callable<String> callable, @Capturing final Observer observer

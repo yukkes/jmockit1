@@ -5,18 +5,47 @@ import org.junit.rules.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class AssertionErrorMessagesTest.
+ */
 public final class AssertionErrorMessagesTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /**
+       * Do something.
+       */
       void doSomething() {}
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       * @param s the s
+       */
       void doSomething(@SuppressWarnings("unused") int i, @SuppressWarnings("unused") String s) {}
+      
+      /**
+       * Do something else.
+       *
+       * @param s the s
+       */
       void doSomethingElse(@SuppressWarnings("unused") String s) {}
    }
 
+   /** The mock. */
    @Mocked Collaborator mock;
 
+   /**
+    * Unexpected invocation for recorded expectation.
+    */
    @Test
    public void unexpectedInvocationForRecordedExpectation() {
       new Expectations() {{ mock.doSomething(anyInt, anyString); times = 1; }};
@@ -29,6 +58,9 @@ public final class AssertionErrorMessagesTest
       mock.doSomething(2, "xyz");
    }
 
+   /**
+    * Unexpected invocation where expecting another for recorded expectations.
+    */
    @Test
    public void unexpectedInvocationWhereExpectingAnotherForRecordedExpectations() {
       mock.doSomething(1, "Abc");
@@ -44,6 +76,9 @@ public final class AssertionErrorMessagesTest
       }};
    }
 
+   /**
+    * Unexpected invocation for recorded expectation with maximum invocation count of zero.
+    */
    @Test
    public void unexpectedInvocationForRecordedExpectationWithMaximumInvocationCountOfZero() {
       new Expectations() {{ mock.doSomething(anyInt, anyString); times = 0; }};
@@ -54,6 +89,9 @@ public final class AssertionErrorMessagesTest
       mock.doSomething(1, "Abc");
    }
 
+   /**
+    * Unexpected invocation for verified expectation.
+    */
    @Test
    public void unexpectedInvocationForVerifiedExpectation() {
       mock.doSomething(123, "Test");
@@ -68,6 +106,9 @@ public final class AssertionErrorMessagesTest
       }};
    }
 
+   /**
+    * Unexpected invocation for expectations verified in order.
+    */
    @Test
    public void unexpectedInvocationForExpectationsVerifiedInOrder() {
       mock.doSomethingElse("test");
@@ -82,6 +123,9 @@ public final class AssertionErrorMessagesTest
       }};
    }
 
+   /**
+    * Unexpected invocation on method with no parameters.
+    */
    @Test
    public void unexpectedInvocationOnMethodWithNoParameters() {
       new Expectations() {{ mock.doSomethingElse(anyString); }};
@@ -93,6 +137,9 @@ public final class AssertionErrorMessagesTest
       new FullVerifications(mock) {};
    }
 
+   /**
+    * Missing invocation for recorded expectation.
+    */
    @Test
    public void missingInvocationForRecordedExpectation() {
       new Expectations() {{ mock.doSomething(anyInt, anyString); times = 2; }};
@@ -103,6 +150,9 @@ public final class AssertionErrorMessagesTest
       mock.doSomething(123, "Abc");
    }
 
+   /**
+    * Missing invocation for recorded expectation which gets non matching invocations at replay time.
+    */
    @Test
    public void missingInvocationForRecordedExpectationWhichGetsNonMatchingInvocationsAtReplayTime() {
       new Expectations() {{ mock.doSomethingElse("test"); }};
@@ -118,6 +168,9 @@ public final class AssertionErrorMessagesTest
       mock.doSomethingElse("");
    }
 
+   /**
+    * Missing invocation for verified expectation.
+    */
    @Test
    public void missingInvocationForVerifiedExpectation() {
       thrown.expect(MissingInvocation.class);
@@ -126,6 +179,9 @@ public final class AssertionErrorMessagesTest
       new Verifications() {{ mock.doSomething(123, anyString); }};
    }
 
+   /**
+    * Missing invocation for verified expectation which gets non matching invocations at replay time.
+    */
    @Test
    public void missingInvocationForVerifiedExpectationWhichGetsNonMatchingInvocationsAtReplayTime() {
       mock.doSomethingElse("Abc");
@@ -141,6 +197,9 @@ public final class AssertionErrorMessagesTest
       new Verifications() {{ mock.doSomethingElse("test"); }};
    }
 
+   /**
+    * Missing invocation for expectation verified in order.
+    */
    @Test
    public void missingInvocationForExpectationVerifiedInOrder() {
       mock.doSomething(123, "Test");
@@ -154,6 +213,9 @@ public final class AssertionErrorMessagesTest
       }};
    }
 
+   /**
+    * Missing invocation for fully verified expectations.
+    */
    @Test
    public void missingInvocationForFullyVerifiedExpectations() {
       mock.doSomething(123, "Abc");
@@ -167,6 +229,9 @@ public final class AssertionErrorMessagesTest
       }};
    }
 
+   /**
+    * Missing invocation for expectation using matcher for different parameter type.
+    */
    @Test
    public void missingInvocationForExpectationUsingMatcherForDifferentParameterType() {
       mock.doSomething(5, "");

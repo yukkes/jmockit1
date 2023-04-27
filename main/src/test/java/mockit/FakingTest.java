@@ -14,10 +14,18 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class FakingTest.
+ */
 public final class FakingTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * Attempt to apply fake without the target type.
+    */
    @Test
    public void attemptToApplyFakeWithoutTheTargetType() {
       thrown.expect(IllegalArgumentException.class);
@@ -28,6 +36,9 @@ public final class FakingTest
 
    // Fakes for classes ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Fake A class.
+    */
    @Test
    public void fakeAClass() {
       new MockUp<Panel>() {
@@ -38,12 +49,25 @@ public final class FakingTest
       assertEquals(123, new Panel().getComponentCount());
    }
 
+   /**
+    * The Class Main.
+    */
    static final class Main {
+      
+      /** The Constant atomicCount. */
       static final AtomicIntegerFieldUpdater<Main> atomicCount = AtomicIntegerFieldUpdater.newUpdater(Main.class, "count");
 
+      /** The count. */
       volatile int count;
+      
+      /** The max. */
       int max = 2;
 
+      /**
+       * Increment.
+       *
+       * @return true, if successful
+       */
       boolean increment() {
          while (true) {
             int currentCount = count;
@@ -59,6 +83,9 @@ public final class FakingTest
       }
    }
 
+   /**
+    * Fake A given class.
+    */
    @Test
    public void fakeAGivenClass() {
       final Main main = new Main();
@@ -84,6 +111,9 @@ public final class FakingTest
       assertTrue(main.increment());
    }
 
+   /**
+    * Attempt to fake given class but pass null.
+    */
    @Test
    public void attemptToFakeGivenClassButPassNull() {
       thrown.expect(NullPointerException.class);
@@ -91,15 +121,30 @@ public final class FakingTest
       new MockUp<Panel>(null) {};
    }
 
+   /**
+    * The Class FakeForGivenClass.
+    */
    @SuppressWarnings("rawtypes")
    static class FakeForGivenClass extends MockUp {
+      
+      /**
+       * Instantiates a new fake for given class.
+       */
       @SuppressWarnings("unchecked")
       FakeForGivenClass() { super(Panel.class); }
 
+      /**
+       * Gets the name.
+       *
+       * @return the name
+       */
       @Mock
       String getName() { return "mock"; }
    }
 
+   /**
+    * Fake given class using named fake.
+    */
    @Test
    public void fakeGivenClassUsingNamedFake() {
       new FakeForGivenClass();
@@ -111,6 +156,11 @@ public final class FakingTest
 
    // Fakes for other situations //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Attempt to fake class and interface at once.
+    *
+    * @param <M> the generic type
+    */
    @Test
    public <M extends Panel & Runnable> void attemptToFakeClassAndInterfaceAtOnce() {
       thrown.expect(UnsupportedOperationException.class);
@@ -122,6 +172,9 @@ public final class FakingTest
       };
    }
 
+   /**
+    * Fake using invocation parameters.
+    */
    @Test
    public void fakeUsingInvocationParameters() {
       new MockUp<Panel>() {
@@ -142,12 +195,30 @@ public final class FakingTest
       assertEquals(-1, i);
    }
 
+   /**
+    * The Class PublicNamedFakeWithNoInvocationParameters.
+    */
    public static class PublicNamedFakeWithNoInvocationParameters extends MockUp<Panel> {
+      
+      /** The executed. */
       boolean executed;
+      
+      /**
+       * $init.
+       */
       @Mock public void $init() { executed = true; }
+      
+      /**
+       * Gets the name.
+       *
+       * @return the name
+       */
       @Mock public String getName() { return "test"; }
    }
 
+   /**
+    * Public named fake with no invocation parameter.
+    */
    @Test
    public void publicNamedFakeWithNoInvocationParameter() {
       PublicNamedFakeWithNoInvocationParameters fake = new PublicNamedFakeWithNoInvocationParameters();
@@ -159,6 +230,11 @@ public final class FakingTest
       assertEquals("test", name);
    }
 
+   /**
+    * Faking of annotated class.
+    *
+    * @throws Exception the exception
+    */
    @Test @SuppressWarnings("deprecation")
    public void fakingOfAnnotatedClass() throws Exception {
       new MockUp<RMISecurityException>() {
@@ -174,6 +250,9 @@ public final class FakingTest
       assertNotNull(deprecated);
    }
 
+   /**
+    * Fake same class twice using separate fakes.
+    */
    @Test
    public void fakeSameClassTwiceUsingSeparateFakes() {
       Panel a = new Panel();
@@ -187,6 +266,9 @@ public final class FakingTest
       a.getAccessibleContext();
    }
 
+   /**
+    * Fake constructor of inner class.
+    */
    @Test
    public void fakeConstructorOfInnerClass() {
       final BasicColorChooserUI outer = new BasicColorChooserUI();
@@ -204,6 +286,11 @@ public final class FakingTest
       assertTrue(constructed[0]);
    }
 
+   /**
+    * Call fake method from AWT event dispatching thread.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void callFakeMethodFromAWTEventDispatchingThread() throws Exception {
       new MockUp<Panel>() {
@@ -219,8 +306,20 @@ public final class FakingTest
       });
    }
 
-   static final class JRESubclass extends Patch { JRESubclass(int i, int j) { super(i, j); } }
+   /**
+    * The Class JRESubclass.
+    */
+   static final class JRESubclass extends Patch { /**
+  * Instantiates a new JRE subclass.
+  *
+  * @param i the i
+  * @param j the j
+  */
+ JRESubclass(int i, int j) { super(i, j); } }
 
+   /**
+    * Anonymous fake for JRE subclass having fake method for JRE method.
+    */
    @Test
    public void anonymousFakeForJRESubclassHavingFakeMethodForJREMethod() {
       new MockUp<JRESubclass>() { @Mock int getBank() { return 123; } };
@@ -231,13 +330,20 @@ public final class FakingTest
       assertEquals(123, i);
    }
 
+   /** The fake torn down. */
    static Boolean fakeTornDown;
 
+   /**
+    * The Class FakeWithActionOnTearDown.
+    */
    static final class FakeWithActionOnTearDown extends MockUp<Panel> {
       @Override
       protected void onTearDown() { fakeTornDown = true; }
    }
 
+   /**
+    * Perform action on fake tear down.
+    */
    @Test
    public void performActionOnFakeTearDown() {
       fakeTornDown = false;
@@ -245,11 +351,17 @@ public final class FakingTest
       assertFalse(fakeTornDown);
    }
 
+   /**
+    * Verify fake applied in test was torn down.
+    */
    @AfterClass
    public static void verifyFakeAppliedInTestWasTornDown() {
       assertTrue(fakeTornDown == null || fakeTornDown);
    }
 
+   /**
+    * Fake varargs method with proceeding fake method which passes replacement arguments.
+    */
    @Test
    public void fakeVarargsMethodWithProceedingFakeMethodWhichPassesReplacementArguments() {
       new MockUp<ProcessBuilder>() {

@@ -10,10 +10,20 @@ import org.junit.*;
 import org.junit.rules.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class FakeLoginContextTest.
+ */
 public final class FakeLoginContextTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * Fake JRE method and constructor using fake class.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void fakeJREMethodAndConstructorUsingFakeClass() throws Exception {
       new FakeLoginContext();
@@ -21,20 +31,43 @@ public final class FakeLoginContextTest
       new LoginContext("test", (CallbackHandler) null).login();
    }
 
+   /**
+    * The Class FakeLoginContext.
+    */
    public static class FakeLoginContext extends MockUp<LoginContext> {
+      
+      /**
+       * $init.
+       *
+       * @param name the name
+       * @param callbackHandler the callback handler
+       */
       @Mock
       public void $init(String name, CallbackHandler callbackHandler) {
          assertEquals("test", name);
          assertNull(callbackHandler);
       }
 
+      /**
+       * Login.
+       */
       @Mock
       public void login() {}
 
+      /**
+       * Gets the subject.
+       *
+       * @return the subject
+       */
       @Mock
       public Subject getSubject() { return null; }
    }
 
+   /**
+    * Fake JRE method and constructor with fake class.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void fakeJREMethodAndConstructorWithFakeClass() throws Exception {
       thrown.expect(LoginException.class);
@@ -50,6 +83,11 @@ public final class FakeLoginContextTest
       new LoginContext("test").login();
    }
 
+   /**
+    * Fake JRE class with stubs.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void fakeJREClassWithStubs() throws Exception {
       new FakeLoginContextWithStubs();
@@ -59,12 +97,34 @@ public final class FakeLoginContextTest
       context.logout();
    }
 
+   /**
+    * The Class FakeLoginContextWithStubs.
+    */
    final class FakeLoginContextWithStubs extends MockUp<LoginContext> {
+      
+      /**
+       * $init.
+       *
+       * @param s the s
+       */
       @Mock void $init(String s) {}
+      
+      /**
+       * Logout.
+       */
       @Mock void logout() {}
+      
+      /**
+       * Login.
+       */
       @Mock void login() {}
    }
 
+   /**
+    * Access faked instance.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void accessFakedInstance() throws Exception {
       new MockUp<LoginContext>() {
@@ -101,6 +161,11 @@ public final class FakeLoginContextTest
       assertNull(fakedInstance.getSubject());
    }
 
+   /**
+    * Proceed into real implementations of faked methods.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void proceedIntoRealImplementationsOfFakedMethods() throws Exception {
       // Create objects to be exercised by the code under test:
@@ -136,10 +201,22 @@ public final class FakeLoginContextTest
       assertFalse(fakeInstance.loggedIn);
    }
 
+   /**
+    * The Class ProceedingFakeLoginContext.
+    */
    static final class ProceedingFakeLoginContext extends MockUp<LoginContext> {
+      
+      /** The ignore logout. */
       boolean ignoreLogout;
+      
+      /** The logged in. */
       boolean loggedIn;
 
+      /**
+       * Login.
+       *
+       * @param inv the inv
+       */
       @Mock
       void login(Invocation inv) {
          LoginContext it = inv.getInvokedInstance();
@@ -153,6 +230,11 @@ public final class FakeLoginContextTest
          }
       }
 
+      /**
+       * Logout.
+       *
+       * @param inv the inv
+       */
       @Mock
       void logout(Invocation inv) {
          if (!ignoreLogout) {
@@ -162,6 +244,9 @@ public final class FakeLoginContextTest
       }
    }
 
+   /**
+    * The Class TestLoginModule.
+    */
    public static class TestLoginModule implements LoginModule {
       @Override
       public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {}

@@ -30,16 +30,38 @@ class BaseTest
    }
 }
 
+/**
+ * The Class TestedClassWithConstructorAndFieldDITest.
+ */
 public final class TestedClassWithConstructorAndFieldDITest extends BaseTest
 {
+   
+   /**
+    * The Class AnotherTestedClass.
+    */
    @SuppressWarnings("unused")
    public static class AnotherTestedClass extends TestedClass {
+      
+      /** The another action. */
       Runnable anotherAction;
+      
+      /** The dependency 3. */
       Dependency dependency3;
+      
+      /** The dependency 2. */
       Dependency dependency2;
 
+      /**
+       * Instantiates a new another tested class.
+       */
       public AnotherTestedClass() { super(-2); }
 
+      /**
+       * Instantiates a new another tested class.
+       *
+       * @param value the value
+       * @param dependency1 the dependency 1
+       */
       public AnotherTestedClass(int value, Dependency dependency1) {
          super(value);
          //noinspection UnnecessarySuperQualifier
@@ -53,10 +75,18 @@ public final class TestedClassWithConstructorAndFieldDITest extends BaseTest
       }
    }
 
+   /** The tested 2. */
    @Tested AnotherTestedClass tested2;
+   
+   /** The another action. */
    @Injectable Runnable anotherAction;
+   
+   /** The dependency 2. */
    @Injectable Dependency dependency2;
 
+   /**
+    * Exercise tested subclass object with fields injected by type and name.
+    */
    @Test
    public void exerciseTestedSubclassObjectWithFieldsInjectedByTypeAndName() {
       verifyTestedObjectFromBaseTestClass(-1);
@@ -75,6 +105,11 @@ public final class TestedClassWithConstructorAndFieldDITest extends BaseTest
       }};
    }
 
+   /**
+    * Exercise tested subclass object with fields injected from mock fields and mock parameter.
+    *
+    * @param dependency3 the dependency 3
+    */
    @Test
    public void exerciseTestedSubclassObjectWithFieldsInjectedFromMockFieldsAndMockParameter(@Injectable Dependency dependency3) {
       verifyTestedObjectFromBaseTestClass(-1);
@@ -87,6 +122,12 @@ public final class TestedClassWithConstructorAndFieldDITest extends BaseTest
       assertFalse(tested2.doSomeOperation());
    }
 
+   /**
+    * Exercise tested subclass object using constructor and field injection.
+    *
+    * @param value the value
+    * @param dependency1 the dependency 1
+    */
    @Test
    public void exerciseTestedSubclassObjectUsingConstructorAndFieldInjection(
       @Injectable("45") int value, @Injectable Dependency dependency1
@@ -101,10 +142,20 @@ public final class TestedClassWithConstructorAndFieldDITest extends BaseTest
       assertFalse(tested2.doSomeOperation());
    }
 
-   static class ClassWithFieldHavingTestedFieldInBaseTestClass { Collaborator collaborator; }
+   /**
+    * The Class ClassWithFieldHavingTestedFieldInBaseTestClass.
+    */
+   static class ClassWithFieldHavingTestedFieldInBaseTestClass { /** The collaborator. */
+ Collaborator collaborator; }
 
+   /** The tested 3. */
    @Tested ClassWithFieldHavingTestedFieldInBaseTestClass tested3;
 
+   /**
+    * Creates the tested parameter injecting from tested field in base test class.
+    *
+    * @param tested4 the tested 4
+    */
    @Test
    public void createTestedParameterInjectingFromTestedFieldInBaseTestClass(
       @Tested ClassWithFieldHavingTestedFieldInBaseTestClass tested4

@@ -7,27 +7,94 @@ import org.junit.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class RestrictedFullVerificationsTest.
+ */
 public final class RestrictedFullVerificationsTest
 {
+   
+   /**
+    * The Class Dependency.
+    */
    @SuppressWarnings("UnusedReturnValue")
    static class Dependency {
+      
+      /**
+       * Sets the something.
+       *
+       * @param value the new something
+       */
       public void setSomething(@SuppressWarnings("unused") int value) {}
+      
+      /**
+       * Edits the A bunch more stuff.
+       *
+       * @return the int
+       */
       public int editABunchMoreStuff() { return 0; }
+      
+      /**
+       * Prepare.
+       *
+       * @return true, if successful
+       */
       public boolean prepare() { return false; }
+      
+      /**
+       * Save.
+       */
       public void save() {}
+      
+      /**
+       * Static method.
+       *
+       * @param s the s
+       */
       static void staticMethod(@SuppressWarnings("unused") String s) {}
    }
 
-   static final class SubDependency extends Dependency { int getValue() { return 5; } }
+   /**
+    * The Class SubDependency.
+    */
+   static final class SubDependency extends Dependency { /**
+  * Gets the value.
+  *
+  * @return the value
+  */
+ int getValue() { return 5; } }
 
+   /**
+    * The Class AnotherDependency.
+    */
    static final class AnotherDependency {
+      
+      /**
+       * Do something.
+       */
       void doSomething() {}
+      
+      /**
+       * Do something else.
+       *
+       * @param i the i
+       * @return the string
+       */
       String doSomethingElse(int i) { return String.valueOf(i); }
+      
+      /**
+       * Static method.
+       *
+       * @return true, if successful
+       */
       static boolean staticMethod() { return true; }
    }
    
+   /** The mock. */
    @Mocked Dependency mock;
 
+   /**
+    * Exercise code under test.
+    */
    void exerciseCodeUnderTest() {
       mock.prepare();
       mock.setSomething(123);
@@ -35,6 +102,11 @@ public final class RestrictedFullVerificationsTest
       mock.save();
    }
 
+   /**
+    * Verify all invocations to only one of two mocked types.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyAllInvocationsToOnlyOneOfTwoMockedTypes(@Mocked AnotherDependency mock2) {
       exerciseCodeUnderTest();
@@ -55,6 +127,11 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
+   /**
+    * Verify all invocations with some missing.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsWithSomeMissing(@Mocked final AnotherDependency mock2) {
       exerciseCodeUnderTest();
@@ -68,6 +145,12 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
+   /**
+    * Verify only invocations to generic type.
+    *
+    * @param mock2 the mock 2
+    * @throws Exception the exception
+    */
    @Test
    public void verifyOnlyInvocationsToGenericType(@Mocked final Callable<Dependency> mock2) throws Exception {
       exerciseCodeUnderTest();
@@ -76,6 +159,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock2.call(); }};
    }
 
+   /**
+    * Verify all invocations to inherited methods.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyAllInvocationsToInheritedMethods(@Mocked SubDependency mock2) {
       mock.prepare();
@@ -85,6 +173,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(Dependency.class) {{ mock.prepare(); }};
    }
 
+   /**
+    * Verify all invocations to inherited methods when not verified.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToInheritedMethods_whenNotVerified(@Mocked final SubDependency mock2) {
       mock2.prepare();
@@ -93,6 +186,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock2.getValue(); }};
    }
 
+   /**
+    * Verify all invocations to subclass methods.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyAllInvocationsToSubclassMethods(@Mocked final SubDependency mock2) {
       mock.prepare();
@@ -101,6 +199,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2.getClass()) {{ mock2.getValue(); }};
    }
 
+   /**
+    * Verify all invocations to subclass methods when not verified.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToSubclassMethods_whenNotVerified(@Mocked SubDependency mock2) {
       mock.prepare();
@@ -109,6 +212,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2.getClass()) {{ mock.prepare(); }};
    }
 
+   /**
+    * Verify all invocations to methods of base class and of subclass.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass(@Mocked final SubDependency mock2) {
       mock2.prepare();
@@ -120,6 +228,11 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
+   /**
+    * Verify all invocations to methods of base class and of subclass when inherited method not verified.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass_whenInheritedMethodNotVerified(@Mocked final SubDependency mock2) {
       mock2.prepare();
@@ -128,6 +241,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock2.getValue(); }};
    }
 
+   /**
+    * Verify all invocations to methods of base class and of subclass when subclass method not verified.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllInvocationsToMethodsOfBaseClassAndOfSubclass_whenSubclassMethodNotVerified(@Mocked SubDependency mock2) {
       mock.prepare();
@@ -136,6 +254,9 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock.prepare(); }};
    }
 
+   /**
+    * Verify all invocations with replay on different instance.
+    */
    @Test
    public void verifyAllInvocationsWithReplayOnDifferentInstance() {
       new Dependency().save();
@@ -146,6 +267,11 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
+   /**
+    * Verify all invocations with replay on same instance.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyAllInvocationsWithReplayOnSameInstance(@Mocked final Dependency mock2) {
       mock2.editABunchMoreStuff();
@@ -153,6 +279,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock2.editABunchMoreStuff(); }};
    }
 
+   /**
+    * Verify all with replay on different instance when should be same.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = MissingInvocation.class)
    public void verifyAllWithReplayOnDifferentInstanceWhenShouldBeSame(@Mocked Dependency mock2) {
       mock2.editABunchMoreStuff();
@@ -162,6 +293,11 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
+   /**
+    * Verify all with unverified replay on same instance.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void verifyAllWithUnverifiedReplayOnSameInstance(@Mocked Dependency mock2) {
       mock.editABunchMoreStuff();
@@ -170,6 +306,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock.editABunchMoreStuff(); }};
    }
 
+   /**
+    * Verify static invocation for specified mock instance.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyStaticInvocationForSpecifiedMockInstance(@Mocked final AnotherDependency mock2) {
       mock2.doSomething();
@@ -186,6 +327,11 @@ public final class RestrictedFullVerificationsTest
       }};
    }
 
+   /**
+    * Unverified static invocation for specified mock instance.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void unverifiedStaticInvocationForSpecifiedMockInstance(@Mocked final AnotherDependency mock2) {
       mock2.doSomething();
@@ -194,6 +340,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock2.doSomething(); }};
    }
 
+   /**
+    * Unverified static invocation for specified subclass instance.
+    *
+    * @param mock2 the mock 2
+    */
    @Test(expected = UnexpectedInvocation.class)
    public void unverifiedStaticInvocationForSpecifiedSubclassInstance(@Mocked final SubDependency mock2) {
       mock2.getValue();
@@ -202,6 +353,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock2) {{ mock2.getValue(); }};
    }
 
+   /**
+    * Verify no invocations occurred on one of two mocked dependencies.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyNoInvocationsOccurredOnOneOfTwoMockedDependencies(@Mocked AnotherDependency mock2) {
       mock2.doSomething();
@@ -209,6 +365,11 @@ public final class RestrictedFullVerificationsTest
       new FullVerifications(mock) {};
    }
 
+   /**
+    * Verify no invocations occurred on mocked dependency with one having occurred.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyNoInvocationsOccurredOnMockedDependencyWithOneHavingOccurred(@Mocked AnotherDependency mock2) {
       mock2.doSomething();
@@ -223,6 +384,11 @@ public final class RestrictedFullVerificationsTest
       }
    }
 
+   /**
+    * Verify no invocations on one of two mocked dependencies beyond those recorded as expected.
+    *
+    * @param mock2 the mock 2
+    */
    @Test
    public void verifyNoInvocationsOnOneOfTwoMockedDependenciesBeyondThoseRecordedAsExpected(@Mocked final AnotherDependency mock2) {
       new Expectations() {{

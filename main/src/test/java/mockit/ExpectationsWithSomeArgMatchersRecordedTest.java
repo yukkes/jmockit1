@@ -9,14 +9,33 @@ import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class ExpectationsWithSomeArgMatchersRecordedTest.
+ */
 public final class ExpectationsWithSomeArgMatchersRecordedTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Dependency.
+    */
    static class Dependency {
+      
+      /** The value. */
       private final int value;
 
+      /**
+       * Instantiates a new dependency.
+       */
       Dependency() { value = 0; }
+      
+      /**
+       * Instantiates a new dependency.
+       *
+       * @param value the value
+       */
       Dependency(int value) { this.value = value; }
 
       @Override
@@ -26,42 +45,200 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       public int hashCode() { return value; }
    }
 
+   /**
+    * The Class Collaborator.
+    */
    @SuppressWarnings({"SameParameterValue", "unused"})
    static class Collaborator {
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(double value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(float value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the value
+       * @return the string
+       */
       String setValue(String value) { return ""; }
 
+      /**
+       * Sets the values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       */
       void setValues(long value1, byte value2, double value3, short value4) {}
+      
+      /**
+       * Boolean values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       * @return true, if successful
+       */
       boolean booleanValues(long value1, byte value2, double value3, short value4) { return true; }
 
+      /**
+       * Static set values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       */
       static void staticSetValues(long value1, byte value2, double value3, short value4) {}
 
+      /**
+       * Static long values.
+       *
+       * @param value1 the value 1
+       * @param value2 the value 2
+       * @param value3 the value 3
+       * @param value4 the value 4
+       * @return the long
+       */
       static long staticLongValues(long value1, byte value2, double value3, short value4) { return -2; }
 
+      /**
+       * Do something.
+       *
+       * @param src the src
+       * @return the int
+       */
       int doSomething(Dependency src) { return -1; }
+      
+      /**
+       * Do something.
+       *
+       * @param src the src
+       * @param s the s
+       * @return the int
+       */
       int doSomething(Dependency src, String s) { return -1; }
+      
+      /**
+       * Do something.
+       *
+       * @param src the src
+       * @param s the s
+       * @return the int
+       */
       int doSomething(Dependency src, String... s) { return -1; }
 
+      /**
+       * Simple operation.
+       *
+       * @param a the a
+       * @param b the b
+       */
       final void simpleOperation(int a, String b) {}
+      
+      /**
+       * Simple operation.
+       *
+       * @param a the a
+       * @param b the b
+       * @param c the c
+       */
       final void simpleOperation(int a, String b, Date c) {}
+      
+      /**
+       * Another operation.
+       *
+       * @param b the b
+       * @param l the l
+       * @return the long
+       */
       long anotherOperation(byte b, Long l) { return -1; }
 
+      /**
+       * Static void method.
+       *
+       * @param l the l
+       * @param c the c
+       * @param d the d
+       */
       static void staticVoidMethod(long l, char c, double d) {}
 
+      /**
+       * Static boolean method.
+       *
+       * @param b the b
+       * @param s the s
+       * @param array the array
+       * @return true, if successful
+       */
       static boolean staticBooleanMethod(boolean b, String s, int[] array) { return false; }
 
+      /**
+       * Method with array parameters.
+       *
+       * @param c the c
+       * @param s the s
+       * @param matrix the matrix
+       */
       void methodWithArrayParameters(char[][] c, String[] s, Object[][][] matrix) {}
 
+      /**
+       * Method with many parameters.
+       *
+       * @param b1 the b 1
+       * @param s1 the s 1
+       * @param i1 the i 1
+       * @param l1 the l 1
+       * @param str1 the str 1
+       * @param bo1 the bo 1
+       * @param f1 the f 1
+       * @param d1 the d 1
+       * @param ii1 the ii 1
+       * @param ss1 the ss 1
+       * @param b2 the b 2
+       * @param s2 the s 2
+       * @param i2 the i 2
+       * @param l2 the l 2
+       * @param str2 the str 2
+       * @param bo2 the bo 2
+       * @param f2 the f 2
+       * @param d2 the d 2
+       * @param ii2 the ii 2
+       * @param ss2 the ss 2
+       * @param c the c
+       */
       void methodWithManyParameters(
          byte b1, short s1, int i1, long l1, String str1, boolean bo1, float f1, double d1, int[] ii1, String[] ss1,
          byte b2, short s2, int i2, long l2, String str2, boolean bo2, float f2, double d2, int[] ii2, String[] ss2,
          char c) {}
    }
 
+   /** The mock. */
    @Mocked Collaborator mock;
 
+   /**
+    * Use matcher only for one argument.
+    */
    @Test
    public void useMatcherOnlyForOneArgument() {
       final Object o = new Object();
@@ -99,6 +276,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
          new char[][] {{'a', 'b'}, {'X', 'Y', 'Z'}}, null, new Object[][][] {null, {{1, 'X', "test"}}, {{o}}});
    }
 
+   /**
+    * Use matcher only for first argument with unexpected replay value.
+    */
    @Test
    public void useMatcherOnlyForFirstArgumentWithUnexpectedReplayValue() {
       thrown.expect(MissingInvocation.class);
@@ -110,6 +290,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       }};
    }
 
+   /**
+    * Use matcher only for second argument with unexpected replay value.
+    */
    @Test
    public void useMatcherOnlyForSecondArgumentWithUnexpectedReplayValue() {
       thrown.expect(MissingInvocation.class);
@@ -121,6 +304,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       }};
    }
 
+   /**
+    * Use matcher only for last argument with unexpected replay value.
+    */
    @Test
    public void useMatcherOnlyForLastArgumentWithUnexpectedReplayValue() {
       thrown.expect(MissingInvocation.class);
@@ -132,6 +318,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       }};
    }
 
+   /**
+    * Use matchers for parameters of all sizes.
+    */
    @Test
    public void useMatchersForParametersOfAllSizes() {
       new Expectations() {{
@@ -147,6 +336,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertEquals(0L, Collaborator.staticLongValues(12L, (byte) -7, 6.1, (short) 4));
    }
 
+   /**
+    * Use any int field.
+    */
    @Test
    public void useAnyIntField() {
       new Expectations() {{ mock.setValue(anyInt); }};
@@ -154,6 +346,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       mock.setValue(1);
    }
 
+   /**
+    * Use any string field.
+    */
    @Test
    public void useAnyStringField() {
       new Expectations() {{
@@ -165,6 +360,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertEquals("two", mock.setValue(null));
    }
 
+   /**
+    * Use several any fields.
+    */
    @Test
    public void useSeveralAnyFields() {
       final Date now = new Date();
@@ -198,6 +396,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
          (byte) 10, (short) 20, 30, 40L, "50", true, 70.0F, 80.0, null, null, 'x');
    }
 
+   /**
+    * Use with methods mixed with any fields.
+    */
    @Test
    public void useWithMethodsMixedWithAnyFields() {
       mock.simpleOperation(2, "abc", new Date());
@@ -215,8 +416,24 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       }};
    }
 
-   public interface Scheduler { List<String> getAlerts(Object o, int i, boolean b); }
+   /**
+    * The Interface Scheduler.
+    */
+   public interface Scheduler { /**
+  * Gets the alerts.
+  *
+  * @param o the o
+  * @param i the i
+  * @param b the b
+  * @return the alerts
+  */
+ List<String> getAlerts(Object o, int i, boolean b); }
 
+   /**
+    * Use matchers in invocations to interface methods.
+    *
+    * @param scheduler the scheduler
+    */
    @Test
    public void useMatchersInInvocationsToInterfaceMethods(@Mocked final Scheduler scheduler) {
       new Expectations() {{
@@ -228,6 +445,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
 
    // Tests for the matching of expectations to instances created during replay ///////////////////////////////////////////////////////////
 
+   /**
+    * Record expectations for mocked objects instantiated inside SUT.
+    *
+    * @param dep the dep
+    */
    @Test
    public void recordExpectationsForMockedObjectsInstantiatedInsideSUT(@Mocked Dependency dep) {
       new Expectations() {{
@@ -248,6 +470,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertEquals(2, mock.doSomething(src4));
    }
 
+   /**
+    * Verify unordered expectations for mocked objects instantiated inside SUT.
+    */
    @Test
    public void verifyUnorderedExpectationsForMockedObjectsInstantiatedInsideSUT() {
       Dependency src1 = new Dependency(1);
@@ -274,6 +499,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertTrue(l2 >= 0 && l2 != i2);
    }
 
+   /**
+    * Verify ordered expectations for mocked objects instantiated inside SUT.
+    */
    @Test
    public void verifyOrderedExpectationsForMockedObjectsInstantiatedInsideSUT() {
       Dependency src1 = new Dependency(1);
@@ -295,6 +523,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       }};
    }
 
+   /**
+    * Record expectation with matcher and regular argument matching mocked object instantiated inside SUT.
+    *
+    * @param dep the dep
+    */
    @Test
    public void recordExpectationWithMatcherAndRegularArgumentMatchingMockedObjectInstantiatedInsideSUT(
       @Mocked Dependency dep
@@ -318,6 +551,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertEquals(123, i);
    }
 
+   /**
+    * Record varargs expectation with matcher and regular argument matching mocked object instantiated inside SUT.
+    *
+    * @param dep the dep
+    */
    @Test
    public void recordVarargsExpectationWithMatcherAndRegularArgumentMatchingMockedObjectInstantiatedInsideSUT(
       @Mocked Dependency dep
@@ -341,6 +579,11 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       assertEquals(123, i);
    }
 
+   /**
+    * Record instantiation expectations for mocked objects instantiated inside SUT.
+    *
+    * @param anyDep the any dep
+    */
    @Test
    public void recordInstantiationExpectationsForMockedObjectsInstantiatedInsideSUT(@Mocked Dependency anyDep) {
       new Expectations() {{
@@ -363,6 +606,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
 
    // The following tests failed only when compiled with the Eclipse compiler /////////////////////////////////////////////////////////////
 
+   /**
+    * Expectation with matchers spanning multiple lines.
+    */
    @Test
    public void expectationWithMatchersSpanningMultipleLines() {
       new Expectations() {{
@@ -373,6 +619,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       mock.simpleOperation(1, null);
    }
 
+   /**
+    * Expectation with matcher in second line and constant argument in third line.
+    */
    @Test
    public void expectationWithMatcherInSecondLineAndConstantArgumentInThirdLine() {
       new Expectations() {{
@@ -384,6 +633,9 @@ public final class ExpectationsWithSomeArgMatchersRecordedTest
       mock.simpleOperation(123, "test");
    }
 
+   /**
+    * Expectations with partial matchers in every combination for method with three parameters.
+    */
    @Test
    public void expectationsWithPartialMatchersInEveryCombinationForMethodWithThreeParameters() {
       final Date now = new Date();

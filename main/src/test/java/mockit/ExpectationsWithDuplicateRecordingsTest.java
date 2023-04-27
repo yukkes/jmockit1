@@ -4,23 +4,97 @@ import static org.junit.Assert.*;
 
 import org.junit.*;
 
+/**
+ * The Class ExpectationsWithDuplicateRecordingsTest.
+ */
 public final class ExpectationsWithDuplicateRecordingsTest
 {
+   
+   /**
+    * The Class Blah.
+    */
    @SuppressWarnings({"unused", "NumericCastThatLosesPrecision"})
    static class Blah {
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) {}
+      
+      /**
+       * Do something.
+       *
+       * @param b the b
+       * @return the string
+       */
       String doSomething(boolean b) { return ""; }
+      
+      /**
+       * Do something.
+       *
+       * @param s the s
+       * @return the string
+       */
       String doSomething(String s) { return ""; }
+      
+      /**
+       * Do something.
+       *
+       * @param l the l
+       * @return the long
+       */
       long doSomething(Long l) { return -1L; }
+      
+      /**
+       * Do something.
+       *
+       * @param l the l
+       * @param o the o
+       * @return the long
+       */
       long doSomething(Long l, Object o) { return 1L; }
+      
+      /**
+       * Truncate.
+       *
+       * @param d the d
+       * @return the int
+       */
       int truncate(double d) { return (int) d; }
+      
+      /**
+       * Truncate.
+       *
+       * @param f the f
+       * @return the int
+       */
       int truncate(float f) { return (int) f; }
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       * @return the boolean
+       */
       Boolean doSomething(int i) { return true; }
+      
+      /**
+       * Do something.
+       *
+       * @param c the c
+       * @return the int
+       */
       int doSomething(char c) { return 123; }
    }
 
+   /** The mock. */
    @Mocked Blah mock;
 
+   /**
+    * Record same method with disjunctive argument matchers.
+    */
    @Test
    public void recordSameMethodWithDisjunctiveArgumentMatchers() {
       new Expectations() {{
@@ -34,6 +108,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertFalse(mock.doSomething(1));
    }
 
+   /**
+    * Record ambiguous expectations using argument matchers.
+    */
    @Test
    public void recordAmbiguousExpectationsUsingArgumentMatchers() {
       new Expectations() {{
@@ -45,6 +122,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals(2, mock.doSomething('x'));
    }
 
+   /**
+    * Record same method with identical argument matchers.
+    */
    @Test
    public void recordSameMethodWithIdenticalArgumentMatchers() {
       new Expectations() {{
@@ -62,6 +142,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals(2, mock.doSomething(1L, "test 2"));
    }
 
+   /**
+    * Record same method with overlapping argument matchers.
+    */
    @Test
    public void recordSameMethodWithOverlappingArgumentMatchers() {
       new Expectations() {{
@@ -79,6 +162,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals(2, mock.doSomething(1L));
    }
 
+   /**
+    * Record same method with exact argument and arg matcher but in wrong order of specificity.
+    */
    @Test
    public void recordSameMethodWithExactArgumentAndArgMatcherButInWrongOrderOfSpecificity() {
       new Expectations() {{
@@ -90,6 +176,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertFalse(mock.doSomething(2)); // matches no expectation
    }
 
+   /**
+    * Record same method with arguments or matchers of varying specificity.
+    */
    @Test
    public void recordSameMethodWithArgumentsOrMatchersOfVaryingSpecificity() {
       new Expectations() {{
@@ -122,6 +211,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals("c", mock.doSomething("")); // matches the non-specific expectation
    }
 
+   /**
+    * Record same method with opposing matchers.
+    */
    @Test
    public void recordSameMethodWithOpposingMatchers() {
       new Expectations() {{
@@ -133,6 +225,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals("null", mock.doSomething((String) null));
    }
 
+   /**
+    * Record ambiguous expectations using the same matcher but with different arguments.
+    */
    @Test
    public void recordAmbiguousExpectationsUsingTheSameMatcherButWithDifferentArguments() {
       new Expectations() {{
@@ -152,6 +247,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertTrue(mock.doSomething(2));
    }
 
+   /**
+    * Record unambiguous expectations using the same matcher but with different arguments.
+    */
    @Test @SuppressWarnings("unused")
    public void recordUnambiguousExpectationsUsingTheSameMatcherButWithDifferentArguments() {
       new Expectations() {{
@@ -237,6 +335,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals(2L, mock.doSomething(123L));
    }
 
+   /**
+    * Record unambiguous expectations with same matcher for one parameter and different arguments for another.
+    */
    @Test
    public void recordUnambiguousExpectationsWithSameMatcherForOneParameterAndDifferentArgumentsForAnother() {
       Blah b = new Blah();
@@ -254,6 +355,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals(0L, b.doSomething(0L, null));
    }
 
+   /**
+    * Record overlapping expectations with same matcher for one parameter and different arguments for another.
+    */
    @Test
    public void recordOverlappingExpectationsWithSameMatcherForOneParameterAndDifferentArgumentsForAnother() {
       Blah b = new Blah();
@@ -271,6 +375,9 @@ public final class ExpectationsWithDuplicateRecordingsTest
       assertEquals(2L, b.doSomething(0L, null));
    }
 
+   /**
+    * Record multiple non strict expectations with same delegate.
+    */
    @Test
    public void recordMultipleNonStrictExpectationsWithSameDelegate() {
       final Delegate<String> delegate = new Delegate<String>() {

@@ -1,9 +1,19 @@
 package mockit;
 
+/**
+ * The Class ClassWithObjectOverrides.
+ */
 public final class ClassWithObjectOverrides implements Cloneable
 {
+   
+   /** The text. */
    private final StringBuilder text;
 
+   /**
+    * Instantiates a new class with object overrides.
+    *
+    * @param text the text
+    */
    public ClassWithObjectOverrides(String text) { this.text = new StringBuilder(text); }
 
    @Override
@@ -31,7 +41,23 @@ public final class ClassWithObjectOverrides implements Cloneable
       return theClone;
    }
 
+   /**
+    * Gets the int value.
+    *
+    * @return the int value
+    */
    int getIntValue() { return -1; }
+   
+   /**
+    * Do something.
+    */
    void doSomething() { throw new RuntimeException(); }
+   
+   /**
+    * Do something.
+    *
+    * @param arg the arg
+    * @return the int
+    */
    int doSomething(Object arg) { return arg.hashCode(); }
 }

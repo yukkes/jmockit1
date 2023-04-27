@@ -16,24 +16,51 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import static org.junit.runners.MethodSorters.*;
 
+/**
+ * The Class TestedClassWithFullStandardDITest.
+ */
 @FixMethodOrder(NAME_ASCENDING)
 public final class TestedClassWithFullStandardDITest
 {
+   
+   /**
+    * The Class TestedClass.
+    */
    public static class TestedClass {
+      
+      /** The dependency to be mocked. */
       @Inject private Runnable dependencyToBeMocked;
+      
+      /** The dependency 2. */
       @Inject private FirstLevelDependency dependency2;
+      
+      /** The dependency 3. */
       @Resource private FirstLevelDependency dependency3;
+      
+      /** The common dependency. */
       @Inject private CommonDependency commonDependency;
+      
+      /** The text. */
       String text;
+      
+      /** The initialized. */
       boolean initialized;
+      
+      /** The destroyed. */
       static boolean destroyed;
 
+      /**
+       * Initialize.
+       */
       @PostConstruct
       void initialize() {
          assertNotNull(dependency3);
          initialized = true;
       }
 
+      /**
+       * Destroy.
+       */
       @PreDestroy
       void destroy() {
          assertTrue("TestedClass not initialized", initialized);
@@ -41,47 +68,117 @@ public final class TestedClassWithFullStandardDITest
       }
    }
 
+   /**
+    * The Class AnotherTestedClass.
+    */
    static final class AnotherTestedClass {
+      
+      /** The em. */
       @PersistenceContext EntityManager em;
+      
+      /** The session. */
       @Inject HttpSession session;
+      
+      /** The application context. */
       @Inject ServletContext applicationContext;
    }
 
+   /**
+    * The Class FirstLevelDependency.
+    */
    public static class FirstLevelDependency {
+      
+      /** The dependency. */
       @EJB private SecondLevelDependency dependency;
+      
+      /** The static dependency. */
       @Inject private static SecondLevelDependency staticDependency;
+      
+      /** The common dependency. */
       @Inject private CommonDependency commonDependency;
+      
+      /** The dependency to be mocked. */
       @Resource private static Runnable dependencyToBeMocked;
+      
+      /** The em. */
       @PersistenceContext private EntityManager em;
    }
 
+   /**
+    * The Class SecondLevelDependency.
+    */
    public static class SecondLevelDependency {
+      
+      /** The common dependency. */
       @Inject CommonDependency commonDependency;
+      
+      /** The em. */
       @PersistenceContext private EntityManager em;
+      
+      /** The servlet context. */
       @Inject ServletContext servletContext;
+      
+      /** The http session. */
       @Inject HttpSession httpSession;
+      
+      /** The initialized. */
       boolean initialized;
+      
+      /** The terminated. */
       static boolean terminated;
 
+      /**
+       * Initialize.
+       */
       @PostConstruct void initialize() { initialized = true; }
+      
+      /**
+       * Terminate.
+       */
       @PreDestroy void terminate() { terminated = true; }
    }
 
+   /**
+    * The Class CommonDependency.
+    */
    public static class CommonDependency {
+      
+      /** The em factory. */
       @PersistenceUnit(unitName = "test") private EntityManagerFactory emFactory;
+      
+      /** The em. */
       @PersistenceContext(unitName = "test") private EntityManager em;
    }
 
+   /** The tested. */
    @Tested(fullyInitialized = true) TestedClass tested;
+   
+   /** The tested 2. */
    @Tested(fullyInitialized = true) AnotherTestedClass tested2;
+   
+   /** The mocked dependency. */
    @Injectable Runnable mockedDependency;
 
+   /** The persistence xml file. */
    static File persistenceXmlFile;
+   
+   /** The named EM factory. */
    static EntityManagerFactory namedEMFactory;
+   
+   /** The named EM. */
    static EntityManager namedEM;
+   
+   /** The default EM factory. */
    static EntityManagerFactory defaultEMFactory;
+   
+   /** The default EM. */
    static EntityManager defaultEM;
 
+   /**
+    * Sets the up persistence.
+    *
+    * @throws Exception the exception
+    */
    @BeforeClass @SuppressWarnings("rawtypes")
    public static void setUpPersistence() throws Exception {
       final class FakeEntityManager implements EntityManager {
@@ -184,6 +281,11 @@ public final class TestedClassWithFullStandardDITest
       createTemporaryPersistenceXmlFileWithDefaultPersistenceUnit();
    }
 
+   /**
+    * Creates the temporary persistence xml file with default persistence unit.
+    *
+    * @throws IOException Signals that an I/O exception has occurred.
+    */
    static void createTemporaryPersistenceXmlFileWithDefaultPersistenceUnit() throws IOException {
       String rootOfClasspath = TestedClass.class.getProtectionDomain().getCodeSource().getLocation().getFile();
       File tempFolder = new File(rootOfClasspath + "META-INF");
@@ -196,12 +298,18 @@ public final class TestedClassWithFullStandardDITest
       xmlWriter.close();
    }
 
+   /**
+    * Delete default persistence xml file.
+    */
    @AfterClass
    public static void deleteDefaultPersistenceXmlFile() {
       persistenceXmlFile.delete();
       persistenceXmlFile.getParentFile().delete();
    }
 
+   /**
+    * Use fully initialized tested object.
+    */
    @Test
    public void useFullyInitializedTestedObject() {
       // First level dependencies:
@@ -235,11 +343,17 @@ public final class TestedClassWithFullStandardDITest
       assertTrue(tested.dependency2.dependency.initialized);
    }
 
+   /**
+    * Use fully initialized tested object again.
+    */
    @Test
    public void useFullyInitializedTestedObjectAgain() {
       assertNull(tested.text);
    }
 
+   /**
+    * Verify emulated http session.
+    */
    @Test
    public void verifyEmulatedHttpSession() {
       HttpSession session = tested2.session;
@@ -275,6 +389,9 @@ public final class TestedClassWithFullStandardDITest
       assertSame(session, tested.dependency3.dependency.httpSession);
    }
 
+   /**
+    * Verify emulated servlet context.
+    */
    @Test
    public void verifyEmulatedServletContext() {
       ServletContext ctx = tested2.applicationContext;
@@ -295,6 +412,9 @@ public final class TestedClassWithFullStandardDITest
       assertSame(ctx, tested.dependency2.dependency.servletContext);
    }
 
+   /**
+    * Verify that tested fields were cleared and pre destroy methods were executed.
+    */
    @After
    public void verifyThatTestedFieldsWereClearedAndPreDestroyMethodsWereExecuted() {
       assertNull(tested);
@@ -303,6 +423,9 @@ public final class TestedClassWithFullStandardDITest
       assertTrue(SecondLevelDependency.terminated);
    }
 
+   /**
+    * Clear entity managers.
+    */
    @After
    public void clearEntityManagers() {
       namedEM = null;

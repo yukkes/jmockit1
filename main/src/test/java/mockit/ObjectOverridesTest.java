@@ -7,8 +7,18 @@ import static org.junit.Assert.*;
 
 import mockit.internal.util.*;
 
+/**
+ * The Class ObjectOverridesTest.
+ */
 public final class ObjectOverridesTest
 {
+   
+   /**
+    * Verify standard behavior of overridable object methods in mocked interface.
+    *
+    * @param r1 the r 1
+    * @param r2 the r 2
+    */
    @Test
    public void verifyStandardBehaviorOfOverridableObjectMethodsInMockedInterface(@Mocked Runnable r1, @Mocked Runnable r2) {
       assertDefaultEqualsBehavior(r1, r2);
@@ -21,6 +31,12 @@ public final class ObjectOverridesTest
       assertDefaultToStringBehavior(r2);
    }
 
+   /**
+    * Assert default equals behavior.
+    *
+    * @param obj1 the obj 1
+    * @param obj2 the obj 2
+    */
    @SuppressWarnings("SimplifiableJUnitAssertion")
    void assertDefaultEqualsBehavior(Object obj1, Object obj2) {
       assertFalse(obj1.equals(null));
@@ -30,9 +46,26 @@ public final class ObjectOverridesTest
       assertFalse(obj1.equals(obj2));
    }
 
+   /**
+    * Assert default hash code behavior.
+    *
+    * @param obj the obj
+    */
    void assertDefaultHashCodeBehavior(Object obj) { assertEquals(System.identityHashCode(obj), obj.hashCode()); }
+   
+   /**
+    * Assert default to string behavior.
+    *
+    * @param obj the obj
+    */
    void assertDefaultToStringBehavior(Object obj) { assertEquals(ObjectMethods.objectIdentity(obj), obj.toString()); }
 
+   /**
+    * Verify standard behavior of overridden object methods in mocked JRE class.
+    *
+    * @param d1 the d 1
+    * @param d2 the d 2
+    */
    @Test
    public void verifyStandardBehaviorOfOverriddenObjectMethodsInMockedJREClass(@Mocked Date d1, @Mocked Date d2) {
       assertDefaultEqualsBehavior(d1, d2);
@@ -45,15 +78,26 @@ public final class ObjectOverridesTest
       assertDefaultToStringBehavior(d2);
    }
 
+   /** The a. */
    @Mocked ClassWithObjectOverrides a;
+   
+   /** The b. */
    @Mocked ClassWithObjectOverrides b;
 
+   /**
+    * Call object methods in mock before every test.
+    */
    @Before
    public void callObjectMethodsInMockBeforeEveryTest() {
       assertEquals(System.identityHashCode(a), a.hashCode());
       assertEquals(b, b);
    }
 
+   /**
+    * Verify standard behavior of overridden object methods in mocked class.
+    *
+    * @throws Throwable the throwable
+    */
    @Test @SuppressWarnings("FinalizeCalledExplicitly")
    public void verifyStandardBehaviorOfOverriddenObjectMethodsInMockedClass() throws Throwable {
       assertDefaultEqualsBehavior(a, b);
@@ -69,6 +113,9 @@ public final class ObjectOverridesTest
       b.finalize();
    }
 
+   /**
+    * Mock override of equals method.
+    */
    @Test @SuppressWarnings({"SimplifiableJUnitAssertion", "EqualsBetweenInconvertibleTypes"})
    public void mockOverrideOfEqualsMethod() {
       new Expectations() {{
@@ -85,6 +132,9 @@ public final class ObjectOverridesTest
       assertTrue(b.equals(a));
    }
 
+   /**
+    * Mock override of hash code method.
+    */
    @Test
    public void mockOverrideOfHashCodeMethod() {
       assertTrue(a.hashCode() != b.hashCode());
@@ -98,6 +148,9 @@ public final class ObjectOverridesTest
       assertEquals(45, b.hashCode());
    }
 
+   /**
+    * Mock override of to string method.
+    */
    @Test
    public void mockOverrideOfToStringMethod() {
       //noinspection SimplifiableJUnitAssertion
@@ -116,6 +169,9 @@ public final class ObjectOverridesTest
       }};
    }
 
+   /**
+    * Mock override of clone method.
+    */
    @Test
    public void mockOverrideOfCloneMethod() {
       new Expectations() {{
@@ -125,6 +181,9 @@ public final class ObjectOverridesTest
       assertSame(b, a.clone());
    }
 
+   /**
+    * Record expectations on overridden object method as always non strict.
+    */
    @Test
    public void recordExpectationsOnOverriddenObjectMethodAsAlwaysNonStrict() {
       new Expectations() {{
@@ -137,13 +196,27 @@ public final class ObjectOverridesTest
       a.doSomething();
    }
 
+   /**
+    * The Class ClassWithEqualsOverride.
+    */
    @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
    static class ClassWithEqualsOverride {
+      
+      /** The value. */
       private final int value;
+      
+      /**
+       * Instantiates a new class with equals override.
+       *
+       * @param value the value
+       */
       ClassWithEqualsOverride(int value) { this.value = value; }
       @Override public boolean equals(Object other) { return ((ClassWithEqualsOverride) other).value == value; }
    }
 
+   /**
+    * Partially mock instances of class with equals override whose instance gets passed in recorded expectation.
+    */
    @Test
    public void partiallyMockInstancesOfClassWithEqualsOverrideWhoseInstanceGetsPassedInRecordedExpectation() {
       final Object o1 = new ClassWithEqualsOverride(123);
@@ -154,6 +227,9 @@ public final class ObjectOverridesTest
       a.doSomething(o2);
    }
 
+   /**
+    * Partially mock instances of JRE class with equals override whose instance gets passed in recorded expectation.
+    */
    @Test
    public void partiallyMockInstancesOfJREClassWithEqualsOverrideWhoseInstanceGetsPassedInRecordedExpectation() {
       final Object o1 = new Date(123);

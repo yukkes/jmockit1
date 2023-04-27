@@ -6,21 +6,57 @@ import javax.annotation.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class MockedClassWithSuperClassTest.
+ */
 public final class MockedClassWithSuperClassTest
 {
+   
+   /**
+    * The Class SubclassOfJREClass.
+    */
    static class SubclassOfJREClass extends Writer {
       @Override public void write(@Nonnull char[] cbuf, int off, int len) {}
       @Override public void flush() {}
       @Override public void close() { throw new UnsupportedOperationException(); }
    }
 
+   /**
+    * The Class BaseClass.
+    */
    static class BaseClass {
+      
+      /**
+       * Do something.
+       *
+       * @return the int
+       */
       protected int doSomething() { return 123; }
+      
+      /**
+       * Static method.
+       *
+       * @return the int
+       */
       static int staticMethod() { return -1; }
    }
 
-   public static class Subclass extends BaseClass { BaseClass getInstance() { return this; } }
+   /**
+    * The Class Subclass.
+    */
+   public static class Subclass extends BaseClass { /**
+  * Gets the single instance of Subclass.
+  *
+  * @return single instance of Subclass
+  */
+ BaseClass getInstance() { return this; } }
 
+   /**
+    * Mocked class extending JRE class.
+    *
+    * @param mock the mock
+    * @throws Exception the exception
+    */
    @Test
    public void mockedClassExtendingJREClass(@Mocked SubclassOfJREClass mock) throws Exception {
       // Mocked:
@@ -40,6 +76,11 @@ public final class MockedClassWithSuperClassTest
       try { new SubclassOfJREClass() {}.close(); } catch (UnsupportedOperationException ignore) {}
    }
 
+   /**
+    * Mocked class extending non JRE class.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockedClassExtendingNonJREClass(@Mocked final Subclass mock) {
       new Expectations() {{ mock.doSomething(); result = 45; times = 2; }};
@@ -57,6 +98,11 @@ public final class MockedClassWithSuperClassTest
       assertEquals(100, b2.doSomething());
    }
 
+   /**
+    * Cascading subclass with method returning cascaded base class instance.
+    *
+    * @param mock the mock
+    */
    @Test
    public void cascadingSubclassWithMethodReturningCascadedBaseClassInstance(@Mocked Subclass mock) {
       // The subclass is already mocked at this point, when the cascaded instance gets created.
@@ -66,6 +112,11 @@ public final class MockedClassWithSuperClassTest
       assertEquals(0, mock.doSomething());
    }
 
+   /**
+    * Record expectation on static method from base class.
+    *
+    * @param unused the unused
+    */
    @Test
    public void recordExpectationOnStaticMethodFromBaseClass(@Mocked Subclass unused) {
       new Expectations() {{
@@ -76,24 +127,57 @@ public final class MockedClassWithSuperClassTest
       assertEquals(123, BaseClass.staticMethod());
    }
 
-   static class BaseClassWithConstructor { BaseClassWithConstructor(@SuppressWarnings("unused") boolean b) {} }
+   /**
+    * The Class BaseClassWithConstructor.
+    */
+   static class BaseClassWithConstructor { /**
+  * Instantiates a new base class with constructor.
+  *
+  * @param b the b
+  */
+ BaseClassWithConstructor(@SuppressWarnings("unused") boolean b) {} }
+   
+   /**
+    * The Class DerivedClass.
+    */
    static class DerivedClass extends BaseClassWithConstructor {
+      
+      /**
+       * Instantiates a new derived class.
+       */
       protected DerivedClass() {
          // TRYCATCHBLOCK instruction appears before call to super, which caused a VerifyError.
          super(true);
          try { doSomething(); } catch (RuntimeException ignore) {}
       }
 
+      /**
+       * Do something.
+       */
       private void doSomething() {}
    }
 
+   /**
+    * Mock subclass with constructor containing try catch.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockSubclassWithConstructorContainingTryCatch(@Mocked DerivedClass mock) {
       new DerivedClass();
    }
 
+   /**
+    * The Class Subclass2.
+    */
    static class Subclass2 extends BaseClass {}
 
+   /**
+    * Record same method on different mocked subclasses.
+    *
+    * @param mock1 the mock 1
+    * @param mock2 the mock 2
+    */
    @Test
    public void recordSameMethodOnDifferentMockedSubclasses(@Mocked final Subclass mock1, @Mocked final Subclass2 mock2) {
       new Expectations() {{
@@ -105,6 +189,11 @@ public final class MockedClassWithSuperClassTest
       assertEquals(2, mock2.doSomething());
    }
 
+   /**
+    * Record method on mocked base class but replay on subclass instance.
+    *
+    * @param baseMock the base mock
+    */
    @Test
    public void recordMethodOnMockedBaseClassButReplayOnSubclassInstance(@Mocked final BaseClass baseMock) {
       new Expectations() {{ baseMock.doSomething(); result = 45; }};
@@ -114,23 +203,61 @@ public final class MockedClassWithSuperClassTest
       assertEquals( 45, baseMock.doSomething());
    }
 
+   /**
+    * The Class BaseClassWithTwoConstructors.
+    */
    static class BaseClassWithTwoConstructors {
+      
+      /** The value. */
       final int value;
+      
+      /**
+       * Instantiates a new base class with two constructors.
+       */
       @SuppressWarnings("unused") BaseClassWithTwoConstructors() { value = 1; }
+      
+      /**
+       * Instantiates a new base class with two constructors.
+       *
+       * @param value the value
+       */
       BaseClassWithTwoConstructors(int value) { this.value = value; }
    }
 
-   static class SubclassWithOneConstructor extends BaseClassWithTwoConstructors { SubclassWithOneConstructor() { super(2); } }
+   /**
+    * The Class SubclassWithOneConstructor.
+    */
+   static class SubclassWithOneConstructor extends BaseClassWithTwoConstructors { /**
+  * Instantiates a new subclass with one constructor.
+  */
+ SubclassWithOneConstructor() { super(2); } }
+   
+   /**
+    * The Class SecondLevelSubclass1.
+    */
    static final class SecondLevelSubclass1 extends SubclassWithOneConstructor {}
 
+   /**
+    * Mock direct subclass of base with two constructors but instantiate second level subclass.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockDirectSubclassOfBaseWithTwoConstructorsButInstantiateSecondLevelSubclass(@Mocked SubclassWithOneConstructor mock) {
       int value = new SecondLevelSubclass1().value;
       assertEquals(2, value);
    }
 
+   /**
+    * The Class SecondLevelSubclass2.
+    */
    static final class SecondLevelSubclass2 extends SubclassWithOneConstructor {}
 
+   /**
+    * Mock one subclass but instantiate unmocked sibling.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockOneSubclassButInstantiateUnmockedSibling(@Mocked SecondLevelSubclass1 mock) {
       int value = new SecondLevelSubclass2().value;

@@ -14,33 +14,132 @@ import mockit.internal.expectations.invocation.*;
 
 import static mockit.ExpectationsWithArgMatchersTest.Delegates.*;
 
+/**
+ * The Class ExpectationsWithArgMatchersTest.
+ */
 public final class ExpectationsWithArgMatchersTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Collaborator.
+    */
    @SuppressWarnings("unused")
    static class Collaborator {
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(double value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the value
+       * @return true, if successful
+       */
       boolean setValue(float value) { return false; }
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(char value) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(String value) {}
+      
+      /**
+       * Sets the values.
+       *
+       * @param c the c
+       * @param b the b
+       */
       void setValues(char c, boolean b) {}
+      
+      /**
+       * Sets the values.
+       *
+       * @param values the new values
+       */
       void setValues(String[] values) {}
+      
+      /**
+       * Sets the textual values.
+       *
+       * @param values the new textual values
+       */
       void setTextualValues(Collection<String> values) {}
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       */
       void doSomething(Integer i) {}
+      
+      /**
+       * Do something.
+       *
+       * @param s the s
+       * @return true, if successful
+       */
       boolean doSomething(String s) { return false; }
 
+      /**
+       * Simple operation.
+       *
+       * @param a the a
+       * @param b the b
+       * @param c the c
+       */
       final void simpleOperation(int a, String b, Date c) {}
 
+      /**
+       * Sets the value.
+       *
+       * @param cert the new value
+       */
       void setValue(Certificate cert) {}
+      
+      /**
+       * Sets the value.
+       *
+       * @param ex the new value
+       */
       void setValue(Exception ex) {}
 
+      /**
+       * Use object.
+       *
+       * @param arg the arg
+       * @return the string
+       */
       String useObject(Object arg) { return ""; }
    }
 
+   /** The mock. */
    @Mocked Collaborator mock;
 
+   /**
+    * Verify expectation numeric equality matcher but fail to match on replay.
+    */
    @Test
    public void verifyExpectationNumericEqualityMatcherButFailToMatchOnReplay() {
       thrown.expect(MissingInvocation.class);
@@ -54,6 +153,9 @@ public final class ExpectationsWithArgMatchersTest
       new Verifications() {{ mock.setValue(withEqual(2.3, 0.01)); }};
    }
 
+   /**
+    * Verify expectation using numeric equality matcher but replay with non numeric parameter type.
+    */
    @Test
    public void verifyExpectationUsingNumericEqualityMatcherButReplayWithNonNumericParameterType() {
       thrown.expect(MissingInvocation.class);
@@ -63,6 +165,9 @@ public final class ExpectationsWithArgMatchersTest
       new Verifications() {{ mock.useObject(withEqual(2.3, 0.01)); }};
    }
 
+   /**
+    * Verify expectation using inequality matcher but fail to match on replay.
+    */
    @Test
    public void verifyExpectationUsingInequalityMatcherButFailToMatchOnReplay() {
       thrown.expect(MissingInvocation.class);
@@ -75,6 +180,9 @@ public final class ExpectationsWithArgMatchersTest
       new Verifications() {{ mock.setValue(withNotEqual(2)); }};
    }
 
+   /**
+    * Verify expectations using numeric equality matchers.
+    */
    @Test
    public void verifyExpectationsUsingNumericEqualityMatchers() {
       new Expectations() {{
@@ -86,6 +194,9 @@ public final class ExpectationsWithArgMatchersTest
       assertFalse(mock.setValue(2.05F));
    }
 
+   /**
+    * Record expectation with delegate without the parameter type.
+    */
    @Test
    public void recordExpectationWithDelegateWithoutTheParameterType() {
       new Expectations() {{
@@ -100,17 +211,51 @@ public final class ExpectationsWithArgMatchersTest
       assertNull(result);
    }
 
+   /**
+    * The Class CollectionElementDelegate.
+    *
+    * @param <T> the generic type
+    */
    static final class CollectionElementDelegate<T> implements Delegate<Collection<T>> {
+      
+      /** The item. */
       private final T item;
+      
+      /**
+       * Instantiates a new collection element delegate.
+       *
+       * @param item the item
+       */
       CollectionElementDelegate(T item) { this.item = item; }
+      
+      /**
+       * Checks for item.
+       *
+       * @param items the items
+       * @return true, if successful
+       */
       @SuppressWarnings("unused") boolean hasItem(Collection<T> items) { return items.contains(item); }
    }
 
+   /**
+    * The Class Delegates.
+    */
    @SuppressWarnings("unused")
    static final class Delegates {
+      
+      /**
+       * Collection element.
+       *
+       * @param <T> the generic type
+       * @param item the item
+       * @return the delegate
+       */
       static <T> Delegate<Collection<T>> collectionElement(T item) { return new CollectionElementDelegate<>(item); }
    }
 
+   /**
+    * Expect invocations with named delegate matcher.
+    */
    @Test
    public void expectInvocationsWithNamedDelegateMatcher() {
       new Expectations() {{
@@ -121,6 +266,9 @@ public final class ExpectationsWithArgMatchersTest
       mock.setTextualValues(values);
    }
 
+   /**
+    * Use mocked method before recording expectation with argument matcher.
+    */
    @Test
    public void useMockedMethodBeforeRecordingExpectationWithArgumentMatcher() {
       assertFalse(mock.doSomething("abc"));
@@ -134,6 +282,9 @@ public final class ExpectationsWithArgMatchersTest
       assertTrue(mock.doSomething("abc"));
    }
 
+   /**
+    * Record expectations using the any fields for parameter of type object.
+    */
    @Test
    public void recordExpectationsUsingTheAnyFieldsForParameterOfTypeObject() {
       new Expectations() {{
@@ -152,6 +303,9 @@ public final class ExpectationsWithArgMatchersTest
       assertInvocationsWithArgumentsOfDifferentTypesToMethodAcceptingAnyObject();
    }
 
+   /**
+    * Assert invocations with arguments of different types to method accepting any object.
+    */
    void assertInvocationsWithArgumentsOfDifferentTypesToMethodAcceptingAnyObject() {
       assertEquals("String",  mock.useObject("test"));
       assertEquals("String",  mock.useObject(null)); // uses the first recorded expectation, since they all match null
@@ -167,6 +321,9 @@ public final class ExpectationsWithArgMatchersTest
       assertEquals("double",  mock.useObject(23.456));
    }
 
+   /**
+    * Record expectations using the with any method for parameter of type object.
+    */
    @Test
    public void recordExpectationsUsingTheWithAnyMethodForParameterOfTypeObject() {
       new Expectations() {{
@@ -185,6 +342,9 @@ public final class ExpectationsWithArgMatchersTest
       assertInvocationsWithArgumentsOfDifferentTypesToMethodAcceptingAnyObject();
    }
 
+   /**
+    * Declare field in expectation block with name having same prefix as argument matching field.
+    */
    @Test
    public void declareFieldInExpectationBlockWithNameHavingSamePrefixAsArgumentMatchingField() {
       new Expectations() {
@@ -198,6 +358,9 @@ public final class ExpectationsWithArgMatchersTest
       mock.setValue(1);
    }
 
+   /**
+    * Declare method in expectation block with name having same prefix as argument matching method.
+    */
    @Test
    public void declareMethodInExpectationBlockWithNameHavingSamePrefixAsArgumentMatchingMethod() {
       final List<Integer> values = new ArrayList<>();
@@ -229,6 +392,11 @@ public final class ExpectationsWithArgMatchersTest
 
    // "Missing invocations" ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Expect invocation with same mock instance but replay with null.
+    *
+    * @param cert the cert
+    */
    @Test
    public void expectInvocationWithSameMockInstanceButReplayWithNull(
       // This class defines an abstract "toString" override, which initially was erroneously
@@ -244,6 +412,9 @@ public final class ExpectationsWithArgMatchersTest
       thrown.expect(MissingInvocation.class);
    }
 
+   /**
+    * Expect invocation with matcher which invokes mocked method.
+    */
    @Test
    public void expectInvocationWithMatcherWhichInvokesMockedMethod() {
       new Expectations() {{
@@ -264,10 +435,23 @@ public final class ExpectationsWithArgMatchersTest
 
    // Verifications ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * The Class ReusableMatcher.
+    */
    class ReusableMatcher implements Delegate<Integer> {
+      
+      /**
+       * Checks if is positive.
+       *
+       * @param i the i
+       * @return true, if is positive
+       */
       @Mock final boolean isPositive(int i) { return i > 0; }
    }
 
+   /**
+    * Extending A reusable argument matcher.
+    */
    @Test
    public void extendingAReusableArgumentMatcher() {
       mock.setValue(5);

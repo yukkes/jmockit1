@@ -9,25 +9,72 @@ import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class ExpectationsWithVarArgsMatchersTest.
+ */
 public final class ExpectationsWithVarArgsMatchersTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /**
+       * Complex operation.
+       *
+       * @param input1 the input 1
+       * @param otherInputs the other inputs
+       * @return the list
+       */
       List<?> complexOperation(Object input1, Object... otherInputs) {
          return input1 == null ? Collections.emptyList() : asList(otherInputs);
       }
 
+      /**
+       * Another operation.
+       *
+       * @param i the i
+       * @param b the b
+       * @param s the s
+       * @param otherStrings the other strings
+       * @return the int
+       */
       @SuppressWarnings("unused")
       int anotherOperation(int i, boolean b, String s, String... otherStrings) { return -1; }
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       * @param values the values
+       * @return true, if successful
+       */
       static boolean doSomething(int i, Object... values) { return i + values.length > 0; }
    }
 
-   public interface Dependency { void doSomething(String... args); }
+   /**
+    * The Interface Dependency.
+    */
+   public interface Dependency { /**
+  * Do something.
+  *
+  * @param args the args
+  */
+ void doSomething(String... args); }
 
+   /** The mock. */
    @Mocked Collaborator mock;
+   
+   /** The mock 2. */
    @Mocked Dependency mock2;
 
+   /**
+    * Replay varargs method with different than expected non varargs argument.
+    */
    @Test
    public void replayVarargsMethodWithDifferentThanExpectedNonVarargsArgument() {
       thrown.expect(MissingInvocation.class);
@@ -37,6 +84,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       new Verifications() {{ mock.complexOperation(1, 2, 3); }};
    }
 
+   /**
+    * Replay varargs method with different than expected number of varargs arguments.
+    */
    @Test
    public void replayVarargsMethodWithDifferentThanExpectedNumberOfVarargsArguments() {
       new Expectations() {{ mock2.doSomething("1", "2", "3"); times = 1; }};
@@ -45,6 +95,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock2.doSomething("1", "2");
    }
 
+   /**
+    * Replay varargs method with different than expected varargs argument.
+    */
    @Test
    public void replayVarargsMethodWithDifferentThanExpectedVarargsArgument() {
       new Expectations() {{ mock2.doSomething("1", "2", "3"); }};
@@ -53,6 +106,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock2.doSomething("1", "2", "4");
    }
 
+   /**
+    * Expect invocation on method with varargs argument using argument matchers.
+    */
    @Test
    public void expectInvocationOnMethodWithVarargsArgumentUsingArgumentMatchers() {
       new Expectations() {{
@@ -64,6 +120,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock2.doSomething("Cab", "123.");
    }
 
+   /**
+    * Expect invocation with any number of variable arguments.
+    */
    @Test
    public void expectInvocationWithAnyNumberOfVariableArguments() {
       new Expectations() {{
@@ -78,6 +137,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation(123, true, "test", 3);
    }
 
+   /**
+    * Expect invocations with matcher for varargs parameter only.
+    */
    @Test
    public void expectInvocationsWithMatcherForVarargsParameterOnly() {
       final List<Integer> values = asList(1, 2, 3);
@@ -100,6 +162,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       assertTrue(Collaborator.doSomething(-2, "test"));
    }
 
+   /**
+    * Expect invocation on varargs method with matcher only for regular first parameter.
+    */
    @Test
    public void expectInvocationOnVarargsMethodWithMatcherOnlyForRegularFirstParameter() {
       new Expectations() {{ mock.complexOperation(any, 1, 2); }};
@@ -107,6 +172,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation("test", 1, 2);
    }
 
+   /**
+    * Expect invocation with matchers for regular parameters and all varargs values.
+    */
    @Test
    public void expectInvocationWithMatchersForRegularParametersAndAllVarargsValues() {
       new Expectations() {{
@@ -118,6 +186,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation("abc", 1, 2, 3, true);
    }
 
+   /**
+    * Record expectations with matchers for some regular parameters and none for varargs.
+    */
    @Test
    public void recordExpectationsWithMatchersForSomeRegularParametersAndNoneForVarargs() {
       new Expectations() {{
@@ -149,6 +220,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       assertEquals(0, mock.anotherOperation(32, true, "-Xx", "a", null));
    }
 
+   /**
+    * Expect invocations with non null regular argument and any varargs.
+    */
    @Test
    public void expectInvocationsWithNonNullRegularArgumentAndAnyVarargs() {
       new Expectations() {{ mock.complexOperation(withNotNull(), (Object[]) any); times = 3; }};
@@ -158,6 +232,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       mock.complexOperation(123);
    }
 
+   /**
+    * Expect invocation with non null regular argument and any varargs but replay with null.
+    */
    @Test
    public void expectInvocationWithNonNullRegularArgumentAndAnyVarargsButReplayWithNull() {
       thrown.expect(MissingInvocation.class);
@@ -167,6 +244,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       new Verifications() {{ mock.complexOperation(withNotNull(), (Object[]) any); }};
    }
 
+   /**
+    * Expect invocation with matchers for some regular parameters and all for varargs.
+    */
    @Test
    public void expectInvocationWithMatchersForSomeRegularParametersAndAllForVarargs() {
       new Expectations() {{
@@ -184,12 +264,33 @@ public final class ExpectationsWithVarArgsMatchersTest
       assertEquals(0, mock.anotherOperation(0, false, "Abc", "", "Abc", "test", ""));
    }
 
+   /**
+    * The Class VarArgs.
+    */
    @SuppressWarnings("unused")
    static class VarArgs {
+      
+      /**
+       * Vars only.
+       *
+       * @param ints the ints
+       */
       public void varsOnly(int... ints) {}
+      
+      /**
+       * Mixed.
+       *
+       * @param arg0 the arg 0
+       * @param ints the ints
+       */
       public void mixed(String arg0, int... ints) {}
    }
 
+   /**
+    * Expect invocation with no var args.
+    *
+    * @param varargs the varargs
+    */
    @SuppressWarnings("NullArgumentToVariableArgMethod")
    @Test
    public void expectInvocationWithNoVarArgs(@Mocked final VarArgs varargs) {
@@ -204,11 +305,26 @@ public final class ExpectationsWithVarArgsMatchersTest
       varargs.mixed("arg", null);
    }
 
+   /**
+    * The Class ReferenceVarArgs.
+    */
    static class ReferenceVarArgs {
+      
+      /**
+       * Mixed.
+       *
+       * @param strings the strings
+       * @param ints the ints
+       */
       @SuppressWarnings("unused")
       public void mixed(String[] strings, Integer... ints) {}
    }
 
+   /**
+    * Expect invocation with non primitive var args.
+    *
+    * @param varargs the varargs
+    */
    @Test
    public void expectInvocationWithNonPrimitiveVarArgs(@Mocked final ReferenceVarArgs varargs) {
       final String[] strings1 = new String[0];
@@ -231,12 +347,34 @@ public final class ExpectationsWithVarArgsMatchersTest
       varargs.mixed(strings2);
    }
 
+   /**
+    * The Class PrimitiveVarArgs.
+    */
    @SuppressWarnings("unused")
    static class PrimitiveVarArgs {
+      
+      /**
+       * Vars only.
+       *
+       * @param ints the ints
+       */
       public void varsOnly(int... ints) {}
+      
+      /**
+       * Mixed.
+       *
+       * @param arg0 the arg 0
+       * @param strings the strings
+       * @param ints the ints
+       */
       public void mixed(String arg0, String[] strings, int... ints) {}
    }
 
+   /**
+    * Expect invocation with primitive var args.
+    *
+    * @param varargs the varargs
+    */
    @SuppressWarnings("NullArgumentToVariableArgMethod")
    @Test
    public void expectInvocationWithPrimitiveVarArgs(@Mocked final PrimitiveVarArgs varargs) {
@@ -268,8 +406,22 @@ public final class ExpectationsWithVarArgsMatchersTest
       varargs.mixed(null, null, null);
    }
 
-   static class MixedVarArgs { @SuppressWarnings("unused") public void mixed(String[] strings, int... ints) {} }
+   /**
+    * The Class MixedVarArgs.
+    */
+   static class MixedVarArgs { /**
+  * Mixed.
+  *
+  * @param strings the strings
+  * @param ints the ints
+  */
+ @SuppressWarnings("unused") public void mixed(String[] strings, int... ints) {} }
 
+   /**
+    * Expect invocation with primitive var args using matchers.
+    *
+    * @param varargs the varargs
+    */
    @Test
    public void expectInvocationWithPrimitiveVarArgsUsingMatchers(@Mocked final MixedVarArgs varargs) {
       final String[] strings1 = new String[0];
@@ -292,6 +444,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       varargs.mixed(strings2);
    }
 
+   /**
+    * Expect invocation with matchers for all parameters and varargs values but replay with different vararg value.
+    */
    @Test
    public void expectInvocationWithMatchersForAllParametersAndVarargsValuesButReplayWithDifferentVarargValue() {
       thrown.expect(MissingInvocation.class);
@@ -301,6 +456,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       new Verifications() {{ mock.complexOperation(anyString, anyBoolean, withEqual(123L)); }};
    }
 
+   /**
+    * Expectation recorded with not null matcher for varargs parameter.
+    */
    @Test
    public void expectationRecordedWithNotNullMatcherForVarargsParameter() {
       new Expectations() {{ Collaborator.doSomething(0, (Object[]) withNotNull()); result = true; }};
@@ -310,6 +468,9 @@ public final class ExpectationsWithVarArgsMatchersTest
       assertFalse(Collaborator.doSomething(0, (Object[]) null));
    }
 
+   /**
+    * Record varargs method with regular parameter using matcher for varargs only.
+    */
    @Test @Ignore("issue #292")
    public void recordVarargsMethodWithRegularParameterUsingMatcherForVarargsOnly() {
       new Expectations() {{ Collaborator.doSomething(123, anyString); }};

@@ -3,15 +3,50 @@ package mockit;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class FakedClassWithSuperClassTest.
+ */
 public final class FakedClassWithSuperClassTest
 {
-   static class BaseClass { protected int doSomething() { return 123; } }
-   public static class Subclass extends BaseClass { BaseClass getInstance() { return this; } }
+   
+   /**
+    * The Class BaseClass.
+    */
+   static class BaseClass { 
+ /**
+  * Do something.
+  *
+  * @return the int
+  */
+ protected int doSomething() { return 123; } }
+   
+   /**
+    * The Class Subclass.
+    */
+   public static class Subclass extends BaseClass { 
+ /**
+  * Gets the single instance of Subclass.
+  *
+  * @return single instance of Subclass
+  */
+ BaseClass getInstance() { return this; } }
 
+   /**
+    * The Class FakeForSubclass.
+    */
    public static final class FakeForSubclass extends MockUp<Subclass> {
+      
+      /**
+       * Do something.
+       *
+       * @return the int
+       */
       @Mock public int doSomething() { return 1; }
    }
 
+   /**
+    * Fake only instances of the class specified to be faked.
+    */
    @Test
    public void fakeOnlyInstancesOfTheClassSpecifiedToBeFaked() {
       BaseClass d = new Subclass();
@@ -26,6 +61,9 @@ public final class FakedClassWithSuperClassTest
       assertEquals(1, new Subclass() {}.doSomething());
    }
 
+   /**
+    * Fake only instances of the class specified to be faked using fake method bridge.
+    */
    @Test
    public void fakeOnlyInstancesOfTheClassSpecifiedToBeFaked_usingFakeMethodBridge() {
       BaseClass d = new Subclass();

@@ -9,25 +9,79 @@ import static java.util.Arrays.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class DelegateInvocationProceedTest.
+ */
 public final class DelegateInvocationProceedTest
 {
+   
+   /**
+    * The Class BaseClassToBeMocked.
+    */
    public static class BaseClassToBeMocked {
+      
+      /** The name. */
       protected String name;
 
+      /**
+       * Gets the name.
+       *
+       * @return the name
+       */
       public final String getName() { return name; }
+      
+      /**
+       * Base method.
+       *
+       * @param i the i
+       * @return the int
+       */
       public final int baseMethod(int i) { return i + 1; }
+      
+      /**
+       * Method to be mocked.
+       *
+       * @param i the i
+       * @return the int
+       * @throws IOException Signals that an I/O exception has occurred.
+       */
       protected int methodToBeMocked(int i) throws IOException { return i; }
    }
 
+   /**
+    * The Class ClassToBeMocked.
+    */
    public static class ClassToBeMocked extends BaseClassToBeMocked {
+      
+      /**
+       * Instantiates a new class to be mocked.
+       */
       public ClassToBeMocked() { name = ""; }
+      
+      /**
+       * Instantiates a new class to be mocked.
+       *
+       * @param name the name
+       */
       public ClassToBeMocked(String name) { this.name = name; }
 
+      /**
+       * Method to be mocked.
+       *
+       * @return true, if successful
+       */
       public boolean methodToBeMocked() { return true; }
 
       @Override
       protected int methodToBeMocked(int i) throws IOException { return super.methodToBeMocked(i); }
 
+      /**
+       * Method to be mocked.
+       *
+       * @param i the i
+       * @param args the args
+       * @return the int
+       */
       int methodToBeMocked(int i, Object... args) {
          int result = i;
 
@@ -38,11 +92,24 @@ public final class DelegateInvocationProceedTest
          return result;
       }
 
+      /**
+       * Another method to be mocked.
+       *
+       * @param s the s
+       * @param b the b
+       * @param ints the ints
+       * @return the string
+       */
       String anotherMethodToBeMocked(String s, boolean b, List<Integer> ints) {
          return (b ? s.toUpperCase() : s.toLowerCase()) + ints;
       }
    }
 
+   /**
+    * Proceed from delegate method on regular mocked class.
+    *
+    * @param mocked the mocked
+    */
    @Test
    public void proceedFromDelegateMethodOnRegularMockedClass(@Mocked final ClassToBeMocked mocked) {
       new Expectations() {{
@@ -55,6 +122,11 @@ public final class DelegateInvocationProceedTest
       assertTrue(mocked.methodToBeMocked());
    }
 
+   /**
+    * Proceed from delegate method on injectable mocked class.
+    *
+    * @param mocked the mocked
+    */
    @Test
    public void proceedFromDelegateMethodOnInjectableMockedClass(@Injectable final ClassToBeMocked mocked) {
       new Expectations() {{
@@ -67,6 +139,11 @@ public final class DelegateInvocationProceedTest
       assertTrue(mocked.methodToBeMocked());
    }
 
+   /**
+    * Proceed from delegate method with parameters.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void proceedFromDelegateMethodWithParameters() throws Exception {
       final ClassToBeMocked mocked = new ClassToBeMocked();
@@ -92,6 +169,9 @@ public final class DelegateInvocationProceedTest
       assertEquals(7, mocked.methodToBeMocked(3, "Test", new Object(), null, 45));
    }
 
+   /**
+    * Proceed conditionally from delegate method.
+    */
    @Test
    public void proceedConditionallyFromDelegateMethod() {
       final ClassToBeMocked mocked = new ClassToBeMocked();
@@ -122,6 +202,11 @@ public final class DelegateInvocationProceedTest
       assertEquals("No proceed", mocked.anotherMethodToBeMocked("No proceed", false, null));
    }
 
+   /**
+    * Proceed from delegate method into real method with modified arguments.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void proceedFromDelegateMethodIntoRealMethodWithModifiedArguments() throws Exception {
       final ClassToBeMocked mocked = new ClassToBeMocked();
@@ -146,6 +231,11 @@ public final class DelegateInvocationProceedTest
       assertEquals(3, mocked.methodToBeMocked(-2, null, "Abc", true, 'a'));
    }
 
+   /**
+    * Proceed from delegate method into constructor.
+    *
+    * @param mock the mock
+    */
    @Test
    public void proceedFromDelegateMethodIntoConstructor(@Mocked ClassToBeMocked mock) {
       new Expectations() {{
@@ -163,6 +253,11 @@ public final class DelegateInvocationProceedTest
       assertEquals("", obj.name);
    }
 
+   /**
+    * Proceed conditionally from delegate method into constructor.
+    *
+    * @param mock the mock
+    */
    @Test
    public void proceedConditionallyFromDelegateMethodIntoConstructor(@Mocked ClassToBeMocked mock) {
       new Expectations() {{
@@ -183,6 +278,11 @@ public final class DelegateInvocationProceedTest
       assertNull(new ClassToBeMocked("do not proceed").name);
    }
 
+   /**
+    * Proceed from delegate method into JRE constructor.
+    *
+    * @param mock the mock
+    */
    @Test
    public void proceedFromDelegateMethodIntoJREConstructor(@Mocked ProcessBuilder mock) {
       new Expectations() {{
@@ -200,6 +300,9 @@ public final class DelegateInvocationProceedTest
       assertEquals(asList("proceed", "again"), pb2.command());
    }
 
+   /**
+    * Proceed from delegate method into method inherited from base class.
+    */
    @Test
    public void proceedFromDelegateMethodIntoMethodInheritedFromBaseClass() {
       final ClassToBeMocked obj = new ClassToBeMocked();
@@ -214,6 +317,12 @@ public final class DelegateInvocationProceedTest
       assertEquals(3, obj.baseMethod(1));
    }
 
+   /**
+    * Proceed from delegate method into overriding method which calls super.
+    *
+    * @param mocked the mocked
+    * @throws Exception the exception
+    */
    @Test
    public void proceedFromDelegateMethodIntoOverridingMethodWhichCallsSuper(@Mocked final ClassToBeMocked mocked) throws Exception {
       new Expectations() {{
@@ -226,6 +335,13 @@ public final class DelegateInvocationProceedTest
       assertEquals(1, mocked.methodToBeMocked(1));
    }
 
+   /**
+    * Proceed from delegate method into overriding method that calls super which also has A proceeding delegate.
+    *
+    * @param mockedBase the mocked base
+    * @param mocked the mocked
+    * @throws Exception the exception
+    */
    @Test
    public void proceedFromDelegateMethodIntoOverridingMethodThatCallsSuperWhichAlsoHasAProceedingDelegate(
       @Mocked final BaseClassToBeMocked mockedBase, @Mocked final ClassToBeMocked mocked
@@ -247,6 +363,13 @@ public final class DelegateInvocationProceedTest
       assertEquals(1, mocked.methodToBeMocked(1));
    }
 
+   /**
+    * Throw exception from proceed into JRE method.
+    *
+    * @param c1 the c 1
+    * @param c2 the c 2
+    * @throws Exception the exception
+    */
    @Test
    public void throwExceptionFromProceedIntoJREMethod(
       @Injectable final AbstractExecutorService c1, @Mocked final ClassToBeMocked c2

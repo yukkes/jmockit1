@@ -5,42 +5,121 @@ import java.nio.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class MockedParametersWithCapturingTest.
+ */
 public final class MockedParametersWithCapturingTest
 {
+   
+   /**
+    * The Interface Service.
+    */
    public interface Service {
+      
+      /**
+       * Do something.
+       *
+       * @return the int
+       */
       int doSomething();
+      
+      /**
+       * Do something else.
+       *
+       * @param i the i
+       */
       void doSomethingElse(int i);
    }
 
+   /**
+    * The Class ServiceImpl.
+    */
    static final class ServiceImpl implements Service {
+      
+      /** The str. */
       final String str;
 
+      /**
+       * Instantiates a new service impl.
+       *
+       * @param str the str
+       */
       ServiceImpl(String str) { this.str = str; }
 
       @Override public int doSomething() { return 1; }
       @Override public void doSomethingElse(int i) { throw new IllegalMonitorStateException(); }
    }
 
+   /**
+    * The Class BaseClass.
+    */
    static class BaseClass {
+      
+      /** The str. */
       final String str;
+      
+      /**
+       * Instantiates a new base class.
+       */
       BaseClass() { str = ""; }
+      
+      /**
+       * Instantiates a new base class.
+       *
+       * @param str the str
+       */
       BaseClass(String str) { this.str = str; }
+      
+      /**
+       * Gets the str.
+       *
+       * @return the str
+       */
       String getStr() { return str; }
+      
+      /**
+       * Do something.
+       */
       void doSomething() { throw new IllegalStateException("Invalid state"); }
    }
 
+   /**
+    * The Class DerivedClass.
+    */
    static class DerivedClass extends BaseClass {
+      
+      /**
+       * Instantiates a new derived class.
+       */
       DerivedClass() {}
+      
+      /**
+       * Instantiates a new derived class.
+       *
+       * @param str the str
+       */
       DerivedClass(String str) { super(str); }
       @Override String getStr() { return super.getStr().toUpperCase(); }
    }
 
+   /**
+    * Capture derived class.
+    *
+    * @param service the service
+    */
    @Test
    public void captureDerivedClass(@Capturing BaseClass service) {
       assertNull(new DerivedClass("test").str);
       assertNull(new DerivedClass() {}.str);
    }
 
+   /**
+    * Capture implementations of different interfaces.
+    *
+    * @param mock1 the mock 1
+    * @param mock2 the mock 2
+    * @throws Exception the exception
+    */
    @Test
    public void captureImplementationsOfDifferentInterfaces(@Capturing Runnable mock1, @Capturing Readable mock2) throws Exception {
       Runnable runnable = new Runnable() {
@@ -56,6 +135,11 @@ public final class MockedParametersWithCapturingTest
       readable.read(CharBuffer.wrap("test"));
    }
 
+   /**
+    * Capture implementations of an interface.
+    *
+    * @param service the service
+    */
    @Test
    public void captureImplementationsOfAnInterface(@Capturing final Service service) {
       Service impl1 = new ServiceImpl("test1");
@@ -68,6 +152,11 @@ public final class MockedParametersWithCapturingTest
       impl2.doSomethingElse(2);
    }
 
+   /**
+    * Capture subclasses of A base class.
+    *
+    * @param base the base
+    */
    @Test
    public void captureSubclassesOfABaseClass(@Capturing final BaseClass base) {
       BaseClass impl1 = new DerivedClass("test1");
@@ -86,9 +175,26 @@ public final class MockedParametersWithCapturingTest
       impl3.doSomething();
    }
 
-   public interface IBase { int doSomething(); }
+   /**
+    * The Interface IBase.
+    */
+   public interface IBase { /**
+  * Do something.
+  *
+  * @return the int
+  */
+ int doSomething(); }
+   
+   /**
+    * The Interface ISub.
+    */
    public interface ISub extends IBase {}
 
+   /**
+    * Record call to base interface method on capture sub interface implementation.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordCallToBaseInterfaceMethodOnCaptureSubInterfaceImplementation(@Capturing final ISub mock) {
       new Expectations() {{ mock.doSomething(); result = 123; }};

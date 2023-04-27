@@ -132,6 +132,8 @@ public @interface Tested
     *       {@link javax.enterprise.context.Conversation}: an object that emulates a web application's conversation context is created.
     *    </li>
     * </ul>
+    *
+    * @return true, if successful
     */
    boolean fullyInitialized() default false;
 
@@ -144,12 +146,16 @@ public @interface Tested
     * Another potential use is to affect the initialization of other tested objects in the same test class, during their creation
     * <em>after</em> setup.
     * Finally, objects made available during setup are also available during the execution of any tear-down methods.
+    *
+    * @return true, if successful
     */
    boolean availableDuringSetup() default false;
 
    /**
     * Indicates whether a single <em>named</em> instance of the tested class is to be created and used for the whole test run.
     * The name is the same as the annotated field or test method parameter.
+    *
+    * @return true, if successful
     */
    boolean global() default false;
 }

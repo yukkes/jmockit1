@@ -8,14 +8,44 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * The Class MockedAnnotationsTest.
+ */
 public final class MockedAnnotationsTest
 {
+   
+   /**
+    * The Interface MyAnnotation.
+    */
    public @interface MyAnnotation {
+      
+      /**
+       * Value.
+       *
+       * @return the string
+       */
       String value();
+      
+      /**
+       * Flag.
+       *
+       * @return true, if successful
+       */
       boolean flag() default true;
+      
+      /**
+       * Values.
+       *
+       * @return the string[]
+       */
       String[] values() default {};
    }
 
+   /**
+    * Specify values for annotation attributes.
+    *
+    * @param a the a
+    */
    @Test
    public void specifyValuesForAnnotationAttributes(@Mocked final MyAnnotation a) {
       assertSame(MyAnnotation.class, a.annotationType());
@@ -31,6 +61,11 @@ public final class MockedAnnotationsTest
       assertArrayEquals(new String[] {"abc", "dEf"}, a.values());
    }
 
+   /**
+    * Verify uses of annotation attributes.
+    *
+    * @param a the a
+    */
    @Test
    public void verifyUsesOfAnnotationAttributes(@Mocked final MyAnnotation a) {
       new Expectations() {{
@@ -52,9 +87,17 @@ public final class MockedAnnotationsTest
       }};
    }
 
+   /**
+    * The Interface AnInterface.
+    */
    @Resource
    public interface AnInterface {}
 
+   /**
+    * Mocking an annotated public interface.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockingAnAnnotatedPublicInterface(@Mocked AnInterface mock) {
       Annotation[] mockClassAnnotations = mock.getClass().getAnnotations();
@@ -62,10 +105,26 @@ public final class MockedAnnotationsTest
       assertEquals(0, mockClassAnnotations.length);
    }
 
+   /**
+    * The Class ClassWithNullabilityAnnotations.
+    */
    static class ClassWithNullabilityAnnotations {
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       * @param obj the obj
+       * @return the string
+       */
       @Nonnull String doSomething(@Nonnegative int i, @Nonnull Object obj) { return ""; }
    }
 
+   /**
+    * Mock class with nullability annotations.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockClassWithNullabilityAnnotations(@Injectable final ClassWithNullabilityAnnotations mock) {
       new Expectations() {{ mock.doSomething(anyInt, any); result = "test"; }};
@@ -73,8 +132,17 @@ public final class MockedAnnotationsTest
       assertEquals("test", mock.doSomething(123, "test"));
    }
 
-   static final class ClassWithAnnotatedField { @Resource(type = int.class) Object aField; }
+   /**
+    * The Class ClassWithAnnotatedField.
+    */
+   static final class ClassWithAnnotatedField { /** The a field. */
+ @Resource(type = int.class) Object aField; }
 
+   /**
+    * Mock class having field annotated with attribute having A primitive class as value.
+    *
+    * @param mock the mock
+    */
    @Test
    public void mockClassHavingFieldAnnotatedWithAttributeHavingAPrimitiveClassAsValue(@Mocked ClassWithAnnotatedField mock) {
       assertNull(mock.aField);

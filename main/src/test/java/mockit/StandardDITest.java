@@ -9,52 +9,124 @@ import static java.util.Collections.singletonList;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class StandardDITest.
+ */
 public final class StandardDITest
 {
+   
+   /**
+    * The Class TestedClass.
+    */
    public static class TestedClass {
+      
+      /** The global action. */
       @Inject static Runnable globalAction;
 
+      /** The collaborator. */
       private final Collaborator collaborator;
+      
+      /** The collaborator 1. */
       @Inject private Collaborator collaborator1;
+      
+      /** The collaborator 2. */
       Collaborator collaborator2;
+      
+      /** The some value. */
       @Inject int someValue;
+      
+      /** The another value. */
       @Inject private int anotherValue;
 
+      /** The non annotated field. */
       String nonAnnotatedField;
+      
+      /** The non annotated generic field. */
       Callable<String> nonAnnotatedGenericField;
 
+      /**
+       * Instantiates a new tested class.
+       *
+       * @param collaborator the collaborator
+       */
       @Inject
       public TestedClass(Collaborator collaborator) { this.collaborator = collaborator; }
 
+      /**
+       * Instantiates a new tested class.
+       *
+       * @param collaborator the collaborator
+       * @param anotherValue the another value
+       */
       @SuppressWarnings("unused")
       public TestedClass(Collaborator collaborator, int anotherValue) { throw new RuntimeException("Must not occur"); }
    }
 
-   static class Collaborator { boolean b = true; }
+   /**
+    * The Class Collaborator.
+    */
+   static class Collaborator { /** The b. */
+ boolean b = true; }
 
+   /** The tested 1. */
    @Tested TestedClass tested1;
+   
+   /** The collaborator. */
    @Injectable Collaborator collaborator; // for constructor injection
+   
+   /** The collaborator 1. */
    @Injectable Collaborator collaborator1; // for field injection
+   
+   /** The some value. */
    @Injectable("123") int someValue;
+   
+   /** The another value. */
    @Injectable final int anotherValue = 45;
+   
+   /** The callable. */
    @Injectable Callable<String> callable;
 
+   /**
+    * The Class TestedClassWithNoAnnotatedConstructor.
+    */
    static final class TestedClassWithNoAnnotatedConstructor {
+      
+      /** The value. */
       @Inject int value;
+      
+      /** The a text. */
       @Inject String aText;
+      
+      /** The another text. */
       String anotherText;
    }
 
+   /** The tested 2. */
    @Tested TestedClassWithNoAnnotatedConstructor tested2;
+   
+   /** The a text. */
    @Injectable final String aText = "Abc";
 
+   /**
+    * The Class TestedClassWithInjectOnConstructorOnly.
+    */
    public static class TestedClassWithInjectOnConstructorOnly {
+      
+      /** The name. */
       String name;
+      
+      /**
+       * Instantiates a new tested class with inject on constructor only.
+       */
       @Inject public TestedClassWithInjectOnConstructorOnly() {}
    }
 
+   /** The tested 3. */
    @Tested TestedClassWithInjectOnConstructorOnly tested3;
 
+   /**
+    * Invoke inject annotated constructor only.
+    */
    @Test
    public void invokeInjectAnnotatedConstructorOnly() {
       assertSame(collaborator, tested1.collaborator);
@@ -66,6 +138,12 @@ public final class StandardDITest
       assertEquals(123, tested2.value);
    }
 
+   /**
+    * Assign inject annotated fields and also non annotated ones.
+    *
+    * @param collaborator2 the collaborator 2
+    * @param notToBeUsed the not to be used
+    */
    @Test
    public void assignInjectAnnotatedFieldsAndAlsoNonAnnotatedOnes(
       @Injectable Collaborator collaborator2, @Injectable("67") int notToBeUsed
@@ -79,18 +157,32 @@ public final class StandardDITest
       assertEquals(123, tested2.value);
    }
 
+   /**
+    * Assign annotated field even if tested class has no annotated constructor.
+    *
+    * @param value the value
+    */
    @Test
    public void assignAnnotatedFieldEvenIfTestedClassHasNoAnnotatedConstructor(@Injectable("123") int value) {
       assertEquals(123, tested2.value);
    }
 
+   /** The action. */
    @Injectable Runnable action;
 
+   /**
+    * Assign annotated static field during field injection.
+    */
    @Test
    public void assignAnnotatedStaticFieldDuringFieldInjection() {
       assertSame(action, TestedClass.globalAction);
    }
 
+   /**
+    * Consider annotated and non annotated fields for injection.
+    *
+    * @param text2 the text 2
+    */
    @Test
    public void considerAnnotatedAndNonAnnotatedFieldsForInjection(@Injectable("XY") String text2) {
       assertEquals(aText, tested2.aText);
@@ -98,12 +190,29 @@ public final class StandardDITest
       assertEquals(aText, tested3.name);
    }
 
+   /**
+    * The Class TestedClassWithProviders.
+    */
    static final class TestedClassWithProviders {
+      
+      /** The port. */
       final int port;
+      
+      /** The collaborator. */
       final Collaborator collaborator;
+      
+      /** The user. */
       @Inject Provider<String> user;
+      
+      /** The password. */
       @Inject Provider<String> password;
 
+      /**
+       * Instantiates a new tested class with providers.
+       *
+       * @param port the port
+       * @param collaborator the collaborator
+       */
       @Inject
       TestedClassWithProviders(Provider<Integer> port, Collaborator collaborator) {
          this.port = port.get();
@@ -111,11 +220,21 @@ public final class StandardDITest
       }
    }
 
+   /** The tested 4. */
    @Tested TestedClassWithProviders tested4;
+   
+   /** The port number. */
    @Injectable Integer portNumber = 4567;
+   
+   /** The user. */
    @Injectable String user = "John";
+   
+   /** The password. */
    @Injectable String password = "123";
 
+   /**
+    * Support provider fields and parameters.
+    */
    @Test
    public void supportProviderFieldsAndParameters() {
       assertEquals(portNumber.intValue(), tested4.port);
@@ -124,12 +243,28 @@ public final class StandardDITest
       assertEquals(password, tested4.password.get());
    }
 
+   /**
+    * The Class TestedClassWithVarargsParameterForProviders.
+    */
    static final class TestedClassWithVarargsParameterForProviders {
+      
+      /** The collaborator 1. */
       final Collaborator collaborator1;
+      
+      /** The collaborator 2. */
       final Collaborator collaborator2;
+      
+      /** The optional collaborators. */
       final List<Collaborator> optionalCollaborators = new ArrayList<>();
+      
+      /** The name provider. */
       @Inject Provider<String> nameProvider;
 
+      /**
+       * Instantiates a new tested class with varargs parameter for providers.
+       *
+       * @param collaborators the collaborators
+       */
       @SuppressWarnings({"unchecked", "VariableArgumentMethod"})
       @Inject
       TestedClassWithVarargsParameterForProviders(Provider<Collaborator>... collaborators) {
@@ -149,10 +284,18 @@ public final class StandardDITest
       }
    }
 
+   /** The tested 5. */
    @Tested TestedClassWithVarargsParameterForProviders tested5;
+   
+   /** The collaborator provider. */
    @Injectable Provider<Collaborator> collaboratorProvider;
+   
+   /** The col 3. */
    @Injectable Collaborator col3;
 
+   /**
+    * Configure provider used by constructor of tested class.
+    */
    @Before
    public void configureProviderUsedByConstructorOfTestedClass() {
       new Expectations() {{
@@ -161,6 +304,11 @@ public final class StandardDITest
       }};
    }
 
+   /**
+    * Support varargs parameter with providers.
+    *
+    * @param nameProvider the name provider
+    */
    @Test
    public void supportVarargsParameterWithProviders(@Injectable final Provider<String> nameProvider) {
       final String[] names = {"John", "Mary"};
@@ -175,16 +323,33 @@ public final class StandardDITest
       assertEquals(names[1], tested5.nameProvider.get());
    }
 
+   /**
+    * Fields not annotated with known DI annotations should still be injected.
+    */
    @Test
    public void fieldsNotAnnotatedWithKnownDIAnnotationsShouldStillBeInjected() {
       assertEquals("Abc", tested1.nonAnnotatedField);
       assertSame(callable, tested1.nonAnnotatedGenericField);
    }
 
+   /**
+    * The Class DependencyToBeProvided.
+    */
    public static final class DependencyToBeProvided {}
-   public static final class TestedClassWithProvider { @Inject Provider<DependencyToBeProvided> provider; }
+   
+   /**
+    * The Class TestedClassWithProvider.
+    */
+   public static final class TestedClassWithProvider { 
+ /** The provider. */
+ @Inject Provider<DependencyToBeProvided> provider; }
+   
+   /** The tested 6. */
    @Tested(fullyInitialized = true) TestedClassWithProvider tested6;
 
+   /**
+    * Instantiate class with dependency from standard provider.
+    */
    @Test
    public void instantiateClassWithDependencyFromStandardProvider() {
       DependencyToBeProvided providedDependency1 = tested6.provider.get();
@@ -195,10 +360,24 @@ public final class StandardDITest
    }
 
 
+   /**
+    * The Class SingletonDependencyToBeProvided.
+    */
    @Singleton public static final class SingletonDependencyToBeProvided {}
-   public static final class TestedClassWithSingletonProvider { @Inject Provider<SingletonDependencyToBeProvided> provider; }
+   
+   /**
+    * The Class TestedClassWithSingletonProvider.
+    */
+   public static final class TestedClassWithSingletonProvider { 
+ /** The provider. */
+ @Inject Provider<SingletonDependencyToBeProvided> provider; }
+   
+   /** The tested 7. */
    @Tested(fullyInitialized = true) TestedClassWithSingletonProvider tested7;
 
+   /**
+    * Instantiate class with singleton dependency from standard provider.
+    */
    @Test
    public void instantiateClassWithSingletonDependencyFromStandardProvider() {
       SingletonDependencyToBeProvided providedDependency1 = tested7.provider.get();

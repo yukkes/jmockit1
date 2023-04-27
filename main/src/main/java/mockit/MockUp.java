@@ -89,6 +89,11 @@ public class MockUp<T>
       }
    }
 
+   /**
+    * Gets the type to fake.
+    *
+    * @return the type to fake
+    */
    @Nonnull
    private Type getTypeToFake() {
       Class<?> currentClass = getClass();
@@ -109,6 +114,11 @@ public class MockUp<T>
       while (true);
    }
 
+   /**
+    * Redefine class.
+    *
+    * @param classToFake the class to fake
+    */
    private void redefineClass(@Nonnull Class<?> classToFake) {
       if (!classToFake.isInterface()) {
          new FakeClassSetup(classToFake, this, targetType).redefineMethods();
@@ -123,6 +133,8 @@ public class MockUp<T>
     * For example, it can be used with an {@linkplain Mock $advice} method and the <code>fakes</code> system property in order to have an
     * aspect-like fake implementation applicable to any class; it can then be applied at the beginning of the test run with the desired
     * target class being specified in the test run configuration.
+    *
+    * @param targetClass the target class
     */
    protected MockUp(@Nonnull Class<?> targetClass) {
       targetType = targetClass;

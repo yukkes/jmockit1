@@ -3,12 +3,30 @@ package mockit;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+/**
+ * The Class DynamicMockingInBeforeMethodTest.
+ */
 public final class DynamicMockingInBeforeMethodTest
 {
-   static final class MockedClass { boolean doSomething(int i) { return i > 0; } }
+   
+   /**
+    * The Class MockedClass.
+    */
+   static final class MockedClass { 
+ /**
+  * Do something.
+  *
+  * @param i the i
+  * @return true, if successful
+  */
+ boolean doSomething(int i) { return i > 0; } }
 
+   /** The an instance. */
    final MockedClass anInstance = new MockedClass();
 
+   /**
+    * Record expectations on dynamically mocked class.
+    */
    @Before
    public void recordExpectationsOnDynamicallyMockedClass() {
       assertTrue(anInstance.doSomething(56));
@@ -20,6 +38,9 @@ public final class DynamicMockingInBeforeMethodTest
       assertTrue(anInstance.doSomething(-56));
    }
 
+   /**
+    * Verify that dynamically mocked class is still mocked.
+    */
    @After
    public void verifyThatDynamicallyMockedClassIsStillMocked() {
       new FullVerifications() {{
@@ -27,11 +48,17 @@ public final class DynamicMockingInBeforeMethodTest
       }};
    }
 
+   /**
+    * Test something.
+    */
    @Test
    public void testSomething() {
       assertTrue(anInstance.doSomething(56));
    }
 
+   /**
+    * Test something else.
+    */
    @Test
    public void testSomethingElse() {
       assertTrue(anInstance.doSomething(-129));

@@ -11,19 +11,56 @@ import static java.util.Arrays.*;
 import static org.junit.Assert.*;
 import org.junit.*;
 
+/**
+ * The Class TestedClassWithConstructorDI4Test.
+ */
 public final class TestedClassWithConstructorDI4Test
 {
-   static class GenericClass<T> { T doSomething() { return null; } }
+   
+   /**
+    * The Class GenericClass.
+    *
+    * @param <T> the generic type
+    */
+   static class GenericClass<T> { 
+ /**
+  * Do something.
+  *
+  * @return the t
+  */
+ T doSomething() { return null; } }
 
+   /**
+    * The Class TestedClass.
+    */
    @SuppressWarnings("FieldMayBeFinal")
    public static final class TestedClass {
+      
+      /** The go. */
       final GenericClass<String> go;
+      
+      /** The values. */
       final List<Integer> values;
+      
+      /** The action 1. */
       final Callable<Number> action1;
+      
+      /** The action 2. */
       private Callable<Number> action2;
+      
+      /** The action 3. */
       private Callable<Number> action3;
+      
+      /** The database. */
       private DataSource database;
 
+      /**
+       * Instantiates a new tested class.
+       *
+       * @param go the go
+       * @param values the values
+       * @param actions the actions
+       */
       @SuppressWarnings("unchecked")
       public TestedClass(GenericClass<String> go, List<Integer> values, Callable<Number>... actions) {
          this.go = go;
@@ -42,19 +79,38 @@ public final class TestedClassWithConstructorDI4Test
       }
    }
 
+   /** The numbers. */
    @Tested final List<Integer> numbers = asList(1, 2, 3);
+   
+   /** The tested. */
    @Tested TestedClass tested;
+   
+   /** The action 1. */
    @Injectable Callable<Number> action1;
+   
+   /** The mock GO. */
    @Injectable final GenericClass<String> mockGO = new GenericClass<>(); // still mocked
+   
+   /** The jndi context. */
    @Mocked InitialContext jndiContext;
+   
+   /** The test DB. */
    @Mocked DataSource testDB;
 
+   /**
+    * Record common expectations.
+    *
+    * @throws Exception the exception
+    */
    @Before
    public void recordCommonExpectations() throws Exception {
       new Expectations() {{ mockGO.doSomething(); result = "test"; minTimes = 0; }};
       new Expectations() {{ jndiContext.lookup("testDB"); result = testDB; }};
    }
 
+   /**
+    * Exercise tested object with values injected from mock fields.
+    */
    @Test
    public void exerciseTestedObjectWithValuesInjectedFromMockFields() {
       assertNotNull(tested.go);
@@ -64,6 +120,12 @@ public final class TestedClassWithConstructorDI4Test
       assertNull(new GenericClass<String>().doSomething());
    }
 
+   /**
+    * Exercise tested object with values injected from mock parameters.
+    *
+    * @param action2 the action 2
+    * @param action3 the action 3
+    */
    @Test
    public void exerciseTestedObjectWithValuesInjectedFromMockParameters(
       @Injectable Callable<Number> action2, @Injectable Callable<Number> action3
@@ -77,28 +139,58 @@ public final class TestedClassWithConstructorDI4Test
       assertNull(new GenericClass().doSomething());
    }
 
+   /**
+    * Use mocked JRE classes during tested object creation.
+    *
+    * @param fileMock the file mock
+    */
    @Test
    public void useMockedJREClassesDuringTestedObjectCreation(@Mocked File fileMock) {
       assertNotNull(tested.database);
       mockGO.doSomething();
    }
 
+   /**
+    * The Class TestedClass3.
+    */
    static class TestedClass3 {
+      
+      /** The text. */
       final String text;
+      
+      /** The dependency. */
       final Runnable dependency;
+      
+      /** The other dep. */
       @Inject GenericClass<Integer> otherDep;
 
+      /**
+       * Instantiates a new tested class 3.
+       *
+       * @param text the text
+       * @param dependency the dependency
+       */
       TestedClass3(String text, Runnable dependency) {
          this.text = text;
          this.dependency = dependency;
       }
    }
 
+   /** The tested 7. */
    @Tested TestedClass3 tested7;
+   
+   /** The text. */
    @Injectable final String text = null;
+   
+   /** The dependency. */
    @Injectable final Runnable dependency = null;
+   
+   /** The other dep. */
    @Injectable final GenericClass<Integer> otherDep = null;
 
+   /**
+    * Inject nulls through constructor parameters and into required field.
+    */
    @Test
    public void injectNullsThroughConstructorParametersAndIntoRequiredField() {
       assertNull(tested7.text);

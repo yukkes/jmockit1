@@ -10,43 +10,117 @@ import org.junit.rules.*;
 
 import mockit.MoreFakingTest.ClassWithNested.*;
 
+/**
+ * The Class MoreFakingTest.
+ */
 @SuppressWarnings("JUnitTestMethodWithNoAssertions")
 public final class MoreFakingTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /** The code under test. */
    final CodeUnderTest codeUnderTest = new CodeUnderTest();
+   
+   /** The fake executed. */
    boolean fakeExecuted;
 
+   /**
+    * The Class CodeUnderTest.
+    */
    static class CodeUnderTest {
+      
+      /** The dependency. */
       private final Collaborator dependency = new Collaborator();
 
+      /**
+       * Do something.
+       */
       void doSomething() { dependency.provideSomeService(); }
+      
+      /**
+       * Do something else.
+       *
+       * @param i the i
+       * @return the long
+       */
       long doSomethingElse(int i) { return dependency.getThreadSpecificValue(i); }
    }
 
+   /**
+    * The Class Collaborator.
+    */
    public static class Collaborator {
+      
+      /** The xyz. */
       static Object xyz;
+      
+      /** The value. */
       protected int value;
 
+      /**
+       * Instantiates a new collaborator.
+       */
       public Collaborator() {}
+      
+      /**
+       * Instantiates a new collaborator.
+       *
+       * @param value the value
+       */
       Collaborator(int value) { this.value = value; }
 
+      /**
+       * Do internal.
+       *
+       * @return the string
+       */
       @SuppressWarnings("DeprecatedIsStillUsed")
       @Deprecated protected static String doInternal() { return "123"; }
 
+      /**
+       * Provide some service.
+       */
       public void provideSomeService() { throw new RuntimeException("Real provideSomeService() called"); }
 
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       public int getValue() { return value; }
+      
+      /**
+       * Sets the value.
+       *
+       * @param value the new value
+       */
       void setValue(int value) { this.value = value; }
 
+      /**
+       * Gets the thread specific value.
+       *
+       * @param i the i
+       * @return the thread specific value
+       */
       protected long getThreadSpecificValue(int i) { return Thread.currentThread().getId() + i; }
    }
 
+   /**
+    * The Class FakeCollaborator1.
+    */
    static class FakeCollaborator1 extends MockUp<Collaborator> {
+      
+      /**
+       * Provide some service.
+       */
       @Mock void provideSomeService() {}
    }
 
+   /**
+    * Fake doing nothing.
+    */
    @Test
    public void fakeDoingNothing() {
       new FakeCollaborator1();
@@ -54,6 +128,9 @@ public final class MoreFakingTest
       codeUnderTest.doSomething();
    }
 
+   /**
+    * Apply fakes from inner fake class with fake constructor.
+    */
    @Test
    public void applyFakesFromInnerFakeClassWithFakeConstructor() {
       new FakeCollaborator4();
@@ -64,11 +141,25 @@ public final class MoreFakingTest
       assertTrue(fakeExecuted);
    }
 
+   /**
+    * The Class FakeCollaborator4.
+    */
    class FakeCollaborator4 extends MockUp<Collaborator> {
+      
+      /**
+       * $init.
+       */
       @Mock void $init() { fakeExecuted = true; }
+      
+      /**
+       * Provide some service.
+       */
       @Mock void provideSomeService() {}
    }
 
+   /**
+    * Apply reentrant fake.
+    */
    @Test
    public void applyReentrantFake() {
       thrown.expect(RuntimeException.class);
@@ -78,11 +169,29 @@ public final class MoreFakingTest
       codeUnderTest.doSomething();
    }
 
+   /**
+    * The Class FakeCollaboratorWithReentrantFakeMethod.
+    */
    static class FakeCollaboratorWithReentrantFakeMethod extends MockUp<Collaborator> {
+      
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       @Mock int getValue() { return 123; }
+      
+      /**
+       * Provide some service.
+       *
+       * @param inv the inv
+       */
       @Mock void provideSomeService(Invocation inv) { inv.proceed(); }
    }
 
+   /**
+    * Apply fake for constructor.
+    */
    @Test
    public void applyFakeForConstructor() {
       new FakeCollaboratorWithConstructorFake();
@@ -90,20 +199,41 @@ public final class MoreFakingTest
       new FacesMessage("test");
    }
 
+   /**
+    * The Class FakeCollaboratorWithConstructorFake.
+    */
    static class FakeCollaboratorWithConstructorFake extends MockUp<FacesMessage> {
+      
+      /**
+       * $init.
+       *
+       * @param value the value
+       */
       @Mock
       void $init(String value) {
          assertEquals("test", value);
       }
    }
 
+   /**
+    * The Class SubCollaborator.
+    */
    public static class SubCollaborator extends Collaborator {
+      
+      /**
+       * Instantiates a new sub collaborator.
+       *
+       * @param i the i
+       */
       public SubCollaborator(int i) { throw new RuntimeException(String.valueOf(i)); }
 
       @Override
       public void provideSomeService() { value = 123; }
    }
 
+   /**
+    * Apply fake for class hierarchy.
+    */
    @Test
    public void applyFakeForClassHierarchy() {
       new MockUp<SubCollaborator>() {
@@ -133,6 +263,9 @@ public final class MoreFakingTest
       assertEquals(123, collaborator.getValue());
    }
 
+   /**
+    * Apply fake for JRE class.
+    */
    @Test
    public void applyFakeForJREClass() {
       FakeThread fakeThread = new FakeThread();
@@ -142,13 +275,24 @@ public final class MoreFakingTest
       assertTrue(fakeThread.interrupted);
    }
 
+   /**
+    * The Class FakeThread.
+    */
    public static class FakeThread extends MockUp<Thread> {
+      
+      /** The interrupted. */
       boolean interrupted;
 
+      /**
+       * Interrupt.
+       */
       @Mock
       public void interrupt() { interrupted = true; }
    }
 
+   /**
+    * Fake static initializer.
+    */
    @Test
    public void fakeStaticInitializer() {
       new MockUp<AccessibleState>() {
@@ -158,8 +302,21 @@ public final class MoreFakingTest
       assertNull(AccessibleState.ACTIVE);
    }
 
-   abstract static class AnAbstractClass { protected abstract int doSomething(); }
+   /**
+    * The Class AnAbstractClass.
+    */
+   abstract static class AnAbstractClass { /**
+  * Do something.
+  *
+  * @return the int
+  */
+ protected abstract int doSomething(); }
 
+   /**
+    * Fake abstract class with fake for abstract method having invocation parameter.
+    *
+    * @param <A> the generic type
+    */
    @Test
    public <A extends AnAbstractClass> void fakeAbstractClassWithFakeForAbstractMethodHavingInvocationParameter() {
       final AnAbstractClass obj = new AnAbstractClass() { @Override protected int doSomething() { return 0; } };
@@ -177,8 +334,21 @@ public final class MoreFakingTest
       assertEquals(123, obj.doSomething());
    }
 
-   static class GenericClass<T> { protected T doSomething() { return null; } }
+   /**
+    * The Class GenericClass.
+    *
+    * @param <T> the generic type
+    */
+   static class GenericClass<T> { /**
+  * Do something.
+  *
+  * @return the t
+  */
+ protected T doSomething() { return null; } }
 
+   /**
+    * Fake generic class with fake having invocation parameter.
+    */
    @Test
    public void fakeGenericClassWithFakeHavingInvocationParameter() {
       new MockUp<GenericClass<String>>() {
@@ -189,6 +359,11 @@ public final class MoreFakingTest
       assertEquals("faked", faked.doSomething());
    }
 
+   /**
+    * Concurrent fake.
+    *
+    * @throws Exception the exception
+    */
    @Test @SuppressWarnings("MethodWithMultipleLoops")
    public void concurrentFake() throws Exception {
       new MockUp<Collaborator>() {
@@ -212,6 +387,9 @@ public final class MoreFakingTest
       for (Thread thread : threads) { thread.join(); }
    }
 
+   /**
+    * Fake affects instances of specified subclass and not of base class.
+    */
    @Test
    public void fakeAffectsInstancesOfSpecifiedSubclassAndNotOfBaseClass() {
       new FakeForSubclass();
@@ -227,17 +405,52 @@ public final class MoreFakingTest
       assertEquals(62, new Collaborator(62).getValue());
    }
 
+   /**
+    * The Class FakeForSubclass.
+    */
    static class FakeForSubclass extends MockUp<SubCollaborator> {
+      
+      /**
+       * $init.
+       *
+       * @param i the i
+       */
       @Mock void $init(int i) {}
+      
+      /**
+       * Do internal.
+       *
+       * @return the string
+       */
       @Mock String doInternal() { return "faked"; }
+      
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       @Mock int getValue() { return 123; }
    }
 
+   /**
+    * The Class ClassWithNested.
+    */
    public static final class ClassWithNested {
+      
+      /**
+       * Do something.
+       */
       public static void doSomething() {}
+      
+      /**
+       * The Class Nested.
+       */
       public static final class Nested {}
    }
 
+   /**
+    * Fake A class having A nested class.
+    */
    @Test
    public void fakeAClassHavingANestedClass() {
       new MockUp<ClassWithNested>() {

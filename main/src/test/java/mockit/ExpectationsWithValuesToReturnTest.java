@@ -7,57 +7,324 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
+/**
+ * The Class ExpectationsWithValuesToReturnTest.
+ */
 public final class ExpectationsWithValuesToReturnTest
 {
+   
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {
+      
+      /**
+       * Do internal.
+       *
+       * @return the string
+       */
       static String doInternal() { return "123"; }
 
+      /**
+       * Gets the value.
+       *
+       * @return the value
+       */
       int getValue() { return -1; }
+      
+      /**
+       * Gets the integer.
+       *
+       * @return the integer
+       */
       Integer getInteger() { return -1; }
+      
+      /**
+       * Gets the byte value.
+       *
+       * @return the byte value
+       */
       byte getByteValue() { return -1; }
+      
+      /**
+       * Gets the byte wrapper.
+       *
+       * @return the byte wrapper
+       */
       Byte getByteWrapper() { return -1; }
+      
+      /**
+       * Gets the short value.
+       *
+       * @return the short value
+       */
       short getShortValue() { return -1; }
+      
+      /**
+       * Gets the short wrapper.
+       *
+       * @return the short wrapper
+       */
       Short getShortWrapper() { return -1; }
+      
+      /**
+       * Gets the long value.
+       *
+       * @return the long value
+       */
       long getLongValue() { return -1; }
+      
+      /**
+       * Gets the long wrapper.
+       *
+       * @return the long wrapper
+       */
       Long getLongWrapper() { return -1L; }
+      
+      /**
+       * Gets the float value.
+       *
+       * @return the float value
+       */
       float getFloatValue() { return -1.0F; }
+      
+      /**
+       * Gets the float wrapper.
+       *
+       * @return the float wrapper
+       */
       Float getFloatWrapper() { return -1.0F; }
+      
+      /**
+       * Gets the double value.
+       *
+       * @return the double value
+       */
       double getDoubleValue() { return -1.0; }
+      
+      /**
+       * Gets the double wrapper.
+       *
+       * @return the double wrapper
+       */
       Double getDoubleWrapper() { return -1.0; }
+      
+      /**
+       * Gets the char value.
+       *
+       * @return the char value
+       */
       char getCharValue() { return '1'; }
+      
+      /**
+       * Gets the character.
+       *
+       * @return the character
+       */
       Character getCharacter() { return '1'; }
+      
+      /**
+       * Gets the boolean value.
+       *
+       * @return the boolean value
+       */
       boolean getBooleanValue() { return true; }
+      
+      /**
+       * Gets the boolean wrapper.
+       *
+       * @return the boolean wrapper
+       */
       Boolean getBooleanWrapper() { return true; }
+      
+      /**
+       * Gets the string.
+       *
+       * @return the string
+       */
       String getString() { return ""; }
+      
+      /**
+       * Gets the object.
+       *
+       * @return the object
+       */
       Object getObject() { return null; }
 
+      /**
+       * Gets the items.
+       *
+       * @return the items
+       */
       Collection<?> getItems() { return null; }
+      
+      /**
+       * Gets the list items.
+       *
+       * @return the list items
+       */
       List<?> getListItems() { return null; }
+      
+      /**
+       * Gets the a list.
+       *
+       * @return the a list
+       */
       List<?> getAList() { return null; }
+      
+      /**
+       * Gets the sets the items.
+       *
+       * @return the sets the items
+       */
       Set<?> getSetItems() { return null; }
+      
+      /**
+       * Gets the sorted set items.
+       *
+       * @return the sorted set items
+       */
       SortedSet<?> getSortedSetItems() { return null; }
+      
+      /**
+       * Gets the map items.
+       *
+       * @return the map items
+       */
       Map<?, ?> getMapItems() { return null; }
+      
+      /**
+       * Gets the sorted map items.
+       *
+       * @return the sorted map items
+       */
       SortedMap<?, ?> getSortedMapItems() { return null; }
+      
+      /**
+       * Gets the list iterator.
+       *
+       * @return the list iterator
+       */
       ListIterator<?> getListIterator() { return null; }
+      
+      /**
+       * Gets the iterator.
+       *
+       * @return the iterator
+       */
       Iterator<?> getIterator() { return null; }
+      
+      /**
+       * Gets the iterable.
+       *
+       * @return the iterable
+       */
       Iterable<?> getIterable() { return null; }
 
+      /**
+       * Gets the int array.
+       *
+       * @return the int array
+       */
       int[] getIntArray() { return null; }
+      
+      /**
+       * Gets the int 2 array.
+       *
+       * @return the int 2 array
+       */
       int[][] getInt2Array() { return null; }
+      
+      /**
+       * Gets the byte array.
+       *
+       * @return the byte array
+       */
       byte[] getByteArray() { return null; }
+      
+      /**
+       * Gets the byte wrapper array.
+       *
+       * @return the byte wrapper array
+       */
       Byte[] getByteWrapperArray() { return null; }
+      
+      /**
+       * Gets the short array.
+       *
+       * @return the short array
+       */
       short[] getShortArray() { return null; }
+      
+      /**
+       * Gets the short wrapper array.
+       *
+       * @return the short wrapper array
+       */
       Short[] getShortWrapperArray() { return null; }
+      
+      /**
+       * Gets the long array.
+       *
+       * @return the long array
+       */
       long[] getLongArray() { return null; }
+      
+      /**
+       * Gets the long 2 array.
+       *
+       * @return the long 2 array
+       */
       long[][] getLong2Array() { return null; }
+      
+      /**
+       * Gets the float array.
+       *
+       * @return the float array
+       */
       float[] getFloatArray() { return null; }
+      
+      /**
+       * Gets the double array.
+       *
+       * @return the double array
+       */
       double[] getDoubleArray() { return null; }
+      
+      /**
+       * Gets the char array.
+       *
+       * @return the char array
+       */
       char[] getCharArray() { return null; }
+      
+      /**
+       * Gets the boolean array.
+       *
+       * @return the boolean array
+       */
       boolean[] getBooleanArray() { return null; }
+      
+      /**
+       * Gets the string array.
+       *
+       * @return the string array
+       */
       String[] getStringArray() { return null; }
+      
+      /**
+       * Gets the string 2 array.
+       *
+       * @return the string 2 array
+       */
       String[][] getString2Array() { return null; }
    }
 
+   /**
+    * Returns default values for primitive and wrapper return types.
+    *
+    * @param mock the mock
+    */
    @Test
    public void returnsDefaultValuesForPrimitiveAndWrapperReturnTypes(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -99,6 +366,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertNull(Collaborator.doInternal());
    }
 
+   /**
+    * Returns default values for collection valued return types.
+    *
+    * @param mock the mock
+    */
    @Test
    public void returnsDefaultValuesForCollectionValuedReturnTypes(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -118,6 +390,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertEquals(Collections.emptyMap(), mock.getSortedMapItems());
    }
 
+   /**
+    * Returns default values for array valued return types.
+    *
+    * @param mock the mock
+    */
    @Test
    public void returnsDefaultValuesForArrayValuedReturnTypes(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -151,6 +428,9 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new String[0][0], mock.getString2Array());
    }
 
+   /**
+    * Returns multiple values in sequence using varargs.
+    */
    @Test
    public void returnsMultipleValuesInSequenceUsingVarargs() {
       final Collaborator collaborator = new Collaborator();
@@ -178,6 +458,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new char[]{'x'}, collaborator.getCharArray());
    }
 
+   /**
+    * Returns non null value followed by null using varargs.
+    *
+    * @param collaborator the collaborator
+    */
    @Test
    public void returnsNonNullValueFollowedByNullUsingVarargs(@Mocked final Collaborator collaborator) {
       new Expectations() {{
@@ -191,6 +476,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertNull(collaborator.getString());
    }
 
+   /**
+    * Returns multiple values from method with return type of object.
+    *
+    * @param collaborator the collaborator
+    */
    @Test
    public void returnsMultipleValuesFromMethodWithReturnTypeOfObject(@Mocked final Collaborator collaborator) {
       new Expectations() {{
@@ -205,6 +495,12 @@ public final class ExpectationsWithValuesToReturnTest
       assertEquals('X', collaborator.getObject());
    }
 
+   /**
+    * Returns multiple values from generic method.
+    *
+    * @param callable the callable
+    * @throws Exception the exception
+    */
    @Test
    public void returnsMultipleValuesFromGenericMethod(@Mocked final Callable<Integer> callable) throws Exception {
       new Expectations() {{
@@ -217,6 +513,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertEquals(1, callable.call().intValue());
    }
 
+   /**
+    * Record results for collection and list returning methods using varargs.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordResultsForCollectionAndListReturningMethodsUsingVarargs(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -229,6 +530,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new Object[] {"a", true}, collaborator.getListItems().toArray());
    }
 
+   /**
+    * Record results for iterable returning method using varargs.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordResultsForIterableReturningMethodUsingVarargs(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -243,6 +549,11 @@ public final class ExpectationsWithValuesToReturnTest
       }
    }
 
+   /**
+    * Record results for iterator returning method using varargs.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordResultsForIteratorReturningMethodUsingVarargs(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -257,6 +568,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertEquals(3, itr.next());
    }
 
+   /**
+    * Record results for set returning method using varargs.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordResultsForSetReturningMethodUsingVarargs(@Mocked final Collaborator mock) {
       new Expectations() {{
@@ -268,6 +584,9 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new Object[] {1, 5, 123}, mock.getSortedSetItems().toArray());
    }
 
+   /**
+    * Record results for array returning methods using varargs.
+    */
    @Test
    public void recordResultsForArrayReturningMethodsUsingVarargs() {
       final Collaborator collaborator = new Collaborator();
@@ -297,6 +616,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertArrayEquals(new String[] {"aX", null, "B2 m"}, collaborator.getStringArray());
    }
 
+   /**
+    * Record multiple iterators to be returned from method that returns iterator.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordMultipleIteratorsToBeReturnedFromMethodThatReturnsIterator(@Mocked final Collaborator mock) {
       final Iterator<?> firstResult = new ArrayList<>().listIterator();
@@ -319,6 +643,11 @@ public final class ExpectationsWithValuesToReturnTest
       assertSame(thirdResult, mock.getIterator());
    }
 
+   /**
+    * Record multiple lists to be returned from method that returns list.
+    *
+    * @param mock the mock
+    */
    @Test
    public void recordMultipleListsToBeReturnedFromMethodThatReturnsList(@Mocked final Collaborator mock) {
       final List<?> firstResult = new ArrayList<Object>();

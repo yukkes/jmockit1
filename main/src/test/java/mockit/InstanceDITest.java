@@ -8,14 +8,33 @@ import static java.util.Arrays.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class InstanceDITest.
+ */
 public final class InstanceDITest
 {
+   
+   /**
+    * The Class Collaborator.
+    */
    static class Collaborator {}
 
+   /**
+    * The Class TestedClassWithInstanceInjectionPoints.
+    */
    static final class TestedClassWithInstanceInjectionPoints {
+      
+      /** The names. */
       final Set<String> names;
+      
+      /** The collaborators. */
       @Inject Instance<Collaborator> collaborators;
 
+      /**
+       * Instantiates a new tested class with instance injection points.
+       *
+       * @param names the names
+       */
       @Inject
       TestedClassWithInstanceInjectionPoints(Instance<String> names) {
          this.names = new HashSet<>();
@@ -26,11 +45,21 @@ public final class InstanceDITest
       }
    }
 
+   /** The tested. */
    @Tested TestedClassWithInstanceInjectionPoints tested;
+   
+   /** The col 1. */
    @Injectable Collaborator col1;
+   
+   /** The col 2. */
    @Injectable Collaborator col2;
+   
+   /** The names. */
    @Injectable final Iterable<String> names = asList("Abc", "Test", "123");
 
+   /**
+    * Allow multiple injectables of same type to be obtained from instance injection point.
+    */
    @Test
    public void allowMultipleInjectablesOfSameTypeToBeObtainedFromInstanceInjectionPoint() {
       assertEquals(new HashSet<>(asList("Abc", "Test", "123")), tested.names);
@@ -43,6 +72,13 @@ public final class InstanceDITest
       assertEquals(asList(col1, col2), collaboratorInstances);
    }
 
+   /**
+    * To list.
+    *
+    * @param <T> the generic type
+    * @param instances the instances
+    * @return the list
+    */
    static <T> List<T> toList(Iterable<T> instances) {
       List<T> list = new ArrayList<>();
 

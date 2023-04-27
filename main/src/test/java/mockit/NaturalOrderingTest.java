@@ -6,8 +6,18 @@ import javax.annotation.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
+/**
+ * The Class NaturalOrderingTest.
+ */
 public final class NaturalOrderingTest
 {
+   
+   /**
+    * Verify standard comparable behavior in mocked class.
+    *
+    * @param a the a
+    * @param b the b
+    */
    @Test
    public void verifyStandardComparableBehaviorInMockedClass(@Mocked Date a, @Mocked Date b) {
       //noinspection EqualsWithItself
@@ -24,13 +34,30 @@ public final class NaturalOrderingTest
       assertEquals(aXb, -bXa);
    }
 
+   /**
+    * The Class ComparableClass.
+    */
    @SuppressWarnings("ComparableImplementedButEqualsNotOverridden")
    static final class ComparableClass implements Comparable<String> {
+      
+      /** The value. */
       final String value;
+      
+      /**
+       * Instantiates a new comparable class.
+       *
+       * @param value the value
+       */
       ComparableClass(String value) { this.value = value; }
       @Override public int compareTo(@Nonnull String s) { return value.compareTo(s); }
    }
 
+   /**
+    * Mock override of compare to method.
+    *
+    * @param a the a
+    * @param b the b
+    */
    @Test
    public void mockOverrideOfCompareToMethod(@Mocked final ComparableClass a, @Mocked final ComparableClass b) {
       new Expectations() {{
@@ -45,6 +72,12 @@ public final class NaturalOrderingTest
       assertEquals(-50, b.compareTo("test"));
    }
 
+   /**
+    * Mock override of compare to method in JRE class.
+    *
+    * @param a the a
+    * @param b the b
+    */
    @Test
    public void mockOverrideOfCompareToMethodInJREClass(@Mocked final Date a, @Mocked final Date b) {
       new Expectations() {{ a.compareTo(b); result = 5; }};

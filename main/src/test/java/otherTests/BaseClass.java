@@ -2,14 +2,29 @@ package otherTests;
 
 import java.util.*;
 
+/**
+ * The Class BaseClass.
+ */
 public class BaseClass
 {
+   
+   /** The base int. */
    protected int baseInt;
+   
+   /** The base string. */
    protected String baseString;
+   
+   /** The base set. */
    protected Set<Boolean> baseSet;
 
+   /** The long field. */
    @SuppressWarnings({"FieldCanBeLocal", "unused"})
    private long longField;
 
+   /**
+    * Sets the long field.
+    *
+    * @param value the new long field
+    */
    void setLongField(long value) { longField = value; }
 }

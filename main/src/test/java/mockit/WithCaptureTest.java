@@ -11,41 +11,174 @@ import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+/**
+ * The Class WithCaptureTest.
+ */
 @SuppressWarnings("ConstantConditions")
 public final class WithCaptureTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /**
+    * The Class Person.
+    */
    public static class Person {
+      
+      /** The name. */
       private String name;
+      
+      /** The age. */
       private int age;
+      
+      /**
+       * Instantiates a new person.
+       */
       public Person() {}
+      
+      /**
+       * Instantiates a new person.
+       *
+       * @param name the name
+       * @param age the age
+       */
       public Person(String name, int age) { this.name = name; this.age = age; }
+      
+      /**
+       * Gets the name.
+       *
+       * @return the name
+       */
       public String getName() { return name; }
+      
+      /**
+       * Gets the age.
+       *
+       * @return the age
+       */
       public int getAge() { return age; }
    }
 
-   public interface DAO<T> { @SuppressWarnings("unused") void create(T t); }
+   /**
+    * The Interface DAO.
+    *
+    * @param <T> the generic type
+    */
+   public interface DAO<T> { /**
+  * Creates the.
+  *
+  * @param t the t
+  */
+ @SuppressWarnings("unused") void create(T t); }
 
+   /**
+    * The Class PersonDAO.
+    */
    @SuppressWarnings("UnusedParameters")
    public static final class PersonDAO implements DAO<Person> {
       @Override public void create(Person p) {}
+      
+      /**
+       * Creates the.
+       *
+       * @param name the name
+       * @param age the age
+       * @return the person
+       */
       public Person create(String name, int age) { return new Person(name, age); }
+      
+      /**
+       * Do something.
+       *
+       * @param i the i
+       */
       public void doSomething(Integer i) {}
+      
+      /**
+       * Do something.
+       *
+       * @param b the b
+       */
       public void doSomething(boolean b) {}
+      
+      /**
+       * Do something.
+       *
+       * @param n the n
+       */
       public void doSomething(Number n) {}
+      
+      /**
+       * Do something else.
+       *
+       * @param n the n
+       */
       public void doSomethingElse(Number n) {}
+      
+      /**
+       * Do something.
+       *
+       * @param nums the nums
+       */
       public void doSomething(Number[] nums) {}
+      
+      /**
+       * Do something.
+       *
+       * @param nums the nums
+       */
       public void doSomething(List<Integer> nums) {}
+      
+      /**
+       * Do something.
+       *
+       * @param s1 the s 1
+       * @param b the b
+       * @param s2 the s 2
+       * @param d the d
+       * @param f the f
+       * @param l the l
+       * @param o the o
+       * @param c the c
+       * @param bt the bt
+       * @param sh the sh
+       */
       public void doSomething(
          String s1, boolean b, String s2, double d, float f, long l, Object o, char c, byte bt, short sh) {}
+      
+      /**
+       * Do something.
+       *
+       * @param names the names
+       * @param ages the ages
+       */
       void doSomething(String[] names, int[] ages) {}
+      
+      /**
+       * Do something.
+       *
+       * @param f1 the f 1
+       * @param f2 the f 2
+       * @param flags the flags
+       */
       void doSomething(Float f1, float f2, boolean... flags) {}
+      
+      /**
+       * Do something.
+       *
+       * @param name the name
+       * @param age the age
+       */
       void doSomething(String name, Short age) {}
    }
 
+   /** The dao. */
    @Mocked PersonDAO dao;
 
+   /**
+    * Capture argument from last matching invocation to local variable.
+    */
    @Test
    public void captureArgumentFromLastMatchingInvocationToLocalVariable() {
       dao.create("Mary Jane", 10);
@@ -58,6 +191,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture argument of wrapper type to local variable of primitive type.
+    */
    @Test
    public void captureArgumentOfWrapperTypeToLocalVariableOfPrimitiveType() {
       dao.doSomething(45);
@@ -69,6 +205,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture null argument of wrapper type to local variable of same wrapper type.
+    */
    @Test
    public void captureNullArgumentOfWrapperTypeToLocalVariableOfSameWrapperType() {
       dao.doSomething((Integer) null);
@@ -80,6 +219,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture argument of reference type to local variable of primitive type.
+    */
    @Test
    public void captureArgumentOfReferenceTypeToLocalVariableOfPrimitiveType() {
       dao.doSomething(123.0F);
@@ -91,6 +233,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture null into A list during verification.
+    */
    @Test
    public void captureNullIntoAListDuringVerification() {
       dao.create(null);
@@ -103,6 +248,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture argument to variable of specific subtype for separate invocations.
+    */
    @Test
    public void captureArgumentToVariableOfSpecificSubtypeForSeparateInvocations() {
       dao.doSomething(new BigInteger("9999"));
@@ -134,6 +282,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture array arguments to variables with specific element subtypes.
+    */
    @Test
    public void captureArrayArgumentsToVariablesWithSpecificElementSubtypes() {
       final Integer[] ints = {1, 2, 3};
@@ -160,6 +311,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture argument of primitive type to local variable of primitive type.
+    */
    @Test
    public void captureArgumentOfPrimitiveTypeToLocalVariableOfPrimitiveType() {
       dao.doSomething(true);
@@ -171,6 +325,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture argument of primitive type to local variable of reference type.
+    */
    @Test
    public void captureArgumentOfPrimitiveTypeToLocalVariableOfReferenceType() {
       dao.doSomething(true);
@@ -182,6 +339,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture arguments to local variables.
+    */
    @Test
    public void captureArgumentsToLocalVariables() {
       final Person p = new Person("John", 10);
@@ -226,6 +386,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Attempt to capture arguments into fields.
+    */
    @Test
    public void attemptToCaptureArgumentsIntoFields() {
       dao.doSomething(56);
@@ -240,6 +403,9 @@ public final class WithCaptureTest
       };
    }
 
+   /**
+    * Capture first argument in two parameter method.
+    */
    @Test
    public void captureFirstArgumentInTwoParameterMethod() {
       final String name1 = "Ted";
@@ -260,6 +426,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture arguments for invocation already matched by recorded expectation.
+    */
    @Test
    public void captureArgumentsForInvocationAlreadyMatchedByRecordedExpectation() {
       new Expectations() {{ dao.doSomething(anyString, anyShort); }};
@@ -275,6 +444,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture arguments from consecutive matching invocations.
+    */
    @Test
    public void captureArgumentsFromConsecutiveMatchingInvocations() {
       dao.doSomething((byte) 56);
@@ -324,6 +496,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture array arguments.
+    */
    @Test
    public void captureArrayArguments() {
       final String[] names = {"Ted", "Lisa"};
@@ -340,6 +515,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture varargs parameter.
+    */
    @Test
    public void captureVarargsParameter() {
       dao.doSomething(1.2F, 1.0F, true, false, true);
@@ -365,6 +543,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture arguments while mixing any fields and literal values and calls to other methods.
+    */
    @Test
    public void captureArgumentsWhileMixingAnyFieldsAndLiteralValuesAndCallsToOtherMethods() {
       final double d = 4.5;
@@ -387,8 +568,16 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Gets the data.
+    *
+    * @return the data
+    */
    private String getData() { return "data"; }
 
+   /**
+    * Capture arguments into list in expectation block.
+    */
    @Test
    public void captureArgumentsIntoListInExpectationBlock() {
       final List<Person> personsCreated = new ArrayList<>();
@@ -419,6 +608,9 @@ public final class WithCaptureTest
       assertEquals(35, personAges.get(0).intValue());
    }
 
+   /**
+    * Capture arguments into list in verification block.
+    */
    @Test
    public void captureArgumentsIntoListInVerificationBlock() {
       dao.create(new Person("John", 10));
@@ -453,6 +645,11 @@ public final class WithCaptureTest
       };
    }
 
+   /**
+    * Capture newed instance.
+    *
+    * @param mockedPerson the mocked person
+    */
    @Test
    public void captureNewedInstance(@Mocked Person mockedPerson) {
       Person p = new Person();
@@ -468,6 +665,11 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture multiple new instances.
+    *
+    * @param mockedPerson the mocked person
+    */
    @Test
    public void captureMultipleNewInstances(@Mocked Person mockedPerson) {
       dao.create(new Person("Paul", 10));
@@ -485,6 +687,11 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Attempt to capture new instance when there was none.
+    *
+    * @param mockedPerson the mocked person
+    */
    @Test
    public void attemptToCaptureNewInstanceWhenThereWasNone(@Mocked Person mockedPerson) {
       thrown.expect(MissingInvocation.class);
@@ -501,6 +708,11 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture two sets of new instances of the same type.
+    *
+    * @param mockedPerson the mocked person
+    */
    @Test
    public void captureTwoSetsOfNewInstancesOfTheSameType(@Mocked Person mockedPerson) {
       // First set.
@@ -519,6 +731,11 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture new instances after verifying new instance of different type.
+    *
+    * @param mockedPerson the mocked person
+    */
    @Test
    public void captureNewInstancesAfterVerifyingNewInstanceOfDifferentType(@Mocked Person mockedPerson) {
       new PersonDAO();
@@ -533,6 +750,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Attempt to capture argument for invocation that never occurred unordered.
+    */
    @Test
    public void attemptToCaptureArgumentForInvocationThatNeverOccurred_unordered() {
       thrown.expect(MissingInvocation.class);
@@ -548,6 +768,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Attempt to capture argument for invocation that never occurred ordered.
+    */
    @Test
    public void attemptToCaptureArgumentForInvocationThatNeverOccurred_ordered() {
       thrown.expect(MissingInvocation.class);
@@ -560,8 +783,22 @@ public final class WithCaptureTest
       }};
    }
 
-   static class ClassWithVarargsMethod { @SuppressWarnings("unused") void varargsMethod(String s, String... values) {} }
+   /**
+    * The Class ClassWithVarargsMethod.
+    */
+   static class ClassWithVarargsMethod { /**
+  * Varargs method.
+  *
+  * @param s the s
+  * @param values the values
+  */
+ @SuppressWarnings("unused") void varargsMethod(String s, String... values) {} }
 
+   /**
+    * Capture varargs values from all invocations.
+    *
+    * @param mock the mock
+    */
    @Test
    public void captureVarargsValuesFromAllInvocations(@Mocked final ClassWithVarargsMethod mock) {
       final String[] expectedValues1 = {"a", "b"};
@@ -582,6 +819,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture arguments into A list of A subtype of the captured parameter type.
+    */
    @Test
    public void captureArgumentsIntoAListOfASubtypeOfTheCapturedParameterType() {
       dao.doSomethingElse(1);
@@ -598,6 +838,9 @@ public final class WithCaptureTest
       }};
    }
 
+   /**
+    * Capture list arguments from multiple invocations.
+    */
    @Test
    public void captureListArgumentsFromMultipleInvocations() {
       final List<Integer> integers1 = asList(1, 2, 3);
