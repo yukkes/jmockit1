@@ -125,10 +125,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <additionalOptions combine.children="append">
-                        <option>--add-modules</option>
-                        <option>java.sql</option>
-                    </additionalOptions>
                     <windowtitle>JMockit Toolkit API</windowtitle>
                     <doctitle>JMockit Toolkit API Documentation</doctitle>
                     <sourceFileExcludes>mockit/asm/**,mockit/coverage/**,mockit/integration/**,mockit/internal/**</sourceFileExcludes>
@@ -260,4 +256,27 @@
             <version>3.3</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jdk17on</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <build>
+                <plugins>
+                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                           <additionalOptions combine.children="append">
+                                <option>--add-modules</option>
+                                <option>java.sql</option>
+                            </additionalOptions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

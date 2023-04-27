@@ -44,9 +44,6 @@
         <java.version>11</java.version>
         <java.release.version>11</java.release.version>
 
-        <!-- Javadoc Release is strict due to maven bug and automatic module naming; it needs extra help, see examples -->
-        <javadoc.java.release.version>11</javadoc.java.release.version>
-
         <!-- TODO: Remove after parent 40 -->
         <jacoco.plugin>0.8.10</jacoco.plugin>
 
@@ -71,6 +68,9 @@
             </activation>
             <properties>
                 <argLine>-javaagent:${settings.localRepository}/com/github/hazendaz/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar --add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+
+                <!-- Javadoc Release is strict due to maven bug and automatic module naming; it needs extra help, see examples (note: done on jdk 17 only as broken until jdk 13 and not backported) -->
+                <javadoc.java.release.version>11</javadoc.java.release.version>
             </properties>
         </profile>
     </profiles>
