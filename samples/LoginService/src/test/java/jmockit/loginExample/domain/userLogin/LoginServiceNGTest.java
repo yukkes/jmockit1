@@ -12,7 +12,11 @@ import jmockit.loginExample.domain.userAccount.*;
  */
 public final class LoginServiceNGTest
 {
+   
+   /** The service. */
    @Tested LoginService service;
+   
+   /** The account. */
    @Mocked UserAccount account;
 
    /**
@@ -31,10 +35,20 @@ public final class LoginServiceNGTest
       new Verifications() {{ account.setLoggedIn(true); }};
    }
 
+   /**
+    * Will match password.
+    *
+    * @param matches the matches
+    */
    void willMatchPassword(boolean... matches) {
       new Expectations() {{ account.passwordMatches(anyString); result = matches; }};
    }
 
+   /**
+    * Sets the account to revoked after three failed login attempts.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void setAccountToRevokedAfterThreeFailedLoginAttempts() throws Exception {
       willMatchPassword(false);
@@ -62,6 +76,11 @@ public final class LoginServiceNGTest
       new Verifications() {{ account.setLoggedIn(true); times = 0; }};
    }
 
+   /**
+    * Not revoke second account after two failed attempts on first account.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount() throws Exception {
       new Expectations() {{ account.passwordMatches(anyString); result = false; }};
@@ -73,6 +92,11 @@ public final class LoginServiceNGTest
       new Verifications() {{ account.setRevoked(true); times = 0; }};
    }
 
+   /**
+    * Disallow concurrent logins.
+    *
+    * @throws Exception the exception
+    */
    @Test(expectedExceptions = AccountLoginLimitReachedException.class)
    public void disallowConcurrentLogins() throws Exception {
       willMatchPassword(true);
@@ -82,6 +106,11 @@ public final class LoginServiceNGTest
       service.login("john", "password");
    }
 
+   /**
+    * Throw exception if account not found.
+    *
+    * @throws Exception the exception
+    */
    @Test(expectedExceptions = UserAccountNotFoundException.class)
    public void throwExceptionIfAccountNotFound() throws Exception {
       new Expectations() {{ UserAccount.find("roger"); result = null; }};
@@ -89,6 +118,11 @@ public final class LoginServiceNGTest
       service.login("roger", "password");
    }
 
+   /**
+    * Disallow logging into revoked account.
+    *
+    * @throws Exception the exception
+    */
    @Test(expectedExceptions = UserAccountRevokedException.class)
    public void disallowLoggingIntoRevokedAccount() throws Exception {
       willMatchPassword(true);
@@ -98,6 +132,11 @@ public final class LoginServiceNGTest
       service.login("john", "password");
    }
 
+   /**
+    * Reset back to initial state after successful login.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void resetBackToInitialStateAfterSuccessfulLogin() throws Exception {
       willMatchPassword(false, false, true, false);
