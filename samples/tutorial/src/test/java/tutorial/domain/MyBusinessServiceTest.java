@@ -9,14 +9,29 @@ import mockit.*;
 import org.apache.commons.mail.*;
 import static tutorial.persistence.Database.*;
 
+/**
+ * The Class MyBusinessServiceTest.
+ */
 public final class MyBusinessServiceTest
 {
+   
+   /** The thrown. */
    @Rule public final ExpectedException thrown = ExpectedException.none();
 
+   /** The data. */
    @Tested final EntityX data = new EntityX(1, "abc", "someone@somewhere.com");
+   
+   /** The business service. */
    @Tested(fullyInitialized = true) MyBusinessService businessService;
+   
+   /** The any email. */
    @Mocked SimpleEmail anyEmail;
 
+   /**
+    * Do business operation xyz.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void doBusinessOperationXyz() throws Exception {
       EntityX existingItem = new EntityX(1, "AX5", "abc@xpta.net");
@@ -28,6 +43,11 @@ public final class MyBusinessServiceTest
       new Verifications() {{ anyEmail.send(); times = 1; }};
    }
 
+   /**
+    * Do business operation xyz with invalid email address.
+    *
+    * @throws Exception the exception
+    */
    @Test
    public void doBusinessOperationXyzWithInvalidEmailAddress() throws Exception {
       String email = "invalid address";
