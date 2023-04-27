@@ -48,7 +48,7 @@
         <javadoc.java.release.version>11</javadoc.java.release.version>
 
         <!-- TODO: Remove after parent 40 -->
-        <jacoco.plugin>0.8.9</jacoco.plugin>
+        <jacoco.plugin>0.8.10</jacoco.plugin>
 
         <!-- Reproducible Builds -->
         <project.build.outputTimestamp>1679577617</project.build.outputTimestamp>
