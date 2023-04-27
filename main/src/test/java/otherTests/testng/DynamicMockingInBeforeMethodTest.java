@@ -1,42 +1,51 @@
 package otherTests.testng;
 
 import static org.testng.Assert.*;
-import org.testng.annotations.*;
 
 import mockit.*;
 
-public final class DynamicMockingInBeforeMethodTest
-{
-   static final class MockedClass {
-      boolean doSomething(int i) { return i > 0; }
-   }
+import org.testng.annotations.*;
 
-   final MockedClass anInstance = new MockedClass();
+public final class DynamicMockingInBeforeMethodTest {
+    static final class MockedClass {
+        boolean doSomething(int i) {
+            return i > 0;
+        }
+    }
 
-   @BeforeMethod
-   public void recordExpectationsOnDynamicallyMockedClass() {
-      assertTrue(anInstance.doSomething(56));
-      assertFalse(anInstance.doSomething(-56));
+    final MockedClass anInstance = new MockedClass();
 
-      new Expectations(anInstance) {{
-         anInstance.doSomething(anyInt); result = true; minTimes = 0;
-      }};
-   }
+    @BeforeMethod
+    public void recordExpectationsOnDynamicallyMockedClass() {
+        assertTrue(anInstance.doSomething(56));
+        assertFalse(anInstance.doSomething(-56));
 
-   @AfterMethod
-   public void verifyThatDynamicallyMockedClassIsStillMocked() {
-      new FullVerifications() {{
-         anInstance.doSomething(anyInt); times = 1;
-      }};
-   }
+        new Expectations(anInstance) {
+            {
+                anInstance.doSomething(anyInt);
+                result = true;
+                minTimes = 0;
+            }
+        };
+    }
 
-   @Test
-   public void testSomething() {
-      assertTrue(anInstance.doSomething(-56));
-   }
+    @AfterMethod
+    public void verifyThatDynamicallyMockedClassIsStillMocked() {
+        new FullVerifications() {
+            {
+                anInstance.doSomething(anyInt);
+                times = 1;
+            }
+        };
+    }
 
-   @Test
-   public void testSomethingElse() {
-      assertTrue(anInstance.doSomething(-129));
-   }
+    @Test
+    public void testSomething() {
+        assertTrue(anInstance.doSomething(-56));
+    }
+
+    @Test
+    public void testSomethingElse() {
+        assertTrue(anInstance.doSomething(-129));
+    }
 }

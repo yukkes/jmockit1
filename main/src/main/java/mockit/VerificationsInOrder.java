@@ -5,7 +5,9 @@
 package mockit;
 
 /**
- * Same as {@link Verifications}, but checking that invocations from code under test occur in the same order as the verified expectations.
+ * Same as {@link Verifications}, but checking that invocations from code under test occur in the same order as the
+ * verified expectations.
+ *
  * <pre>{@code
  * // Exercise tested code.
  * codeUnderTest.doSomething();
@@ -21,10 +23,12 @@ package mockit;
  * @see #VerificationsInOrder()
  * @see <a href="http://jmockit.github.io/tutorial/Mocking.html#verificationInOrder" target="tutorial">Tutorial</a>
  */
-public class VerificationsInOrder extends Verifications
-{
-   /**
-    * Begins <em>in-order</em> verification on the mocked types/instances that were invoked while executing code under test.
-    */
-   protected VerificationsInOrder() { super(true, (Object[]) null); }
+public class VerificationsInOrder extends Verifications {
+    /**
+     * Begins <em>in-order</em> verification on the mocked types/instances that were invoked while executing code under
+     * test.
+     */
+    protected VerificationsInOrder() {
+        super(true, (Object[]) null);
+    }
 }

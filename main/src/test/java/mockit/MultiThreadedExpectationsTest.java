@@ -1,216 +1,280 @@
 package mockit;
 
+import static org.junit.Assert.*;
+import static org.junit.runners.MethodSorters.*;
+
 import java.awt.*;
 import java.util.concurrent.*;
 
 import javax.swing.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-import static org.junit.runners.MethodSorters.*;
 
 /**
  * The Class MultiThreadedExpectationsTest.
  */
 @FixMethodOrder(NAME_ASCENDING)
-public final class MultiThreadedExpectationsTest
-{
-   
-   /**
-    * The Class Collaborator.
-    */
-   static class Collaborator {
-      
-      /**
-       * Do something.
-       *
-       * @return the int
-       */
-      int doSomething() { return -1; }
-      
-      /**
-       * Do something else.
-       */
-      void doSomethingElse() {}
-   }
+public final class MultiThreadedExpectationsTest {
 
-   /** The mock. */
-   @Mocked Collaborator mock;
+    /**
+     * The Class Collaborator.
+     */
+    static class Collaborator {
 
-   /**
-    * Use mocked collaborator from worker thread.
-    */
-   void useMockedCollaboratorFromWorkerThread() {
-      Thread worker = new Thread() {
-         @Override public void run() { mock.doSomethingElse(); }
-      };
-      worker.start();
-      try { worker.join(); } catch (InterruptedException ignore) {}
-   }
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething() {
+            return -1;
+        }
 
-   /**
-    * Use mocked object from worker thread while verifying expectation.
-    */
-   @Test
-   public void useMockedObjectFromWorkerThreadWhileVerifyingExpectation() {
-      mock.doSomething();
-      mock.doSomething();
+        /**
+         * Do something else.
+         */
+        void doSomethingElse() {
+        }
+    }
 
-      new Verifications() {{
-         mock.doSomething();
-         useMockedCollaboratorFromWorkerThread();
-         times = 2;
-      }};
-   }
+    /** The mock. */
+    @Mocked
+    Collaborator mock;
 
-   /**
-    * Use mocked object from worker thread while recording and verifying expectation.
-    */
-   @Test
-   public void useMockedObjectFromWorkerThreadWhileRecordingAndVerifyingExpectation() {
-      new Expectations() {{
-         mock.doSomething();
-         useMockedCollaboratorFromWorkerThread();
-         result = 123;
-      }};
+    /**
+     * Use mocked collaborator from worker thread.
+     */
+    void useMockedCollaboratorFromWorkerThread() {
+        Thread worker = new Thread() {
+            @Override
+            public void run() {
+                mock.doSomethingElse();
+            }
+        };
+        worker.start();
+        try {
+            worker.join();
+        } catch (InterruptedException ignore) {
+        }
+    }
 
-      assertEquals(123, mock.doSomething());
-      mock.doSomethingElse();
+    /**
+     * Use mocked object from worker thread while verifying expectation.
+     */
+    @Test
+    public void useMockedObjectFromWorkerThreadWhileVerifyingExpectation() {
+        mock.doSomething();
+        mock.doSomething();
 
-      new VerificationsInOrder() {{
-         useMockedCollaboratorFromWorkerThread();
-         mock.doSomething();
-         mock.doSomethingElse();
-      }};
-   }
+        new Verifications() {
+            {
+                mock.doSomething();
+                useMockedCollaboratorFromWorkerThread();
+                times = 2;
+            }
+        };
+    }
 
-   /**
-    * Replay recorded expectation from another thread.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void replayRecordedExpectationFromAnotherThread() throws Exception {
-      new Expectations() {{ mock.doSomething(); }};
+    /**
+     * Use mocked object from worker thread while recording and verifying expectation.
+     */
+    @Test
+    public void useMockedObjectFromWorkerThreadWhileRecordingAndVerifyingExpectation() {
+        new Expectations() {
+            {
+                mock.doSomething();
+                useMockedCollaboratorFromWorkerThread();
+                result = 123;
+            }
+        };
 
-      Thread task = new Thread() {
-         @Override public void run() { mock.doSomething(); }
-      };
-      task.start();
-      task.join();
-   }
+        assertEquals(123, mock.doSomething());
+        mock.doSomethingElse();
 
-   /**
-    * The Class Dependency.
-    */
-   static class Dependency {
-      
-      /**
-       * Do something.
-       */
-      void doSomething() {}
-      
-      /**
-       * Do something else.
-       */
-      static void doSomethingElse() {}
-   }
+        new VerificationsInOrder() {
+            {
+                useMockedCollaboratorFromWorkerThread();
+                mock.doSomething();
+                mock.doSomethingElse();
+            }
+        };
+    }
 
-   /**
-    * Verify invocations replayed in another thread whose class is no longer mocked.
-    *
-    * @param dep the dep
-    * @param g2D the g 2 D
-    * @param runnable the runnable
-    */
-   @Test
-   public void verifyInvocationsReplayedInAnotherThreadWhoseClassIsNoLongerMocked(
-      @Mocked final Dependency dep, @Mocked final Graphics2D g2D, @Mocked final Runnable runnable
-   ) {
-      new Thread() {
-         @Override
-         public void run() {
-            dep.doSomething();
-            g2D.dispose();
-            runnable.run();
-            Dependency.doSomethingElse();
-         }
-      }.start();
-   }
+    /**
+     * Replay recorded expectation from another thread.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void replayRecordedExpectationFromAnotherThread() throws Exception {
+        new Expectations() {
+            {
+                mock.doSomething();
+            }
+        };
 
-   /**
-    * The Interface APublicInterface.
-    */
-   public interface APublicInterface { /**
-  * Do something.
-  *
-  * @return true, if successful
-  */
- boolean doSomething(); }
+        Thread task = new Thread() {
+            @Override
+            public void run() {
+                mock.doSomething();
+            }
+        };
+        task.start();
+        task.join();
+    }
 
-   /**
-    * Invoke method on mocked public interface from EDT.
-    *
-    * @param mock2 the mock 2
-    * @throws Exception the exception
-    */
-   @Test
-   public void invokeMethodOnMockedPublicInterfaceFromEDT(@Mocked final APublicInterface mock2) throws Exception {
-      new Expectations() {{ mock2.doSomething(); result = true; }};
+    /**
+     * The Class Dependency.
+     */
+    static class Dependency {
 
-      SwingUtilities.invokeAndWait(new Runnable() {
-         @Override
-         public void run() { assertTrue(mock2.doSomething()); }
-      });
+        /**
+         * Do something.
+         */
+        void doSomething() {
+        }
 
-      assertTrue(mock2.doSomething());
-   }
+        /**
+         * Do something else.
+         */
+        static void doSomethingElse() {
+        }
+    }
 
-   /**
-    * The Class AnAbstractClass.
-    */
-   public abstract static class AnAbstractClass { /**
-  * Do something.
-  *
-  * @return true, if successful
-  */
- public abstract boolean doSomething(); }
+    /**
+     * Verify invocations replayed in another thread whose class is no longer mocked.
+     *
+     * @param dep
+     *            the dep
+     * @param g2D
+     *            the g 2 D
+     * @param runnable
+     *            the runnable
+     */
+    @Test
+    public void verifyInvocationsReplayedInAnotherThreadWhoseClassIsNoLongerMocked(@Mocked final Dependency dep,
+            @Mocked final Graphics2D g2D, @Mocked final Runnable runnable) {
+        new Thread() {
+            @Override
+            public void run() {
+                dep.doSomething();
+                g2D.dispose();
+                runnable.run();
+                Dependency.doSomethingElse();
+            }
+        }.start();
+    }
 
-   /**
-    * Invoke method on mocked abstract class from EDT.
-    *
-    * @param mock2 the mock 2
-    * @throws Exception the exception
-    */
-   @Test
-   public void invokeMethodOnMockedAbstractClassFromEDT(@Mocked final AnAbstractClass mock2) throws Exception {
-      new Expectations() {{ mock2.doSomething(); result = true; }};
+    /**
+     * The Interface APublicInterface.
+     */
+    public interface APublicInterface {
+        /**
+         * Do something.
+         *
+         * @return true, if successful
+         */
+        boolean doSomething();
+    }
 
-      SwingUtilities.invokeAndWait(new Runnable() {
-         @Override
-         public void run() { assertTrue(mock2.doSomething()); }
-      });
+    /**
+     * Invoke method on mocked public interface from EDT.
+     *
+     * @param mock2
+     *            the mock 2
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void invokeMethodOnMockedPublicInterfaceFromEDT(@Mocked final APublicInterface mock2) throws Exception {
+        new Expectations() {
+            {
+                mock2.doSomething();
+                result = true;
+            }
+        };
 
-      assertTrue(mock2.doSomething());
-   }
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertTrue(mock2.doSomething());
+            }
+        });
 
-   /**
-    * Invoke method on mocked generic interface from EDT.
-    *
-    * @param mock2 the mock 2
-    * @throws Exception the exception
-    */
-   @Test
-   public void invokeMethodOnMockedGenericInterfaceFromEDT(@Mocked final Callable<Boolean> mock2) throws Exception {
-      new Expectations() {{ mock2.call(); result = true; }};
+        assertTrue(mock2.doSomething());
+    }
 
-      SwingUtilities.invokeAndWait(new Runnable() {
-         @Override
-         public void run() {
-            try { assertTrue(mock2.call()); } catch (Exception e) { throw new RuntimeException(e); }
-         }
-      });
+    /**
+     * The Class AnAbstractClass.
+     */
+    public abstract static class AnAbstractClass {
+        /**
+         * Do something.
+         *
+         * @return true, if successful
+         */
+        public abstract boolean doSomething();
+    }
 
-      assertTrue(mock2.call());
-   }
+    /**
+     * Invoke method on mocked abstract class from EDT.
+     *
+     * @param mock2
+     *            the mock 2
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void invokeMethodOnMockedAbstractClassFromEDT(@Mocked final AnAbstractClass mock2) throws Exception {
+        new Expectations() {
+            {
+                mock2.doSomething();
+                result = true;
+            }
+        };
+
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                assertTrue(mock2.doSomething());
+            }
+        });
+
+        assertTrue(mock2.doSomething());
+    }
+
+    /**
+     * Invoke method on mocked generic interface from EDT.
+     *
+     * @param mock2
+     *            the mock 2
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void invokeMethodOnMockedGenericInterfaceFromEDT(@Mocked final Callable<Boolean> mock2) throws Exception {
+        new Expectations() {
+            {
+                mock2.call();
+                result = true;
+            }
+        };
+
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    assertTrue(mock2.call());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        assertTrue(mock2.call());
+    }
 }

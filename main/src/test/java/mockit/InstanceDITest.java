@@ -1,91 +1,103 @@
 package mockit;
 
-import java.util.*;
-import javax.enterprise.inject.*;
-import javax.inject.*;
 import static java.util.Arrays.*;
 
-import org.junit.*;
 import static org.junit.Assert.*;
+
+import java.util.*;
+
+import javax.enterprise.inject.*;
+import javax.inject.*;
+
+import org.junit.*;
 
 /**
  * The Class InstanceDITest.
  */
-public final class InstanceDITest
-{
-   
-   /**
-    * The Class Collaborator.
-    */
-   static class Collaborator {}
+public final class InstanceDITest {
 
-   /**
-    * The Class TestedClassWithInstanceInjectionPoints.
-    */
-   static final class TestedClassWithInstanceInjectionPoints {
-      
-      /** The names. */
-      final Set<String> names;
-      
-      /** The collaborators. */
-      @Inject Instance<Collaborator> collaborators;
+    /**
+     * The Class Collaborator.
+     */
+    static class Collaborator {
+    }
 
-      /**
-       * Instantiates a new tested class with instance injection points.
-       *
-       * @param names the names
-       */
-      @Inject
-      TestedClassWithInstanceInjectionPoints(Instance<String> names) {
-         this.names = new HashSet<>();
+    /**
+     * The Class TestedClassWithInstanceInjectionPoints.
+     */
+    static final class TestedClassWithInstanceInjectionPoints {
 
-         for (String name : names) {
-            this.names.add(name);
-         }
-      }
-   }
+        /** The names. */
+        final Set<String> names;
 
-   /** The tested. */
-   @Tested TestedClassWithInstanceInjectionPoints tested;
-   
-   /** The col 1. */
-   @Injectable Collaborator col1;
-   
-   /** The col 2. */
-   @Injectable Collaborator col2;
-   
-   /** The names. */
-   @Injectable final Iterable<String> names = asList("Abc", "Test", "123");
+        /** The collaborators. */
+        @Inject
+        Instance<Collaborator> collaborators;
 
-   /**
-    * Allow multiple injectables of same type to be obtained from instance injection point.
-    */
-   @Test
-   public void allowMultipleInjectablesOfSameTypeToBeObtainedFromInstanceInjectionPoint() {
-      assertEquals(new HashSet<>(asList("Abc", "Test", "123")), tested.names);
+        /**
+         * Instantiates a new tested class with instance injection points.
+         *
+         * @param names
+         *            the names
+         */
+        @Inject
+        TestedClassWithInstanceInjectionPoints(Instance<String> names) {
+            this.names = new HashSet<>();
 
-      Instance<Collaborator> collaborators = tested.collaborators;
-      assertFalse(collaborators.isAmbiguous());
-      assertFalse(collaborators.isUnsatisfied());
+            for (String name : names) {
+                this.names.add(name);
+            }
+        }
+    }
 
-      List<Collaborator> collaboratorInstances = toList(collaborators);
-      assertEquals(asList(col1, col2), collaboratorInstances);
-   }
+    /** The tested. */
+    @Tested
+    TestedClassWithInstanceInjectionPoints tested;
 
-   /**
-    * To list.
-    *
-    * @param <T> the generic type
-    * @param instances the instances
-    * @return the list
-    */
-   static <T> List<T> toList(Iterable<T> instances) {
-      List<T> list = new ArrayList<>();
+    /** The col 1. */
+    @Injectable
+    Collaborator col1;
 
-      for (T instance : instances) {
-         list.add(instance);
-      }
+    /** The col 2. */
+    @Injectable
+    Collaborator col2;
 
-      return list;
-   }
+    /** The names. */
+    @Injectable
+    final Iterable<String> names = asList("Abc", "Test", "123");
+
+    /**
+     * Allow multiple injectables of same type to be obtained from instance injection point.
+     */
+    @Test
+    public void allowMultipleInjectablesOfSameTypeToBeObtainedFromInstanceInjectionPoint() {
+        assertEquals(new HashSet<>(asList("Abc", "Test", "123")), tested.names);
+
+        Instance<Collaborator> collaborators = tested.collaborators;
+        assertFalse(collaborators.isAmbiguous());
+        assertFalse(collaborators.isUnsatisfied());
+
+        List<Collaborator> collaboratorInstances = toList(collaborators);
+        assertEquals(asList(col1, col2), collaboratorInstances);
+    }
+
+    /**
+     * To list.
+     *
+     * @param <T>
+     *            the generic type
+     * @param instances
+     *            the instances
+     *
+     * @return the list
+     */
+    static <T> List<T> toList(Iterable<T> instances) {
+        List<T> list = new ArrayList<>();
+
+        for (T instance : instances) {
+            list.add(instance);
+        }
+
+        return list;
+    }
 }

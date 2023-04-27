@@ -1,136 +1,179 @@
 package mockit;
 
-import org.junit.*;
 import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+import org.junit.*;
+
 /**
  * The Class TestedAndMockedTest.
  */
-public final class TestedAndMockedTest
-{
-   
-   /**
-    * The Class ClassToBeTested.
-    */
-   public static class ClassToBeTested {
-      
-      /** The some data. */
-      private final String someData;
-      
-      /** The output data. */
-      String outputData;
-      
-      /** The collaborator. */
-      AnotherClassToBeTested collaborator;
+public final class TestedAndMockedTest {
 
-      /**
-       * Instantiates a new class to be tested.
-       *
-       * @param someData the some data
-       */
-      public ClassToBeTested(String someData) { this.someData = someData; }
+    /**
+     * The Class ClassToBeTested.
+     */
+    public static class ClassToBeTested {
 
-      /**
-       * Do some operation.
-       *
-       * @param i the i
-       * @param s the s
-       * @return true, if successful
-       */
-      public boolean doSomeOperation(int i, String s) {
-         validateInput(i, s);
-         int j = i + doSomething();
-         doSomethingElse(s);
-         return j > 0;
-      }
+        /** The some data. */
+        private final String someData;
 
-      /**
-       * Validate input.
-       *
-       * @param i the i
-       * @param s the s
-       */
-      static void validateInput(int i, String s) { if (i <= 0 || s == null) throw new IllegalArgumentException(); }
-      
-      /**
-       * Do something.
-       *
-       * @return the int
-       */
-      int doSomething() { return -1; }
-      
-      /**
-       * Do something else.
-       *
-       * @param s the s
-       */
-      void doSomethingElse(String s) { outputData = "output data: " + s; }
+        /** The output data. */
+        String outputData;
 
-      /**
-       * Do another operation.
-       *
-       * @return the int
-       */
-      int doAnotherOperation() {
-         return collaborator.doSomething() - 23;
-      }
-   }
+        /** The collaborator. */
+        AnotherClassToBeTested collaborator;
 
-   /**
-    * The Class AnotherClassToBeTested.
-    */
-   static final class AnotherClassToBeTested { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething() { return 123; } }
+        /**
+         * Instantiates a new class to be tested.
+         *
+         * @param someData
+         *            the some data
+         */
+        public ClassToBeTested(String someData) {
+            this.someData = someData;
+        }
 
-   /** The tested and injected. */
-   @Tested AnotherClassToBeTested testedAndInjected;
-   
-   /** The tested. */
-   @Tested(fullyInitialized = true) @Mocked ClassToBeTested tested;
-   
-   /** The test data. */
-   @Injectable final String testData = "test data";
+        /**
+         * Do some operation.
+         *
+         * @param i
+         *            the i
+         * @param s
+         *            the s
+         *
+         * @return true, if successful
+         */
+        public boolean doSomeOperation(int i, String s) {
+            validateInput(i, s);
+            int j = i + doSomething();
+            doSomethingElse(s);
+            return j > 0;
+        }
 
-   /**
-    * Exercise public method while having helper methods mocked.
-    */
-   @Test
-   public void exercisePublicMethodWhileHavingHelperMethodsMocked() {
-      assertEquals(testData, tested.someData);
+        /**
+         * Validate input.
+         *
+         * @param i
+         *            the i
+         * @param s
+         *            the s
+         */
+        static void validateInput(int i, String s) {
+            if (i <= 0 || s == null)
+                throw new IllegalArgumentException();
+        }
 
-      new Expectations() {{ tested.doSomething(); result = 123; }};
-      new Expectations() {{ ClassToBeTested.validateInput(anyInt, anyString); }};
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething() {
+            return -1;
+        }
 
-      boolean result = tested.doSomeOperation(0, "testing");
+        /**
+         * Do something else.
+         *
+         * @param s
+         *            the s
+         */
+        void doSomethingElse(String s) {
+            outputData = "output data: " + s;
+        }
 
-      assertTrue(result);
-      assertEquals("output data: testing", tested.outputData);
+        /**
+         * Do another operation.
+         *
+         * @return the int
+         */
+        int doAnotherOperation() {
+            return collaborator.doSomething() - 23;
+        }
+    }
 
-      new Verifications() {{ tested.doSomethingElse(anyString); times = 1; }};
-   }
+    /**
+     * The Class AnotherClassToBeTested.
+     */
+    static final class AnotherClassToBeTested {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething() {
+            return 123;
+        }
+    }
 
-   /**
-    * Exercise top level tested object together with injected second level tested object.
-    */
-   @Test
-   public void exerciseTopLevelTestedObjectTogetherWithInjectedSecondLevelTestedObject() {
-      assertEquals(123, testedAndInjected.doSomething());
-      assertEquals(100, tested.doAnotherOperation());
-   }
+    /** The tested and injected. */
+    @Tested
+    AnotherClassToBeTested testedAndInjected;
 
-   /**
-    * Mock tested class.
-    *
-    * @param mock the mock
-    */
-   @Test(expected = MissingInvocation.class)
-   public void mockTestedClass(@Mocked final ClassToBeTested mock) {
-      new Expectations() {{ mock.doSomethingElse(""); }};
-   }
+    /** The tested. */
+    @Tested(fullyInitialized = true)
+    @Mocked
+    ClassToBeTested tested;
+
+    /** The test data. */
+    @Injectable
+    final String testData = "test data";
+
+    /**
+     * Exercise public method while having helper methods mocked.
+     */
+    @Test
+    public void exercisePublicMethodWhileHavingHelperMethodsMocked() {
+        assertEquals(testData, tested.someData);
+
+        new Expectations() {
+            {
+                tested.doSomething();
+                result = 123;
+            }
+        };
+        new Expectations() {
+            {
+                ClassToBeTested.validateInput(anyInt, anyString);
+            }
+        };
+
+        boolean result = tested.doSomeOperation(0, "testing");
+
+        assertTrue(result);
+        assertEquals("output data: testing", tested.outputData);
+
+        new Verifications() {
+            {
+                tested.doSomethingElse(anyString);
+                times = 1;
+            }
+        };
+    }
+
+    /**
+     * Exercise top level tested object together with injected second level tested object.
+     */
+    @Test
+    public void exerciseTopLevelTestedObjectTogetherWithInjectedSecondLevelTestedObject() {
+        assertEquals(123, testedAndInjected.doSomething());
+        assertEquals(100, tested.doAnotherOperation());
+    }
+
+    /**
+     * Mock tested class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test(expected = MissingInvocation.class)
+    public void mockTestedClass(@Mocked final ClassToBeTested mock) {
+        new Expectations() {
+            {
+                mock.doSomethingElse("");
+            }
+        };
+    }
 }

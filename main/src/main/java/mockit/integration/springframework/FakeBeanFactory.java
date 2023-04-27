@@ -18,49 +18,48 @@ import org.springframework.beans.factory.support.*;
  * {@link Tested @Tested} or {@link Injectable @Injectable} object with the given field name, or a dependency object
  * injected at any level into a <code>@Tested</code> object.
  * <p>
- * In case said calls come (indirectly) from a test class having no <code>@Tested</code> fields, bean lookup will proceed
- * into the actual <code>getBean</code> implementation method.
+ * In case said calls come (indirectly) from a test class having no <code>@Tested</code> fields, bean lookup will
+ * proceed into the actual <code>getBean</code> implementation method.
  * <p>
  * Note this fake is only useful if the code under test makes direct calls to Spring's <code>getBean</code> methods.
  */
-public final class FakeBeanFactory extends MockUp<DefaultListableBeanFactory>
-{
-   @Mock
-   public static Object getBean(@Nonnull Invocation invocation, @Nonnull String name) {
-      TestedClassInstantiations testedClasses = TestRun.getTestedClassInstantiations();
+public final class FakeBeanFactory extends MockUp<DefaultListableBeanFactory> {
+    @Mock
+    public static Object getBean(@Nonnull Invocation invocation, @Nonnull String name) {
+        TestedClassInstantiations testedClasses = TestRun.getTestedClassInstantiations();
 
-      if (testedClasses == null) {
-         return invocation.proceed();
-      }
+        if (testedClasses == null) {
+            return invocation.proceed();
+        }
 
-      BeanExporter beanExporter = testedClasses.getBeanExporter();
-      Object bean = BeanLookup.getBean(beanExporter, name);
-      return bean;
-   }
+        BeanExporter beanExporter = testedClasses.getBeanExporter();
+        Object bean = BeanLookup.getBean(beanExporter, name);
+        return bean;
+    }
 
-   @Mock
-   public static <T> T getBean(@Nonnull Invocation invocation, @Nonnull String name, @Nullable Class<T> requiredType) {
-      TestedClassInstantiations testedClasses = TestRun.getTestedClassInstantiations();
+    @Mock
+    public static <T> T getBean(@Nonnull Invocation invocation, @Nonnull String name, @Nullable Class<T> requiredType) {
+        TestedClassInstantiations testedClasses = TestRun.getTestedClassInstantiations();
 
-      if (testedClasses == null) {
-         return invocation.proceed();
-      }
+        if (testedClasses == null) {
+            return invocation.proceed();
+        }
 
-      BeanExporter beanExporter = testedClasses.getBeanExporter();
-      T bean = BeanLookup.getBean(beanExporter, name, requiredType);
-      return bean;
-   }
+        BeanExporter beanExporter = testedClasses.getBeanExporter();
+        T bean = BeanLookup.getBean(beanExporter, name, requiredType);
+        return bean;
+    }
 
-   @Mock
-   public static <T> T getBean(@Nonnull Invocation invocation, @Nonnull Class<T> requiredType) {
-      TestedClassInstantiations testedClasses = TestRun.getTestedClassInstantiations();
+    @Mock
+    public static <T> T getBean(@Nonnull Invocation invocation, @Nonnull Class<T> requiredType) {
+        TestedClassInstantiations testedClasses = TestRun.getTestedClassInstantiations();
 
-      if (testedClasses == null) {
-         return invocation.proceed();
-      }
+        if (testedClasses == null) {
+            return invocation.proceed();
+        }
 
-      BeanExporter beanExporter = testedClasses.getBeanExporter();
-      T bean = BeanLookup.getBean(beanExporter, requiredType);
-      return bean;
-   }
+        BeanExporter beanExporter = testedClasses.getBeanExporter();
+        T bean = BeanLookup.getBean(beanExporter, requiredType);
+        return bean;
+    }
 }

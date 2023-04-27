@@ -4,37 +4,42 @@
  */
 package mockit.internal.injection;
 
-import java.lang.reflect.*;
-import java.util.*;
-import javax.annotation.*;
-
 import static mockit.internal.util.Utilities.getClassType;
 
-final class MultiValuedProvider extends InjectionProvider
-{
-   @Nonnull private final List<InjectionProvider> individualProviders;
+import java.lang.reflect.*;
+import java.util.*;
 
-   MultiValuedProvider(@Nonnull Type elementType) {
-      super(elementType, "");
-      individualProviders = new ArrayList<>();
-   }
+import javax.annotation.*;
 
-   void addInjectable(@Nonnull InjectionProvider provider) {
-      individualProviders.add(provider);
-   }
+final class MultiValuedProvider extends InjectionProvider {
+    @Nonnull
+    private final List<InjectionProvider> individualProviders;
 
-   @Nonnull @Override
-   public Class<?> getClassOfDeclaredType() { return getClassType(declaredType); }
+    MultiValuedProvider(@Nonnull Type elementType) {
+        super(elementType, "");
+        individualProviders = new ArrayList<>();
+    }
 
-   @Nonnull @Override
-   public Object getValue(@Nullable Object owner) {
-      List<Object> values = new ArrayList<>(individualProviders.size());
+    void addInjectable(@Nonnull InjectionProvider provider) {
+        individualProviders.add(provider);
+    }
 
-      for (InjectionProvider provider : individualProviders) {
-         Object value = provider.getValue(owner);
-         values.add(value);
-      }
+    @Nonnull
+    @Override
+    public Class<?> getClassOfDeclaredType() {
+        return getClassType(declaredType);
+    }
 
-      return values;
-   }
+    @Nonnull
+    @Override
+    public Object getValue(@Nullable Object owner) {
+        List<Object> values = new ArrayList<>(individualProviders.size());
+
+        for (InjectionProvider provider : individualProviders) {
+            Object value = provider.getValue(owner);
+            values.add(value);
+        }
+
+        return values;
+    }
 }

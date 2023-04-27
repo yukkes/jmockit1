@@ -3,34 +3,37 @@ package integrationTests;
 /**
  * The Class ClassWithNestedEnum.
  */
-final class ClassWithNestedEnum
-{
-   
-   /**
-    * The Enum NestedEnum.
-    */
-   enum NestedEnum {
+final class ClassWithNestedEnum {
 
-    /** The elem. */
-    ELEM
+    /**
+     * The Enum NestedEnum.
+     */
+    enum NestedEnum {
+
+        /** The elem. */
+        ELEM
     }
 
-   /**
-    * The Class NestedClass.
-    */
-   static final class NestedClass
-   {
-      
-      /**
-       * Use enum from outer class.
-       */
-      static void useEnumFromOuterClass() { NestedEnum.values(); }
-      
-      /**
-       * Gets the outer.
-       *
-       * @return the outer
-       */
-      @SuppressWarnings("unused") ClassWithNestedEnum getOuter() { return null; }
-   }
+    /**
+     * The Class NestedClass.
+     */
+    static final class NestedClass {
+
+        /**
+         * Use enum from outer class.
+         */
+        static void useEnumFromOuterClass() {
+            NestedEnum.values();
+        }
+
+        /**
+         * Gets the outer.
+         *
+         * @return the outer
+         */
+        @SuppressWarnings("unused")
+        ClassWithNestedEnum getOuter() {
+            return null;
+        }
+    }
 }

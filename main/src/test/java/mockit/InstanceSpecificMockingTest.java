@@ -1,10 +1,11 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.io.*;
 import java.nio.*;
 import java.util.*;
 
-import static org.junit.Assert.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.*;
@@ -13,308 +14,375 @@ import org.junit.runners.*;
 /**
  * The Class InstanceSpecificMockingTest.
  */
-public final class InstanceSpecificMockingTest
-{
-   
-   /**
-    * The Class Collaborator.
-    */
-   static class Collaborator {
-      
-      /** The value. */
-      protected final int value;
+public final class InstanceSpecificMockingTest {
 
-      /**
-       * Instantiates a new collaborator.
-       */
-      Collaborator() { value = -1; }
-      
-      /**
-       * Instantiates a new collaborator.
-       *
-       * @param value the value
-       */
-      Collaborator(int value) { this.value = value; }
+    /**
+     * The Class Collaborator.
+     */
+    static class Collaborator {
 
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      int getValue() { return value; }
+        /** The value. */
+        protected final int value;
 
-      /**
-       * Simple operation.
-       *
-       * @param a the a
-       * @param b the b
-       * @param c the c
-       * @return true, if successful
-       */
-      @SuppressWarnings("unused")
-      final boolean simpleOperation(int a, String b, Date c) { return true; }
+        /**
+         * Instantiates a new collaborator.
+         */
+        Collaborator() {
+            value = -1;
+        }
 
-      /**
-       * Do something.
-       *
-       * @param b the b
-       * @param s the s
-       */
-      @SuppressWarnings("unused")
-      static void doSomething(boolean b, String s) { throw new IllegalStateException(); }
-   }
+        /**
+         * Instantiates a new collaborator.
+         *
+         * @param value
+         *            the value
+         */
+        Collaborator(int value) {
+            this.value = value;
+        }
 
-   /** The previous instance. */
-   final Collaborator previousInstance = new Collaborator();
-   
-   /** The mock. */
-   @Injectable Collaborator mock;
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return value;
+        }
 
-   /**
-    * Exercise injected instance during replay only.
-    */
-   @Test
-   public void exerciseInjectedInstanceDuringReplayOnly() {
-      assertThatPreviouslyCreatedInstanceIsNotMocked();
+        /**
+         * Simple operation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         * @param c
+         *            the c
+         *
+         * @return true, if successful
+         */
+        @SuppressWarnings("unused")
+        final boolean simpleOperation(int a, String b, Date c) {
+            return true;
+        }
 
-      assertEquals(0, mock.value);
-      assertEquals(0, mock.getValue());
-      assertFalse(mock.simpleOperation(1, "test", null));
+        /**
+         * Do something.
+         *
+         * @param b
+         *            the b
+         * @param s
+         *            the s
+         */
+        @SuppressWarnings("unused")
+        static void doSomething(boolean b, String s) {
+            throw new IllegalStateException();
+        }
+    }
 
-      assertThatNewlyCreatedInstanceIsNotMocked();
-   }
+    /** The previous instance. */
+    final Collaborator previousInstance = new Collaborator();
 
-   /**
-    * Assert that previously created instance is not mocked.
-    */
-   void assertThatPreviouslyCreatedInstanceIsNotMocked() {
-      assertEquals(-1, previousInstance.value);
-      assertEquals(-1, previousInstance.getValue());
-      assertTrue(previousInstance.simpleOperation(1, "test", null));
-   }
+    /** The mock. */
+    @Injectable
+    Collaborator mock;
 
-   /**
-    * Assert that newly created instance is not mocked.
-    */
-   void assertThatNewlyCreatedInstanceIsNotMocked() {
-      Collaborator newInstance = new Collaborator();
-      assertEquals(-1, newInstance.value);
-      assertEquals(-1, newInstance.getValue());
-      assertTrue(newInstance.simpleOperation(1, "test", null));
-   }
+    /**
+     * Exercise injected instance during replay only.
+     */
+    @Test
+    public void exerciseInjectedInstanceDuringReplayOnly() {
+        assertThatPreviouslyCreatedInstanceIsNotMocked();
 
-   /**
-    * Mock specific instance.
-    */
-   @Test
-   public void mockSpecificInstance() {
-      new Expectations() {{
-         mock.simpleOperation(1, "", null); result = false;
-         mock.getValue(); result = 123; times = 1;
-      }};
+        assertEquals(0, mock.value);
+        assertEquals(0, mock.getValue());
+        assertFalse(mock.simpleOperation(1, "test", null));
 
-      assertFalse(mock.simpleOperation(1, "", null));
-      assertEquals(123, mock.getValue());
-      assertThatPreviouslyCreatedInstanceIsNotMocked();
-      assertThatNewlyCreatedInstanceIsNotMocked();
+        assertThatNewlyCreatedInstanceIsNotMocked();
+    }
 
-      try {
-         Collaborator.doSomething(false, null);
-         fail();
-      }
-      catch (IllegalStateException ignore) {}
-   }
+    /**
+     * Assert that previously created instance is not mocked.
+     */
+    void assertThatPreviouslyCreatedInstanceIsNotMocked() {
+        assertEquals(-1, previousInstance.value);
+        assertEquals(-1, previousInstance.getValue());
+        assertTrue(previousInstance.simpleOperation(1, "test", null));
+    }
 
-   /**
-    * Use A second mock instance of the same type.
-    *
-    * @param mock2 the mock 2
-    */
-   @Test
-   public void useASecondMockInstanceOfTheSameType(@Injectable final Collaborator mock2) {
-      assertThatPreviouslyCreatedInstanceIsNotMocked();
+    /**
+     * Assert that newly created instance is not mocked.
+     */
+    void assertThatNewlyCreatedInstanceIsNotMocked() {
+        Collaborator newInstance = new Collaborator();
+        assertEquals(-1, newInstance.value);
+        assertEquals(-1, newInstance.getValue());
+        assertTrue(newInstance.simpleOperation(1, "test", null));
+    }
 
-      new Expectations() {{
-         mock2.getValue(); result = 2;
-         mock.getValue(); returns(1, 3);
-      }};
+    /**
+     * Mock specific instance.
+     */
+    @Test
+    public void mockSpecificInstance() {
+        new Expectations() {
+            {
+                mock.simpleOperation(1, "", null);
+                result = false;
+                mock.getValue();
+                result = 123;
+                times = 1;
+            }
+        };
 
-      assertEquals(1, mock.getValue());
-      assertEquals(2, mock2.getValue());
-      assertEquals(3, mock.getValue());
-      assertEquals(2, mock2.getValue());
-      assertEquals(3, mock.getValue());
+        assertFalse(mock.simpleOperation(1, "", null));
+        assertEquals(123, mock.getValue());
+        assertThatPreviouslyCreatedInstanceIsNotMocked();
+        assertThatNewlyCreatedInstanceIsNotMocked();
 
-      assertThatPreviouslyCreatedInstanceIsNotMocked();
-      assertThatNewlyCreatedInstanceIsNotMocked();
-   }
+        try {
+            Collaborator.doSomething(false, null);
+            fail();
+        } catch (IllegalStateException ignore) {
+        }
+    }
 
-   // Injectable mocks of unusual types ///////////////////////////////////////////////////////////////////////////////
+    /**
+     * Use A second mock instance of the same type.
+     *
+     * @param mock2
+     *            the mock 2
+     */
+    @Test
+    public void useASecondMockInstanceOfTheSameType(@Injectable final Collaborator mock2) {
+        assertThatPreviouslyCreatedInstanceIsNotMocked();
 
-   /**
-    * Allow injectable mock of interface type.
-    *
-    * @param runnable the runnable
-    */
-   @Test
-   public void allowInjectableMockOfInterfaceType(@Injectable final Runnable runnable) {
-      runnable.run();
-      runnable.run();
+        new Expectations() {
+            {
+                mock2.getValue();
+                result = 2;
+                mock.getValue();
+                returns(1, 3);
+            }
+        };
 
-      new Verifications() {{ runnable.run(); minTimes = 1; maxTimes = 2; }};
-   }
+        assertEquals(1, mock.getValue());
+        assertEquals(2, mock2.getValue());
+        assertEquals(3, mock.getValue());
+        assertEquals(2, mock2.getValue());
+        assertEquals(3, mock.getValue());
 
-   /**
-    * Allow injectable mock of annotation type.
-    *
-    * @param runWith the run with
-    */
-   @Test
-   public void allowInjectableMockOfAnnotationType(@Injectable final RunWith runWith) {
-      new Expectations() {{ runWith.value(); result = BlockJUnit4ClassRunner.class; }};
-      
-      assertSame(BlockJUnit4ClassRunner.class, runWith.value());
-   }
+        assertThatPreviouslyCreatedInstanceIsNotMocked();
+        assertThatNewlyCreatedInstanceIsNotMocked();
+    }
 
-   // Mocking java.nio.ByteBuffer /////////////////////////////////////////////////////////////////////////////////////
+    // Injectable mocks of unusual types ///////////////////////////////////////////////////////////////////////////////
 
-   /**
-    * Mock byte buffer as injectable.
-    *
-    * @param buf the buf
-    */
-   @Test
-   public void mockByteBufferAsInjectable(@Injectable final ByteBuffer buf) {
-      ByteBuffer realBuf = ByteBuffer.allocateDirect(10);
-      assertNotNull(realBuf);
-      assertEquals(10, realBuf.capacity());
-      
-      new Expectations() {{
-         buf.isDirect(); result = true;
+    /**
+     * Allow injectable mock of interface type.
+     *
+     * @param runnable
+     *            the runnable
+     */
+    @Test
+    public void allowInjectableMockOfInterfaceType(@Injectable final Runnable runnable) {
+        runnable.run();
+        runnable.run();
 
-         // Calling "getBytes()" here indirectly creates a new ByteBuffer, requiring use of @Injectable.
-         buf.put("Test".getBytes()); times = 1;
-      }};
+        new Verifications() {
+            {
+                runnable.run();
+                minTimes = 1;
+                maxTimes = 2;
+            }
+        };
+    }
 
-      assertTrue(buf.isDirect());
-      buf.put("Test".getBytes());
-   }
+    /**
+     * Allow injectable mock of annotation type.
+     *
+     * @param runWith
+     *            the run with
+     */
+    @Test
+    public void allowInjectableMockOfAnnotationType(@Injectable final RunWith runWith) {
+        new Expectations() {
+            {
+                runWith.value();
+                result = BlockJUnit4ClassRunner.class;
+            }
+        };
 
-   /**
-    * Mock byte buffer regularly.
-    *
-    * @param mockBuffer the mock buffer
-    */
-   // TODO JWL 10/30/2022 Test is very flaky, ignore it
-   @Ignore
-   @Test
-   public void mockByteBufferRegularly(@Mocked ByteBuffer mockBuffer) {
-      ByteBuffer buffer = ByteBuffer.allocateDirect(10);
-      //noinspection MisorderedAssertEqualsArguments
-      assertSame(mockBuffer, buffer);
+        assertSame(BlockJUnit4ClassRunner.class, runWith.value());
+    }
 
-      new Verifications() {{ ByteBuffer.allocateDirect(anyInt); }};
-   }
+    // Mocking java.nio.ByteBuffer /////////////////////////////////////////////////////////////////////////////////////
 
-   /**
-    * Mock byte buffer as cascading.
-    *
-    * @param unused the unused
-    */
-   // TODO JWL 10/30/2022 Test is very flaky, ignore it
-   @Ignore
-   @Test
-   public void mockByteBufferAsCascading(@Mocked ByteBuffer unused) {
-      ByteBuffer cascadedBuf = ByteBuffer.allocateDirect(10);
-      assertNotNull(cascadedBuf);
-      assertEquals(0, cascadedBuf.capacity());
-   }
+    /**
+     * Mock byte buffer as injectable.
+     *
+     * @param buf
+     *            the buf
+     */
+    @Test
+    public void mockByteBufferAsInjectable(@Injectable final ByteBuffer buf) {
+        ByteBuffer realBuf = ByteBuffer.allocateDirect(10);
+        assertNotNull(realBuf);
+        assertEquals(10, realBuf.capacity());
 
-   /**
-    * A factory for creating Buffer objects.
-    */
-   static class BufferFactory { /**
-  * Creates a new Buffer object.
-  *
-  * @return the byte buffer
-  */
- ByteBuffer createBuffer() { return null; } }
+        new Expectations() {
+            {
+                buf.isDirect();
+                result = true;
 
-   /**
-    * Mock byte buffer as cascaded mock.
-    *
-    * @param cascadingMock the cascading mock
-    */
-   @Test
-   public void mockByteBufferAsCascadedMock(@Mocked BufferFactory cascadingMock) {
-      ByteBuffer realBuf1 = ByteBuffer.allocateDirect(10);
-      assertEquals(10, realBuf1.capacity());
+                // Calling "getBytes()" here indirectly creates a new ByteBuffer, requiring use of @Injectable.
+                buf.put("Test".getBytes());
+                times = 1;
+            }
+        };
 
-      ByteBuffer cascadedBuf = cascadingMock.createBuffer();
-      assertEquals(0, cascadedBuf.capacity());
+        assertTrue(buf.isDirect());
+        buf.put("Test".getBytes());
+    }
 
-      ByteBuffer realBuf2 = ByteBuffer.allocateDirect(20);
-      assertEquals(20, realBuf2.capacity());
-   }
+    /**
+     * Mock byte buffer regularly.
+     *
+     * @param mockBuffer
+     *            the mock buffer
+     */
+    // TODO JWL 10/30/2022 Test is very flaky, ignore it
+    @Ignore
+    @Test
+    public void mockByteBufferRegularly(@Mocked ByteBuffer mockBuffer) {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(10);
+        // noinspection MisorderedAssertEqualsArguments
+        assertSame(mockBuffer, buffer);
 
-   // Mocking java.io.InputStream /////////////////////////////////////////////////////////////////////////////////////
+        new Verifications() {
+            {
+                ByteBuffer.allocateDirect(anyInt);
+            }
+        };
+    }
 
-   /**
-    * The Class ConcatenatingInputStream.
-    */
-   public static final class ConcatenatingInputStream extends InputStream {
-      
-      /** The sequential inputs. */
-      private final Queue<InputStream> sequentialInputs;
-      
-      /** The current input. */
-      private InputStream currentInput;
+    /**
+     * Mock byte buffer as cascading.
+     *
+     * @param unused
+     *            the unused
+     */
+    // TODO JWL 10/30/2022 Test is very flaky, ignore it
+    @Ignore
+    @Test
+    public void mockByteBufferAsCascading(@Mocked ByteBuffer unused) {
+        ByteBuffer cascadedBuf = ByteBuffer.allocateDirect(10);
+        assertNotNull(cascadedBuf);
+        assertEquals(0, cascadedBuf.capacity());
+    }
 
-      /**
-       * Instantiates a new concatenating input stream.
-       *
-       * @param sequentialInputs the sequential inputs
-       */
-      public ConcatenatingInputStream(InputStream... sequentialInputs) {
-         this.sequentialInputs = new LinkedList<>(Arrays.asList(sequentialInputs));
-         currentInput = this.sequentialInputs.poll();
-      }
+    /**
+     * A factory for creating Buffer objects.
+     */
+    static class BufferFactory {
+        /**
+         * Creates a new Buffer object.
+         *
+         * @return the byte buffer
+         */
+        ByteBuffer createBuffer() {
+            return null;
+        }
+    }
 
-      @Override
-      public int read() throws IOException {
-         if (currentInput == null) return -1;
+    /**
+     * Mock byte buffer as cascaded mock.
+     *
+     * @param cascadingMock
+     *            the cascading mock
+     */
+    @Test
+    public void mockByteBufferAsCascadedMock(@Mocked BufferFactory cascadingMock) {
+        ByteBuffer realBuf1 = ByteBuffer.allocateDirect(10);
+        assertEquals(10, realBuf1.capacity());
 
-         int nextByte = currentInput.read();
+        ByteBuffer cascadedBuf = cascadingMock.createBuffer();
+        assertEquals(0, cascadedBuf.capacity());
 
-         if (nextByte >= 0) {
-            return nextByte;
-         }
+        ByteBuffer realBuf2 = ByteBuffer.allocateDirect(20);
+        assertEquals(20, realBuf2.capacity());
+    }
 
-         currentInput = sequentialInputs.poll();
-         //noinspection TailRecursion
-         return read();
-      }
-   }
+    // Mocking java.io.InputStream /////////////////////////////////////////////////////////////////////////////////////
 
-   /**
-    * Concatenate input streams.
-    *
-    * @param input1 the input 1
-    * @param input2 the input 2
-    * @throws Exception the exception
-    */
-   @Test
-   public void concatenateInputStreams(@Injectable final InputStream input1, @Injectable final InputStream input2) throws Exception {
-      new Expectations() {{
-         input1.read(); returns(1, 2, -1);
-         input2.read(); returns(3, -1);
-      }};
+    /**
+     * The Class ConcatenatingInputStream.
+     */
+    public static final class ConcatenatingInputStream extends InputStream {
 
-      InputStream concatenatedInput = new ConcatenatingInputStream(input1, input2);
-      byte[] buf = new byte[3];
-      concatenatedInput.read(buf);
+        /** The sequential inputs. */
+        private final Queue<InputStream> sequentialInputs;
 
-      byte[] expectedBytes = {1, 2, 3};
-      assertArrayEquals(expectedBytes, buf);
-   }
+        /** The current input. */
+        private InputStream currentInput;
+
+        /**
+         * Instantiates a new concatenating input stream.
+         *
+         * @param sequentialInputs
+         *            the sequential inputs
+         */
+        public ConcatenatingInputStream(InputStream... sequentialInputs) {
+            this.sequentialInputs = new LinkedList<>(Arrays.asList(sequentialInputs));
+            currentInput = this.sequentialInputs.poll();
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (currentInput == null)
+                return -1;
+
+            int nextByte = currentInput.read();
+
+            if (nextByte >= 0) {
+                return nextByte;
+            }
+
+            currentInput = sequentialInputs.poll();
+            // noinspection TailRecursion
+            return read();
+        }
+    }
+
+    /**
+     * Concatenate input streams.
+     *
+     * @param input1
+     *            the input 1
+     * @param input2
+     *            the input 2
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void concatenateInputStreams(@Injectable final InputStream input1, @Injectable final InputStream input2)
+            throws Exception {
+        new Expectations() {
+            {
+                input1.read();
+                returns(1, 2, -1);
+                input2.read();
+                returns(3, -1);
+            }
+        };
+
+        InputStream concatenatedInput = new ConcatenatingInputStream(input1, input2);
+        byte[] buf = new byte[3];
+        concatenatedInput.read(buf);
+
+        byte[] expectedBytes = { 1, 2, 3 };
+        assertArrayEquals(expectedBytes, buf);
+    }
 }

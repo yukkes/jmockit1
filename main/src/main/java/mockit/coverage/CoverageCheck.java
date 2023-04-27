@@ -7,119 +7,130 @@ package mockit.coverage;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+
 import javax.annotation.*;
 
 import mockit.coverage.data.*;
 
-final class CoverageCheck
-{
-   private static final String configuration = Configuration.getProperty("check", "");
+final class CoverageCheck {
+    private static final String configuration = Configuration.getProperty("check", "");
 
-   @Nullable
-   static CoverageCheck createIfApplicable() { return configuration.isEmpty() ? null : new CoverageCheck(); }
+    @Nullable
+    static CoverageCheck createIfApplicable() {
+        return configuration.isEmpty() ? null : new CoverageCheck();
+    }
 
-   private static final class Threshold {
-      private static final Pattern PARAMETER_SEPARATORS = Pattern.compile(":|=");
+    private static final class Threshold {
+        private static final Pattern PARAMETER_SEPARATORS = Pattern.compile(":|=");
 
-      @Nullable private final String sourceFilePrefix;
-      @Nonnull private final String scopeDescription;
-      @Nonnegative private int minPercentage;
+        @Nullable
+        private final String sourceFilePrefix;
+        @Nonnull
+        private final String scopeDescription;
+        @Nonnegative
+        private int minPercentage;
 
-      Threshold(@Nonnull String configurationParameter) {
-         String[] sourceFilePrefixAndMinPercentage = PARAMETER_SEPARATORS.split(configurationParameter);
-         String textualPercentage;
+        Threshold(@Nonnull String configurationParameter) {
+            String[] sourceFilePrefixAndMinPercentage = PARAMETER_SEPARATORS.split(configurationParameter);
+            String textualPercentage;
 
-         if (sourceFilePrefixAndMinPercentage.length == 1) {
-            sourceFilePrefix = null;
-            scopeDescription = "";
-            textualPercentage = sourceFilePrefixAndMinPercentage[0];
-         }
-         else {
-            String scope = sourceFilePrefixAndMinPercentage[0].trim();
+            if (sourceFilePrefixAndMinPercentage.length == 1) {
+                sourceFilePrefix = null;
+                scopeDescription = "";
+                textualPercentage = sourceFilePrefixAndMinPercentage[0];
+            } else {
+                String scope = sourceFilePrefixAndMinPercentage[0].trim();
 
-            if (isPerFile(scope)) {
-               sourceFilePrefix = scope;
-               scopeDescription = " for some source files";
+                if (isPerFile(scope)) {
+                    sourceFilePrefix = scope;
+                    scopeDescription = " for some source files";
+                } else {
+                    sourceFilePrefix = scope.replace('.', '/');
+                    scopeDescription = " for " + scope;
+                }
+
+                textualPercentage = sourceFilePrefixAndMinPercentage[1];
             }
-            else {
-               sourceFilePrefix = scope.replace('.', '/');
-               scopeDescription = " for " + scope;
+
+            try {
+                minPercentage = Integer.parseInt(textualPercentage.trim());
+            } catch (NumberFormatException ignore) {
+            }
+        }
+
+        private static boolean isPerFile(@Nullable String scope) {
+            return "perFile".equalsIgnoreCase(scope);
+        }
+
+        boolean verifyMinimum() {
+            CoverageData coverageData = CoverageData.instance();
+            int percentage;
+
+            if (isPerFile(sourceFilePrefix)) {
+                percentage = coverageData.getSmallestPerFilePercentage();
+            } else {
+                percentage = coverageData.getPercentage(sourceFilePrefix);
             }
 
-            textualPercentage = sourceFilePrefixAndMinPercentage[1];
-         }
+            return percentage < 0 || verifyMinimum(percentage);
+        }
 
-         try { minPercentage = Integer.parseInt(textualPercentage.trim()); } catch (NumberFormatException ignore) {}
-      }
+        private boolean verifyMinimum(@Nonnegative int percentage) {
+            if (percentage < minPercentage) {
+                System.out.println("JMockit: coverage too low" + scopeDescription + ": " + percentage + "% < "
+                        + minPercentage + '%');
+                return false;
+            }
 
-      private static boolean isPerFile(@Nullable String scope) { return "perFile".equalsIgnoreCase(scope); }
+            return true;
+        }
+    }
 
-      boolean verifyMinimum() {
-         CoverageData coverageData = CoverageData.instance();
-         int percentage;
+    @Nonnull
+    private final List<Threshold> thresholds;
+    private boolean allThresholdsSatisfied;
 
-         if (isPerFile(sourceFilePrefix)) {
-            percentage = coverageData.getSmallestPerFilePercentage();
-         }
-         else {
-            percentage = coverageData.getPercentage(sourceFilePrefix);
-         }
+    private CoverageCheck() {
+        String[] configurationParameters = configuration.split(";");
+        int n = configurationParameters.length;
+        thresholds = new ArrayList<>(n);
 
-         return percentage < 0 || verifyMinimum(percentage);
-      }
+        for (String configurationParameter : configurationParameters) {
+            thresholds.add(new Threshold(configurationParameter));
+        }
+    }
 
-      private boolean verifyMinimum(@Nonnegative int percentage) {
-         if (percentage < minPercentage) {
-            System.out.println("JMockit: coverage too low" + scopeDescription + ": " + percentage + "% < " + minPercentage + '%');
-            return false;
-         }
+    void verifyThresholds() {
+        allThresholdsSatisfied = true;
 
-         return true;
-      }
-   }
+        for (Threshold threshold : thresholds) {
+            allThresholdsSatisfied &= threshold.verifyMinimum();
+        }
 
-   @Nonnull private final List<Threshold> thresholds;
-   private boolean allThresholdsSatisfied;
+        createOrDeleteIndicatorFile();
 
-   private CoverageCheck() {
-      String[] configurationParameters = configuration.split(";");
-      int n = configurationParameters.length;
-      thresholds = new ArrayList<>(n);
+        if (!allThresholdsSatisfied) {
+            throw new AssertionError("JMockit: minimum coverage percentages not reached; see previous messages.");
+        }
+    }
 
-      for (String configurationParameter : configurationParameters) {
-         thresholds.add(new Threshold(configurationParameter));
-      }
-   }
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private void createOrDeleteIndicatorFile() {
+        String parentDir = Configuration.getOrChooseOutputDirectory("");
+        File indicatorFile = new File(parentDir, "coverage.check.failed");
 
-   void verifyThresholds() {
-      allThresholdsSatisfied = true;
-
-      for (Threshold threshold : thresholds) {
-         allThresholdsSatisfied &= threshold.verifyMinimum();
-      }
-
-      createOrDeleteIndicatorFile();
-
-      if (!allThresholdsSatisfied) {
-         throw new AssertionError("JMockit: minimum coverage percentages not reached; see previous messages.");
-      }
-   }
-
-   @SuppressWarnings("ResultOfMethodCallIgnored")
-   private void createOrDeleteIndicatorFile() {
-      String parentDir = Configuration.getOrChooseOutputDirectory("");
-      File indicatorFile = new File(parentDir, "coverage.check.failed");
-
-      if (indicatorFile.exists()) {
-         if (allThresholdsSatisfied) {
-            indicatorFile.delete();
-         }
-         else {
-            indicatorFile.setLastModified(System.currentTimeMillis());
-         }
-      }
-      else if (!allThresholdsSatisfied) {
-         try { indicatorFile.createNewFile(); } catch (IOException e) { throw new RuntimeException(e); }
-      }
-   }
+        if (indicatorFile.exists()) {
+            if (allThresholdsSatisfied) {
+                indicatorFile.delete();
+            } else {
+                indicatorFile.setLastModified(System.currentTimeMillis());
+            }
+        } else if (!allThresholdsSatisfied) {
+            try {
+                indicatorFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

@@ -4,55 +4,61 @@
  */
 package mockit.internal.injection;
 
-import java.lang.reflect.*;
-import javax.annotation.*;
-
 import static java.lang.reflect.Modifier.isFinal;
+
+import static mockit.internal.reflection.FieldReflection.*;
+
+import java.lang.reflect.*;
+
+import javax.annotation.*;
 
 import mockit.*;
 import mockit.internal.util.*;
-import static mockit.internal.reflection.FieldReflection.*;
 
-final class TestedField extends TestedObject
-{
-   @Nonnull private final Field testedField;
+final class TestedField extends TestedObject {
+    @Nonnull
+    private final Field testedField;
 
-   TestedField(@Nonnull InjectionState injectionState, @Nonnull Field field, @Nonnull Tested metadata) {
-      super(injectionState, metadata, field.getDeclaringClass(), field.getName(), field.getGenericType(), field.getType());
-      testedField = field;
-   }
+    TestedField(@Nonnull InjectionState injectionState, @Nonnull Field field, @Nonnull Tested metadata) {
+        super(injectionState, metadata, field.getDeclaringClass(), field.getName(), field.getGenericType(),
+                field.getType());
+        testedField = field;
+    }
 
-   boolean isFromBaseClass(@Nonnull Class<?> testClass) { return testedField.getDeclaringClass() != testClass; }
+    boolean isFromBaseClass(@Nonnull Class<?> testClass) {
+        return testedField.getDeclaringClass() != testClass;
+    }
 
-   @Override
-   boolean alreadyInstantiated(@Nonnull Object testClassInstance) {
-      return isAvailableDuringSetup() && getFieldValue(testedField, testClassInstance) != null;
-   }
+    @Override
+    boolean alreadyInstantiated(@Nonnull Object testClassInstance) {
+        return isAvailableDuringSetup() && getFieldValue(testedField, testClassInstance) != null;
+    }
 
-   @Nullable @Override
-   Object getExistingTestedInstanceIfApplicable(@Nonnull Object testClassInstance) {
-      Object testedObject = null;
+    @Nullable
+    @Override
+    Object getExistingTestedInstanceIfApplicable(@Nonnull Object testClassInstance) {
+        Object testedObject = null;
 
-      if (!createAutomatically) {
-         Class<?> targetClass = testedField.getType();
-         testedObject = getFieldValue(testedField, testClassInstance);
+        if (!createAutomatically) {
+            Class<?> targetClass = testedField.getType();
+            testedObject = getFieldValue(testedField, testClassInstance);
 
-         if (testedObject == null || isNonInstantiableType(targetClass, testedObject)) {
-            String providedValue = metadata.value();
+            if (testedObject == null || isNonInstantiableType(targetClass, testedObject)) {
+                String providedValue = metadata.value();
 
-            if (!providedValue.isEmpty()) {
-               testedObject = TypeConversion.convertFromString(targetClass, providedValue);
+                if (!providedValue.isEmpty()) {
+                    testedObject = TypeConversion.convertFromString(targetClass, providedValue);
+                }
+
+                createAutomatically = testedObject == null && !isFinal(testedField.getModifiers());
             }
+        }
 
-            createAutomatically = testedObject == null && !isFinal(testedField.getModifiers());
-         }
-      }
+        return testedObject;
+    }
 
-      return testedObject;
-   }
-
-   @Override
-   void setInstance(@Nonnull Object testClassInstance, @Nullable Object testedInstance) {
-      setFieldValue(testedField, testClassInstance, testedInstance);
-   }
+    @Override
+    void setInstance(@Nonnull Object testClassInstance, @Nullable Object testedInstance) {
+        setFieldValue(testedField, testClassInstance, testedInstance);
+    }
 }

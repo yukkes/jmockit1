@@ -7,108 +7,115 @@ package mockit.internal.faking;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.Map.*;
+
 import javax.annotation.*;
 
 import mockit.*;
 import mockit.internal.util.*;
 
-public final class FakeClasses
-{
-   private static final Method ON_TEAR_DOWN_METHOD;
-   static {
-      try {
-         ON_TEAR_DOWN_METHOD = MockUp.class.getDeclaredMethod("onTearDown");
-         ON_TEAR_DOWN_METHOD.setAccessible(true);
-      }
-      catch (NoSuchMethodException e) { throw new RuntimeException(e); }
-   }
+public final class FakeClasses {
+    private static final Method ON_TEAR_DOWN_METHOD;
+    static {
+        try {
+            ON_TEAR_DOWN_METHOD = MockUp.class.getDeclaredMethod("onTearDown");
+            ON_TEAR_DOWN_METHOD.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-   private static void notifyOfTearDown(@Nonnull MockUp<?> fake) {
-      try { ON_TEAR_DOWN_METHOD.invoke(fake); }
-      catch (IllegalAccessException ignore) {}
-      catch (InvocationTargetException e) { e.getCause().printStackTrace(); }
-   }
+    private static void notifyOfTearDown(@Nonnull MockUp<?> fake) {
+        try {
+            ON_TEAR_DOWN_METHOD.invoke(fake);
+        } catch (IllegalAccessException ignore) {
+        } catch (InvocationTargetException e) {
+            e.getCause().printStackTrace();
+        }
+    }
 
-   @Nonnull private final Map<String, MockUp<?>> startupFakes;
-   @Nonnull private final Map<Class<?>, MockUp<?>> fakeClassesToFakeInstances;
-   @Nonnull public final FakeStates fakeStates;
+    @Nonnull
+    private final Map<String, MockUp<?>> startupFakes;
+    @Nonnull
+    private final Map<Class<?>, MockUp<?>> fakeClassesToFakeInstances;
+    @Nonnull
+    public final FakeStates fakeStates;
 
-   public FakeClasses() {
-      startupFakes = new IdentityHashMap<>(8);
-      fakeClassesToFakeInstances = new IdentityHashMap<>();
-      fakeStates = new FakeStates();
-   }
+    public FakeClasses() {
+        startupFakes = new IdentityHashMap<>(8);
+        fakeClassesToFakeInstances = new IdentityHashMap<>();
+        fakeStates = new FakeStates();
+    }
 
-   void addFake(@Nonnull String fakeClassDesc, @Nonnull MockUp<?> fake) {
-      startupFakes.put(fakeClassDesc, fake);
-   }
+    void addFake(@Nonnull String fakeClassDesc, @Nonnull MockUp<?> fake) {
+        startupFakes.put(fakeClassDesc, fake);
+    }
 
-   void addFake(@Nonnull MockUp<?> fake) {
-      Class<?> fakeClass = fake.getClass();
-      fakeClassesToFakeInstances.put(fakeClass, fake);
-   }
+    void addFake(@Nonnull MockUp<?> fake) {
+        Class<?> fakeClass = fake.getClass();
+        fakeClassesToFakeInstances.put(fakeClass, fake);
+    }
 
-   @Nonnull
-   public MockUp<?> getFake(@Nonnull String fakeClassDesc) {
-      MockUp<?> startupFake = startupFakes.get(fakeClassDesc);
+    @Nonnull
+    public MockUp<?> getFake(@Nonnull String fakeClassDesc) {
+        MockUp<?> startupFake = startupFakes.get(fakeClassDesc);
 
-      if (startupFake != null) {
-         return startupFake;
-      }
+        if (startupFake != null) {
+            return startupFake;
+        }
 
-      Class<?> fakeClass = ClassLoad.loadByInternalName(fakeClassDesc);
-      MockUp<?> fakeInstance = fakeClassesToFakeInstances.get(fakeClass);
-      return fakeInstance;
-   }
+        Class<?> fakeClass = ClassLoad.loadByInternalName(fakeClassDesc);
+        MockUp<?> fakeInstance = fakeClassesToFakeInstances.get(fakeClass);
+        return fakeInstance;
+    }
 
-   public void discardStartupFakes() {
-      for (MockUp<?> startupFake : startupFakes.values()) {
-         notifyOfTearDown(startupFake);
-      }
-   }
+    public void discardStartupFakes() {
+        for (MockUp<?> startupFake : startupFakes.values()) {
+            notifyOfTearDown(startupFake);
+        }
+    }
 
-   public final class SavePoint {
-      @Nonnull private final Map<Class<?>, Boolean> previousFakeClasses;
+    public final class SavePoint {
+        @Nonnull
+        private final Map<Class<?>, Boolean> previousFakeClasses;
 
-      public SavePoint() {
-         previousFakeClasses = new IdentityHashMap<>();
+        public SavePoint() {
+            previousFakeClasses = new IdentityHashMap<>();
 
-         for (Entry<Class<?>, MockUp<?>> fakeClassAndInstance : fakeClassesToFakeInstances.entrySet()) {
-            Class<?> fakeClass = fakeClassAndInstance.getKey();
-            previousFakeClasses.put(fakeClass, false);
-         }
-      }
+            for (Entry<Class<?>, MockUp<?>> fakeClassAndInstance : fakeClassesToFakeInstances.entrySet()) {
+                Class<?> fakeClass = fakeClassAndInstance.getKey();
+                previousFakeClasses.put(fakeClass, false);
+            }
+        }
 
-      public void rollback() {
-         if (previousFakeClasses.isEmpty()) {
-            discardAllFakeInstances();
-         }
-         else {
-            discardFakeInstancesExceptPreviousOnes();
-         }
-      }
+        public void rollback() {
+            if (previousFakeClasses.isEmpty()) {
+                discardAllFakeInstances();
+            } else {
+                discardFakeInstancesExceptPreviousOnes();
+            }
+        }
 
-      private void discardAllFakeInstances() {
-         if (!fakeClassesToFakeInstances.isEmpty()) {
-            for (MockUp<?> fakeInstance : fakeClassesToFakeInstances.values()) {
-               notifyOfTearDown(fakeInstance);
+        private void discardAllFakeInstances() {
+            if (!fakeClassesToFakeInstances.isEmpty()) {
+                for (MockUp<?> fakeInstance : fakeClassesToFakeInstances.values()) {
+                    notifyOfTearDown(fakeInstance);
+                }
+
+                fakeClassesToFakeInstances.clear();
+            }
+        }
+
+        private void discardFakeInstancesExceptPreviousOnes() {
+            for (Entry<Class<?>, MockUp<?>> fakeClassAndInstances : fakeClassesToFakeInstances.entrySet()) {
+                Class<?> fakeClass = fakeClassAndInstances.getKey();
+
+                if (!previousFakeClasses.containsKey(fakeClass)) {
+                    MockUp<?> fakeInstance = fakeClassAndInstances.getValue();
+                    notifyOfTearDown(fakeInstance);
+                }
             }
 
-            fakeClassesToFakeInstances.clear();
-         }
-      }
-
-      private void discardFakeInstancesExceptPreviousOnes() {
-         for (Entry<Class<?>, MockUp<?>> fakeClassAndInstances : fakeClassesToFakeInstances.entrySet()) {
-            Class<?> fakeClass = fakeClassAndInstances.getKey();
-
-            if (!previousFakeClasses.containsKey(fakeClass)) {
-               MockUp<?> fakeInstance = fakeClassAndInstances.getValue();
-               notifyOfTearDown(fakeInstance);
-            }
-         }
-
-         fakeClassesToFakeInstances.keySet().retainAll(previousFakeClasses.keySet());
-      }
-   }
+            fakeClassesToFakeInstances.keySet().retainAll(previousFakeClasses.keySet());
+        }
+    }
 }

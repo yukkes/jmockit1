@@ -9,30 +9,33 @@ import javax.annotation.*;
 /**
  * Matches a decimal argument against another within a given margin of error.
  */
-public final class NumericEqualityMatcher implements ArgumentMatcher<NumericEqualityMatcher>
-{
-   private final double value;
-   private final double delta;
+public final class NumericEqualityMatcher implements ArgumentMatcher<NumericEqualityMatcher> {
+    private final double value;
+    private final double delta;
 
-   public NumericEqualityMatcher(double value, double delta) {
-      this.value = value;
-      this.delta = delta;
-   }
+    public NumericEqualityMatcher(double value, double delta) {
+        this.value = value;
+        this.delta = delta;
+    }
 
-   @Override @SuppressWarnings("FloatingPointEquality")
-   public boolean same(@Nonnull NumericEqualityMatcher other) { return value == other.value && delta == other.delta; }
+    @Override
+    @SuppressWarnings("FloatingPointEquality")
+    public boolean same(@Nonnull NumericEqualityMatcher other) {
+        return value == other.value && delta == other.delta;
+    }
 
-   @Override @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
-   public boolean matches(@Nullable Object decimalValue) {
-      return decimalValue instanceof Number && actualDelta((Number) decimalValue) <= delta;
-   }
+    @Override
+    @SuppressWarnings("ParameterNameDiffersFromOverriddenParameter")
+    public boolean matches(@Nullable Object decimalValue) {
+        return decimalValue instanceof Number && actualDelta((Number) decimalValue) <= delta;
+    }
 
-   private double actualDelta(@Nonnull Number decimalValue) {
-      return Math.abs(decimalValue.doubleValue() - value);
-   }
+    private double actualDelta(@Nonnull Number decimalValue) {
+        return Math.abs(decimalValue.doubleValue() - value);
+    }
 
-   @Override
-   public void writeMismatchPhrase(@Nonnull ArgumentMismatch argumentMismatch) {
-      argumentMismatch.append("a numeric value within ").append(delta).append(" of ").append(value);
-   }
+    @Override
+    public void writeMismatchPhrase(@Nonnull ArgumentMismatch argumentMismatch) {
+        argumentMismatch.append("a numeric value within ").append(delta).append(" of ").append(value);
+    }
 }

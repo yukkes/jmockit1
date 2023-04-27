@@ -4,73 +4,76 @@
  */
 package mockit.internal.expectations.mocking;
 
+import static mockit.internal.util.AutoBoxing.*;
+import static mockit.internal.util.GeneratedClasses.*;
+
 import java.util.*;
+
 import javax.annotation.*;
 
 import mockit.internal.expectations.*;
 import mockit.internal.state.*;
-import static mockit.internal.util.AutoBoxing.*;
-import static mockit.internal.util.GeneratedClasses.*;
 
-public final class PartialMocking extends BaseTypeRedefinition
-{
-   @Nonnull public final List<Object> targetInstances;
-   @Nonnull private final Map<Class<?>, byte[]> modifiedClassfiles;
+public final class PartialMocking extends BaseTypeRedefinition {
+    @Nonnull
+    public final List<Object> targetInstances;
+    @Nonnull
+    private final Map<Class<?>, byte[]> modifiedClassfiles;
 
-   public PartialMocking() {
-      targetInstances = new ArrayList<>(2);
-      modifiedClassfiles = new HashMap<>();
-   }
+    public PartialMocking() {
+        targetInstances = new ArrayList<>(2);
+        modifiedClassfiles = new HashMap<>();
+    }
 
-   public void redefineTypes(@Nonnull Object[] instancesToBePartiallyMocked) {
-      for (Object instance : instancesToBePartiallyMocked) {
-         redefineClassHierarchy(instance);
-      }
+    public void redefineTypes(@Nonnull Object[] instancesToBePartiallyMocked) {
+        for (Object instance : instancesToBePartiallyMocked) {
+            redefineClassHierarchy(instance);
+        }
 
-      if (!modifiedClassfiles.isEmpty()) {
-         TestRun.mockFixture().redefineMethods(modifiedClassfiles);
-         modifiedClassfiles.clear();
-      }
-   }
+        if (!modifiedClassfiles.isEmpty()) {
+            TestRun.mockFixture().redefineMethods(modifiedClassfiles);
+            modifiedClassfiles.clear();
+        }
+    }
 
-   private void redefineClassHierarchy(@Nonnull Object mockInstance) {
-      if (mockInstance instanceof Class) {
-         throw new IllegalArgumentException("Invalid Class argument for partial mocking (use a MockUp instead): " + mockInstance);
-      }
+    private void redefineClassHierarchy(@Nonnull Object mockInstance) {
+        if (mockInstance instanceof Class) {
+            throw new IllegalArgumentException(
+                    "Invalid Class argument for partial mocking (use a MockUp instead): " + mockInstance);
+        }
 
-      targetClass = getMockedClass(mockInstance);
-      applyPartialMockingToGivenInstance(mockInstance);
+        targetClass = getMockedClass(mockInstance);
+        applyPartialMockingToGivenInstance(mockInstance);
 
-      InstanceFactory instanceFactory = createInstanceFactory(targetClass);
-      instanceFactory.lastInstance = mockInstance;
+        InstanceFactory instanceFactory = createInstanceFactory(targetClass);
+        instanceFactory.lastInstance = mockInstance;
 
-      TestRun.mockFixture().registerInstanceFactoryForMockedType(targetClass, instanceFactory);
-      TestRun.getExecutingTest().getCascadingTypes().add(false, targetClass);
-   }
+        TestRun.mockFixture().registerInstanceFactoryForMockedType(targetClass, instanceFactory);
+        TestRun.getExecutingTest().getCascadingTypes().add(false, targetClass);
+    }
 
-   private void applyPartialMockingToGivenInstance(@Nonnull Object instance) {
-      validateTargetClassType();
-      redefineMethodsAndConstructorsInTargetType();
-      targetInstances.add(instance);
-   }
+    private void applyPartialMockingToGivenInstance(@Nonnull Object instance) {
+        validateTargetClassType();
+        redefineMethodsAndConstructorsInTargetType();
+        targetInstances.add(instance);
+    }
 
-   private void validateTargetClassType() {
-      if (
-         targetClass.isInterface() || targetClass.isAnnotation() ||
-         targetClass.isArray() || targetClass.isPrimitive() || targetClass.isSynthetic() ||
-         MockingFilters.isSubclassOfUnmockable(targetClass) ||
-         isWrapperOfPrimitiveType(targetClass) ||
-         isGeneratedImplementationClass(targetClass)
-      ) {
-         throw new IllegalArgumentException("Invalid type for partial mocking: " + targetClass);
-      }
-   }
+    private void validateTargetClassType() {
+        if (targetClass.isInterface() || targetClass.isAnnotation() || targetClass.isArray()
+                || targetClass.isPrimitive() || targetClass.isSynthetic()
+                || MockingFilters.isSubclassOfUnmockable(targetClass) || isWrapperOfPrimitiveType(targetClass)
+                || isGeneratedImplementationClass(targetClass)) {
+            throw new IllegalArgumentException("Invalid type for partial mocking: " + targetClass);
+        }
+    }
 
-   @Override
-   void configureClassModifier(@Nonnull MockedClassModifier modifier) { modifier.useDynamicMocking(); }
+    @Override
+    void configureClassModifier(@Nonnull MockedClassModifier modifier) {
+        modifier.useDynamicMocking();
+    }
 
-   @Override
-   void applyClassRedefinition(@Nonnull Class<?> realClass, @Nonnull byte[] modifiedClass) {
-      modifiedClassfiles.put(realClass, modifiedClass);
-   }
+    @Override
+    void applyClassRedefinition(@Nonnull Class<?> realClass, @Nonnull byte[] modifiedClass) {
+        modifiedClassfiles.put(realClass, modifiedClass);
+    }
 }

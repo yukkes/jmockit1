@@ -4,131 +4,131 @@
  */
 package mockit.internal.reflection;
 
+import static mockit.internal.reflection.MethodReflection.*;
+import static mockit.internal.util.Utilities.*;
+
+import java.lang.reflect.*;
+
 import javax.annotation.*;
 
 import mockit.*;
 import mockit.internal.util.*;
 
-import java.lang.reflect.*;
+public final class ParameterReflection {
+    @Nonnull
+    public static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
-import static mockit.internal.reflection.MethodReflection.*;
-import static mockit.internal.util.Utilities.*;
+    private ParameterReflection() {
+    }
 
-public final class ParameterReflection
-{
-   @Nonnull public static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
+    @Nonnull
+    static String getParameterTypesDescription(@Nonnull Class<?>[] paramTypes) {
+        StringBuilder paramTypesDesc = new StringBuilder(200);
+        paramTypesDesc.append('(');
 
-   private ParameterReflection() {}
+        String sep = "";
 
-   @Nonnull
-   static String getParameterTypesDescription(@Nonnull Class<?>[] paramTypes) {
-      StringBuilder paramTypesDesc = new StringBuilder(200);
-      paramTypesDesc.append('(');
+        for (Class<?> paramType : paramTypes) {
+            String typeName = JAVA_LANG.matcher(paramType.getCanonicalName()).replaceAll("");
+            paramTypesDesc.append(sep).append(typeName);
+            sep = ", ";
+        }
 
-      String sep = "";
+        paramTypesDesc.append(')');
+        return paramTypesDesc.toString();
+    }
 
-      for (Class<?> paramType : paramTypes) {
-         String typeName = JAVA_LANG.matcher(paramType.getCanonicalName()).replaceAll("");
-         paramTypesDesc.append(sep).append(typeName);
-         sep = ", ";
-      }
+    @Nonnull
+    public static Object[] argumentsWithExtraFirstValue(@Nonnull Object[] args, @Nonnull Object firstValue) {
+        Object[] args2 = new Object[1 + args.length];
+        args2[0] = firstValue;
+        System.arraycopy(args, 0, args2, 1, args.length);
+        return args2;
+    }
 
-      paramTypesDesc.append(')');
-      return paramTypesDesc.toString();
-   }
+    static boolean hasMoreSpecificTypes(@Nonnull Class<?>[] currentTypes, @Nonnull Class<?>[] previousTypes) {
+        for (int i = 0; i < currentTypes.length; i++) {
+            Class<?> current = wrappedIfPrimitive(currentTypes[i]);
+            Class<?> previous = wrappedIfPrimitive(previousTypes[i]);
 
-   @Nonnull
-   public static Object[] argumentsWithExtraFirstValue(@Nonnull Object[] args, @Nonnull Object firstValue) {
-      Object[] args2 = new Object[1 + args.length];
-      args2[0] = firstValue;
-      System.arraycopy(args, 0, args2, 1, args.length);
-      return args2;
-   }
+            if (current != previous && previous.isAssignableFrom(current)) {
+                return true;
+            }
+        }
 
-   static boolean hasMoreSpecificTypes(@Nonnull Class<?>[] currentTypes, @Nonnull Class<?>[] previousTypes) {
-      for (int i = 0; i < currentTypes.length; i++) {
-         Class<?> current = wrappedIfPrimitive(currentTypes[i]);
-         Class<?> previous = wrappedIfPrimitive(previousTypes[i]);
+        return false;
+    }
 
-         if (current != previous && previous.isAssignableFrom(current)) {
-            return true;
-         }
-      }
+    @Nonnull
+    private static Class<?> wrappedIfPrimitive(@Nonnull Class<?> parameterType) {
+        if (parameterType.isPrimitive()) {
+            Class<?> wrapperType = AutoBoxing.getWrapperType(parameterType);
+            assert wrapperType != null;
+            return wrapperType;
+        }
 
-      return false;
-   }
+        return parameterType;
+    }
 
-   @Nonnull
-   private static Class<?> wrappedIfPrimitive(@Nonnull Class<?> parameterType) {
-      if (parameterType.isPrimitive()) {
-         Class<?> wrapperType = AutoBoxing.getWrapperType(parameterType);
-         assert wrapperType != null;
-         return wrapperType;
-      }
+    static boolean acceptsArgumentTypes(@Nonnull Class<?>[] paramTypes, @Nonnull Class<?>[] argTypes,
+            int firstParameter) {
+        for (int i = firstParameter; i < paramTypes.length; i++) {
+            Class<?> parType = paramTypes[i];
+            Class<?> argType = argTypes[i - firstParameter];
 
-      return parameterType;
-   }
+            if (isSameTypeIgnoringAutoBoxing(parType, argType) || parType.isAssignableFrom(argType)) {
+                // OK, move to next parameter.
+            } else {
+                return false;
+            }
+        }
 
-   static boolean acceptsArgumentTypes(@Nonnull Class<?>[] paramTypes, @Nonnull Class<?>[] argTypes, int firstParameter) {
-      for (int i = firstParameter; i < paramTypes.length; i++) {
-         Class<?> parType = paramTypes[i];
-         Class<?> argType = argTypes[i - firstParameter];
+        return true;
+    }
 
-         if (isSameTypeIgnoringAutoBoxing(parType, argType) || parType.isAssignableFrom(argType)) {
-            // OK, move to next parameter.
-         }
-         else {
-            return false;
-         }
-      }
+    private static boolean isSameTypeIgnoringAutoBoxing(@Nonnull Class<?> firstType, @Nonnull Class<?> secondType) {
+        return firstType == secondType || firstType.isPrimitive() && isWrapperOfPrimitiveType(firstType, secondType)
+                || secondType.isPrimitive() && isWrapperOfPrimitiveType(secondType, firstType);
+    }
 
-      return true;
-   }
+    private static boolean isWrapperOfPrimitiveType(@Nonnull Class<?> primitiveType, @Nonnull Class<?> otherType) {
+        return primitiveType == AutoBoxing.getPrimitiveType(otherType);
+    }
 
-   private static boolean isSameTypeIgnoringAutoBoxing(@Nonnull Class<?> firstType, @Nonnull Class<?> secondType) {
-      return
-         firstType == secondType ||
-         firstType.isPrimitive() && isWrapperOfPrimitiveType(firstType, secondType) ||
-         secondType.isPrimitive() && isWrapperOfPrimitiveType(secondType, firstType);
-   }
+    static int indexOfFirstRealParameter(@Nonnull Class<?>[] mockParameterTypes,
+            @Nonnull Class<?>[] realParameterTypes) {
+        int extraParameters = mockParameterTypes.length - realParameterTypes.length;
 
-   private static boolean isWrapperOfPrimitiveType(@Nonnull Class<?> primitiveType, @Nonnull Class<?> otherType) {
-      return primitiveType == AutoBoxing.getPrimitiveType(otherType);
-   }
+        if (extraParameters == 1) {
+            return mockParameterTypes[0] == Invocation.class ? 1 : -1;
+        }
 
-   static int indexOfFirstRealParameter(@Nonnull Class<?>[] mockParameterTypes, @Nonnull Class<?>[] realParameterTypes) {
-      int extraParameters = mockParameterTypes.length - realParameterTypes.length;
+        if (extraParameters != 0) {
+            return -1;
+        }
 
-      if (extraParameters == 1) {
-         return mockParameterTypes[0] == Invocation.class ? 1 : -1;
-      }
+        return 0;
+    }
 
-      if (extraParameters != 0) {
-         return -1;
-      }
+    static boolean matchesParameterTypes(@Nonnull Class<?>[] declaredTypes, @Nonnull Class<?>[] specifiedTypes,
+            int firstParameter) {
+        for (int i = firstParameter; i < declaredTypes.length; i++) {
+            Class<?> declaredType = declaredTypes[i];
+            Class<?> specifiedType = specifiedTypes[i - firstParameter];
 
-      return 0;
-   }
+            if (isSameTypeIgnoringAutoBoxing(declaredType, specifiedType)) {
+                // OK, move to next parameter.
+            } else {
+                return false;
+            }
+        }
 
-   static boolean matchesParameterTypes(@Nonnull Class<?>[] declaredTypes, @Nonnull Class<?>[] specifiedTypes, int firstParameter) {
-      for (int i = firstParameter; i < declaredTypes.length; i++) {
-         Class<?> declaredType = declaredTypes[i];
-         Class<?> specifiedType = specifiedTypes[i - firstParameter];
+        return true;
+    }
 
-         if (isSameTypeIgnoringAutoBoxing(declaredType, specifiedType)) {
-            // OK, move to next parameter.
-         }
-         else {
-            return false;
-         }
-      }
-
-      return true;
-   }
-
-   @Nonnegative
-   public static int getParameterCount(@Nonnull Method method) {
-      //noinspection Since15
-      return JAVA8 ? method.getParameterCount() : method.getParameterTypes().length;
-   }
+    @Nonnegative
+    public static int getParameterCount(@Nonnull Method method) {
+        // noinspection Since15
+        return JAVA8 ? method.getParameterCount() : method.getParameterTypes().length;
+    }
 }

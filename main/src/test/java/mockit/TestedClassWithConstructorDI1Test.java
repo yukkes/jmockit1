@@ -1,225 +1,291 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.util.*;
 
 import javax.annotation.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 
 /**
  * The Class TestedClassWithConstructorDI1Test.
  */
-public final class TestedClassWithConstructorDI1Test
-{
-   
-   /**
-    * The Class BaseTestedClass.
-    */
-   public static class BaseTestedClass {
-      
-      /** The base counter. */
-      static int baseCounter;
-      
-      /**
-       * Initialize base.
-       */
-      @PostConstruct void initializeBase() { baseCounter++; }
-      
-      /**
-       * Destroy base.
-       */
-      @PreDestroy void destroyBase() { baseCounter++; }
-   }
+public final class TestedClassWithConstructorDI1Test {
 
-   /**
-    * The Class TestedClass.
-    */
-   public static final class TestedClass extends BaseTestedClass {
-      
-      /** The counter. */
-      static int counter;
-      
-      /** The dependency. */
-      private final Dependency dependency;
-      
-      /** The runnable. */
-      private final Runnable runnable;
-      
-      /** The observable. */
-      private final Observable observable;
+    /**
+     * The Class BaseTestedClass.
+     */
+    public static class BaseTestedClass {
 
-      /**
-       * Instantiates a new tested class.
-       *
-       * @param dependency the dependency
-       */
-      public TestedClass(Dependency dependency) { this(dependency, null, null); }
-      
-      /**
-       * Instantiates a new tested class.
-       *
-       * @param dependency the dependency
-       * @param runnable the runnable
-       */
-      public TestedClass(Dependency dependency, Runnable runnable) { this(dependency, runnable, null); }
-      
-      /**
-       * Instantiates a new tested class.
-       *
-       * @param dependency the dependency
-       * @param observable the observable
-       */
-      public TestedClass(Dependency dependency, Observable observable) { this(dependency, null, observable); }
-      
-      /**
-       * Instantiates a new tested class.
-       *
-       * @param dependency the dependency
-       * @param runnable the runnable
-       * @param observable the observable
-       */
-      public TestedClass(Dependency dependency, Runnable runnable, Observable observable) {
-         this.dependency = dependency;
-         this.runnable = runnable;
-         this.observable = observable;
-      }
+        /** The base counter. */
+        static int baseCounter;
 
-      /**
-       * Do some operation.
-       *
-       * @return true, if successful
-       */
-      public boolean doSomeOperation() {
-         if (runnable != null) {
-            runnable.run();
-         }
+        /**
+         * Initialize base.
+         */
+        @PostConstruct
+        void initializeBase() {
+            baseCounter++;
+        }
 
-         boolean b = dependency.doSomething() > 0;
+        /**
+         * Destroy base.
+         */
+        @PreDestroy
+        void destroyBase() {
+            baseCounter++;
+        }
+    }
 
-         if (b && observable != null) {
-            observable.notifyObservers();
-         }
+    /**
+     * The Class TestedClass.
+     */
+    public static final class TestedClass extends BaseTestedClass {
 
-         return b;
-      }
+        /** The counter. */
+        static int counter;
 
-      /**
-       * Initialize.
-       */
-      @PostConstruct void initialize() { counter++; }
-      
-      /**
-       * Destroy.
-       */
-      @PreDestroy void destroy() { counter++; }
-   }
+        /** The dependency. */
+        private final Dependency dependency;
 
-   /**
-    * The Class Dependency.
-    */
-   static class Dependency { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething() { return -1; } }
+        /** The runnable. */
+        private final Runnable runnable;
 
-   /** The tested. */
-   @Tested TestedClass tested;
-   
-   /** The mock. */
-   @Injectable Dependency mock;
+        /** The observable. */
+        private final Observable observable;
 
-   /**
-    * Exercise tested object with single dependency injected through constructor.
-    */
-   @Test
-   public void exerciseTestedObjectWithSingleDependencyInjectedThroughConstructor() {
-      assertTestedObjectWasInitialized();
+        /**
+         * Instantiates a new tested class.
+         *
+         * @param dependency
+         *            the dependency
+         */
+        public TestedClass(Dependency dependency) {
+            this(dependency, null, null);
+        }
 
-      new Expectations() {{ mock.doSomething(); result = 23; }};
+        /**
+         * Instantiates a new tested class.
+         *
+         * @param dependency
+         *            the dependency
+         * @param runnable
+         *            the runnable
+         */
+        public TestedClass(Dependency dependency, Runnable runnable) {
+            this(dependency, runnable, null);
+        }
 
-      assertTrue(tested.doSomeOperation());
-   }
+        /**
+         * Instantiates a new tested class.
+         *
+         * @param dependency
+         *            the dependency
+         * @param observable
+         *            the observable
+         */
+        public TestedClass(Dependency dependency, Observable observable) {
+            this(dependency, null, observable);
+        }
 
-   /**
-    * Exercise tested object with two dependencies injected through constructor.
-    *
-    * @param mock2 the mock 2
-    */
-   @Test
-   public void exerciseTestedObjectWithTwoDependenciesInjectedThroughConstructor(@Injectable final Runnable mock2) {
-      assertTestedObjectWasInitialized();
+        /**
+         * Instantiates a new tested class.
+         *
+         * @param dependency
+         *            the dependency
+         * @param runnable
+         *            the runnable
+         * @param observable
+         *            the observable
+         */
+        public TestedClass(Dependency dependency, Runnable runnable, Observable observable) {
+            this.dependency = dependency;
+            this.runnable = runnable;
+            this.observable = observable;
+        }
 
-      new Expectations() {{ mock.doSomething(); result = 23; }};
+        /**
+         * Do some operation.
+         *
+         * @return true, if successful
+         */
+        public boolean doSomeOperation() {
+            if (runnable != null) {
+                runnable.run();
+            }
 
-      assertTrue(tested.doSomeOperation());
+            boolean b = dependency.doSomething() > 0;
 
-      new Verifications() {{ mock2.run(); }};
-   }
+            if (b && observable != null) {
+                observable.notifyObservers();
+            }
 
-   /**
-    * Exercise tested object with two other dependencies injected through constructor.
-    *
-    * @param obs the obs
-    */
-   @Test
-   public void exerciseTestedObjectWithTwoOtherDependenciesInjectedThroughConstructor(@Injectable final Observable obs) {
-      assertTestedObjectWasInitialized();
+            return b;
+        }
 
-      new Expectations() {{ mock.doSomething(); result = 123; }};
+        /**
+         * Initialize.
+         */
+        @PostConstruct
+        void initialize() {
+            counter++;
+        }
 
-      assertTrue(tested.doSomeOperation());
+        /**
+         * Destroy.
+         */
+        @PreDestroy
+        void destroy() {
+            counter++;
+        }
+    }
 
-      new FullVerifications() {{ obs.notifyObservers(); }};
-   }
+    /**
+     * The Class Dependency.
+     */
+    static class Dependency {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething() {
+            return -1;
+        }
+    }
 
-   /**
-    * Exercise tested object with all dependencies injected through constructor.
-    *
-    * @param mock2 the mock 2
-    * @param mock3 the mock 3
-    */
-   @Test
-   public void exerciseTestedObjectWithAllDependenciesInjectedThroughConstructor(
-      @Injectable final Runnable mock2, @Injectable final Observable mock3
-   ) {
-      assertTestedObjectWasInitialized();
+    /** The tested. */
+    @Tested
+    TestedClass tested;
 
-      new Expectations() {{ mock.doSomething(); result = 123; }};
+    /** The mock. */
+    @Injectable
+    Dependency mock;
 
-      assertTrue(tested.doSomeOperation());
+    /**
+     * Exercise tested object with single dependency injected through constructor.
+     */
+    @Test
+    public void exerciseTestedObjectWithSingleDependencyInjectedThroughConstructor() {
+        assertTestedObjectWasInitialized();
 
-      new VerificationsInOrder() {{
-         mock2.run();
-         mock3.notifyObservers();
-      }};
-   }
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = 23;
+            }
+        };
 
-   /**
-    * Reset counter.
-    */
-   @Before
-   public void resetCounter() {
-      BaseTestedClass.baseCounter = 0;
-      TestedClass.counter = 0;
-   }
+        assertTrue(tested.doSomeOperation());
+    }
 
-   /**
-    * Assert tested object was initialized.
-    */
-   void assertTestedObjectWasInitialized() {
-      assertEquals(1, BaseTestedClass.baseCounter);
-      assertEquals(1, TestedClass.counter);
-   }
+    /**
+     * Exercise tested object with two dependencies injected through constructor.
+     *
+     * @param mock2
+     *            the mock 2
+     */
+    @Test
+    public void exerciseTestedObjectWithTwoDependenciesInjectedThroughConstructor(@Injectable final Runnable mock2) {
+        assertTestedObjectWasInitialized();
 
-   /**
-    * Verify tested object after every test.
-    */
-   @After
-   public void verifyTestedObjectAfterEveryTest() {
-      assertEquals(2, BaseTestedClass.baseCounter);
-      assertEquals(2, TestedClass.counter);
-   }
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = 23;
+            }
+        };
+
+        assertTrue(tested.doSomeOperation());
+
+        new Verifications() {
+            {
+                mock2.run();
+            }
+        };
+    }
+
+    /**
+     * Exercise tested object with two other dependencies injected through constructor.
+     *
+     * @param obs
+     *            the obs
+     */
+    @Test
+    public void exerciseTestedObjectWithTwoOtherDependenciesInjectedThroughConstructor(
+            @Injectable final Observable obs) {
+        assertTestedObjectWasInitialized();
+
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = 123;
+            }
+        };
+
+        assertTrue(tested.doSomeOperation());
+
+        new FullVerifications() {
+            {
+                obs.notifyObservers();
+            }
+        };
+    }
+
+    /**
+     * Exercise tested object with all dependencies injected through constructor.
+     *
+     * @param mock2
+     *            the mock 2
+     * @param mock3
+     *            the mock 3
+     */
+    @Test
+    public void exerciseTestedObjectWithAllDependenciesInjectedThroughConstructor(@Injectable final Runnable mock2,
+            @Injectable final Observable mock3) {
+        assertTestedObjectWasInitialized();
+
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = 123;
+            }
+        };
+
+        assertTrue(tested.doSomeOperation());
+
+        new VerificationsInOrder() {
+            {
+                mock2.run();
+                mock3.notifyObservers();
+            }
+        };
+    }
+
+    /**
+     * Reset counter.
+     */
+    @Before
+    public void resetCounter() {
+        BaseTestedClass.baseCounter = 0;
+        TestedClass.counter = 0;
+    }
+
+    /**
+     * Assert tested object was initialized.
+     */
+    void assertTestedObjectWasInitialized() {
+        assertEquals(1, BaseTestedClass.baseCounter);
+        assertEquals(1, TestedClass.counter);
+    }
+
+    /**
+     * Verify tested object after every test.
+     */
+    @After
+    public void verifyTestedObjectAfterEveryTest() {
+        assertEquals(2, BaseTestedClass.baseCounter);
+        assertEquals(2, TestedClass.counter);
+    }
 }

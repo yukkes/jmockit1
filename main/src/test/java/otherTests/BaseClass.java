@@ -5,26 +5,28 @@ import java.util.*;
 /**
  * The Class BaseClass.
  */
-public class BaseClass
-{
-   
-   /** The base int. */
-   protected int baseInt;
-   
-   /** The base string. */
-   protected String baseString;
-   
-   /** The base set. */
-   protected Set<Boolean> baseSet;
+public class BaseClass {
 
-   /** The long field. */
-   @SuppressWarnings({"FieldCanBeLocal", "unused"})
-   private long longField;
+    /** The base int. */
+    protected int baseInt;
 
-   /**
-    * Sets the long field.
-    *
-    * @param value the new long field
-    */
-   void setLongField(long value) { longField = value; }
+    /** The base string. */
+    protected String baseString;
+
+    /** The base set. */
+    protected Set<Boolean> baseSet;
+
+    /** The long field. */
+    @SuppressWarnings({ "FieldCanBeLocal", "unused" })
+    private long longField;
+
+    /**
+     * Sets the long field.
+     *
+     * @param value
+     *            the new long field
+     */
+    void setLongField(long value) {
+        longField = value;
+    }
 }

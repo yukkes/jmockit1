@@ -1,73 +1,98 @@
 package otherTests.testng;
 
-import java.io.*;
-
-import org.testng.annotations.*;
 import static org.testng.Assert.*;
+
+import java.io.*;
 
 import mockit.*;
 
-public final class TestNGSharedMockFieldTest
-{
-   public interface Dependency {
-      boolean doSomething();
-      void doSomethingElse();
-   }
+import org.testng.annotations.*;
 
-   @Mocked Dependency mock1;
-   @Capturing Runnable mock2;
-   @Injectable BufferedWriter writer;
+public final class TestNGSharedMockFieldTest {
+    public interface Dependency {
+        boolean doSomething();
 
-   @Test
-   public void recordAndReplayExpectationsOnSharedMocks() {
-      new Expectations() {{
-         mock1.doSomething(); result = true;
-         mock2.run();
-      }};
+        void doSomethingElse();
+    }
 
-      assertTrue(mock1.doSomething());
-      mock2.run();
-   }
+    @Mocked
+    Dependency mock1;
+    @Capturing
+    Runnable mock2;
+    @Injectable
+    BufferedWriter writer;
 
-   @Test
-   public void recordAndReplayExpectationsOnSharedMocksAgain() {
-      new Expectations() {{ mock1.doSomething(); result = true; }};
+    @Test
+    public void recordAndReplayExpectationsOnSharedMocks() {
+        new Expectations() {
+            {
+                mock1.doSomething();
+                result = true;
+                mock2.run();
+            }
+        };
 
-      assertTrue(mock1.doSomething());
-      mock2.run();
-   }
+        assertTrue(mock1.doSomething());
+        mock2.run();
+    }
 
-   @BeforeMethod
-   public void preventAllWritesToMockedBufferedWritersFromSUT() throws Exception {
-      new Expectations() {{ writer.write(anyString, anyInt, anyInt); result = new IOException(); minTimes = 0; }};
-   }
+    @Test
+    public void recordAndReplayExpectationsOnSharedMocksAgain() {
+        new Expectations() {
+            {
+                mock1.doSomething();
+                result = true;
+            }
+        };
 
-   @Test
-   public void useMockedBufferedWriter() throws Exception {
-      writer.newLine();
+        assertTrue(mock1.doSomething());
+        mock2.run();
+    }
 
-      try {
-         writer.write("test", 0, 4);
-         fail();
-      }
-      catch (IOException ignore) {}
-   }
+    @BeforeMethod
+    public void preventAllWritesToMockedBufferedWritersFromSUT() throws Exception {
+        new Expectations() {
+            {
+                writer.write(anyString, anyInt, anyInt);
+                result = new IOException();
+                minTimes = 0;
+            }
+        };
+    }
 
-   public static class Collaborator {}
-   public interface BaseType { Collaborator doSomething(); }
-   public interface SubType extends BaseType {}
+    @Test
+    public void useMockedBufferedWriter() throws Exception {
+        writer.newLine();
 
-   @Mocked SubType mock;
+        try {
+            writer.write("test", 0, 4);
+            fail();
+        } catch (IOException ignore) {
+        }
+    }
 
-   @Test
-   public void cascadeFistTime() {
-      Collaborator cascaded = mock.doSomething();
-      assertNotNull(cascaded);
-   }
+    public static class Collaborator {
+    }
 
-   @Test
-   public void cascadeSecondTime() {
-      Collaborator cascaded = mock.doSomething();
-      assertNotNull(cascaded);
-   }
+    public interface BaseType {
+        Collaborator doSomething();
+    }
+
+    public interface SubType extends BaseType {
+    }
+
+    @Mocked
+    SubType mock;
+
+    @Test
+    public void cascadeFistTime() {
+        Collaborator cascaded = mock.doSomething();
+        assertNotNull(cascaded);
+    }
+
+    @Test
+    public void cascadeSecondTime() {
+        Collaborator cascaded = mock.doSomething();
+        assertNotNull(cascaded);
+    }
 }

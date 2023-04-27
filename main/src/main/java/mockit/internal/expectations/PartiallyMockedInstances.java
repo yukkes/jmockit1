@@ -4,36 +4,37 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
-import javax.annotation.*;
-
 import static mockit.internal.util.Utilities.containsReference;
 
-final class PartiallyMockedInstances
-{
-   @Nonnull private final List<?> dynamicMockInstancesToMatch;
+import java.util.*;
 
-   PartiallyMockedInstances(@Nonnull List<?> dynamicMockInstancesToMatch) {
-      this.dynamicMockInstancesToMatch = dynamicMockInstancesToMatch;
-   }
+import javax.annotation.*;
 
-   boolean isToBeMatchedOnInstance(@Nonnull Object mock) {
-      return containsReference(dynamicMockInstancesToMatch, mock);
-   }
+final class PartiallyMockedInstances {
+    @Nonnull
+    private final List<?> dynamicMockInstancesToMatch;
 
-   boolean isDynamicMockInstanceOrClass(@Nonnull Object invokedInstance, @Nonnull Object invocationInstance) {
-      if (containsReference(dynamicMockInstancesToMatch, invokedInstance)) {
-         return true;
-      }
+    PartiallyMockedInstances(@Nonnull List<?> dynamicMockInstancesToMatch) {
+        this.dynamicMockInstancesToMatch = dynamicMockInstancesToMatch;
+    }
 
-      Class<?> invokedClass = invocationInstance.getClass();
+    boolean isToBeMatchedOnInstance(@Nonnull Object mock) {
+        return containsReference(dynamicMockInstancesToMatch, mock);
+    }
 
-      for (Object dynamicMock : dynamicMockInstancesToMatch) {
-         if (dynamicMock.getClass() == invokedClass) {
+    boolean isDynamicMockInstanceOrClass(@Nonnull Object invokedInstance, @Nonnull Object invocationInstance) {
+        if (containsReference(dynamicMockInstancesToMatch, invokedInstance)) {
             return true;
-         }
-      }
+        }
 
-      return false;
-   }
+        Class<?> invokedClass = invocationInstance.getClass();
+
+        for (Object dynamicMock : dynamicMockInstancesToMatch) {
+            if (dynamicMock.getClass() == invokedClass) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

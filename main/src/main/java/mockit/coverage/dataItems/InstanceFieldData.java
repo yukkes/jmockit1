@@ -4,69 +4,69 @@
  */
 package mockit.coverage.dataItems;
 
-import java.util.*;
-import javax.annotation.*;
-
 import static java.util.Collections.*;
+
+import java.util.*;
+
+import javax.annotation.*;
 
 import mockit.internal.state.*;
 
-public final class InstanceFieldData extends FieldData
-{
-   private static final long serialVersionUID = 6991762113575259754L;
+public final class InstanceFieldData extends FieldData {
+    private static final long serialVersionUID = 6991762113575259754L;
 
-   @Nonnull
-   private final transient Map<Integer, List<Integer>> testIdsToAssignments = new HashMap<>();
+    @Nonnull
+    private final transient Map<Integer, List<Integer>> testIdsToAssignments = new HashMap<>();
 
-   void registerAssignment(@Nonnull Object instance) {
-      List<Integer> dataForRunningTest = getDataForRunningTest();
-      Integer instanceId = System.identityHashCode(instance);
+    void registerAssignment(@Nonnull Object instance) {
+        List<Integer> dataForRunningTest = getDataForRunningTest();
+        Integer instanceId = System.identityHashCode(instance);
 
-      if (!dataForRunningTest.contains(instanceId)) {
-         dataForRunningTest.add(instanceId);
-      }
+        if (!dataForRunningTest.contains(instanceId)) {
+            dataForRunningTest.add(instanceId);
+        }
 
-      writeCount++;
-   }
+        writeCount++;
+    }
 
-   void registerRead(@Nonnull Object instance) {
-      List<Integer> dataForRunningTest = getDataForRunningTest();
-      Integer instanceId = System.identityHashCode(instance);
+    void registerRead(@Nonnull Object instance) {
+        List<Integer> dataForRunningTest = getDataForRunningTest();
+        Integer instanceId = System.identityHashCode(instance);
 
-      dataForRunningTest.remove(instanceId);
-      readCount++;
-   }
+        dataForRunningTest.remove(instanceId);
+        readCount++;
+    }
 
-   @Nonnull
-   private List<Integer> getDataForRunningTest() {
-      int testId = TestRun.getTestId();
-      List<Integer> fieldData = testIdsToAssignments.get(testId);
+    @Nonnull
+    private List<Integer> getDataForRunningTest() {
+        int testId = TestRun.getTestId();
+        List<Integer> fieldData = testIdsToAssignments.get(testId);
 
-      if (fieldData == null) {
-         fieldData = new LinkedList<>();
-         testIdsToAssignments.put(testId, fieldData);
-      }
+        if (fieldData == null) {
+            fieldData = new LinkedList<>();
+            testIdsToAssignments.put(testId, fieldData);
+        }
 
-      return fieldData;
-   }
+        return fieldData;
+    }
 
-   @Override
-   void markAsCoveredIfNoUnreadValuesAreLeft() {
-      for (List<Integer> unreadInstances : testIdsToAssignments.values()) {
-         if (unreadInstances.isEmpty()) {
-            covered = true;
-            break;
-         }
-      }
-   }
+    @Override
+    void markAsCoveredIfNoUnreadValuesAreLeft() {
+        for (List<Integer> unreadInstances : testIdsToAssignments.values()) {
+            if (unreadInstances.isEmpty()) {
+                covered = true;
+                break;
+            }
+        }
+    }
 
-   @Nonnull
-   public List<Integer> getOwnerInstancesWithUnreadAssignments() {
-      if (isCovered()) {
-         return emptyList();
-      }
+    @Nonnull
+    public List<Integer> getOwnerInstancesWithUnreadAssignments() {
+        if (isCovered()) {
+            return emptyList();
+        }
 
-      Collection<List<Integer>> assignments = testIdsToAssignments.values();
-      return assignments.iterator().next();
-   }
+        Collection<List<Integer>> assignments = testIdsToAssignments.values();
+        return assignments.iterator().next();
+    }
 }

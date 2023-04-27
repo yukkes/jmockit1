@@ -8,15 +8,18 @@ import javax.annotation.*;
 
 import mockit.internal.util.*;
 
-final class ExpectationError extends AssertionError
-{
-   private String message;
+final class ExpectationError extends AssertionError {
+    private String message;
 
-   @Nonnull @Override public String toString() { return message; }
+    @Nonnull
+    @Override
+    public String toString() {
+        return message;
+    }
 
-   void defineCause(@Nonnull String title, @Nonnull Throwable error) {
-      message = title;
-      StackTrace.filterStackTrace(this);
-      error.initCause(this);
-   }
+    void defineCause(@Nonnull String title, @Nonnull Throwable error) {
+        message = title;
+        StackTrace.filterStackTrace(this);
+        error.initCause(this);
+    }
 }

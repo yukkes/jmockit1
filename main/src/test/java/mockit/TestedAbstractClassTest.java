@@ -1,137 +1,164 @@
 package mockit;
 
-import org.junit.*;
 import static org.junit.Assert.*;
+
+import org.junit.*;
 
 /**
  * The Class TestedAbstractClassTest.
  */
-public final class TestedAbstractClassTest
-{
-   
-   /**
-    * The Class AbstractClass.
-    */
-   public abstract static class AbstractClass implements Runnable {
-      
-      /** The value. */
-      private final int value;
-      
-      /** The name. */
-      protected String name;
+public final class TestedAbstractClassTest {
 
-      /**
-       * Instantiates a new abstract class.
-       *
-       * @param value the value
-       */
-      protected AbstractClass(int value) { this.value = value; }
+    /**
+     * The Class AbstractClass.
+     */
+    public abstract static class AbstractClass implements Runnable {
 
-      /**
-       * Do some operation.
-       *
-       * @return true, if successful
-       */
-      public final boolean doSomeOperation() {
-         run();
-         return doSomething() > 0;
-      }
+        /** The value. */
+        private final int value;
 
-      /**
-       * Do something.
-       *
-       * @return the int
-       */
-      protected abstract int doSomething();
+        /** The name. */
+        protected String name;
 
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      public int getValue() { return value; }
-   }
+        /**
+         * Instantiates a new abstract class.
+         *
+         * @param value
+         *            the value
+         */
+        protected AbstractClass(int value) {
+            this.value = value;
+        }
 
-   // A subclass is generated with the *same* constructors as the tested class, and with *mocked* implementations
-   /** The tested. */
-   // for all abstract methods in the tested base class, its super-classes and its implemented interfaces.
-   @Tested AbstractClass tested;
+        /**
+         * Do some operation.
+         *
+         * @return true, if successful
+         */
+        public final boolean doSomeOperation() {
+            run();
+            return doSomething() > 0;
+        }
 
-   /** The value. */
-   @Injectable("123") int value;
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        protected abstract int doSomething();
 
-   /**
-    * Exercise tested object.
-    *
-    * @param name the name
-    */
-   @Test
-   public void exerciseTestedObject(@Injectable("Test") String name) {
-      assertThatGeneratedSubclassIsAlwaysTheSame();
-      assertEquals(123, tested.getValue());
-      assertEquals("Test", tested.name);
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        public int getValue() {
+            return value;
+        }
+    }
 
-      new Expectations() {{
-         tested.doSomething(); result = 23; times = 1;
-      }};
+    // A subclass is generated with the *same* constructors as the tested class, and with *mocked* implementations
+    /** The tested. */
+    // for all abstract methods in the tested base class, its super-classes and its implemented interfaces.
+    @Tested
+    AbstractClass tested;
 
-      assertTrue(tested.doSomeOperation());
+    /** The value. */
+    @Injectable("123")
+    int value;
 
-      new Verifications() {{ tested.run(); }};
-   }
+    /**
+     * Exercise tested object.
+     *
+     * @param name
+     *            the name
+     */
+    @Test
+    public void exerciseTestedObject(@Injectable("Test") String name) {
+        assertThatGeneratedSubclassIsAlwaysTheSame();
+        assertEquals(123, tested.getValue());
+        assertEquals("Test", tested.name);
 
-   /**
-    * Exercise dynamically mocked tested object.
-    */
-   @Test
-   public void exerciseDynamicallyMockedTestedObject() {
-      assertThatGeneratedSubclassIsAlwaysTheSame();
-      assertEquals(123, tested.getValue());
+        new Expectations() {
+            {
+                tested.doSomething();
+                result = 23;
+                times = 1;
+            }
+        };
 
-      new Expectations(tested) {{
-         tested.getValue(); result = 45;
-         tested.doSomething(); result = 7;
-      }};
+        assertTrue(tested.doSomeOperation());
 
-      assertEquals(45, tested.getValue());
-      assertTrue(tested.doSomeOperation());
+        new Verifications() {
+            {
+                tested.run();
+            }
+        };
+    }
 
-      new Verifications() {{ tested.run(); times = 1; }};
-   }
+    /**
+     * Exercise dynamically mocked tested object.
+     */
+    @Test
+    public void exerciseDynamicallyMockedTestedObject() {
+        assertThatGeneratedSubclassIsAlwaysTheSame();
+        assertEquals(123, tested.getValue());
 
-   /**
-    * Exercise tested object again.
-    *
-    * @param text the text
-    */
-   @Test
-   public void exerciseTestedObjectAgain(@Injectable("Another test") String text) {
-      assertThatGeneratedSubclassIsAlwaysTheSame();
-      assertEquals(123, tested.getValue());
-      assertEquals("Another test", tested.name);
+        new Expectations(tested) {
+            {
+                tested.getValue();
+                result = 45;
+                tested.doSomething();
+                result = 7;
+            }
+        };
 
-      assertFalse(tested.doSomeOperation());
+        assertEquals(45, tested.getValue());
+        assertTrue(tested.doSomeOperation());
 
-      new VerificationsInOrder() {{
-         tested.run();
-         tested.doSomething();
-      }};
-   }
+        new Verifications() {
+            {
+                tested.run();
+                times = 1;
+            }
+        };
+    }
 
-   /** The generated subclass. */
-   Class<?> generatedSubclass;
+    /**
+     * Exercise tested object again.
+     *
+     * @param text
+     *            the text
+     */
+    @Test
+    public void exerciseTestedObjectAgain(@Injectable("Another test") String text) {
+        assertThatGeneratedSubclassIsAlwaysTheSame();
+        assertEquals(123, tested.getValue());
+        assertEquals("Another test", tested.name);
 
-   /**
-    * Assert that generated subclass is always the same.
-    */
-   void assertThatGeneratedSubclassIsAlwaysTheSame() {
-      Class<?> testedClass = tested.getClass();
+        assertFalse(tested.doSomeOperation());
 
-      if (generatedSubclass == null) {
-         generatedSubclass = testedClass;
-      }
-      else {
-         assertSame(generatedSubclass, testedClass);
-      }
-   }
+        new VerificationsInOrder() {
+            {
+                tested.run();
+                tested.doSomething();
+            }
+        };
+    }
+
+    /** The generated subclass. */
+    Class<?> generatedSubclass;
+
+    /**
+     * Assert that generated subclass is always the same.
+     */
+    void assertThatGeneratedSubclassIsAlwaysTheSame() {
+        Class<?> testedClass = tested.getClass();
+
+        if (generatedSubclass == null) {
+            generatedSubclass = testedClass;
+        } else {
+            assertSame(generatedSubclass, testedClass);
+        }
+    }
 }

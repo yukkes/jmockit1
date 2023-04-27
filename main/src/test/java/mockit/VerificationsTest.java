@@ -1,320 +1,394 @@
 package mockit;
 
-import org.junit.*;
-import org.junit.rules.*;
 import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+import org.junit.*;
+import org.junit.rules.*;
+
 /**
  * The Class VerificationsTest.
  */
-public final class VerificationsTest
-{
-   
-   /** The thrown. */
-   @Rule public final ExpectedException thrown = ExpectedException.none();
+public final class VerificationsTest {
 
-   /**
-    * The Class Dependency.
-    */
-   public static class Dependency {
-      
-      /**
-       * Sets the something.
-       *
-       * @param value the new something
-       */
-      public void setSomething(@SuppressWarnings("unused") int value) {}
-      
-      /**
-       * Sets the something else.
-       *
-       * @param value the new something else
-       */
-      public void setSomethingElse(@SuppressWarnings("unused") String value) {}
-      
-      /**
-       * Edits the A bunch more stuff.
-       */
-      public void editABunchMoreStuff() {}
-      
-      /**
-       * Notify before save.
-       */
-      public void notifyBeforeSave() {}
-      
-      /**
-       * Prepare.
-       */
-      public void prepare() {}
-      
-      /**
-       * Save.
-       */
-      public void save() {}
-   }
+    /** The thrown. */
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
-   /** The mock. */
-   @Mocked Dependency mock;
+    /**
+     * The Class Dependency.
+     */
+    public static class Dependency {
 
-   /**
-    * Exercise code under test.
-    */
-   void exerciseCodeUnderTest() {
-      mock.prepare();
-      mock.setSomething(123);
-      mock.setSomethingElse("anotherValue");
-      mock.setSomething(45);
-      mock.editABunchMoreStuff();
-      mock.notifyBeforeSave();
-      mock.save();
-   }
+        /**
+         * Sets the something.
+         *
+         * @param value
+         *            the new something
+         */
+        public void setSomething(@SuppressWarnings("unused") int value) {
+        }
 
-   /**
-    * Verify simple invocations.
-    */
-   @Test
-   public void verifySimpleInvocations() {
-      exerciseCodeUnderTest();
+        /**
+         * Sets the something else.
+         *
+         * @param value
+         *            the new something else
+         */
+        public void setSomethingElse(@SuppressWarnings("unused") String value) {
+        }
 
-      new Verifications() {{
-         mock.prepare(); times = 1;
-         mock.editABunchMoreStuff();
-         mock.setSomething(45);
-      }};
-   }
+        /**
+         * Edits the A bunch more stuff.
+         */
+        public void editABunchMoreStuff() {
+        }
 
-   /**
-    * Verify unrecorded invocation that never happens.
-    */
-   @Test
-   public void verifyUnrecordedInvocationThatNeverHappens() {
-      thrown.expect(MissingInvocation.class);
-      thrown.expectMessage("45");
+        /**
+         * Notify before save.
+         */
+        public void notifyBeforeSave() {
+        }
 
-      mock.setSomething(123);
-      mock.prepare();
+        /**
+         * Prepare.
+         */
+        public void prepare() {
+        }
 
-      new Verifications() {{ mock.setSomething(45); }};
-   }
+        /**
+         * Save.
+         */
+        public void save() {
+        }
+    }
 
-   /**
-    * Verify recorded invocation that never happens.
-    */
-   @Test
-   public void verifyRecordedInvocationThatNeverHappens() {
-      thrown.expect(MissingInvocation.class);
+    /** The mock. */
+    @Mocked
+    Dependency mock;
 
-      new Expectations() {{ mock.editABunchMoreStuff(); }};
+    /**
+     * Exercise code under test.
+     */
+    void exerciseCodeUnderTest() {
+        mock.prepare();
+        mock.setSomething(123);
+        mock.setSomethingElse("anotherValue");
+        mock.setSomething(45);
+        mock.editABunchMoreStuff();
+        mock.notifyBeforeSave();
+        mock.save();
+    }
 
-      mock.setSomething(123);
-      mock.prepare();
+    /**
+     * Verify simple invocations.
+     */
+    @Test
+    public void verifySimpleInvocations() {
+        exerciseCodeUnderTest();
 
-      new Verifications() {{ mock.editABunchMoreStuff(); }};
-   }
+        new Verifications() {
+            {
+                mock.prepare();
+                times = 1;
+                mock.editABunchMoreStuff();
+                mock.setSomething(45);
+            }
+        };
+    }
 
-   /**
-    * Verify invocation that is allowed to happen once or more and happens once.
-    */
-   @Test
-   public void verifyInvocationThatIsAllowedToHappenOnceOrMoreAndHappensOnce() {
-      mock.prepare();
-      mock.setSomething(123);
-      mock.save();
+    /**
+     * Verify unrecorded invocation that never happens.
+     */
+    @Test
+    public void verifyUnrecordedInvocationThatNeverHappens() {
+        thrown.expect(MissingInvocation.class);
+        thrown.expectMessage("45");
 
-      new Verifications() {{
-         mock.setSomething(anyInt);
-         mock.save();
-      }};
-   }
+        mock.setSomething(123);
+        mock.prepare();
 
-   /**
-    * Verify unrecorded invocation that should happen but does not.
-    */
-   @Test
-   public void verifyUnrecordedInvocationThatShouldHappenButDoesNot() {
-      thrown.expect(MissingInvocation.class);
+        new Verifications() {
+            {
+                mock.setSomething(45);
+            }
+        };
+    }
 
-      mock.setSomething(1);
+    /**
+     * Verify recorded invocation that never happens.
+     */
+    @Test
+    public void verifyRecordedInvocationThatNeverHappens() {
+        thrown.expect(MissingInvocation.class);
 
-      new Verifications() {{ mock.notifyBeforeSave(); }};
-   }
+        new Expectations() {
+            {
+                mock.editABunchMoreStuff();
+            }
+        };
 
-   /**
-    * Verify invocations with invocation count.
-    */
-   @Test
-   public void verifyInvocationsWithInvocationCount() {
-      mock.setSomething(3);
-      mock.save();
-      mock.setSomethingElse("test");
-      mock.save();
+        mock.setSomething(123);
+        mock.prepare();
 
-      new Verifications() {{
-         mock.save(); times = 2;
-      }};
-   }
+        new Verifications() {
+            {
+                mock.editABunchMoreStuff();
+            }
+        };
+    }
 
-   /**
-    * Verify invocations with invocation count larger than occurred.
-    */
-   @Test
-   public void verifyInvocationsWithInvocationCountLargerThanOccurred() {
-      thrown.expect(MissingInvocation.class);
-      thrown.expectMessage("Missing 2 invocations");
-      thrown.expectMessage("any int");
+    /**
+     * Verify invocation that is allowed to happen once or more and happens once.
+     */
+    @Test
+    public void verifyInvocationThatIsAllowedToHappenOnceOrMoreAndHappensOnce() {
+        mock.prepare();
+        mock.setSomething(123);
+        mock.save();
 
-      mock.setSomethingElse("test");
-      mock.setSomething(3);
-      mock.save();
+        new Verifications() {
+            {
+                mock.setSomething(anyInt);
+                mock.save();
+            }
+        };
+    }
 
-      new Verifications() {{
-         mock.setSomething(anyInt);
-         times = 3;
-      }};
-   }
+    /**
+     * Verify unrecorded invocation that should happen but does not.
+     */
+    @Test
+    public void verifyUnrecordedInvocationThatShouldHappenButDoesNot() {
+        thrown.expect(MissingInvocation.class);
 
-   /**
-    * Verify invocations with invocation count smaller than occurred.
-    */
-   @Test
-   public void verifyInvocationsWithInvocationCountSmallerThanOccurred() {
-      thrown.expect(UnexpectedInvocation.class);
-      thrown.expectMessage("1 unexpected invocation");
-      thrown.expectMessage("5");
+        mock.setSomething(1);
 
-      mock.setSomethingElse("test");
-      mock.setSomething(3);
-      mock.save();
-      mock.setSomething(5);
+        new Verifications() {
+            {
+                mock.notifyBeforeSave();
+            }
+        };
+    }
 
-      new Verifications() {{
-         mock.setSomething(anyInt);
-         times = 1;
-      }};
-   }
+    /**
+     * Verify invocations with invocation count.
+     */
+    @Test
+    public void verifyInvocationsWithInvocationCount() {
+        mock.setSomething(3);
+        mock.save();
+        mock.setSomethingElse("test");
+        mock.save();
 
-   /**
-    * Verify invocation that should not occur but did.
-    */
-   @Test
-   public void verifyInvocationThatShouldNotOccurButDid() {
-      thrown.expect(UnexpectedInvocation.class);
-      thrown.expectMessage("2 unexpected invocations");
-      thrown.expectMessage("123");
+        new Verifications() {
+            {
+                mock.save();
+                times = 2;
+            }
+        };
+    }
 
-      mock.setSomething(5);
-      mock.setSomething(123);
+    /**
+     * Verify invocations with invocation count larger than occurred.
+     */
+    @Test
+    public void verifyInvocationsWithInvocationCountLargerThanOccurred() {
+        thrown.expect(MissingInvocation.class);
+        thrown.expectMessage("Missing 2 invocations");
+        thrown.expectMessage("any int");
 
-      new Verifications() {{
-         mock.setSomething(anyInt);
-         maxTimes = 0;
-      }};
-   }
+        mock.setSomethingElse("test");
+        mock.setSomething(3);
+        mock.save();
 
-   /**
-    * Verify with argument matcher.
-    */
-   @Test
-   public void verifyWithArgumentMatcher() {
-      exerciseCodeUnderTest();
+        new Verifications() {
+            {
+                mock.setSomething(anyInt);
+                times = 3;
+            }
+        };
+    }
 
-      new Verifications() {{ mock.setSomething(anyInt); }};
-   }
+    /**
+     * Verify invocations with invocation count smaller than occurred.
+     */
+    @Test
+    public void verifyInvocationsWithInvocationCountSmallerThanOccurred() {
+        thrown.expect(UnexpectedInvocation.class);
+        thrown.expectMessage("1 unexpected invocation");
+        thrown.expectMessage("5");
 
-   /**
-    * Verify with argument matcher and individual invocation counts.
-    */
-   @Test
-   public void verifyWithArgumentMatcherAndIndividualInvocationCounts() {
-      exerciseCodeUnderTest();
+        mock.setSomethingElse("test");
+        mock.setSomething(3);
+        mock.save();
+        mock.setSomething(5);
 
-      new Verifications() {{
-         mock.prepare(); maxTimes = 1;
-         mock.setSomething(anyInt); minTimes = 2;
-         mock.editABunchMoreStuff(); maxTimes = 5;
-         mock.save(); times = 1;
-      }};
-   }
+        new Verifications() {
+            {
+                mock.setSomething(anyInt);
+                times = 1;
+            }
+        };
+    }
 
-   /**
-    * Verify with custom argument matcher without argument value.
-    */
-   @Test
-   public void verifyWithCustomArgumentMatcherWithoutArgumentValue() {
-      mock.setSomethingElse("not empty");
+    /**
+     * Verify invocation that should not occur but did.
+     */
+    @Test
+    public void verifyInvocationThatShouldNotOccurButDid() {
+        thrown.expect(UnexpectedInvocation.class);
+        thrown.expectMessage("2 unexpected invocations");
+        thrown.expectMessage("123");
 
-      new Verifications() {{
-         mock.setSomethingElse(with(new Delegate<String>() {
-            @Mock boolean isNotEmpty(String s) { return !s.isEmpty(); }
-         }));
-      }};
-   }
+        mock.setSomething(5);
+        mock.setSomething(123);
 
-   /**
-    * Verify through captured arguments.
-    */
-   @Test
-   public void verifyThroughCapturedArguments() {
-      thrown.expect(AssertionError.class);
-      thrown.expectMessage("not empty");
+        new Verifications() {
+            {
+                mock.setSomething(anyInt);
+                maxTimes = 0;
+            }
+        };
+    }
 
-      mock.setSomethingElse("test");
+    /**
+     * Verify with argument matcher.
+     */
+    @Test
+    public void verifyWithArgumentMatcher() {
+        exerciseCodeUnderTest();
 
-      new Verifications() {{
-         String value;
-         mock.setSomethingElse(value = withCapture());
-         //noinspection ConstantConditions
-         assertEquals("not empty", 0, value.length());
-      }};
-   }
+        new Verifications() {
+            {
+                mock.setSomething(anyInt);
+            }
+        };
+    }
 
-   /**
-    * Verify with custom argument matcher.
-    */
-   @Test
-   public void verifyWithCustomArgumentMatcher() {
-      thrown.expect(MissingInvocation.class);
-      thrown.expectMessage("isEmpty(\"test\")");
+    /**
+     * Verify with argument matcher and individual invocation counts.
+     */
+    @Test
+    public void verifyWithArgumentMatcherAndIndividualInvocationCounts() {
+        exerciseCodeUnderTest();
 
-      mock.setSomethingElse("test");
+        new Verifications() {
+            {
+                mock.prepare();
+                maxTimes = 1;
+                mock.setSomething(anyInt);
+                minTimes = 2;
+                mock.editABunchMoreStuff();
+                maxTimes = 5;
+                mock.save();
+                times = 1;
+            }
+        };
+    }
 
-      new Verifications() {{
-         mock.setSomethingElse(with(new Delegate<String>() {
-            @Mock boolean isEmpty(String s) { return s.isEmpty(); }
-         }));
-      }};
-   }
+    /**
+     * Verify with custom argument matcher without argument value.
+     */
+    @Test
+    public void verifyWithCustomArgumentMatcherWithoutArgumentValue() {
+        mock.setSomethingElse("not empty");
 
-   /**
-    * Verify invocation that matches expectation recorded with any matcher but with argument value which did not occur.
-    */
-   @Test
-   public void verifyInvocationThatMatchesExpectationRecordedWithAnyMatcherButWithArgumentValueWhichDidNotOccur() {
-      thrown.expect(MissingInvocation.class);
-      thrown.expectMessage("45");
+        new Verifications() {
+            {
+                mock.setSomethingElse(with(new Delegate<String>() {
+                    @Mock
+                    boolean isNotEmpty(String s) {
+                        return !s.isEmpty();
+                    }
+                }));
+            }
+        };
+    }
 
-      new Expectations() {{ mock.setSomething(anyInt); }};
+    /**
+     * Verify through captured arguments.
+     */
+    @Test
+    public void verifyThroughCapturedArguments() {
+        thrown.expect(AssertionError.class);
+        thrown.expectMessage("not empty");
 
-      mock.setSomething(123);
+        mock.setSomethingElse("test");
 
-      new Verifications() {{ mock.setSomething(45); }};
-   }
+        new Verifications() {
+            {
+                String value;
+                mock.setSomethingElse(value = withCapture());
+                // noinspection ConstantConditions
+                assertEquals("not empty", 0, value.length());
+            }
+        };
+    }
 
-   /**
-    * Verity two invocations to method matched on specific instance with no argument matchers.
-    *
-    * @param dep the dep
-    */
-   @Test
-   public void verityTwoInvocationsToMethodMatchedOnSpecificInstanceWithNoArgumentMatchers(@Injectable final Dependency dep) {
-      dep.editABunchMoreStuff();
-      dep.editABunchMoreStuff();
+    /**
+     * Verify with custom argument matcher.
+     */
+    @Test
+    public void verifyWithCustomArgumentMatcher() {
+        thrown.expect(MissingInvocation.class);
+        thrown.expectMessage("isEmpty(\"test\")");
 
-      new Verifications() {{
-         dep.editABunchMoreStuff();
-         times = 2;
-      }};
-   }
+        mock.setSomethingElse("test");
+
+        new Verifications() {
+            {
+                mock.setSomethingElse(with(new Delegate<String>() {
+                    @Mock
+                    boolean isEmpty(String s) {
+                        return s.isEmpty();
+                    }
+                }));
+            }
+        };
+    }
+
+    /**
+     * Verify invocation that matches expectation recorded with any matcher but with argument value which did not occur.
+     */
+    @Test
+    public void verifyInvocationThatMatchesExpectationRecordedWithAnyMatcherButWithArgumentValueWhichDidNotOccur() {
+        thrown.expect(MissingInvocation.class);
+        thrown.expectMessage("45");
+
+        new Expectations() {
+            {
+                mock.setSomething(anyInt);
+            }
+        };
+
+        mock.setSomething(123);
+
+        new Verifications() {
+            {
+                mock.setSomething(45);
+            }
+        };
+    }
+
+    /**
+     * Verity two invocations to method matched on specific instance with no argument matchers.
+     *
+     * @param dep
+     *            the dep
+     */
+    @Test
+    public void verityTwoInvocationsToMethodMatchedOnSpecificInstanceWithNoArgumentMatchers(
+            @Injectable final Dependency dep) {
+        dep.editABunchMoreStuff();
+        dep.editABunchMoreStuff();
+
+        new Verifications() {
+            {
+                dep.editABunchMoreStuff();
+                times = 2;
+            }
+        };
+    }
 }

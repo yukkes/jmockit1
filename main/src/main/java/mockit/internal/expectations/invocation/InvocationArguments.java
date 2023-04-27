@@ -6,6 +6,7 @@ package mockit.internal.expectations.invocation;
 
 import java.lang.reflect.*;
 import java.util.*;
+
 import javax.annotation.*;
 
 import mockit.asm.jvmConstants.*;
@@ -15,81 +16,104 @@ import mockit.internal.reflection.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-public final class InvocationArguments
-{
-   @Nonnull final String classDesc;
-   @Nonnull final String methodNameAndDesc;
-   @Nullable final String genericSignature;
-   @Nonnull private final ArgumentValuesAndMatchers valuesAndMatchers;
-   @Nullable private Member realMethodOrConstructor;
+public final class InvocationArguments {
+    @Nonnull
+    final String classDesc;
+    @Nonnull
+    final String methodNameAndDesc;
+    @Nullable
+    final String genericSignature;
+    @Nonnull
+    private final ArgumentValuesAndMatchers valuesAndMatchers;
+    @Nullable
+    private Member realMethodOrConstructor;
 
-   InvocationArguments(
-      int access, @Nonnull String classDesc, @Nonnull String methodNameAndDesc, @Nullable String genericSignature, @Nonnull Object[] args
-   ) {
-      this.classDesc = classDesc;
-      this.methodNameAndDesc = methodNameAndDesc;
-      this.genericSignature = genericSignature;
-      valuesAndMatchers = (access & Access.VARARGS) == 0 ?
-         new ArgumentValuesAndMatchersWithoutVarargs(this, args) : new ArgumentValuesAndMatchersWithVarargs(this, args);
-   }
+    InvocationArguments(int access, @Nonnull String classDesc, @Nonnull String methodNameAndDesc,
+            @Nullable String genericSignature, @Nonnull Object[] args) {
+        this.classDesc = classDesc;
+        this.methodNameAndDesc = methodNameAndDesc;
+        this.genericSignature = genericSignature;
+        valuesAndMatchers = (access & Access.VARARGS) == 0 ? new ArgumentValuesAndMatchersWithoutVarargs(this, args)
+                : new ArgumentValuesAndMatchersWithVarargs(this, args);
+    }
 
-   @Nonnull String getClassName() { return classDesc.replace('/', '.'); }
+    @Nonnull
+    String getClassName() {
+        return classDesc.replace('/', '.');
+    }
 
-   boolean isForConstructor() { return methodNameAndDesc.charAt(0) == '<'; }
+    boolean isForConstructor() {
+        return methodNameAndDesc.charAt(0) == '<';
+    }
 
-   @Nonnull public Object[] getValues() { return valuesAndMatchers.values; }
-   void setValues(@Nonnull Object[] values) { valuesAndMatchers.values = values; }
+    @Nonnull
+    public Object[] getValues() {
+        return valuesAndMatchers.values;
+    }
 
-   public void setValuesWithNoMatchers(@Nonnull Object[] argsToVerify) {
-      valuesAndMatchers.setValuesWithNoMatchers(argsToVerify);
-   }
+    void setValues(@Nonnull Object[] values) {
+        valuesAndMatchers.values = values;
+    }
 
-   public void setValuesAndMatchers(@Nonnull Object[] argsToVerify, @Nullable List<ArgumentMatcher<?>> matchers) {
-      valuesAndMatchers.setValuesAndMatchers(argsToVerify, matchers);
-   }
+    public void setValuesWithNoMatchers(@Nonnull Object[] argsToVerify) {
+        valuesAndMatchers.setValuesWithNoMatchers(argsToVerify);
+    }
 
-   @Nullable public List<ArgumentMatcher<?>> getMatchers() { return valuesAndMatchers.matchers; }
-   public void setMatchers(@Nullable List<ArgumentMatcher<?>> matchers) { valuesAndMatchers.matchers = matchers; }
+    public void setValuesAndMatchers(@Nonnull Object[] argsToVerify, @Nullable List<ArgumentMatcher<?>> matchers) {
+        valuesAndMatchers.setValuesAndMatchers(argsToVerify, matchers);
+    }
 
-   @Nonnull
-   public Object[] prepareForVerification(@Nonnull Object[] argsToVerify, @Nullable List<ArgumentMatcher<?>> matchers) {
-      return valuesAndMatchers.prepareForVerification(argsToVerify, matchers);
-   }
+    @Nullable
+    public List<ArgumentMatcher<?>> getMatchers() {
+        return valuesAndMatchers.matchers;
+    }
 
-   public boolean isMatch(@Nonnull Object[] replayArgs, @Nonnull Map<Object, Object> instanceMap) {
-      TestRun.enterNoMockingZone();
-      ExecutingTest executingTest = TestRun.getExecutingTest();
-      boolean previousFlag = executingTest.setShouldIgnoreMockingCallbacks(true);
+    public void setMatchers(@Nullable List<ArgumentMatcher<?>> matchers) {
+        valuesAndMatchers.matchers = matchers;
+    }
 
-      try {
-         return valuesAndMatchers.isMatch(replayArgs, instanceMap);
-      }
-      finally {
-         executingTest.setShouldIgnoreMockingCallbacks(previousFlag);
-         TestRun.exitNoMockingZone();
-      }
-   }
+    @Nonnull
+    public Object[] prepareForVerification(@Nonnull Object[] argsToVerify,
+            @Nullable List<ArgumentMatcher<?>> matchers) {
+        return valuesAndMatchers.prepareForVerification(argsToVerify, matchers);
+    }
 
-   @Override
-   public String toString() {
-      MethodFormatter methodFormatter = new MethodFormatter(classDesc, methodNameAndDesc, false);
-      List<String> parameterTypes = methodFormatter.getParameterTypes();
-      String arguments = valuesAndMatchers.toString(parameterTypes);
-      methodFormatter.append(arguments);
-      return methodFormatter.toString();
-   }
+    public boolean isMatch(@Nonnull Object[] replayArgs, @Nonnull Map<Object, Object> instanceMap) {
+        TestRun.enterNoMockingZone();
+        ExecutingTest executingTest = TestRun.getExecutingTest();
+        boolean previousFlag = executingTest.setShouldIgnoreMockingCallbacks(true);
 
-   public boolean hasEquivalentMatchers(@Nonnull InvocationArguments other) {
-      return valuesAndMatchers.hasEquivalentMatchers(other.valuesAndMatchers);
-   }
+        try {
+            return valuesAndMatchers.isMatch(replayArgs, instanceMap);
+        } finally {
+            executingTest.setShouldIgnoreMockingCallbacks(previousFlag);
+            TestRun.exitNoMockingZone();
+        }
+    }
 
-   @Nonnull
-   Member getRealMethodOrConstructor() {
-      if (realMethodOrConstructor == null) {
-         try { realMethodOrConstructor = new RealMethodOrConstructor(getClassName(), methodNameAndDesc).getMember(); }
-         catch (NoSuchMethodException e) { throw new RuntimeException(e); }
-      }
+    @Override
+    public String toString() {
+        MethodFormatter methodFormatter = new MethodFormatter(classDesc, methodNameAndDesc, false);
+        List<String> parameterTypes = methodFormatter.getParameterTypes();
+        String arguments = valuesAndMatchers.toString(parameterTypes);
+        methodFormatter.append(arguments);
+        return methodFormatter.toString();
+    }
 
-      return realMethodOrConstructor;
-   }
+    public boolean hasEquivalentMatchers(@Nonnull InvocationArguments other) {
+        return valuesAndMatchers.hasEquivalentMatchers(other.valuesAndMatchers);
+    }
+
+    @Nonnull
+    Member getRealMethodOrConstructor() {
+        if (realMethodOrConstructor == null) {
+            try {
+                realMethodOrConstructor = new RealMethodOrConstructor(getClassName(), methodNameAndDesc).getMember();
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return realMethodOrConstructor;
+    }
 }

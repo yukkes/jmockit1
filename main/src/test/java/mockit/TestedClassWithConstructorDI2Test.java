@@ -1,189 +1,226 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.net.*;
+
 import javax.servlet.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  * The Class TestedClassWithConstructorDI2Test.
  */
-public final class TestedClassWithConstructorDI2Test
-{
-   
-   /**
-    * The Class TestedClass.
-    */
-   public static final class TestedClass implements Servlet {
-      
-      /** The counter. */
-      static int counter;
+public final class TestedClassWithConstructorDI2Test {
 
-      /** The config. */
-      private ServletConfig config;
-      
-      /** The dependency 1. */
-      private final Dependency dependency1;
-      
-      /** The dependency 2. */
-      private final Dependency dependency2;
-      
-      /** The dependency 3. */
-      private final Dependency dependency3;
+    /**
+     * The Class TestedClass.
+     */
+    public static final class TestedClass implements Servlet {
 
-      /**
-       * Instantiates a new tested class.
-       *
-       * @param dependency1 the dependency 1
-       * @param r the r
-       * @param dependency2 the dependency 2
-       * @param dependency3 the dependency 3
-       */
-      public TestedClass(Dependency dependency1, Runnable r, Dependency dependency2, Dependency dependency3) {
-         this.dependency1 = dependency1;
-         this.dependency2 = dependency2;
-         this.dependency3 = dependency3;
-         r.run();
+        /** The counter. */
+        static int counter;
 
-         int i = dependency1.doSomething();
-         assert i == 123;
+        /** The config. */
+        private ServletConfig config;
 
-         try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            assert localHost.getHostName() == null;
-         }
-         catch (UnknownHostException e) {
-            throw new IllegalStateException("InetAddress should be mocked", e);
-         }
-      }
+        /** The dependency 1. */
+        private final Dependency dependency1;
 
-      /**
-       * Do some operation.
-       *
-       * @return the int
-       */
-      public int doSomeOperation() {
-         return dependency1.doSomething() + dependency2.doSomething();
-      }
+        /** The dependency 2. */
+        private final Dependency dependency2;
 
-      @Override public ServletConfig getServletConfig() { return config; }
-      @Override public void service(ServletRequest req, ServletResponse res) {}
-      @Override public String getServletInfo() { return null; }
+        /** The dependency 3. */
+        private final Dependency dependency3;
 
-      @Override
-      public void init(ServletConfig cfg) {
-         config = cfg;
-         counter++;
+        /**
+         * Instantiates a new tested class.
+         *
+         * @param dependency1
+         *            the dependency 1
+         * @param r
+         *            the r
+         * @param dependency2
+         *            the dependency 2
+         * @param dependency3
+         *            the dependency 3
+         */
+        public TestedClass(Dependency dependency1, Runnable r, Dependency dependency2, Dependency dependency3) {
+            this.dependency1 = dependency1;
+            this.dependency2 = dependency2;
+            this.dependency3 = dependency3;
+            r.run();
 
-         int i = dependency1.doSomething();
-         assert i == 123;
+            int i = dependency1.doSomething();
+            assert i == 123;
 
-         checkInetAddressMocking();
-      }
+            try {
+                InetAddress localHost = InetAddress.getLocalHost();
+                assert localHost.getHostName() == null;
+            } catch (UnknownHostException e) {
+                throw new IllegalStateException("InetAddress should be mocked", e);
+            }
+        }
 
-      /**
-       * Check inet address mocking.
-       */
-      private void checkInetAddressMocking() {
-         try {
-            InetAddress inetAddress = InetAddress.getByName("testHost");
-            assert inetAddress.getHostName() == null;
-         }
-         catch (UnknownHostException ignore) {
-            counter = -1;
-         }
-      }
+        /**
+         * Do some operation.
+         *
+         * @return the int
+         */
+        public int doSomeOperation() {
+            return dependency1.doSomething() + dependency2.doSomething();
+        }
 
-      @Override
-      public void destroy() {
-         counter++;
-         checkInetAddressMocking();
-      }
-   }
+        @Override
+        public ServletConfig getServletConfig() {
+            return config;
+        }
 
-   /**
-    * The Class Dependency.
-    */
-   static class Dependency { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething() { return -1; } }
+        @Override
+        public void service(ServletRequest req, ServletResponse res) {
+        }
 
-   /** The tested. */
-   @Tested TestedClass tested;
-   
-   /** The task. */
-   @Injectable Runnable task;
-   
-   /** The dependency 1. */
-   @Injectable Dependency dependency1;
-   
-   /** The dependency 2. */
-   @Injectable Dependency dependency2;
-   
-   /** The config. */
-   @Injectable ServletConfig config;
-   
-   /** The test host. */
-   @Mocked InetAddress testHost;
+        @Override
+        public String getServletInfo() {
+            return null;
+        }
 
-   /**
-    * Reset counter.
-    */
-   @Before
-   public void resetCounter() {
-      TestedClass.counter = 0;
-      new Expectations() {{ dependency1.doSomething(); result = 123; }};
-   }
+        @Override
+        public void init(ServletConfig cfg) {
+            config = cfg;
+            counter++;
 
-   /**
-    * Exercise tested object with dependencies of same type injected through constructor.
-    *
-    * @param dependency3 the dependency 3
-    */
-   @Test
-   public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor(@Injectable Dependency dependency3) {
-      assertTestedObjectWasInitialized();
-      assertSame(dependency3, tested.dependency3);
+            int i = dependency1.doSomething();
+            assert i == 123;
 
-      new Expectations() {{
-         dependency1.doSomething(); result = 23;
-         dependency2.doSomething(); result = 5;
-      }};
+            checkInetAddressMocking();
+        }
 
-      assertEquals(28, tested.doSomeOperation());
-   }
+        /**
+         * Check inet address mocking.
+         */
+        private void checkInetAddressMocking() {
+            try {
+                InetAddress inetAddress = InetAddress.getByName("testHost");
+                assert inetAddress.getHostName() == null;
+            } catch (UnknownHostException ignore) {
+                counter = -1;
+            }
+        }
 
-   /**
-    * Exercise tested object with extra injectable parameter.
-    *
-    * @param dependency3 the dependency 3
-    * @param mock4 the mock 4
-    */
-   @Test
-   public void exerciseTestedObjectWithExtraInjectableParameter(@Injectable Dependency dependency3, @Injectable Dependency mock4) {
-      assertTestedObjectWasInitialized();
-      assertSame(dependency1, tested.dependency1);
-      assertSame(dependency2, tested.dependency2);
-      assertSame(dependency3, tested.dependency3);
-   }
+        @Override
+        public void destroy() {
+            counter++;
+            checkInetAddressMocking();
+        }
+    }
 
-   /**
-    * Assert tested object was initialized.
-    */
-   void assertTestedObjectWasInitialized() {
-      assertSame(config, tested.getServletConfig());
-      assertEquals(1, TestedClass.counter);
-   }
+    /**
+     * The Class Dependency.
+     */
+    static class Dependency {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething() {
+            return -1;
+        }
+    }
 
-   /**
-    * Verify tested object after every test.
-    */
-   @After
-   public void verifyTestedObjectAfterEveryTest() {
-      assertEquals(2, TestedClass.counter);
-   }
+    /** The tested. */
+    @Tested
+    TestedClass tested;
+
+    /** The task. */
+    @Injectable
+    Runnable task;
+
+    /** The dependency 1. */
+    @Injectable
+    Dependency dependency1;
+
+    /** The dependency 2. */
+    @Injectable
+    Dependency dependency2;
+
+    /** The config. */
+    @Injectable
+    ServletConfig config;
+
+    /** The test host. */
+    @Mocked
+    InetAddress testHost;
+
+    /**
+     * Reset counter.
+     */
+    @Before
+    public void resetCounter() {
+        TestedClass.counter = 0;
+        new Expectations() {
+            {
+                dependency1.doSomething();
+                result = 123;
+            }
+        };
+    }
+
+    /**
+     * Exercise tested object with dependencies of same type injected through constructor.
+     *
+     * @param dependency3
+     *            the dependency 3
+     */
+    @Test
+    public void exerciseTestedObjectWithDependenciesOfSameTypeInjectedThroughConstructor(
+            @Injectable Dependency dependency3) {
+        assertTestedObjectWasInitialized();
+        assertSame(dependency3, tested.dependency3);
+
+        new Expectations() {
+            {
+                dependency1.doSomething();
+                result = 23;
+                dependency2.doSomething();
+                result = 5;
+            }
+        };
+
+        assertEquals(28, tested.doSomeOperation());
+    }
+
+    /**
+     * Exercise tested object with extra injectable parameter.
+     *
+     * @param dependency3
+     *            the dependency 3
+     * @param mock4
+     *            the mock 4
+     */
+    @Test
+    public void exerciseTestedObjectWithExtraInjectableParameter(@Injectable Dependency dependency3,
+            @Injectable Dependency mock4) {
+        assertTestedObjectWasInitialized();
+        assertSame(dependency1, tested.dependency1);
+        assertSame(dependency2, tested.dependency2);
+        assertSame(dependency3, tested.dependency3);
+    }
+
+    /**
+     * Assert tested object was initialized.
+     */
+    void assertTestedObjectWasInitialized() {
+        assertSame(config, tested.getServletConfig());
+        assertEquals(1, TestedClass.counter);
+    }
+
+    /**
+     * Verify tested object after every test.
+     */
+    @After
+    public void verifyTestedObjectAfterEveryTest() {
+        assertEquals(2, TestedClass.counter);
+    }
 }

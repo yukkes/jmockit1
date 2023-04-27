@@ -1,6 +1,9 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.util.*;
+
 import javax.security.auth.*;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.*;
@@ -8,252 +11,292 @@ import javax.security.auth.spi.*;
 
 import org.junit.*;
 import org.junit.rules.*;
-import static org.junit.Assert.*;
 
 /**
  * The Class FakeLoginContextTest.
  */
-public final class FakeLoginContextTest
-{
-   
-   /** The thrown. */
-   @Rule public final ExpectedException thrown = ExpectedException.none();
+public final class FakeLoginContextTest {
 
-   /**
-    * Fake JRE method and constructor using fake class.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void fakeJREMethodAndConstructorUsingFakeClass() throws Exception {
-      new FakeLoginContext();
+    /** The thrown. */
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
-      new LoginContext("test", (CallbackHandler) null).login();
-   }
+    /**
+     * Fake JRE method and constructor using fake class.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void fakeJREMethodAndConstructorUsingFakeClass() throws Exception {
+        new FakeLoginContext();
 
-   /**
-    * The Class FakeLoginContext.
-    */
-   public static class FakeLoginContext extends MockUp<LoginContext> {
-      
-      /**
-       * $init.
-       *
-       * @param name the name
-       * @param callbackHandler the callback handler
-       */
-      @Mock
-      public void $init(String name, CallbackHandler callbackHandler) {
-         assertEquals("test", name);
-         assertNull(callbackHandler);
-      }
+        new LoginContext("test", (CallbackHandler) null).login();
+    }
 
-      /**
-       * Login.
-       */
-      @Mock
-      public void login() {}
+    /**
+     * The Class FakeLoginContext.
+     */
+    public static class FakeLoginContext extends MockUp<LoginContext> {
 
-      /**
-       * Gets the subject.
-       *
-       * @return the subject
-       */
-      @Mock
-      public Subject getSubject() { return null; }
-   }
+        /**
+         * $init.
+         *
+         * @param name
+         *            the name
+         * @param callbackHandler
+         *            the callback handler
+         */
+        @Mock
+        public void $init(String name, CallbackHandler callbackHandler) {
+            assertEquals("test", name);
+            assertNull(callbackHandler);
+        }
 
-   /**
-    * Fake JRE method and constructor with fake class.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void fakeJREMethodAndConstructorWithFakeClass() throws Exception {
-      thrown.expect(LoginException.class);
+        /**
+         * Login.
+         */
+        @Mock
+        public void login() {
+        }
 
-      new MockUp<LoginContext>() {
-         @Mock
-         void $init(String name) { assertEquals("test", name); }
+        /**
+         * Gets the subject.
+         *
+         * @return the subject
+         */
+        @Mock
+        public Subject getSubject() {
+            return null;
+        }
+    }
 
-         @Mock
-         void login() throws LoginException { throw new LoginException(); }
-      };
+    /**
+     * Fake JRE method and constructor with fake class.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void fakeJREMethodAndConstructorWithFakeClass() throws Exception {
+        thrown.expect(LoginException.class);
 
-      new LoginContext("test").login();
-   }
+        new MockUp<LoginContext>() {
+            @Mock
+            void $init(String name) {
+                assertEquals("test", name);
+            }
 
-   /**
-    * Fake JRE class with stubs.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void fakeJREClassWithStubs() throws Exception {
-      new FakeLoginContextWithStubs();
+            @Mock
+            void login() throws LoginException {
+                throw new LoginException();
+            }
+        };
 
-      LoginContext context = new LoginContext("");
-      context.login();
-      context.logout();
-   }
+        new LoginContext("test").login();
+    }
 
-   /**
-    * The Class FakeLoginContextWithStubs.
-    */
-   final class FakeLoginContextWithStubs extends MockUp<LoginContext> {
-      
-      /**
-       * $init.
-       *
-       * @param s the s
-       */
-      @Mock void $init(String s) {}
-      
-      /**
-       * Logout.
-       */
-      @Mock void logout() {}
-      
-      /**
-       * Login.
-       */
-      @Mock void login() {}
-   }
+    /**
+     * Fake JRE class with stubs.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void fakeJREClassWithStubs() throws Exception {
+        new FakeLoginContextWithStubs();
 
-   /**
-    * Access faked instance.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void accessFakedInstance() throws Exception {
-      new MockUp<LoginContext>() {
-         Subject testSubject;
+        LoginContext context = new LoginContext("");
+        context.login();
+        context.logout();
+    }
 
-         @Mock
-         void $init(Invocation inv, String name, Subject subject) {
-            assertNotNull(name);
-            assertNotNull(subject);
+    /**
+     * The Class FakeLoginContextWithStubs.
+     */
+    final class FakeLoginContextWithStubs extends MockUp<LoginContext> {
+
+        /**
+         * $init.
+         *
+         * @param s
+         *            the s
+         */
+        @Mock
+        void $init(String s) {
+        }
+
+        /**
+         * Logout.
+         */
+        @Mock
+        void logout() {
+        }
+
+        /**
+         * Login.
+         */
+        @Mock
+        void login() {
+        }
+    }
+
+    /**
+     * Access faked instance.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void accessFakedInstance() throws Exception {
+        new MockUp<LoginContext>() {
+            Subject testSubject;
+
+            @Mock
+            void $init(Invocation inv, String name, Subject subject) {
+                assertNotNull(name);
+                assertNotNull(subject);
+                LoginContext it = inv.getInvokedInstance();
+                assertNotNull(it);
+                assertEquals(1, inv.getInvocationCount());
+            }
+
+            @Mock
+            void login(Invocation inv) {
+                LoginContext it = inv.getInvokedInstance();
+                assertNull(it.getSubject()); // returns null until the subject is authenticated
+                testSubject = new Subject();
+            }
+
+            @Mock
+            void logout() {
+                testSubject = null;
+            }
+
+            @Mock
+            Subject getSubject() {
+                return testSubject;
+            }
+        };
+
+        LoginContext fakedInstance = new LoginContext("test", new Subject());
+        assertNull(fakedInstance.getSubject());
+        fakedInstance.login();
+        assertNotNull(fakedInstance.getSubject());
+        fakedInstance.logout();
+        assertNull(fakedInstance.getSubject());
+    }
+
+    /**
+     * Proceed into real implementations of faked methods.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void proceedIntoRealImplementationsOfFakedMethods() throws Exception {
+        // Create objects to be exercised by the code under test:
+        Configuration configuration = new Configuration() {
+            @Override
+            public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
+                Map<String, ?> options = Collections.emptyMap();
+
+                return new AppConfigurationEntry[] { new AppConfigurationEntry(TestLoginModule.class.getName(),
+                        AppConfigurationEntry.LoginModuleControlFlag.SUFFICIENT, options) };
+            }
+        };
+
+        LoginContext loginContext = new LoginContext("test", null, null, configuration);
+
+        // Apply fakes:
+        ProceedingFakeLoginContext fakeInstance = new ProceedingFakeLoginContext();
+
+        // Exercise the code under test:
+        assertNull(loginContext.getSubject());
+        loginContext.login();
+        assertNotNull(loginContext.getSubject());
+        assertTrue(fakeInstance.loggedIn);
+
+        fakeInstance.ignoreLogout = true;
+        loginContext.logout();
+        assertTrue(fakeInstance.loggedIn);
+
+        fakeInstance.ignoreLogout = false;
+        loginContext.logout();
+        assertFalse(fakeInstance.loggedIn);
+    }
+
+    /**
+     * The Class ProceedingFakeLoginContext.
+     */
+    static final class ProceedingFakeLoginContext extends MockUp<LoginContext> {
+
+        /** The ignore logout. */
+        boolean ignoreLogout;
+
+        /** The logged in. */
+        boolean loggedIn;
+
+        /**
+         * Login.
+         *
+         * @param inv
+         *            the inv
+         */
+        @Mock
+        void login(Invocation inv) {
             LoginContext it = inv.getInvokedInstance();
-            assertNotNull(it);
-            assertEquals(1, inv.getInvocationCount());
-         }
 
-         @Mock
-         void login(Invocation inv) {
-            LoginContext it = inv.getInvokedInstance();
-            assertNull(it.getSubject()); // returns null until the subject is authenticated
-            testSubject = new Subject();
-         }
+            try {
+                inv.proceed();
+                loggedIn = true;
+            } finally {
+                it.getSubject();
+            }
+        }
 
-         @Mock
-         void logout() { testSubject = null; }
+        /**
+         * Logout.
+         *
+         * @param inv
+         *            the inv
+         */
+        @Mock
+        void logout(Invocation inv) {
+            if (!ignoreLogout) {
+                inv.proceed();
+                loggedIn = false;
+            }
+        }
+    }
 
-         @Mock
-         Subject getSubject() { return testSubject; }
-      };
+    /**
+     * The Class TestLoginModule.
+     */
+    public static class TestLoginModule implements LoginModule {
+        @Override
+        public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState,
+                Map<String, ?> options) {
+        }
 
-      LoginContext fakedInstance = new LoginContext("test", new Subject());
-      assertNull(fakedInstance.getSubject());
-      fakedInstance.login();
-      assertNotNull(fakedInstance.getSubject());
-      fakedInstance.logout();
-      assertNull(fakedInstance.getSubject());
-   }
+        @Override
+        public boolean login() {
+            return true;
+        }
 
-   /**
-    * Proceed into real implementations of faked methods.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void proceedIntoRealImplementationsOfFakedMethods() throws Exception {
-      // Create objects to be exercised by the code under test:
-      Configuration configuration = new Configuration() {
-         @Override
-         public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
-            Map<String, ?> options = Collections.emptyMap();
+        @Override
+        public boolean commit() {
+            return true;
+        }
 
-            return new AppConfigurationEntry[] {
-               new AppConfigurationEntry(
-                  TestLoginModule.class.getName(), AppConfigurationEntry.LoginModuleControlFlag.SUFFICIENT, options)
-            };
-         }
-      };
+        @Override
+        public boolean abort() {
+            return false;
+        }
 
-      LoginContext loginContext = new LoginContext("test", null, null, configuration);
-
-      // Apply fakes:
-      ProceedingFakeLoginContext fakeInstance = new ProceedingFakeLoginContext();
-
-      // Exercise the code under test:
-      assertNull(loginContext.getSubject());
-      loginContext.login();
-      assertNotNull(loginContext.getSubject());
-      assertTrue(fakeInstance.loggedIn);
-
-      fakeInstance.ignoreLogout = true;
-      loginContext.logout();
-      assertTrue(fakeInstance.loggedIn);
-
-      fakeInstance.ignoreLogout = false;
-      loginContext.logout();
-      assertFalse(fakeInstance.loggedIn);
-   }
-
-   /**
-    * The Class ProceedingFakeLoginContext.
-    */
-   static final class ProceedingFakeLoginContext extends MockUp<LoginContext> {
-      
-      /** The ignore logout. */
-      boolean ignoreLogout;
-      
-      /** The logged in. */
-      boolean loggedIn;
-
-      /**
-       * Login.
-       *
-       * @param inv the inv
-       */
-      @Mock
-      void login(Invocation inv) {
-         LoginContext it = inv.getInvokedInstance();
-
-         try {
-            inv.proceed();
-            loggedIn = true;
-         }
-         finally {
-            it.getSubject();
-         }
-      }
-
-      /**
-       * Logout.
-       *
-       * @param inv the inv
-       */
-      @Mock
-      void logout(Invocation inv) {
-         if (!ignoreLogout) {
-            inv.proceed();
-            loggedIn = false;
-         }
-      }
-   }
-
-   /**
-    * The Class TestLoginModule.
-    */
-   public static class TestLoginModule implements LoginModule {
-      @Override
-      public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {}
-
-      @Override public boolean login() { return true; }
-      @Override public boolean commit() { return true; }
-      @Override public boolean abort() { return false; }
-      @Override public boolean logout() { return true; }
-   }
+        @Override
+        public boolean logout() {
+            return true;
+        }
+    }
 }

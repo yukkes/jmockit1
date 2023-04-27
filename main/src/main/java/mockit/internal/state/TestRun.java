@@ -7,139 +7,199 @@ package mockit.internal.state;
 import javax.annotation.*;
 
 import mockit.internal.expectations.*;
-import mockit.internal.expectations.state.*;
-import mockit.internal.injection.*;
 import mockit.internal.expectations.mocking.*;
+import mockit.internal.expectations.state.*;
 import mockit.internal.faking.*;
+import mockit.internal.injection.*;
 import mockit.internal.util.*;
 
 /**
- * A singleton which stores several data structures which in turn hold global state for individual test methods, test classes, and for the
- * test run as a whole.
+ * A singleton which stores several data structures which in turn hold global state for individual test methods, test
+ * classes, and for the test run as a whole.
  */
-public final class TestRun
-{
-   private static final TestRun INSTANCE = new TestRun();
-   private TestRun() {}
+public final class TestRun {
+    private static final TestRun INSTANCE = new TestRun();
 
-   // Fields with global state ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private TestRun() {
+    }
 
-   private static final ThreadLocal<Integer> noMockingCount = new ThreadLocal<Integer>() {
-      @Override protected Integer initialValue() { return 0; }
-      @Override public void set(Integer valueToAdd) { super.set(get() + valueToAdd); }
-   };
+    // Fields with global state
+    // ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   // Used only by the Coverage tool:
-   private int testId;
+    private static final ThreadLocal<Integer> noMockingCount = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
 
-   @Nullable private Class<?> currentTestClass;
-   @Nullable private Object currentTestInstance;
-   @Nullable private FieldTypeRedefinitions fieldTypeRedefinitions;
-   @Nullable private TestedClassInstantiations testedClassInstantiations;
+        @Override
+        public void set(Integer valueToAdd) {
+            super.set(get() + valueToAdd);
+        }
+    };
 
-   @Nonnull private final MockFixture mockFixture = new MockFixture();
+    // Used only by the Coverage tool:
+    private int testId;
 
-   @Nonnull private final ExecutingTest executingTest = new ExecutingTest();
-   @Nonnull private final FakeClasses fakeClasses = new FakeClasses();
+    @Nullable
+    private Class<?> currentTestClass;
+    @Nullable
+    private Object currentTestInstance;
+    @Nullable
+    private FieldTypeRedefinitions fieldTypeRedefinitions;
+    @Nullable
+    private TestedClassInstantiations testedClassInstantiations;
 
-   // Static "getters" for global state ///////////////////////////////////////////////////////////////////////////////////////////////////
+    @Nonnull
+    private final MockFixture mockFixture = new MockFixture();
 
-   public static boolean isInsideNoMockingZone() { return noMockingCount.get() > 0; }
+    @Nonnull
+    private final ExecutingTest executingTest = new ExecutingTest();
+    @Nonnull
+    private final FakeClasses fakeClasses = new FakeClasses();
 
-   @Nullable public static Class<?> getCurrentTestClass() { return INSTANCE.currentTestClass; }
+    // Static "getters" for global state
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-   @Nullable public static Object getCurrentTestInstance() { return INSTANCE.currentTestInstance; }
+    public static boolean isInsideNoMockingZone() {
+        return noMockingCount.get() > 0;
+    }
 
-   public static int getTestId() { return INSTANCE.testId; }
+    @Nullable
+    public static Class<?> getCurrentTestClass() {
+        return INSTANCE.currentTestClass;
+    }
 
-   @Nullable
-   public static FieldTypeRedefinitions getFieldTypeRedefinitions() { return INSTANCE.fieldTypeRedefinitions; }
+    @Nullable
+    public static Object getCurrentTestInstance() {
+        return INSTANCE.currentTestInstance;
+    }
 
-   @Nullable
-   public static TestedClassInstantiations getTestedClassInstantiations() { return INSTANCE.testedClassInstantiations; }
+    public static int getTestId() {
+        return INSTANCE.testId;
+    }
 
-   @Nonnull public static MockFixture mockFixture() { return INSTANCE.mockFixture; }
+    @Nullable
+    public static FieldTypeRedefinitions getFieldTypeRedefinitions() {
+        return INSTANCE.fieldTypeRedefinitions;
+    }
 
-   @Nonnull public static ExecutingTest getExecutingTest() { return INSTANCE.executingTest; }
+    @Nullable
+    public static TestedClassInstantiations getTestedClassInstantiations() {
+        return INSTANCE.testedClassInstantiations;
+    }
 
-   @Nullable
-   public static RecordAndReplayExecution getRecordAndReplayForRunningTest() { return INSTANCE.executingTest.getCurrentRecordAndReplay(); }
+    @Nonnull
+    public static MockFixture mockFixture() {
+        return INSTANCE.mockFixture;
+    }
 
-   @Nonnull
-   public static RecordAndReplayExecution getOrCreateRecordAndReplayForRunningTest() {
-      return INSTANCE.executingTest.getOrCreateRecordAndReplay();
-   }
+    @Nonnull
+    public static ExecutingTest getExecutingTest() {
+        return INSTANCE.executingTest;
+    }
 
-   @Nonnull
-   public static RecordAndReplayExecution getRecordAndReplayForVerifications() {
-      return INSTANCE.executingTest.getRecordAndReplayForVerifications();
-   }
+    @Nullable
+    public static RecordAndReplayExecution getRecordAndReplayForRunningTest() {
+        return INSTANCE.executingTest.getCurrentRecordAndReplay();
+    }
 
-   @Nonnull public static FakeClasses getFakeClasses() { return INSTANCE.fakeClasses; }
-   @Nonnull public static FakeStates getFakeStates()   { return INSTANCE.fakeClasses.fakeStates; }
+    @Nonnull
+    public static RecordAndReplayExecution getOrCreateRecordAndReplayForRunningTest() {
+        return INSTANCE.executingTest.getOrCreateRecordAndReplay();
+    }
 
-   // Static "mutators" for global state //////////////////////////////////////////////////////////////////////////////////////////////////
+    @Nonnull
+    public static RecordAndReplayExecution getRecordAndReplayForVerifications() {
+        return INSTANCE.executingTest.getRecordAndReplayForVerifications();
+    }
 
-   public static void setCurrentTestClass(@Nullable Class<?> testClass) { INSTANCE.currentTestClass = testClass; }
+    @Nonnull
+    public static FakeClasses getFakeClasses() {
+        return INSTANCE.fakeClasses;
+    }
 
-   public static void prepareForNextTest() {
-      INSTANCE.testId++;
-      INSTANCE.executingTest.setRecordAndReplay(null);
-   }
+    @Nonnull
+    public static FakeStates getFakeStates() {
+        return INSTANCE.fakeClasses.fakeStates;
+    }
 
-   public static void enterNoMockingZone() { noMockingCount.set(1); }
-   public static void exitNoMockingZone()  { noMockingCount.set(-1); }
-   public static void clearNoMockingZone() { noMockingCount.remove(); }
+    // Static "mutators" for global state
+    // //////////////////////////////////////////////////////////////////////////////////////////////////
 
-   public static void clearCurrentTestInstance() { INSTANCE.currentTestInstance = null; }
+    public static void setCurrentTestClass(@Nullable Class<?> testClass) {
+        INSTANCE.currentTestClass = testClass;
+    }
 
-   public static void setRunningIndividualTest(@Nonnull Object testInstance) { INSTANCE.currentTestInstance = testInstance; }
+    public static void prepareForNextTest() {
+        INSTANCE.testId++;
+        INSTANCE.executingTest.setRecordAndReplay(null);
+    }
 
-   public static void setFieldTypeRedefinitions(@Nullable FieldTypeRedefinitions redefinitions) {
-      INSTANCE.fieldTypeRedefinitions = redefinitions;
-   }
+    public static void enterNoMockingZone() {
+        noMockingCount.set(1);
+    }
 
-   public static void setTestedClassInstantiations(@Nullable TestedClassInstantiations testedClassInstantiations) {
-      INSTANCE.testedClassInstantiations = testedClassInstantiations;
-   }
+    public static void exitNoMockingZone() {
+        noMockingCount.set(-1);
+    }
 
-   public static void finishCurrentTestExecution() {
-      INSTANCE.executingTest.finishExecution();
-   }
+    public static void clearNoMockingZone() {
+        noMockingCount.remove();
+    }
 
-   // Methods to be called only from generated bytecode or from the ClassLoadingBridge ////////////////////////////////////////////////////
+    public static void clearCurrentTestInstance() {
+        INSTANCE.currentTestInstance = null;
+    }
 
-   @SuppressWarnings({"StaticMethodOnlyUsedInOneClass", "SimplifiableIfStatement"})
-   public static boolean updateFakeState(@Nonnull String fakeClassDesc, int fakeStateIndex) {
-      Object fake = getFake(fakeClassDesc);
+    public static void setRunningIndividualTest(@Nonnull Object testInstance) {
+        INSTANCE.currentTestInstance = testInstance;
+    }
 
-      if (fakeStateIndex < 0) {
-         return true;
-      }
+    public static void setFieldTypeRedefinitions(@Nullable FieldTypeRedefinitions redefinitions) {
+        INSTANCE.fieldTypeRedefinitions = redefinitions;
+    }
 
-      return getFakeStates().updateFakeState(fake, fakeStateIndex);
-   }
+    public static void setTestedClassInstantiations(@Nullable TestedClassInstantiations testedClassInstantiations) {
+        INSTANCE.testedClassInstantiations = testedClassInstantiations;
+    }
 
-   @Nonnull
-   public static Object getFake(@Nonnull String fakeClassDesc) {
-      return INSTANCE.fakeClasses.getFake(fakeClassDesc);
-   }
+    public static void finishCurrentTestExecution() {
+        INSTANCE.executingTest.finishExecution();
+    }
 
-   // Other methods ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // Methods to be called only from generated bytecode or from the ClassLoadingBridge
+    // ////////////////////////////////////////////////////
 
-   public static void ensureThatClassIsInitialized(@Nonnull Class<?> aClass) {
-      boolean previousFlag = INSTANCE.executingTest.setShouldIgnoreMockingCallbacks(true);
+    @SuppressWarnings({ "StaticMethodOnlyUsedInOneClass", "SimplifiableIfStatement" })
+    public static boolean updateFakeState(@Nonnull String fakeClassDesc, int fakeStateIndex) {
+        Object fake = getFake(fakeClassDesc);
 
-      try {
-         Class.forName(aClass.getName(), true, aClass.getClassLoader());
-      }
-      catch (ClassNotFoundException ignore) {}
-      catch (LinkageError e) {
-         StackTrace.filterStackTrace(e);
-         e.printStackTrace();
-      }
-      finally {
-         INSTANCE.executingTest.setShouldIgnoreMockingCallbacks(previousFlag);
-      }
-   }
+        if (fakeStateIndex < 0) {
+            return true;
+        }
+
+        return getFakeStates().updateFakeState(fake, fakeStateIndex);
+    }
+
+    @Nonnull
+    public static Object getFake(@Nonnull String fakeClassDesc) {
+        return INSTANCE.fakeClasses.getFake(fakeClassDesc);
+    }
+
+    // Other methods ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static void ensureThatClassIsInitialized(@Nonnull Class<?> aClass) {
+        boolean previousFlag = INSTANCE.executingTest.setShouldIgnoreMockingCallbacks(true);
+
+        try {
+            Class.forName(aClass.getName(), true, aClass.getClassLoader());
+        } catch (ClassNotFoundException ignore) {
+        } catch (LinkageError e) {
+            StackTrace.filterStackTrace(e);
+            e.printStackTrace();
+        } finally {
+            INSTANCE.executingTest.setShouldIgnoreMockingCallbacks(previousFlag);
+        }
+    }
 }

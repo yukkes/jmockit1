@@ -1,645 +1,687 @@
 package mockit.asm.methods;
 
-import javax.annotation.*;
-
-import mockit.asm.*;
-import mockit.asm.classes.*;
-import mockit.asm.annotations.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.util.*;
 import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.*;
 import static mockit.asm.jvmConstants.Opcodes.*;
 
+import javax.annotation.*;
+
+import mockit.asm.*;
+import mockit.asm.annotations.*;
+import mockit.asm.classes.*;
+import mockit.asm.controlFlow.*;
+import mockit.asm.jvmConstants.*;
+import mockit.asm.util.*;
+
 @SuppressWarnings("OverlyComplexClass")
-public final class MethodReader extends AnnotatedReader
-{
-   @Nonnull private final ClassReader cr;
-   @Nonnull private final ClassVisitor cv;
+public final class MethodReader extends AnnotatedReader {
+    @Nonnull
+    private final ClassReader cr;
+    @Nonnull
+    private final ClassVisitor cv;
 
-   @Nullable private String[] throwsClauseTypes;
+    @Nullable
+    private String[] throwsClauseTypes;
 
-   /**
-    * The name of the method currently being parsed.
-    */
-   private String name;
+    /**
+     * The name of the method currently being parsed.
+     */
+    private String name;
 
-   /**
-    * The descriptor of the method currently being parsed.
-    */
-   private String desc;
+    /**
+     * The descriptor of the method currently being parsed.
+     */
+    private String desc;
 
-   @Nonnegative private int methodStartCodeIndex;
-   @Nonnegative private int bodyStartCodeIndex;
-   @Nonnegative private int parameterAnnotationsCodeIndex;
+    @Nonnegative
+    private int methodStartCodeIndex;
+    @Nonnegative
+    private int bodyStartCodeIndex;
+    @Nonnegative
+    private int parameterAnnotationsCodeIndex;
 
-   /**
-    * The label objects, indexed by bytecode offset, of the method currently being parsed (only bytecode offsets for which a label is needed
-    * have a non null associated <code>Label</code> object).
-    */
-   private Label[] labels;
+    /**
+     * The label objects, indexed by bytecode offset, of the method currently being parsed (only bytecode offsets for
+     * which a label is needed have a non null associated <code>Label</code> object).
+     */
+    private Label[] labels;
 
-   /**
-    * The visitor to visit the method being read.
-    */
-   private MethodVisitor mv;
+    /**
+     * The visitor to visit the method being read.
+     */
+    private MethodVisitor mv;
 
-   public MethodReader(@Nonnull ClassReader cr, @Nonnull ClassVisitor cv) {
-      super(cr);
-      this.cr = cr;
-      this.cv = cv;
-   }
+    public MethodReader(@Nonnull ClassReader cr, @Nonnull ClassVisitor cv) {
+        super(cr);
+        this.cr = cr;
+        this.cv = cv;
+    }
 
-   /**
-    * Reads each method and constructor in the class, making the {@linkplain #cr class reader}'s {@linkplain ClassReader#cv visitor} visit
-    * it.
-    *
-    * @return the offset of the first byte following the last method in the class
-    */
-   @Nonnegative
-   public int readMethods() {
-      for (int methodCount = readUnsignedShort(); methodCount > 0; methodCount--) {
-         readMethod();
-      }
+    /**
+     * Reads each method and constructor in the class, making the {@linkplain #cr class reader}'s
+     * {@linkplain ClassReader#cv visitor} visit it.
+     *
+     * @return the offset of the first byte following the last method in the class
+     */
+    @Nonnegative
+    public int readMethods() {
+        for (int methodCount = readUnsignedShort(); methodCount > 0; methodCount--) {
+            readMethod();
+        }
 
-      return codeIndex;
-   }
+        return codeIndex;
+    }
 
-   private void readMethod() {
-      readMethodDeclaration();
-      parameterAnnotationsCodeIndex = 0;
+    private void readMethod() {
+        readMethodDeclaration();
+        parameterAnnotationsCodeIndex = 0;
 
-      readAttributes();
+        readAttributes();
 
-      int currentCodeIndex = codeIndex;
-      readMethodBody();
-      codeIndex = currentCodeIndex;
-   }
+        int currentCodeIndex = codeIndex;
+        readMethodBody();
+        codeIndex = currentCodeIndex;
+    }
 
-   private void readMethodDeclaration() {
-      access = readUnsignedShort();
-      name = readNonnullUTF8();
-      desc = readNonnullUTF8();
+    private void readMethodDeclaration() {
+        access = readUnsignedShort();
+        name = readNonnullUTF8();
+        desc = readNonnullUTF8();
 
-      methodStartCodeIndex = codeIndex;
-      bodyStartCodeIndex = 0;
-      throwsClauseTypes = null;
-   }
+        methodStartCodeIndex = codeIndex;
+        bodyStartCodeIndex = 0;
+        throwsClauseTypes = null;
+    }
 
-   @Nullable @Override
-   protected Boolean readAttribute(@Nonnull String attributeName) {
-      switch (attributeName) {
-         case "Code":
-            bodyStartCodeIndex = codeIndex;
-            return false;
-         case "Exceptions":
-            readExceptionsInThrowsClause();
-            return true;
-         case "RuntimeVisibleParameterAnnotations":
-            parameterAnnotationsCodeIndex = codeIndex;
-            return false;
-         default:
-            return null;
-      }
-   }
-
-   private void readExceptionsInThrowsClause() {
-      int n = readUnsignedShort();
-      String[] typeDescs = new String[n];
-
-      for (int i = 0; i < n; i++) {
-         typeDescs[i] = readNonnullClass();
-      }
-
-      throwsClauseTypes = typeDescs;
-   }
-
-   private void readMethodBody() {
-      mv = cv.visitMethod(access, name, desc, signature, throwsClauseTypes);
-
-      if (mv == null) {
-         return;
-      }
-
-      if (mv instanceof MethodWriter) {
-         copyMethodBody();
-         return;
-      }
-
-      readAnnotations(mv);
-      readAnnotationsOnAllParameters();
-
-      if (bodyStartCodeIndex > 0) {
-         codeIndex = bodyStartCodeIndex;
-         readCode();
-      }
-
-      mv.visitEnd();
-   }
-
-   /**
-    * If the returned <code>MethodVisitor</code> is in fact a <code>MethodWriter</code>, it means there is no method adapter between the reader and
-    * the writer.
-    * In addition, it's assumed that the writer's constant pool was copied from this reader (mw.cw.cr == this.cr), and the signature of the
-    * method has not been changed; then, we skip all visit events and just copy the original code of the method to the writer.
-    */
-   private void copyMethodBody() {
-      // We do not copy directly the code into MethodWriter to save a byte array copy operation.
-      // The real copy will be done in ClassWriter.toByteArray().
-      MethodWriter mw = (MethodWriter) mv;
-      mw.classReaderOffset = methodStartCodeIndex;
-      mw.classReaderLength = codeIndex - methodStartCodeIndex;
-   }
-
-   private void readAnnotationsOnAllParameters() {
-      if (parameterAnnotationsCodeIndex > 0) {
-         codeIndex = parameterAnnotationsCodeIndex;
-         int parameters = readUnsignedByte();
-
-         for (int i = 0; i < parameters; i++) {
-            readParameterAnnotations(i);
-         }
-      }
-   }
-
-   private void readParameterAnnotations(@Nonnegative int parameterIndex) {
-      for (int annotationCount = readUnsignedShort(); annotationCount > 0; annotationCount--) {
-         String annotationTypeDesc = readNonnullUTF8();
-         AnnotationVisitor av = mv.visitParameterAnnotation(parameterIndex, annotationTypeDesc);
-         readAnnotationValues(av);
-      }
-   }
-
-   private void readCode() {
-      int maxStack = readUnsignedShort();
-      codeIndex += 2; // skip maxLocals
-
-      int codeLength = readInt();
-      labels = new Label[codeLength + 2];
-
-      // Reads the bytecode to find the labels.
-      int codeStartIndex = codeIndex;
-      int codeEndIndex = codeStartIndex + codeLength;
-
-      readAllLabelsInCodeBlock(codeStartIndex, codeEndIndex);
-      readTryCatchBlocks();
-
-      // Reads the code attributes.
-      int varTableCodeIndex = 0;
-      int[] typeTable = null;
-
-      for (int attributeCount = readUnsignedShort(); attributeCount > 0; attributeCount--) {
-         String attrName = readNonnullUTF8();
-         int codeOffset = readInt();
-
-         switch (attrName) {
-            case "LocalVariableTable":
-               varTableCodeIndex = codeIndex;
-               readLocalVariableTable();
-               break;
-            case "LocalVariableTypeTable":
-               typeTable = readLocalVariableTypeTable();
-               break;
-            case "LineNumberTable":
-               readLineNumberTable();
-               break;
+    @Nullable
+    @Override
+    protected Boolean readAttribute(@Nonnull String attributeName) {
+        switch (attributeName) {
+            case "Code":
+                bodyStartCodeIndex = codeIndex;
+                return false;
+            case "Exceptions":
+                readExceptionsInThrowsClause();
+                return true;
+            case "RuntimeVisibleParameterAnnotations":
+                parameterAnnotationsCodeIndex = codeIndex;
+                return false;
             default:
-               codeIndex += codeOffset;
-         }
-      }
+                return null;
+        }
+    }
 
-      readBytecodeInstructionsInCodeBlock(codeStartIndex, codeEndIndex);
-      visitEndLabel(codeLength);
-      readLocalVariableTables(varTableCodeIndex, typeTable);
-      mv.visitMaxStack(maxStack);
-   }
+    private void readExceptionsInThrowsClause() {
+        int n = readUnsignedShort();
+        String[] typeDescs = new String[n];
 
-   private void readAllLabelsInCodeBlock(@Nonnegative int codeStart, @Nonnegative int codeEnd) {
-      getOrCreateLabel(codeEnd - codeStart + 1);
+        for (int i = 0; i < n; i++) {
+            typeDescs[i] = readNonnullClass();
+        }
 
-      while (codeIndex < codeEnd) {
-         int offset = codeIndex - codeStart;
-         readLabelForInstructionIfAny(offset);
-      }
-   }
+        throwsClauseTypes = typeDescs;
+    }
 
-   @Nonnull
-   private Label getOrCreateLabel(@Nonnegative int offset) {
-      Label label = labels[offset];
+    private void readMethodBody() {
+        mv = cv.visitMethod(access, name, desc, signature, throwsClauseTypes);
 
-      if (label == null) {
-         label = new Label();
-         labels[offset] = label;
-      }
-
-      return label;
-   }
-
-   private void readLabelForInstructionIfAny(@Nonnegative int offset) {
-      int opcode = readUnsignedByte();
-      byte instructionType = JVMInstruction.TYPE[opcode];
-      boolean tablInsn = instructionType == TABL_INSN;
-
-      if (tablInsn || instructionType == LOOK_INSN) {
-         readLabelsForSwitchInstruction(offset, tablInsn);
-      }
-      else {
-         readLabelsForNonSwitchInstruction(offset, instructionType);
-      }
-   }
-
-   private void readLabelsForSwitchInstruction(@Nonnegative int offset, boolean tableNotLookup) {
-      readSwitchDefaultLabel(offset);
-
-      int caseCount;
-
-      if (tableNotLookup) {
-         int min = readInt();
-         int max = readInt();
-         caseCount = max - min + 1;
-      }
-      else {
-         caseCount = readInt();
-      }
-
-      while (caseCount > 0) {
-         if (!tableNotLookup) {
-            codeIndex += 4;
-         }
-
-         int caseOffset = offset + readInt();
-         getOrCreateLabel(caseOffset);
-         caseCount--;
-      }
-   }
-
-   @Nonnull
-   private Label readSwitchDefaultLabel(@Nonnegative int offset) {
-      codeIndex += 3 - (offset & 3); // skips 0 to 3 padding bytes
-
-      int defaultLabelOffset = readInt();
-      return getOrCreateLabel(offset + defaultLabelOffset);
-   }
-
-   @SuppressWarnings("OverlyLongMethod")
-   private void readLabelsForNonSwitchInstruction(@Nonnegative int offset, byte instructionType) {
-      int codeIndexSize = 0;
-
-      //noinspection SwitchStatementWithoutDefaultBranch
-      switch (instructionType) {
-         case NOARG: case IMPLVAR:
+        if (mv == null) {
             return;
-         case LABEL:
-            int labelOffset = offset + readShort();
-            getOrCreateLabel(labelOffset);
+        }
+
+        if (mv instanceof MethodWriter) {
+            copyMethodBody();
             return;
-         case LABELW:
-            int labelOffsetW = offset + readInt();
-            getOrCreateLabel(labelOffsetW);
-            return;
-         case WIDE_INSN:
-            int opcode = readUnsignedByte();
-            codeIndexSize = opcode == IINC ? 4 : 2;
-            break;
-         case VAR: case SBYTE: case LDC_INSN:
-            codeIndexSize = 1;
-            break;
-         case SHORT: case LDCW_INSN: case TYPE_INSN: case FIELDORMETH: case IINC_INSN:
-            codeIndexSize = 2;
-            break;
-         case ITFMETH: case INDYMETH:
-            codeIndexSize = 4;
-            break;
-         case MANA_INSN:
-            codeIndexSize = 3;
-      }
+        }
 
-      codeIndex += codeIndexSize;
-   }
+        readAnnotations(mv);
+        readAnnotationsOnAllParameters();
 
-   /**
-    * Reads the try catch entries to find the labels, and also visits them.
-    */
-   private void readTryCatchBlocks() {
-      for (int blockCount = readUnsignedShort(); blockCount > 0; blockCount--) {
-         Label start   = getOrCreateLabel(readUnsignedShort());
-         Label end     = getOrCreateLabel(readUnsignedShort());
-         Label handler = getOrCreateLabel(readUnsignedShort());
-         String type   = readUTF8(readItem());
+        if (bodyStartCodeIndex > 0) {
+            codeIndex = bodyStartCodeIndex;
+            readCode();
+        }
 
-         mv.visitTryCatchBlock(start, end, handler, type);
-      }
-   }
+        mv.visitEnd();
+    }
 
-   private void readLocalVariableTable() {
-      for (int localVarCount = readUnsignedShort(); localVarCount > 0; localVarCount--) {
-         int labelOffset = readUnsignedShort();
-         getOrCreateDebugLabel(labelOffset);
+    /**
+     * If the returned <code>MethodVisitor</code> is in fact a <code>MethodWriter</code>, it means there is no method
+     * adapter between the reader and the writer. In addition, it's assumed that the writer's constant pool was copied
+     * from this reader (mw.cw.cr == this.cr), and the signature of the method has not been changed; then, we skip all
+     * visit events and just copy the original code of the method to the writer.
+     */
+    private void copyMethodBody() {
+        // We do not copy directly the code into MethodWriter to save a byte array copy operation.
+        // The real copy will be done in ClassWriter.toByteArray().
+        MethodWriter mw = (MethodWriter) mv;
+        mw.classReaderOffset = methodStartCodeIndex;
+        mw.classReaderLength = codeIndex - methodStartCodeIndex;
+    }
 
-         labelOffset += readUnsignedShort();
-         getOrCreateDebugLabel(labelOffset);
+    private void readAnnotationsOnAllParameters() {
+        if (parameterAnnotationsCodeIndex > 0) {
+            codeIndex = parameterAnnotationsCodeIndex;
+            int parameters = readUnsignedByte();
 
-         codeIndex += 6;
-      }
-   }
+            for (int i = 0; i < parameters; i++) {
+                readParameterAnnotations(i);
+            }
+        }
+    }
 
-   @Nonnull
-   private Label getOrCreateDebugLabel(@Nonnegative int offset) {
-      Label label = labels[offset];
+    private void readParameterAnnotations(@Nonnegative int parameterIndex) {
+        for (int annotationCount = readUnsignedShort(); annotationCount > 0; annotationCount--) {
+            String annotationTypeDesc = readNonnullUTF8();
+            AnnotationVisitor av = mv.visitParameterAnnotation(parameterIndex, annotationTypeDesc);
+            readAnnotationValues(av);
+        }
+    }
 
-      if (label == null) {
-         label = new Label();
-         label.markAsDebug();
-         labels[offset] = label;
-      }
+    private void readCode() {
+        int maxStack = readUnsignedShort();
+        codeIndex += 2; // skip maxLocals
 
-      return label;
-   }
+        int codeLength = readInt();
+        labels = new Label[codeLength + 2];
 
-   @Nonnull
-   private int[] readLocalVariableTypeTable() {
-      int typeTableSize = 3 * readUnsignedShort();
-      int[] typeTable = new int[typeTableSize];
+        // Reads the bytecode to find the labels.
+        int codeStartIndex = codeIndex;
+        int codeEndIndex = codeStartIndex + codeLength;
 
-      while (typeTableSize > 0) {
-         int startIndex = readUnsignedShort();
-         int signatureCodeIndex = codeIndex + 4;
-         codeIndex += 6;
-         int varIndex = readUnsignedShort();
+        readAllLabelsInCodeBlock(codeStartIndex, codeEndIndex);
+        readTryCatchBlocks();
 
-         typeTable[--typeTableSize] = signatureCodeIndex;
-         typeTable[--typeTableSize] = varIndex;
-         typeTable[--typeTableSize] = startIndex;
-      }
+        // Reads the code attributes.
+        int varTableCodeIndex = 0;
+        int[] typeTable = null;
 
-      return typeTable;
-   }
+        for (int attributeCount = readUnsignedShort(); attributeCount > 0; attributeCount--) {
+            String attrName = readNonnullUTF8();
+            int codeOffset = readInt();
 
-   private void readLineNumberTable() {
-      for (int lineCount = readUnsignedShort(); lineCount > 0; lineCount--) {
-         int labelOffset = readUnsignedShort();
-         Label debugLabel = getOrCreateDebugLabel(labelOffset);
-         debugLabel.line = readUnsignedShort();
-      }
-   }
+            switch (attrName) {
+                case "LocalVariableTable":
+                    varTableCodeIndex = codeIndex;
+                    readLocalVariableTable();
+                    break;
+                case "LocalVariableTypeTable":
+                    typeTable = readLocalVariableTypeTable();
+                    break;
+                case "LineNumberTable":
+                    readLineNumberTable();
+                    break;
+                default:
+                    codeIndex += codeOffset;
+            }
+        }
 
-   @SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
-   private void readBytecodeInstructionsInCodeBlock(@Nonnegative int codeStartIndex, @Nonnegative int codeEndIndex) {
-      codeIndex = codeStartIndex;
+        readBytecodeInstructionsInCodeBlock(codeStartIndex, codeEndIndex);
+        visitEndLabel(codeLength);
+        readLocalVariableTables(varTableCodeIndex, typeTable);
+        mv.visitMaxStack(maxStack);
+    }
 
-      while (codeIndex < codeEndIndex) {
-         int offset = codeIndex - codeStartIndex;
-         visitLabelAndLineNumber(offset);
+    private void readAllLabelsInCodeBlock(@Nonnegative int codeStart, @Nonnegative int codeEnd) {
+        getOrCreateLabel(codeEnd - codeStart + 1);
 
-         int opcode = readUnsignedByte();
+        while (codeIndex < codeEnd) {
+            int offset = codeIndex - codeStart;
+            readLabelForInstructionIfAny(offset);
+        }
+    }
 
-         //noinspection SwitchStatementWithoutDefaultBranch
-         switch (JVMInstruction.TYPE[opcode]) {
-            case NOARG:       mv.visitInsn(opcode); break;
-            case VAR:         readVariableAccessInstruction(opcode); break;
-            case IMPLVAR:     readInstructionWithImplicitVariable(opcode); break;
-            case TYPE_INSN:   readTypeInsn(opcode); break;
-            case LABEL:       readJump(opcode, offset); break;
-            case LABELW:      readWideJump(opcode, offset); break;
-            case LDC_INSN:    readLDC(); break;
-            case LDCW_INSN:   readLDCW(); break;
-            case IINC_INSN:   readIInc(); break;
-            case SBYTE:       readInstructionTakingASignedByte(opcode); break;
-            case SHORT:       readInstructionTakingASignedShort(opcode); break;
-            case TABL_INSN:   readSwitchInstruction(offset, true); break;
-            case LOOK_INSN:   readSwitchInstruction(offset, false); break;
-            case MANA_INSN:   readMultiANewArray(); break;
-            case WIDE_INSN:   readWideInstruction(); break;
+    @Nonnull
+    private Label getOrCreateLabel(@Nonnegative int offset) {
+        Label label = labels[offset];
+
+        if (label == null) {
+            label = new Label();
+            labels[offset] = label;
+        }
+
+        return label;
+    }
+
+    private void readLabelForInstructionIfAny(@Nonnegative int offset) {
+        int opcode = readUnsignedByte();
+        byte instructionType = JVMInstruction.TYPE[opcode];
+        boolean tablInsn = instructionType == TABL_INSN;
+
+        if (tablInsn || instructionType == LOOK_INSN) {
+            readLabelsForSwitchInstruction(offset, tablInsn);
+        } else {
+            readLabelsForNonSwitchInstruction(offset, instructionType);
+        }
+    }
+
+    private void readLabelsForSwitchInstruction(@Nonnegative int offset, boolean tableNotLookup) {
+        readSwitchDefaultLabel(offset);
+
+        int caseCount;
+
+        if (tableNotLookup) {
+            int min = readInt();
+            int max = readInt();
+            caseCount = max - min + 1;
+        } else {
+            caseCount = readInt();
+        }
+
+        while (caseCount > 0) {
+            if (!tableNotLookup) {
+                codeIndex += 4;
+            }
+
+            int caseOffset = offset + readInt();
+            getOrCreateLabel(caseOffset);
+            caseCount--;
+        }
+    }
+
+    @Nonnull
+    private Label readSwitchDefaultLabel(@Nonnegative int offset) {
+        codeIndex += 3 - (offset & 3); // skips 0 to 3 padding bytes
+
+        int defaultLabelOffset = readInt();
+        return getOrCreateLabel(offset + defaultLabelOffset);
+    }
+
+    @SuppressWarnings("OverlyLongMethod")
+    private void readLabelsForNonSwitchInstruction(@Nonnegative int offset, byte instructionType) {
+        int codeIndexSize = 0;
+
+        // noinspection SwitchStatementWithoutDefaultBranch
+        switch (instructionType) {
+            case NOARG:
+            case IMPLVAR:
+                return;
+            case LABEL:
+                int labelOffset = offset + readShort();
+                getOrCreateLabel(labelOffset);
+                return;
+            case LABELW:
+                int labelOffsetW = offset + readInt();
+                getOrCreateLabel(labelOffsetW);
+                return;
+            case WIDE_INSN:
+                int opcode = readUnsignedByte();
+                codeIndexSize = opcode == IINC ? 4 : 2;
+                break;
+            case VAR:
+            case SBYTE:
+            case LDC_INSN:
+                codeIndexSize = 1;
+                break;
+            case SHORT:
+            case LDCW_INSN:
+            case TYPE_INSN:
             case FIELDORMETH:
-            case ITFMETH:     readFieldOrInvokeInstruction(opcode); break;
-            case INDYMETH:    readInvokeDynamicInstruction(); break;
-         }
-      }
-   }
+            case IINC_INSN:
+                codeIndexSize = 2;
+                break;
+            case ITFMETH:
+            case INDYMETH:
+                codeIndexSize = 4;
+                break;
+            case MANA_INSN:
+                codeIndexSize = 3;
+        }
 
-   private void visitLabelAndLineNumber(@Nonnegative int offset) {
-      Label label = labels[offset];
+        codeIndex += codeIndexSize;
+    }
 
-      if (label != null) {
-         mv.visitLabel(label);
+    /**
+     * Reads the try catch entries to find the labels, and also visits them.
+     */
+    private void readTryCatchBlocks() {
+        for (int blockCount = readUnsignedShort(); blockCount > 0; blockCount--) {
+            Label start = getOrCreateLabel(readUnsignedShort());
+            Label end = getOrCreateLabel(readUnsignedShort());
+            Label handler = getOrCreateLabel(readUnsignedShort());
+            String type = readUTF8(readItem());
 
-         int lineNumber = label.line;
+            mv.visitTryCatchBlock(start, end, handler, type);
+        }
+    }
 
-         if (lineNumber > 0) {
-            mv.visitLineNumber(lineNumber, label);
-         }
-      }
-   }
+    private void readLocalVariableTable() {
+        for (int localVarCount = readUnsignedShort(); localVarCount > 0; localVarCount--) {
+            int labelOffset = readUnsignedShort();
+            getOrCreateDebugLabel(labelOffset);
 
-   private void readVariableAccessInstruction(int opcode) {
-      int varIndex = readUnsignedByte();
-      mv.visitVarInsn(opcode, varIndex);
-   }
+            labelOffset += readUnsignedShort();
+            getOrCreateDebugLabel(labelOffset);
 
-   private void readInstructionWithImplicitVariable(int opcode) {
-      int opcodeBase;
+            codeIndex += 6;
+        }
+    }
 
-      if (opcode > ISTORE) {
-         opcode -= ISTORE_0;
-         opcodeBase = ISTORE;
-      }
-      else {
-         opcode -= ILOAD_0;
-         opcodeBase = ILOAD;
-      }
+    @Nonnull
+    private Label getOrCreateDebugLabel(@Nonnegative int offset) {
+        Label label = labels[offset];
 
-      int localVarOpcode = opcodeBase + (opcode >> 2);
-      int varIndex = opcode & 3;
+        if (label == null) {
+            label = new Label();
+            label.markAsDebug();
+            labels[offset] = label;
+        }
 
-      mv.visitVarInsn(localVarOpcode, varIndex);
-   }
+        return label;
+    }
 
-   private void readTypeInsn(int opcode) {
-      String typeDesc = readNonnullClass();
-      mv.visitTypeInsn(opcode, typeDesc);
-   }
+    @Nonnull
+    private int[] readLocalVariableTypeTable() {
+        int typeTableSize = 3 * readUnsignedShort();
+        int[] typeTable = new int[typeTableSize];
 
-   private void readJump(int opcode, @Nonnegative int offset) {
-      short targetIndex = readShort();
-      Label targetLabel = labels[offset + targetIndex];
-      mv.visitJumpInsn(opcode, targetLabel);
-   }
+        while (typeTableSize > 0) {
+            int startIndex = readUnsignedShort();
+            int signatureCodeIndex = codeIndex + 4;
+            codeIndex += 6;
+            int varIndex = readUnsignedShort();
 
-   private void readWideJump(int opcode, @Nonnegative int offset) {
-      int targetIndex = readInt();
-      Label targetLabel = labels[offset + targetIndex];
-      mv.visitJumpInsn(opcode - 33, targetLabel);
-   }
+            typeTable[--typeTableSize] = signatureCodeIndex;
+            typeTable[--typeTableSize] = varIndex;
+            typeTable[--typeTableSize] = startIndex;
+        }
 
-   private void readLDC() {
-      int constIndex = readUnsignedByte();
-      Object cst = readConst(constIndex);
-      mv.visitLdcInsn(cst);
-   }
+        return typeTable;
+    }
 
-   private void readLDCW() {
-      Object cst = readConstItem();
-      mv.visitLdcInsn(cst);
-   }
+    private void readLineNumberTable() {
+        for (int lineCount = readUnsignedShort(); lineCount > 0; lineCount--) {
+            int labelOffset = readUnsignedShort();
+            Label debugLabel = getOrCreateDebugLabel(labelOffset);
+            debugLabel.line = readUnsignedShort();
+        }
+    }
 
-   private void readIInc() {
-      int varIndex = readUnsignedByte();
-      int increment = readSignedByte();
-      mv.visitIincInsn(varIndex, increment);
-   }
+    @SuppressWarnings({ "OverlyComplexMethod", "OverlyLongMethod" })
+    private void readBytecodeInstructionsInCodeBlock(@Nonnegative int codeStartIndex, @Nonnegative int codeEndIndex) {
+        codeIndex = codeStartIndex;
 
-   private void readInstructionTakingASignedByte(int opcode) {
-      int operand = readSignedByte();
-      mv.visitIntInsn(opcode, operand);
-   }
+        while (codeIndex < codeEndIndex) {
+            int offset = codeIndex - codeStartIndex;
+            visitLabelAndLineNumber(offset);
 
-   private void readInstructionTakingASignedShort(int opcode) {
-      int operand = readShort();
-      mv.visitIntInsn(opcode, operand);
-   }
+            int opcode = readUnsignedByte();
 
-   private void readSwitchInstruction(@Nonnegative int offset, boolean tableNotLookup) {
-      Label dfltLabel = readSwitchDefaultLabel(offset);
-      int min;
-      int max;
-      int caseCount;
-      int[] keys;
+            // noinspection SwitchStatementWithoutDefaultBranch
+            switch (JVMInstruction.TYPE[opcode]) {
+                case NOARG:
+                    mv.visitInsn(opcode);
+                    break;
+                case VAR:
+                    readVariableAccessInstruction(opcode);
+                    break;
+                case IMPLVAR:
+                    readInstructionWithImplicitVariable(opcode);
+                    break;
+                case TYPE_INSN:
+                    readTypeInsn(opcode);
+                    break;
+                case LABEL:
+                    readJump(opcode, offset);
+                    break;
+                case LABELW:
+                    readWideJump(opcode, offset);
+                    break;
+                case LDC_INSN:
+                    readLDC();
+                    break;
+                case LDCW_INSN:
+                    readLDCW();
+                    break;
+                case IINC_INSN:
+                    readIInc();
+                    break;
+                case SBYTE:
+                    readInstructionTakingASignedByte(opcode);
+                    break;
+                case SHORT:
+                    readInstructionTakingASignedShort(opcode);
+                    break;
+                case TABL_INSN:
+                    readSwitchInstruction(offset, true);
+                    break;
+                case LOOK_INSN:
+                    readSwitchInstruction(offset, false);
+                    break;
+                case MANA_INSN:
+                    readMultiANewArray();
+                    break;
+                case WIDE_INSN:
+                    readWideInstruction();
+                    break;
+                case FIELDORMETH:
+                case ITFMETH:
+                    readFieldOrInvokeInstruction(opcode);
+                    break;
+                case INDYMETH:
+                    readInvokeDynamicInstruction();
+                    break;
+            }
+        }
+    }
 
-      if (tableNotLookup) {
-         min = readInt();
-         max = readInt();
-         caseCount = max - min + 1;
-         keys = null;
-      }
-      else {
-         min = max = 0;
-         caseCount = readInt();
-         keys = new int[caseCount];
-      }
+    private void visitLabelAndLineNumber(@Nonnegative int offset) {
+        Label label = labels[offset];
 
-      Label[] handlerLabels = readSwitchCaseLabels(offset, caseCount, keys);
+        if (label != null) {
+            mv.visitLabel(label);
 
-      if (tableNotLookup) {
-         mv.visitTableSwitchInsn(min, max, dfltLabel, handlerLabels);
-      }
-      else {
-         mv.visitLookupSwitchInsn(dfltLabel, keys, handlerLabels);
-      }
-   }
+            int lineNumber = label.line;
 
-   @Nonnull
-   private Label[] readSwitchCaseLabels(@Nonnegative int offset, @Nonnegative int caseCount, @Nullable int[] keys) {
-      Label[] caseLabels = new Label[caseCount];
+            if (lineNumber > 0) {
+                mv.visitLineNumber(lineNumber, label);
+            }
+        }
+    }
 
-      for (int i = 0; i < caseCount; i++) {
-         if (keys != null) {
-            keys[i] = readInt();
-         }
+    private void readVariableAccessInstruction(int opcode) {
+        int varIndex = readUnsignedByte();
+        mv.visitVarInsn(opcode, varIndex);
+    }
 
-         int labelOffset = offset + readInt();
-         caseLabels[i] = labels[labelOffset];
-      }
+    private void readInstructionWithImplicitVariable(int opcode) {
+        int opcodeBase;
 
-      return caseLabels;
-   }
+        if (opcode > ISTORE) {
+            opcode -= ISTORE_0;
+            opcodeBase = ISTORE;
+        } else {
+            opcode -= ILOAD_0;
+            opcodeBase = ILOAD;
+        }
 
-   private void readMultiANewArray() {
-      String arrayTypeDesc = readNonnullClass();
-      int dims = readUnsignedByte();
-      mv.visitMultiANewArrayInsn(arrayTypeDesc, dims);
-   }
+        int localVarOpcode = opcodeBase + (opcode >> 2);
+        int varIndex = opcode & 3;
 
-   private void readWideInstruction() {
-      int opcode = readUnsignedByte();
-      int varIndex = readUnsignedShort();
+        mv.visitVarInsn(localVarOpcode, varIndex);
+    }
 
-      if (opcode == IINC) {
-         int increment = readShort();
-         mv.visitIincInsn(varIndex, increment);
-      }
-      else {
-         mv.visitVarInsn(opcode, varIndex);
-         codeIndex += 2;
-      }
-   }
+    private void readTypeInsn(int opcode) {
+        String typeDesc = readNonnullClass();
+        mv.visitTypeInsn(opcode, typeDesc);
+    }
 
-   private void readFieldOrInvokeInstruction(int opcode) {
-      int ownerCodeIndex = readItem();
-      String owner = readNonnullClass(ownerCodeIndex);
-      int nameCodeIndex = readItem(ownerCodeIndex + 2);
-      String memberName = readNonnullUTF8(nameCodeIndex);
-      String memberDesc = readNonnullUTF8(nameCodeIndex + 2);
+    private void readJump(int opcode, @Nonnegative int offset) {
+        short targetIndex = readShort();
+        Label targetLabel = labels[offset + targetIndex];
+        mv.visitJumpInsn(opcode, targetLabel);
+    }
 
-      if (opcode < INVOKEVIRTUAL) {
-         mv.visitFieldInsn(opcode, owner, memberName, memberDesc);
-      }
-      else {
-         boolean itf = code[ownerCodeIndex - 1] == ConstantPoolTypes.IMETHOD_REF;
-         mv.visitMethodInsn(opcode, owner, memberName, memberDesc, itf);
+    private void readWideJump(int opcode, @Nonnegative int offset) {
+        int targetIndex = readInt();
+        Label targetLabel = labels[offset + targetIndex];
+        mv.visitJumpInsn(opcode - 33, targetLabel);
+    }
 
-         if (opcode == INVOKEINTERFACE) {
+    private void readLDC() {
+        int constIndex = readUnsignedByte();
+        Object cst = readConst(constIndex);
+        mv.visitLdcInsn(cst);
+    }
+
+    private void readLDCW() {
+        Object cst = readConstItem();
+        mv.visitLdcInsn(cst);
+    }
+
+    private void readIInc() {
+        int varIndex = readUnsignedByte();
+        int increment = readSignedByte();
+        mv.visitIincInsn(varIndex, increment);
+    }
+
+    private void readInstructionTakingASignedByte(int opcode) {
+        int operand = readSignedByte();
+        mv.visitIntInsn(opcode, operand);
+    }
+
+    private void readInstructionTakingASignedShort(int opcode) {
+        int operand = readShort();
+        mv.visitIntInsn(opcode, operand);
+    }
+
+    private void readSwitchInstruction(@Nonnegative int offset, boolean tableNotLookup) {
+        Label dfltLabel = readSwitchDefaultLabel(offset);
+        int min;
+        int max;
+        int caseCount;
+        int[] keys;
+
+        if (tableNotLookup) {
+            min = readInt();
+            max = readInt();
+            caseCount = max - min + 1;
+            keys = null;
+        } else {
+            min = max = 0;
+            caseCount = readInt();
+            keys = new int[caseCount];
+        }
+
+        Label[] handlerLabels = readSwitchCaseLabels(offset, caseCount, keys);
+
+        if (tableNotLookup) {
+            mv.visitTableSwitchInsn(min, max, dfltLabel, handlerLabels);
+        } else {
+            mv.visitLookupSwitchInsn(dfltLabel, keys, handlerLabels);
+        }
+    }
+
+    @Nonnull
+    private Label[] readSwitchCaseLabels(@Nonnegative int offset, @Nonnegative int caseCount, @Nullable int[] keys) {
+        Label[] caseLabels = new Label[caseCount];
+
+        for (int i = 0; i < caseCount; i++) {
+            if (keys != null) {
+                keys[i] = readInt();
+            }
+
+            int labelOffset = offset + readInt();
+            caseLabels[i] = labels[labelOffset];
+        }
+
+        return caseLabels;
+    }
+
+    private void readMultiANewArray() {
+        String arrayTypeDesc = readNonnullClass();
+        int dims = readUnsignedByte();
+        mv.visitMultiANewArrayInsn(arrayTypeDesc, dims);
+    }
+
+    private void readWideInstruction() {
+        int opcode = readUnsignedByte();
+        int varIndex = readUnsignedShort();
+
+        if (opcode == IINC) {
+            int increment = readShort();
+            mv.visitIincInsn(varIndex, increment);
+        } else {
+            mv.visitVarInsn(opcode, varIndex);
             codeIndex += 2;
-         }
-      }
-   }
+        }
+    }
 
-   private void readInvokeDynamicInstruction() {
-      int cpIndex = readItem();
-      int bsmStartIndex = readUnsignedShort(cpIndex);
-      int nameCodeIndex = readItem(cpIndex + 2);
+    private void readFieldOrInvokeInstruction(int opcode) {
+        int ownerCodeIndex = readItem();
+        String owner = readNonnullClass(ownerCodeIndex);
+        int nameCodeIndex = readItem(ownerCodeIndex + 2);
+        String memberName = readNonnullUTF8(nameCodeIndex);
+        String memberDesc = readNonnullUTF8(nameCodeIndex + 2);
 
-      String bsmName = readNonnullUTF8(nameCodeIndex);
-      String bsmDesc = readNonnullUTF8(nameCodeIndex + 2);
+        if (opcode < INVOKEVIRTUAL) {
+            mv.visitFieldInsn(opcode, owner, memberName, memberDesc);
+        } else {
+            boolean itf = code[ownerCodeIndex - 1] == ConstantPoolTypes.IMETHOD_REF;
+            mv.visitMethodInsn(opcode, owner, memberName, memberDesc, itf);
 
-      int bsmCodeIndex = cr.getBSMCodeIndex(bsmStartIndex);
-      MethodHandle bsmHandle = readMethodHandleItem(bsmCodeIndex);
-      int bsmArgCount = readUnsignedShort(bsmCodeIndex + 2);
-      bsmCodeIndex += 4;
-      Object[] bsmArgs = new Object[bsmArgCount];
+            if (opcode == INVOKEINTERFACE) {
+                codeIndex += 2;
+            }
+        }
+    }
 
-      for (int i = 0; i < bsmArgCount; i++) {
-         bsmArgs[i] = readConstItem(bsmCodeIndex);
-         bsmCodeIndex += 2;
-      }
+    private void readInvokeDynamicInstruction() {
+        int cpIndex = readItem();
+        int bsmStartIndex = readUnsignedShort(cpIndex);
+        int nameCodeIndex = readItem(cpIndex + 2);
 
-      mv.visitInvokeDynamicInsn(bsmName, bsmDesc, bsmHandle, bsmArgs);
-      codeIndex += 2;
-   }
+        String bsmName = readNonnullUTF8(nameCodeIndex);
+        String bsmDesc = readNonnullUTF8(nameCodeIndex + 2);
 
-   private void visitEndLabel(@Nonnegative int codeLength) {
-      Label label = labels[codeLength];
+        int bsmCodeIndex = cr.getBSMCodeIndex(bsmStartIndex);
+        MethodHandle bsmHandle = readMethodHandleItem(bsmCodeIndex);
+        int bsmArgCount = readUnsignedShort(bsmCodeIndex + 2);
+        bsmCodeIndex += 4;
+        Object[] bsmArgs = new Object[bsmArgCount];
 
-      if (label != null) {
-         mv.visitLabel(label);
-      }
-   }
+        for (int i = 0; i < bsmArgCount; i++) {
+            bsmArgs[i] = readConstItem(bsmCodeIndex);
+            bsmCodeIndex += 2;
+        }
 
-   private void readLocalVariableTables(@Nonnegative int varTableCodeIndex, @Nullable int[] typeTable) {
-      if (varTableCodeIndex > 0) {
-         codeIndex = varTableCodeIndex;
+        mv.visitInvokeDynamicInsn(bsmName, bsmDesc, bsmHandle, bsmArgs);
+        codeIndex += 2;
+    }
 
-         for (int localVarCount = readUnsignedShort(); localVarCount > 0; localVarCount--) {
-            int start  = readUnsignedShort();
-            int length = readUnsignedShort();
-            String varName = readNonnullUTF8();
-            String varDesc = readNonnullUTF8();
-            int index  = readUnsignedShort();
-            String varSignature = typeTable == null ? null : getLocalVariableSignature(typeTable, start, index);
+    private void visitEndLabel(@Nonnegative int codeLength) {
+        Label label = labels[codeLength];
 
-            mv.visitLocalVariable(varName, varDesc, varSignature, labels[start], labels[start + length], index);
-         }
-      }
-   }
+        if (label != null) {
+            mv.visitLabel(label);
+        }
+    }
 
-   @Nullable
-   private String getLocalVariableSignature(@Nonnull int[] typeTable, @Nonnegative int start, @Nonnegative int index) {
-      for (int i = 0, n = typeTable.length; i < n; i += 3) {
-         if (typeTable[i] == start && typeTable[i + 1] == index) {
-            String varSignature = readNonnullUTF8(typeTable[i + 2]);
-            return varSignature;
-         }
-      }
+    private void readLocalVariableTables(@Nonnegative int varTableCodeIndex, @Nullable int[] typeTable) {
+        if (varTableCodeIndex > 0) {
+            codeIndex = varTableCodeIndex;
 
-      return null;
-   }
+            for (int localVarCount = readUnsignedShort(); localVarCount > 0; localVarCount--) {
+                int start = readUnsignedShort();
+                int length = readUnsignedShort();
+                String varName = readNonnullUTF8();
+                String varDesc = readNonnullUTF8();
+                int index = readUnsignedShort();
+                String varSignature = typeTable == null ? null : getLocalVariableSignature(typeTable, start, index);
+
+                mv.visitLocalVariable(varName, varDesc, varSignature, labels[start], labels[start + length], index);
+            }
+        }
+    }
+
+    @Nullable
+    private String getLocalVariableSignature(@Nonnull int[] typeTable, @Nonnegative int start, @Nonnegative int index) {
+        for (int i = 0, n = typeTable.length; i < n; i += 3) {
+            if (typeTable[i] == start && typeTable[i + 1] == index) {
+                String varSignature = readNonnullUTF8(typeTable[i + 2]);
+                return varSignature;
+            }
+        }
+
+        return null;
+    }
 }

@@ -4,210 +4,220 @@
  */
 package mockit.internal.injection;
 
+import static mockit.internal.injection.InjectionPoint.INJECT_CLASS;
+import static mockit.internal.util.Utilities.getClassType;
+
 import java.lang.reflect.*;
 import java.util.*;
+
 import javax.annotation.*;
 import javax.inject.*;
 
 import mockit.internal.injection.InjectionPoint.*;
 import mockit.internal.reflection.*;
-import static mockit.internal.injection.InjectionPoint.INJECT_CLASS;
-import static mockit.internal.util.Utilities.getClassType;
 
-public final class InjectionProviders
-{
-   @Nonnull private List<InjectionProvider> injectables;
-   @Nonnull private List<InjectionProvider> consumedInjectionProviders;
-   private Type typeOfInjectionPoint;
-   private KindOfInjectionPoint kindOfInjectionPoint;
+public final class InjectionProviders {
+    @Nonnull
+    private List<InjectionProvider> injectables;
+    @Nonnull
+    private List<InjectionProvider> consumedInjectionProviders;
+    private Type typeOfInjectionPoint;
+    private KindOfInjectionPoint kindOfInjectionPoint;
 
-   InjectionProviders(@Nonnull LifecycleMethods lifecycleMethods) {
-      injectables = Collections.emptyList();
-      consumedInjectionProviders = new ArrayList<>();
-   }
+    InjectionProviders(@Nonnull LifecycleMethods lifecycleMethods) {
+        injectables = Collections.emptyList();
+        consumedInjectionProviders = new ArrayList<>();
+    }
 
-   boolean setInjectables(@SuppressWarnings("ParameterHidesMemberVariable") @Nonnull List<? extends InjectionProvider> injectables) {
-      if (injectables.isEmpty()) {
-         this.injectables = Collections.emptyList();
-         return false;
-      }
+    boolean setInjectables(
+            @SuppressWarnings("ParameterHidesMemberVariable") @Nonnull List<? extends InjectionProvider> injectables) {
+        if (injectables.isEmpty()) {
+            this.injectables = Collections.emptyList();
+            return false;
+        }
 
-      this.injectables = new ArrayList<>(injectables);
-      return true;
-   }
+        this.injectables = new ArrayList<>(injectables);
+        return true;
+    }
 
-   @Nonnull
-   List<InjectionProvider> addInjectables(@Nonnull List<? extends InjectionProvider> injectablesToAdd) {
-      if (!injectablesToAdd.isEmpty()) {
-         if (injectables.isEmpty()) {
-            injectables = new ArrayList<>(injectablesToAdd);
-         }
-         else {
-            injectables.addAll(injectablesToAdd);
-         }
-      }
+    @Nonnull
+    List<InjectionProvider> addInjectables(@Nonnull List<? extends InjectionProvider> injectablesToAdd) {
+        if (!injectablesToAdd.isEmpty()) {
+            if (injectables.isEmpty()) {
+                injectables = new ArrayList<>(injectablesToAdd);
+            } else {
+                injectables.addAll(injectablesToAdd);
+            }
+        }
 
-      return injectables;
-   }
+        return injectables;
+    }
 
-   public void setTypeOfInjectionPoint(@Nonnull Type typeOfInjectionPoint, @Nonnull KindOfInjectionPoint kindOfInjectionPoint) {
-      this.typeOfInjectionPoint = typeOfInjectionPoint;
-      this.kindOfInjectionPoint = kindOfInjectionPoint;
-   }
+    public void setTypeOfInjectionPoint(@Nonnull Type typeOfInjectionPoint,
+            @Nonnull KindOfInjectionPoint kindOfInjectionPoint) {
+        this.typeOfInjectionPoint = typeOfInjectionPoint;
+        this.kindOfInjectionPoint = kindOfInjectionPoint;
+    }
 
-   @Nullable
-   public InjectionProvider getProviderByTypeAndOptionallyName(@Nonnull String nameOfInjectionPoint, @Nonnull TestedClass testedClass) {
-      if (kindOfInjectionPoint == KindOfInjectionPoint.Required) {
-         Type elementTypeOfIterable = getElementTypeIfIterable(typeOfInjectionPoint);
+    @Nullable
+    public InjectionProvider getProviderByTypeAndOptionallyName(@Nonnull String nameOfInjectionPoint,
+            @Nonnull TestedClass testedClass) {
+        if (kindOfInjectionPoint == KindOfInjectionPoint.Required) {
+            Type elementTypeOfIterable = getElementTypeIfIterable(typeOfInjectionPoint);
 
-         if (elementTypeOfIterable != null) {
-            return findInjectablesByTypeOnly(elementTypeOfIterable, testedClass);
-         }
-      }
+            if (elementTypeOfIterable != null) {
+                return findInjectablesByTypeOnly(elementTypeOfIterable, testedClass);
+            }
+        }
 
-      return findInjectableByTypeAndOptionallyName(nameOfInjectionPoint, testedClass);
-   }
+        return findInjectableByTypeAndOptionallyName(nameOfInjectionPoint, testedClass);
+    }
 
-   @Nullable
-   private static Type getElementTypeIfIterable(@Nonnull Type injectableType) {
-      if (injectableType instanceof ParameterizedType) {
-         ParameterizedType parameterizedType = (ParameterizedType) injectableType;
-         Class<?> classOfInjectionPoint = (Class<?>) parameterizedType.getRawType();
+    @Nullable
+    private static Type getElementTypeIfIterable(@Nonnull Type injectableType) {
+        if (injectableType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) injectableType;
+            Class<?> classOfInjectionPoint = (Class<?>) parameterizedType.getRawType();
 
-         if (Iterable.class.isAssignableFrom(classOfInjectionPoint)) {
-            return parameterizedType.getActualTypeArguments()[0];
-         }
-      }
+            if (Iterable.class.isAssignableFrom(classOfInjectionPoint)) {
+                return parameterizedType.getActualTypeArguments()[0];
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   @Nullable
-   public InjectionProvider findNextInjectableForInjectionPoint(@Nonnull TestedClass testedClass) {
-      for (InjectionProvider injectable : injectables) {
-         if (hasTypeAssignableToInjectionPoint(injectable, testedClass) && !consumedInjectionProviders.contains(injectable)) {
-            return injectable;
-         }
-      }
+    @Nullable
+    public InjectionProvider findNextInjectableForInjectionPoint(@Nonnull TestedClass testedClass) {
+        for (InjectionProvider injectable : injectables) {
+            if (hasTypeAssignableToInjectionPoint(injectable, testedClass)
+                    && !consumedInjectionProviders.contains(injectable)) {
+                return injectable;
+            }
+        }
 
-      return null;
-   }
+        return null;
+    }
 
-   private boolean hasTypeAssignableToInjectionPoint(@Nonnull InjectionProvider injectable, @Nonnull TestedClass testedClass) {
-      Type declaredType = injectable.getDeclaredType();
-      return isAssignableToInjectionPoint(declaredType, testedClass);
-   }
+    private boolean hasTypeAssignableToInjectionPoint(@Nonnull InjectionProvider injectable,
+            @Nonnull TestedClass testedClass) {
+        Type declaredType = injectable.getDeclaredType();
+        return isAssignableToInjectionPoint(declaredType, testedClass);
+    }
 
-   boolean isAssignableToInjectionPoint(@Nonnull Type injectableType, @Nonnull TestedClass testedClass) {
-      if (testedClass.reflection.areMatchingTypes(typeOfInjectionPoint, injectableType)) {
-         return true;
-      }
+    boolean isAssignableToInjectionPoint(@Nonnull Type injectableType, @Nonnull TestedClass testedClass) {
+        if (testedClass.reflection.areMatchingTypes(typeOfInjectionPoint, injectableType)) {
+            return true;
+        }
 
-      if (typeOfInjectionPoint instanceof ParameterizedType) {
-         ParameterizedType parameterizedType = (ParameterizedType) typeOfInjectionPoint;
-         Class<?> classOfInjectionPoint = (Class<?>) parameterizedType.getRawType();
+        if (typeOfInjectionPoint instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) typeOfInjectionPoint;
+            Class<?> classOfInjectionPoint = (Class<?>) parameterizedType.getRawType();
 
-         if (
-            kindOfInjectionPoint == KindOfInjectionPoint.Required && Iterable.class.isAssignableFrom(classOfInjectionPoint) ||
-            INJECT_CLASS != null && Provider.class.isAssignableFrom(classOfInjectionPoint)
-         ) {
-            Type providedType = parameterizedType.getActualTypeArguments()[0];
+            if (kindOfInjectionPoint == KindOfInjectionPoint.Required
+                    && Iterable.class.isAssignableFrom(classOfInjectionPoint)
+                    || INJECT_CLASS != null && Provider.class.isAssignableFrom(classOfInjectionPoint)) {
+                Type providedType = parameterizedType.getActualTypeArguments()[0];
 
-            if (providedType.equals(injectableType)) {
-               return true;
+                if (providedType.equals(injectableType)) {
+                    return true;
+                }
+
+                Class<?> injectableClass = getClassType(injectableType);
+                Class<?> providedClass = getClassType(providedType);
+
+                return providedClass.isAssignableFrom(injectableClass);
+            }
+        }
+
+        return false;
+    }
+
+    @Nullable
+    private InjectionProvider findInjectablesByTypeOnly(@Nonnull Type elementType, @Nonnull TestedClass testedClass) {
+        GenericTypeReflection typeReflection = testedClass.reflection;
+        MultiValuedProvider found = null;
+
+        for (InjectionProvider injectable : injectables) {
+            Type injectableType = injectable.getDeclaredType();
+            Type elementTypeOfIterable = getElementTypeIfIterable(injectableType);
+
+            if (elementTypeOfIterable != null && typeReflection.areMatchingTypes(elementType, elementTypeOfIterable)) {
+                return injectable;
             }
 
-            Class<?> injectableClass = getClassType(injectableType);
-            Class<?> providedClass = getClassType(providedType);
+            if (isAssignableToInjectionPoint(injectableType, testedClass)) {
+                if (found == null) {
+                    found = new MultiValuedProvider(elementType);
+                }
 
-            return providedClass.isAssignableFrom(injectableClass);
-         }
-      }
-
-      return false;
-   }
-
-   @Nullable
-   private InjectionProvider findInjectablesByTypeOnly(@Nonnull Type elementType, @Nonnull TestedClass testedClass) {
-      GenericTypeReflection typeReflection = testedClass.reflection;
-      MultiValuedProvider found = null;
-
-      for (InjectionProvider injectable : injectables) {
-         Type injectableType = injectable.getDeclaredType();
-         Type elementTypeOfIterable = getElementTypeIfIterable(injectableType);
-
-         if (elementTypeOfIterable != null && typeReflection.areMatchingTypes(elementType, elementTypeOfIterable)) {
-            return injectable;
-         }
-
-         if (isAssignableToInjectionPoint(injectableType, testedClass)) {
-            if (found == null) {
-               found = new MultiValuedProvider(elementType);
+                found.addInjectable(injectable);
             }
+        }
 
-            found.addInjectable(injectable);
-         }
-      }
+        return found;
+    }
 
-      return found;
-   }
+    @Nullable
+    private InjectionProvider findInjectableByTypeAndOptionallyName(@Nonnull String nameOfInjectionPoint,
+            @Nonnull TestedClass testedClass) {
+        InjectionProvider foundInjectable = null;
 
-   @Nullable
-   private InjectionProvider findInjectableByTypeAndOptionallyName(@Nonnull String nameOfInjectionPoint, @Nonnull TestedClass testedClass) {
-      InjectionProvider foundInjectable = null;
+        for (InjectionProvider injectable : injectables) {
+            if (hasTypeAssignableToInjectionPoint(injectable, testedClass)) {
+                if (nameOfInjectionPoint.equals(injectable.getName())) {
+                    return injectable;
+                }
 
-      for (InjectionProvider injectable : injectables) {
-         if (hasTypeAssignableToInjectionPoint(injectable, testedClass)) {
-            if (nameOfInjectionPoint.equals(injectable.getName())) {
-               return injectable;
+                if (foundInjectable == null) {
+                    foundInjectable = injectable;
+                }
             }
+        }
 
-            if (foundInjectable == null) {
-               foundInjectable = injectable;
+        return foundInjectable;
+    }
+
+    @Nullable
+    InjectionProvider findInjectableByTypeAndName(@Nonnull String nameOfInjectionPoint,
+            @Nonnull TestedClass testedClass) {
+        for (InjectionProvider injectable : injectables) {
+            if (hasTypeAssignableToInjectionPoint(injectable, testedClass)
+                    && nameOfInjectionPoint.equals(injectable.getName())) {
+                return injectable;
             }
-         }
-      }
+        }
 
-      return foundInjectable;
-   }
+        return null;
+    }
 
-   @Nullable
-   InjectionProvider findInjectableByTypeAndName(@Nonnull String nameOfInjectionPoint, @Nonnull TestedClass testedClass) {
-      for (InjectionProvider injectable : injectables) {
-         if (hasTypeAssignableToInjectionPoint(injectable, testedClass) && nameOfInjectionPoint.equals(injectable.getName())) {
-            return injectable;
-         }
-      }
+    @Nullable
+    Object getValueToInject(@Nonnull InjectionProvider injectionProvider, @Nullable Object currentTestClassInstance) {
+        if (consumedInjectionProviders.contains(injectionProvider)) {
+            return null;
+        }
 
-      return null;
-   }
+        Object value = injectionProvider.getValue(currentTestClassInstance);
 
-   @Nullable
-   Object getValueToInject(@Nonnull InjectionProvider injectionProvider, @Nullable Object currentTestClassInstance) {
-      if (consumedInjectionProviders.contains(injectionProvider)) {
-         return null;
-      }
+        if (value != null) {
+            consumedInjectionProviders.add(injectionProvider);
+        }
 
-      Object value = injectionProvider.getValue(currentTestClassInstance);
+        return value;
+    }
 
-      if (value != null) {
-         consumedInjectionProviders.add(injectionProvider);
-      }
+    void resetConsumedInjectionProviders() {
+        consumedInjectionProviders.clear();
+    }
 
-      return value;
-   }
+    @Nonnull
+    public List<InjectionProvider> saveConsumedInjectionProviders() {
+        List<InjectionProvider> previouslyConsumed = consumedInjectionProviders;
+        consumedInjectionProviders = new ArrayList<>();
+        return previouslyConsumed;
+    }
 
-
-   void resetConsumedInjectionProviders() { consumedInjectionProviders.clear(); }
-
-   @Nonnull
-   public List<InjectionProvider> saveConsumedInjectionProviders() {
-      List<InjectionProvider> previouslyConsumed = consumedInjectionProviders;
-      consumedInjectionProviders = new ArrayList<>();
-      return previouslyConsumed;
-   }
-
-   public void restoreConsumedInjectionProviders(@Nonnull List<InjectionProvider> previouslyConsumed) {
-      consumedInjectionProviders = previouslyConsumed;
-   }
+    public void restoreConsumedInjectionProviders(@Nonnull List<InjectionProvider> previouslyConsumed) {
+        consumedInjectionProviders = previouslyConsumed;
+    }
 }

@@ -1,357 +1,419 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
 import org.junit.*;
 
-import static org.junit.Assert.*;
-
 /**
  * The Class FakeClassInstantiationPerSetupTest.
  */
-public final class FakeClassInstantiationPerSetupTest
-{
-   
-   /**
-    * The Class RealClass1.
-    */
-   public static final class RealClass1 {
-      
-      /**
-       * Do something.
-       */
-      public static void doSomething() { throw new RuntimeException(); }
-      
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      public int performComputation(int a, boolean b) { return b ? a : -a; }
-   }
+public final class FakeClassInstantiationPerSetupTest {
 
-   /**
-    * The Class RealClass2.
-    */
-   public static final class RealClass2 {
-      
-      /**
-       * Do something.
-       */
-      public static void doSomething() { throw new RuntimeException(); }
-      
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      public int performComputation(int a, boolean b) { return b ? a : -a; }
-   }
+    /**
+     * The Class RealClass1.
+     */
+    public static final class RealClass1 {
 
-   /**
-    * The Class RealClass3.
-    */
-   public static final class RealClass3 {
-      
-      /**
-       * Do something.
-       */
-      public static void doSomething() { throw new RuntimeException(); }
-      
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      public int performComputation(int a, boolean b) { return b ? a : -a; }
-   }
+        /**
+         * Do something.
+         */
+        public static void doSomething() {
+            throw new RuntimeException();
+        }
 
-   /**
-    * The Class RealClass4.
-    */
-   public static final class RealClass4 {
-      
-      /**
-       * Do something.
-       */
-      public static void doSomething() { throw new RuntimeException(); }
-      
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      public int performComputation(int a, boolean b) { return b ? a : -a; }
-   }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        public int performComputation(int a, boolean b) {
+            return b ? a : -a;
+        }
+    }
 
-   /**
-    * The Class FakeClass1.
-    */
-   static final class FakeClass1 extends MockUp<RealClass1> {
-      
-      /** The single instance created. */
-      static Object singleInstanceCreated;
+    /**
+     * The Class RealClass2.
+     */
+    public static final class RealClass2 {
 
-      /**
-       * Instantiates a new fake class 1.
-       */
-      FakeClass1() {
-         assertNull(singleInstanceCreated);
-         singleInstanceCreated = this;
-      }
+        /**
+         * Do something.
+         */
+        public static void doSomething() {
+            throw new RuntimeException();
+        }
 
-      /**
-       * Do something.
-       */
-      @Mock void doSomething() { assertSame(singleInstanceCreated, this); }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        public int performComputation(int a, boolean b) {
+            return b ? a : -a;
+        }
+    }
 
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      @Mock
-      int performComputation(int a, boolean b) {
-         assertSame(singleInstanceCreated, this);
-         assertTrue(a > 0); assertTrue(b); return 2;
-      }
-   }
+    /**
+     * The Class RealClass3.
+     */
+    public static final class RealClass3 {
 
-   /**
-    * The Class FakeClass2.
-    */
-   static final class FakeClass2 extends MockUp<RealClass2> {
-      
-      /** The single instance created. */
-      static Object singleInstanceCreated;
+        /**
+         * Do something.
+         */
+        public static void doSomething() {
+            throw new RuntimeException();
+        }
 
-      /**
-       * Instantiates a new fake class 2.
-       */
-      FakeClass2() {
-         assertNull(singleInstanceCreated);
-         singleInstanceCreated = this;
-      }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        public int performComputation(int a, boolean b) {
+            return b ? a : -a;
+        }
+    }
 
-      /**
-       * Do something.
-       */
-      @Mock void doSomething() { assertSame(singleInstanceCreated, this); }
+    /**
+     * The Class RealClass4.
+     */
+    public static final class RealClass4 {
 
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      @Mock
-      int performComputation(int a, boolean b) {
-         assertSame(singleInstanceCreated, this);
-         assertTrue(a > 0); assertTrue(b); return 2;
-      }
-   }
+        /**
+         * Do something.
+         */
+        public static void doSomething() {
+            throw new RuntimeException();
+        }
 
-   /**
-    * The Class FakeClass3.
-    */
-   static final class FakeClass3 extends MockUp<RealClass3> {
-      
-      /** The single instance created. */
-      static Object singleInstanceCreated;
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        public int performComputation(int a, boolean b) {
+            return b ? a : -a;
+        }
+    }
 
-      /**
-       * Instantiates a new fake class 3.
-       */
-      FakeClass3() {
-         assertNull(singleInstanceCreated);
-         singleInstanceCreated = this;
-      }
+    /**
+     * The Class FakeClass1.
+     */
+    static final class FakeClass1 extends MockUp<RealClass1> {
 
-      /**
-       * Do something.
-       */
-      @Mock void doSomething() { assertSame(singleInstanceCreated, this); }
+        /** The single instance created. */
+        static Object singleInstanceCreated;
 
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      @Mock
-      int performComputation(int a, boolean b) {
-         assertSame(singleInstanceCreated, this);
-         assertTrue(a > 0); assertTrue(b); return 2;
-      }
-   }
+        /**
+         * Instantiates a new fake class 1.
+         */
+        FakeClass1() {
+            assertNull(singleInstanceCreated);
+            singleInstanceCreated = this;
+        }
 
-   /**
-    * The Class FakeClass4.
-    */
-   static final class FakeClass4 extends MockUp<RealClass4> {
-      
-      /** The single instance created. */
-      static Object singleInstanceCreated;
+        /**
+         * Do something.
+         */
+        @Mock
+        void doSomething() {
+            assertSame(singleInstanceCreated, this);
+        }
 
-      /**
-       * Instantiates a new fake class 4.
-       */
-      FakeClass4() {
-         assertNull(singleInstanceCreated);
-         singleInstanceCreated = this;
-      }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        @Mock
+        int performComputation(int a, boolean b) {
+            assertSame(singleInstanceCreated, this);
+            assertTrue(a > 0);
+            assertTrue(b);
+            return 2;
+        }
+    }
 
-      /**
-       * Do something.
-       */
-      @Mock void doSomething() { assertSame(singleInstanceCreated, this); }
+    /**
+     * The Class FakeClass2.
+     */
+    static final class FakeClass2 extends MockUp<RealClass2> {
 
-      /**
-       * Perform computation.
-       *
-       * @param a the a
-       * @param b the b
-       * @return the int
-       */
-      @Mock
-      int performComputation(int a, boolean b) {
-         assertSame(singleInstanceCreated, this);
-         assertTrue(a > 0);
-         assertTrue(b);
-         return 2;
-      }
-   }
+        /** The single instance created. */
+        static Object singleInstanceCreated;
 
-   /**
-    * Sets the up class level fakes.
-    */
-   @BeforeClass
-   public static void setUpClassLevelFakes() {
-      new FakeClass1();
-   }
+        /**
+         * Instantiates a new fake class 2.
+         */
+        FakeClass2() {
+            assertNull(singleInstanceCreated);
+            singleInstanceCreated = this;
+        }
 
-   /**
-    * Sets the up additional class level fakes.
-    */
-   @BeforeClass
-   public static void setUpAdditionalClassLevelFakes() {
-      new FakeClass2();
-   }
+        /**
+         * Do something.
+         */
+        @Mock
+        void doSomething() {
+            assertSame(singleInstanceCreated, this);
+        }
 
-   /**
-    * Sets the up method level fakes.
-    */
-   @Before
-   public void setUpMethodLevelFakes() {
-      FakeClass3.singleInstanceCreated = null;
-      new FakeClass3();
-   }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        @Mock
+        int performComputation(int a, boolean b) {
+            assertSame(singleInstanceCreated, this);
+            assertTrue(a > 0);
+            assertTrue(b);
+            return 2;
+        }
+    }
 
-   /**
-    * Fake instance per setup in class and fixture scopes.
-    */
-   @Test
-   public void fakeInstancePerSetupInClassAndFixtureScopes() {
-      assertFakeClass1();
-      assertFakeClass2();
-      assertFakeClass3();
-      assertEquals(1, new RealClass4().performComputation(1, true));
-   }
+    /**
+     * The Class FakeClass3.
+     */
+    static final class FakeClass3 extends MockUp<RealClass3> {
 
-   /**
-    * Assert fake class 1.
-    */
-   void assertFakeClass1() {
-      RealClass1.doSomething();
-      assertEquals(2, new RealClass1().performComputation(1, true));
-   }
+        /** The single instance created. */
+        static Object singleInstanceCreated;
 
-   /**
-    * Assert fake class 2.
-    */
-   void assertFakeClass2() {
-      RealClass2.doSomething();
-      assertEquals(2, new RealClass2().performComputation(1, true));
-   }
+        /**
+         * Instantiates a new fake class 3.
+         */
+        FakeClass3() {
+            assertNull(singleInstanceCreated);
+            singleInstanceCreated = this;
+        }
 
-   /**
-    * Assert fake class 3.
-    */
-   void assertFakeClass3() {
-      RealClass3.doSomething();
-      assertEquals(2, new RealClass3().performComputation(1, true));
-   }
+        /**
+         * Do something.
+         */
+        @Mock
+        void doSomething() {
+            assertSame(singleInstanceCreated, this);
+        }
 
-   /**
-    * Assert fake class 4.
-    */
-   void assertFakeClass4() {
-      RealClass4.doSomething();
-      assertEquals(2, new RealClass4().performComputation(1, true));
-   }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        @Mock
+        int performComputation(int a, boolean b) {
+            assertSame(singleInstanceCreated, this);
+            assertTrue(a > 0);
+            assertTrue(b);
+            return 2;
+        }
+    }
 
-   /**
-    * Fake instance per setup in all scopes.
-    */
-   @Test
-   public void fakeInstancePerSetupInAllScopes() {
-      new FakeClass4();
+    /**
+     * The Class FakeClass4.
+     */
+    static final class FakeClass4 extends MockUp<RealClass4> {
 
-      assertFakeClass1();
-      assertFakeClass2();
-      assertFakeClass3();
-      assertFakeClass4();
-   }
+        /** The single instance created. */
+        static Object singleInstanceCreated;
 
-   /**
-    * The Class FakeURL.
-    */
-   public static final class FakeURL extends MockUp<URL> {
-      
-      /**
-       * Open stream.
-       *
-       * @param inv the inv
-       * @return the input stream
-       * @throws IOException Signals that an I/O exception has occurred.
-       */
-      @Mock
-      public InputStream openStream(Invocation inv) throws IOException {
-         URL it = inv.getInvokedInstance();
+        /**
+         * Instantiates a new fake class 4.
+         */
+        FakeClass4() {
+            assertNull(singleInstanceCreated);
+            singleInstanceCreated = this;
+        }
 
-         if ("test".equals(it.getHost())) {
-            return new ByteArrayInputStream("response".getBytes());
-         }
+        /**
+         * Do something.
+         */
+        @Mock
+        void doSomething() {
+            assertSame(singleInstanceCreated, this);
+        }
 
-         return it.openStream();
-      }
-   }
+        /**
+         * Perform computation.
+         *
+         * @param a
+         *            the a
+         * @param b
+         *            the b
+         *
+         * @return the int
+         */
+        @Mock
+        int performComputation(int a, boolean b) {
+            assertSame(singleInstanceCreated, this);
+            assertTrue(a > 0);
+            assertTrue(b);
+            return 2;
+        }
+    }
 
-   /**
-    * Reentrant fake for JRE class.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void reentrantFakeForJREClass() throws Exception {
-      new FakeURL();
+    /**
+     * Sets the up class level fakes.
+     */
+    @BeforeClass
+    public static void setUpClassLevelFakes() {
+        new FakeClass1();
+    }
 
-      InputStream response = new URL("http://test").openStream();
+    /**
+     * Sets the up additional class level fakes.
+     */
+    @BeforeClass
+    public static void setUpAdditionalClassLevelFakes() {
+        new FakeClass2();
+    }
 
-      assertEquals("response", new Scanner(response).nextLine());
-   }
+    /**
+     * Sets the up method level fakes.
+     */
+    @Before
+    public void setUpMethodLevelFakes() {
+        FakeClass3.singleInstanceCreated = null;
+        new FakeClass3();
+    }
+
+    /**
+     * Fake instance per setup in class and fixture scopes.
+     */
+    @Test
+    public void fakeInstancePerSetupInClassAndFixtureScopes() {
+        assertFakeClass1();
+        assertFakeClass2();
+        assertFakeClass3();
+        assertEquals(1, new RealClass4().performComputation(1, true));
+    }
+
+    /**
+     * Assert fake class 1.
+     */
+    void assertFakeClass1() {
+        RealClass1.doSomething();
+        assertEquals(2, new RealClass1().performComputation(1, true));
+    }
+
+    /**
+     * Assert fake class 2.
+     */
+    void assertFakeClass2() {
+        RealClass2.doSomething();
+        assertEquals(2, new RealClass2().performComputation(1, true));
+    }
+
+    /**
+     * Assert fake class 3.
+     */
+    void assertFakeClass3() {
+        RealClass3.doSomething();
+        assertEquals(2, new RealClass3().performComputation(1, true));
+    }
+
+    /**
+     * Assert fake class 4.
+     */
+    void assertFakeClass4() {
+        RealClass4.doSomething();
+        assertEquals(2, new RealClass4().performComputation(1, true));
+    }
+
+    /**
+     * Fake instance per setup in all scopes.
+     */
+    @Test
+    public void fakeInstancePerSetupInAllScopes() {
+        new FakeClass4();
+
+        assertFakeClass1();
+        assertFakeClass2();
+        assertFakeClass3();
+        assertFakeClass4();
+    }
+
+    /**
+     * The Class FakeURL.
+     */
+    public static final class FakeURL extends MockUp<URL> {
+
+        /**
+         * Open stream.
+         *
+         * @param inv
+         *            the inv
+         *
+         * @return the input stream
+         *
+         * @throws IOException
+         *             Signals that an I/O exception has occurred.
+         */
+        @Mock
+        public InputStream openStream(Invocation inv) throws IOException {
+            URL it = inv.getInvokedInstance();
+
+            if ("test".equals(it.getHost())) {
+                return new ByteArrayInputStream("response".getBytes());
+            }
+
+            return it.openStream();
+        }
+    }
+
+    /**
+     * Reentrant fake for JRE class.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void reentrantFakeForJREClass() throws Exception {
+        new FakeURL();
+
+        InputStream response = new URL("http://test").openStream();
+
+        assertEquals("response", new Scanner(response).nextLine());
+    }
 }

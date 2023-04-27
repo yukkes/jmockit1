@@ -1,308 +1,339 @@
 package mockit;
 
 import static org.junit.Assert.*;
+
 import org.junit.*;
 import org.junit.rules.*;
 
 /**
  * The Class FakeInvocationTest.
  */
-public final class FakeInvocationTest
-{
-   
-   /** The thrown. */
-   @Rule public final ExpectedException thrown = ExpectedException.none();
+public final class FakeInvocationTest {
 
-   /**
-    * The Class Collaborator.
-    */
-   public static class Collaborator {
-      
-      /** The value. */
-      int value;
-      
-      /**
-       * Instantiates a new collaborator.
-       */
-      Collaborator() {}
-      
-      /**
-       * Instantiates a new collaborator.
-       *
-       * @param i the i
-       */
-      public Collaborator(int i) { value = i; }
+    /** The thrown. */
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      public int getValue() { return -1; }
-      
-      /**
-       * Sets the value.
-       *
-       * @param i the new value
-       */
-      public void setValue(int i) { value = i; }
-      
-      /**
-       * Do something.
-       *
-       * @param b the b
-       * @param i the i
-       * @param s the s
-       * @return the string
-       */
-      public String doSomething(boolean b, int[] i, String s) { return s + b + i[0]; }
-      
-      /**
-       * Static method.
-       *
-       * @return true, if successful
-       */
-      public static boolean staticMethod() { return true; }
-   }
+    /**
+     * The Class Collaborator.
+     */
+    public static class Collaborator {
 
-   /**
-    * The Class FakeMethods.
-    */
-   static final class FakeMethods extends MockUp<Collaborator> {
-      
-      /**
-       * Static method.
-       *
-       * @param context the context
-       * @return true, if successful
-       */
-      @Mock
-      static boolean staticMethod(Invocation context) {
-         assertNotNull(context);
-         assertNull(context.getInvokedInstance());
-         assertEquals(1, context.getInvocationCount());
-         return false;
-      }
+        /** The value. */
+        int value;
 
-      /**
-       * Gets the value.
-       *
-       * @param context the context
-       * @return the value
-       */
-      @Mock
-      int getValue(Invocation context) {
-         assertTrue(context.getInvokedInstance() instanceof Collaborator);
-         assertEquals(0, context.getInvocationIndex());
-         return 123;
-      }
-   }
+        /**
+         * Instantiates a new collaborator.
+         */
+        Collaborator() {
+        }
 
-   /**
-    * Fake methods for methods without parameters.
-    */
-   @Test
-   public void fakeMethodsForMethodsWithoutParameters() {
-      new FakeMethods();
-      assertFalse(Collaborator.staticMethod());
-      assertEquals(123, new Collaborator().getValue());
-   }
+        /**
+         * Instantiates a new collaborator.
+         *
+         * @param i
+         *            the i
+         */
+        public Collaborator(int i) {
+            value = i;
+        }
 
-   /**
-    * Instance fake method for static method.
-    */
-   @Test
-   public void instanceFakeMethodForStaticMethod() {
-      new MockUp<Collaborator>() {
-         @Mock
-         boolean staticMethod(Invocation context) {
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        public int getValue() {
+            return -1;
+        }
+
+        /**
+         * Sets the value.
+         *
+         * @param i
+         *            the new value
+         */
+        public void setValue(int i) {
+            value = i;
+        }
+
+        /**
+         * Do something.
+         *
+         * @param b
+         *            the b
+         * @param i
+         *            the i
+         * @param s
+         *            the s
+         *
+         * @return the string
+         */
+        public String doSomething(boolean b, int[] i, String s) {
+            return s + b + i[0];
+        }
+
+        /**
+         * Static method.
+         *
+         * @return true, if successful
+         */
+        public static boolean staticMethod() {
+            return true;
+        }
+    }
+
+    /**
+     * The Class FakeMethods.
+     */
+    static final class FakeMethods extends MockUp<Collaborator> {
+
+        /**
+         * Static method.
+         *
+         * @param context
+         *            the context
+         *
+         * @return true, if successful
+         */
+        @Mock
+        static boolean staticMethod(Invocation context) {
+            assertNotNull(context);
             assertNull(context.getInvokedInstance());
-            assertEquals(context.getInvocationCount() - 1, context.getInvocationIndex());
-            return context.getInvocationCount() <= 0;
-         }
-      };
+            assertEquals(1, context.getInvocationCount());
+            return false;
+        }
 
-      assertFalse(Collaborator.staticMethod());
-      assertFalse(Collaborator.staticMethod());
-   }
+        /**
+         * Gets the value.
+         *
+         * @param context
+         *            the context
+         *
+         * @return the value
+         */
+        @Mock
+        int getValue(Invocation context) {
+            assertTrue(context.getInvokedInstance() instanceof Collaborator);
+            assertEquals(0, context.getInvocationIndex());
+            return 123;
+        }
+    }
 
-   /**
-    * Fake methods with invocation parameter.
-    */
-   @Test
-   public void fakeMethodsWithInvocationParameter() {
-      new MockUp<Collaborator>() {
-         Collaborator instantiated;
+    /**
+     * Fake methods for methods without parameters.
+     */
+    @Test
+    public void fakeMethodsForMethodsWithoutParameters() {
+        new FakeMethods();
+        assertFalse(Collaborator.staticMethod());
+        assertEquals(123, new Collaborator().getValue());
+    }
 
-         @Mock
-         void $init(Invocation inv, int i) {
-            assertNotNull(inv.getInvokedInstance());
-            assertTrue(i > 0);
-            instantiated = inv.getInvokedInstance();
-         }
+    /**
+     * Instance fake method for static method.
+     */
+    @Test
+    public void instanceFakeMethodForStaticMethod() {
+        new MockUp<Collaborator>() {
+            @Mock
+            boolean staticMethod(Invocation context) {
+                assertNull(context.getInvokedInstance());
+                assertEquals(context.getInvocationCount() - 1, context.getInvocationIndex());
+                return context.getInvocationCount() <= 0;
+            }
+        };
 
-         @Mock
-         String doSomething(Invocation inv, boolean b, int[] array, String s) {
-            assertNotNull(inv);
-            assertSame(instantiated, inv.getInvokedInstance());
-            assertEquals(1, inv.getInvocationCount());
-            assertTrue(b);
-            assertNull(array);
-            assertEquals("test", s);
-            return "mock";
-         }
-      };
+        assertFalse(Collaborator.staticMethod());
+        assertFalse(Collaborator.staticMethod());
+    }
 
-      String s = new Collaborator(123).doSomething(true, null, "test");
-      assertEquals("mock", s);
-   }
+    /**
+     * Fake methods with invocation parameter.
+     */
+    @Test
+    public void fakeMethodsWithInvocationParameter() {
+        new MockUp<Collaborator>() {
+            Collaborator instantiated;
 
-   /**
-    * The Class FakeMethodsWithParameters.
-    */
-   static class FakeMethodsWithParameters extends MockUp<Collaborator> {
-      
-      /** The captured argument. */
-      int capturedArgument;
-      
-      /** The faked instance. */
-      Collaborator fakedInstance;
+            @Mock
+            void $init(Invocation inv, int i) {
+                assertNotNull(inv.getInvokedInstance());
+                assertTrue(i > 0);
+                instantiated = inv.getInvokedInstance();
+            }
 
-      /**
-       * $init.
-       *
-       * @param context the context
-       * @param i the i
-       */
-      @Mock
-      void $init(Invocation context, int i) {
-         capturedArgument = i + context.getInvocationCount();
-         assertNull(fakedInstance);
-         assertTrue(context.getInvokedInstance() instanceof Collaborator);
-         assertEquals(1, context.getInvokedArguments().length);
-      }
+            @Mock
+            String doSomething(Invocation inv, boolean b, int[] array, String s) {
+                assertNotNull(inv);
+                assertSame(instantiated, inv.getInvokedInstance());
+                assertEquals(1, inv.getInvocationCount());
+                assertTrue(b);
+                assertNull(array);
+                assertEquals("test", s);
+                return "mock";
+            }
+        };
 
-      /**
-       * Sets the value.
-       *
-       * @param context the context
-       * @param i the i
-       */
-      @Mock
-      void setValue(Invocation context, int i) {
-         assertEquals(i, context.getInvocationIndex());
-         assertSame(fakedInstance, context.getInvokedInstance());
-         assertEquals(1, context.getInvokedArguments().length);
-      }
-   }
+        String s = new Collaborator(123).doSomething(true, null, "test");
+        assertEquals("mock", s);
+    }
 
-   /**
-    * Fake methods with parameters.
-    */
-   @Test
-   public void fakeMethodsWithParameters() {
-      FakeMethodsWithParameters mock = new FakeMethodsWithParameters();
+    /**
+     * The Class FakeMethodsWithParameters.
+     */
+    static class FakeMethodsWithParameters extends MockUp<Collaborator> {
 
-      Collaborator col = new Collaborator(4);
-      mock.fakedInstance = col;
+        /** The captured argument. */
+        int capturedArgument;
 
-      assertEquals(5, mock.capturedArgument);
-      col.setValue(0);
-      col.setValue(1);
-   }
+        /** The faked instance. */
+        Collaborator fakedInstance;
 
-   /**
-    * Use of context parameters for JRE methods.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void useOfContextParametersForJREMethods() throws Exception {
-      new MockUp<Runtime>() {
-         @Mock
-         Process exec(Invocation inv, String command, String[] envp) {
-            assertSame(Runtime.getRuntime(), inv.getInvokedInstance());
-            assertEquals(0, inv.getInvocationIndex());
-            assertNotNull(command);
-            assertNull(envp);
-            return null;
-         }
-      };
+        /**
+         * $init.
+         *
+         * @param context
+         *            the context
+         * @param i
+         *            the i
+         */
+        @Mock
+        void $init(Invocation context, int i) {
+            capturedArgument = i + context.getInvocationCount();
+            assertNull(fakedInstance);
+            assertTrue(context.getInvokedInstance() instanceof Collaborator);
+            assertEquals(1, context.getInvokedArguments().length);
+        }
 
-      assertNull(Runtime.getRuntime().exec("test", null));
-   }
+        /**
+         * Sets the value.
+         *
+         * @param context
+         *            the context
+         * @param i
+         *            the i
+         */
+        @Mock
+        void setValue(Invocation context, int i) {
+            assertEquals(i, context.getInvocationIndex());
+            assertSame(fakedInstance, context.getInvokedInstance());
+            assertEquals(1, context.getInvokedArguments().length);
+        }
+    }
 
-   /**
-    * The Class FakeByMethodNameOnly.
-    */
-   public static final class FakeByMethodNameOnly extends MockUp<Collaborator> {
-      
-      /**
-       * Do something.
-       *
-       * @param inv the inv
-       * @return the string
-       */
-      @Mock
-      public static String doSomething(Invocation inv) {
-         Object[] args = inv.getInvokedArguments();
-         assertEquals(3, args.length);
-         return "fake";
-      }
-   }
+    /**
+     * Fake methods with parameters.
+     */
+    @Test
+    public void fakeMethodsWithParameters() {
+        FakeMethodsWithParameters mock = new FakeMethodsWithParameters();
 
-   /**
-    * Fake method by name only using public fake.
-    */
-   @Test
-   public void fakeMethodByNameOnly_usingPublicFake() {
-      new FakeByMethodNameOnly();
+        Collaborator col = new Collaborator(4);
+        mock.fakedInstance = col;
 
-      String result = new Collaborator().doSomething(true, new int[] {1, 2}, "test");
+        assertEquals(5, mock.capturedArgument);
+        col.setValue(0);
+        col.setValue(1);
+    }
 
-      assertEquals("fake", result);
-   }
+    /**
+     * Use of context parameters for JRE methods.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void useOfContextParametersForJREMethods() throws Exception {
+        new MockUp<Runtime>() {
+            @Mock
+            Process exec(Invocation inv, String command, String[] envp) {
+                assertSame(Runtime.getRuntime(), inv.getInvokedInstance());
+                assertEquals(0, inv.getInvocationIndex());
+                assertNotNull(command);
+                assertNull(envp);
+                return null;
+            }
+        };
 
-   /**
-    * Fake method by name only using anonymous fake.
-    */
-   @Test
-   public void fakeMethodByNameOnly_usingAnonymousFake() {
-      new MockUp<Collaborator>() {
-         @Mock
-         String doSomething(Invocation inv) {
+        assertNull(Runtime.getRuntime().exec("test", null));
+    }
+
+    /**
+     * The Class FakeByMethodNameOnly.
+     */
+    public static final class FakeByMethodNameOnly extends MockUp<Collaborator> {
+
+        /**
+         * Do something.
+         *
+         * @param inv
+         *            the inv
+         *
+         * @return the string
+         */
+        @Mock
+        public static String doSomething(Invocation inv) {
             Object[] args = inv.getInvokedArguments();
             assertEquals(3, args.length);
             return "fake";
-         }
-      };
+        }
+    }
 
-      String result = new Collaborator().doSomething(true, new int[] {1, 2}, "test");
+    /**
+     * Fake method by name only using public fake.
+     */
+    @Test
+    public void fakeMethodByNameOnly_usingPublicFake() {
+        new FakeByMethodNameOnly();
 
-      assertEquals("fake", result);
-   }
+        String result = new Collaborator().doSomething(true, new int[] { 1, 2 }, "test");
 
-   /**
-    * The Class PublicFakeForConstructorUsingInvocation.
-    */
-   public static final class PublicFakeForConstructorUsingInvocation extends MockUp<Collaborator> {
-      
-      /**
-       * $init.
-       *
-       * @param inv the inv
-       */
-      @Mock
-      public void $init(Invocation inv) {}
-   }
+        assertEquals("fake", result);
+    }
 
-   /**
-    * Fake constructor using public fake class with public fake method having invocation parameter.
-    */
-   @Test
-   public void fakeConstructorUsingPublicFakeClassWithPublicFakeMethodHavingInvocationParameter() {
-      new PublicFakeForConstructorUsingInvocation();
+    /**
+     * Fake method by name only using anonymous fake.
+     */
+    @Test
+    public void fakeMethodByNameOnly_usingAnonymousFake() {
+        new MockUp<Collaborator>() {
+            @Mock
+            String doSomething(Invocation inv) {
+                Object[] args = inv.getInvokedArguments();
+                assertEquals(3, args.length);
+                return "fake";
+            }
+        };
 
-      new Collaborator();
-   }
+        String result = new Collaborator().doSomething(true, new int[] { 1, 2 }, "test");
+
+        assertEquals("fake", result);
+    }
+
+    /**
+     * The Class PublicFakeForConstructorUsingInvocation.
+     */
+    public static final class PublicFakeForConstructorUsingInvocation extends MockUp<Collaborator> {
+
+        /**
+         * $init.
+         *
+         * @param inv
+         *            the inv
+         */
+        @Mock
+        public void $init(Invocation inv) {
+        }
+    }
+
+    /**
+     * Fake constructor using public fake class with public fake method having invocation parameter.
+     */
+    @Test
+    public void fakeConstructorUsingPublicFakeClassWithPublicFakeMethodHavingInvocationParameter() {
+        new PublicFakeForConstructorUsingInvocation();
+
+        new Collaborator();
+    }
 }

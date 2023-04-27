@@ -1,168 +1,210 @@
 package mockit;
 
 import static org.junit.Assert.*;
+
 import org.junit.*;
 
 /**
  * The Class FinalMockFieldsTest.
  */
-public final class FinalMockFieldsTest
-{
-   
-   /**
-    * The Class Collaborator.
-    */
-   static final class Collaborator {
-      
-      /**
-       * Instantiates a new collaborator.
-       */
-      Collaborator() {}
-      
-      /**
-       * Instantiates a new collaborator.
-       *
-       * @param b the b
-       */
-      Collaborator(boolean b) { if (!b) throw new IllegalArgumentException(); }
-      
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      int getValue() { return -1; }
-      
-      /**
-       * Do something.
-       */
-      void doSomething() {}
-   }
+public final class FinalMockFieldsTest {
 
-   /**
-    * The Class AnotherCollaborator.
-    */
-   static final class AnotherCollaborator {
-      
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      int getValue() { return -1; }
-      
-      /**
-       * Do something.
-       */
-      void doSomething() {}
-   }
+    /**
+     * The Class Collaborator.
+     */
+    static final class Collaborator {
 
-   /** The mock. */
-   @Injectable final Collaborator mock = new Collaborator();
-   
-   /** The mock 2. */
-   @Mocked final AnotherCollaborator mock2 = new AnotherCollaborator();
+        /**
+         * Instantiates a new collaborator.
+         */
+        Collaborator() {
+        }
 
-   /**
-    * Use mocked types.
-    */
-   @Before
-   public void useMockedTypes() {
-      assertEquals(0, mock.getValue());
-      assertEquals(0, mock2.getValue());
-      assertEquals(0, YetAnotherCollaborator.doSomethingStatic());
-   }
+        /**
+         * Instantiates a new collaborator.
+         *
+         * @param b
+         *            the b
+         */
+        Collaborator(boolean b) {
+            if (!b)
+                throw new IllegalArgumentException();
+        }
 
-   /**
-    * Record expectations on injectable final mock field.
-    */
-   @Test
-   public void recordExpectationsOnInjectableFinalMockField() {
-      new Expectations() {{
-         mock.getValue(); result = 12;
-         mock.doSomething(); times = 0;
-      }};
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return -1;
+        }
 
-      assertEquals(12, mock.getValue());
-   }
+        /**
+         * Do something.
+         */
+        void doSomething() {
+        }
+    }
 
-   /**
-    * Record expectations on final mock field.
-    */
-   @Test
-   public void recordExpectationsOnFinalMockField() {
-      AnotherCollaborator collaborator = new AnotherCollaborator();
+    /**
+     * The Class AnotherCollaborator.
+     */
+    static final class AnotherCollaborator {
 
-      new Expectations() {{ mock2.doSomething(); times = 1; }};
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return -1;
+        }
 
-      collaborator.doSomething();
-      assertEquals(0, collaborator.getValue());
-   }
+        /**
+         * Do something.
+         */
+        void doSomething() {
+        }
+    }
 
-   /** The mock process builder. */
-   @Mocked final ProcessBuilder mockProcessBuilder = null;
+    /** The mock. */
+    @Injectable
+    final Collaborator mock = new Collaborator();
 
-   /**
-    * Record expectations on constructor of final mock field.
-    */
-   @Test
-   public void recordExpectationsOnConstructorOfFinalMockField() {
-      new Expectations() {{ new ProcessBuilder("test"); times = 1; }};
+    /** The mock 2. */
+    @Mocked
+    final AnotherCollaborator mock2 = new AnotherCollaborator();
 
-      new ProcessBuilder("test");
-   }
+    /**
+     * Use mocked types.
+     */
+    @Before
+    public void useMockedTypes() {
+        assertEquals(0, mock.getValue());
+        assertEquals(0, mock2.getValue());
+        assertEquals(0, YetAnotherCollaborator.doSomethingStatic());
+    }
 
-   /**
-    * The Class YetAnotherCollaborator.
-    */
-   static final class YetAnotherCollaborator {
-      
-      /**
-       * Instantiates a new yet another collaborator.
-       *
-       * @param b the b
-       */
-      YetAnotherCollaborator(boolean b) { if (!b) throw new IllegalArgumentException(); }
-      
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      int getValue() { return -1; }
-      
-      /**
-       * Do something.
-       */
-      void doSomething() {}
-      
-      /**
-       * Do something static.
-       *
-       * @return the int
-       */
-      static int doSomethingStatic() { return -2; }
-   }
+    /**
+     * Record expectations on injectable final mock field.
+     */
+    @Test
+    public void recordExpectationsOnInjectableFinalMockField() {
+        new Expectations() {
+            {
+                mock.getValue();
+                result = 12;
+                mock.doSomething();
+                times = 0;
+            }
+        };
 
-   /** The unused. */
-   @Mocked final YetAnotherCollaborator unused = null;
+        assertEquals(12, mock.getValue());
+    }
 
-   /**
-    * Record expectations on static method and constructor of final local mock field.
-    */
-   @Test
-   public void recordExpectationsOnStaticMethodAndConstructorOfFinalLocalMockField() {
-      new Expectations() {{
-         new YetAnotherCollaborator(true); result = new RuntimeException();
-         YetAnotherCollaborator.doSomethingStatic(); result = 123;
-      }};
+    /**
+     * Record expectations on final mock field.
+     */
+    @Test
+    public void recordExpectationsOnFinalMockField() {
+        AnotherCollaborator collaborator = new AnotherCollaborator();
 
-      try {
-         new YetAnotherCollaborator(true);
-         fail();
-      }
-      catch (RuntimeException ignore) {}
+        new Expectations() {
+            {
+                mock2.doSomething();
+                times = 1;
+            }
+        };
 
-      assertEquals(123, YetAnotherCollaborator.doSomethingStatic());
-   }
+        collaborator.doSomething();
+        assertEquals(0, collaborator.getValue());
+    }
+
+    /** The mock process builder. */
+    @Mocked
+    final ProcessBuilder mockProcessBuilder = null;
+
+    /**
+     * Record expectations on constructor of final mock field.
+     */
+    @Test
+    public void recordExpectationsOnConstructorOfFinalMockField() {
+        new Expectations() {
+            {
+                new ProcessBuilder("test");
+                times = 1;
+            }
+        };
+
+        new ProcessBuilder("test");
+    }
+
+    /**
+     * The Class YetAnotherCollaborator.
+     */
+    static final class YetAnotherCollaborator {
+
+        /**
+         * Instantiates a new yet another collaborator.
+         *
+         * @param b
+         *            the b
+         */
+        YetAnotherCollaborator(boolean b) {
+            if (!b)
+                throw new IllegalArgumentException();
+        }
+
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return -1;
+        }
+
+        /**
+         * Do something.
+         */
+        void doSomething() {
+        }
+
+        /**
+         * Do something static.
+         *
+         * @return the int
+         */
+        static int doSomethingStatic() {
+            return -2;
+        }
+    }
+
+    /** The unused. */
+    @Mocked
+    final YetAnotherCollaborator unused = null;
+
+    /**
+     * Record expectations on static method and constructor of final local mock field.
+     */
+    @Test
+    public void recordExpectationsOnStaticMethodAndConstructorOfFinalLocalMockField() {
+        new Expectations() {
+            {
+                new YetAnotherCollaborator(true);
+                result = new RuntimeException();
+                YetAnotherCollaborator.doSomethingStatic();
+                result = 123;
+            }
+        };
+
+        try {
+            new YetAnotherCollaborator(true);
+            fail();
+        } catch (RuntimeException ignore) {
+        }
+
+        assertEquals(123, YetAnotherCollaborator.doSomethingStatic());
+    }
 }

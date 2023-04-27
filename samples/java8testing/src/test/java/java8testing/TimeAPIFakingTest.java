@@ -1,58 +1,68 @@
 package java8testing;
 
-import java.time.*;
-
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.*;
+
 import mockit.*;
+
+import org.junit.jupiter.api.*;
 
 /**
  * The Class TimeAPIFakingTest.
  */
-final class TimeAPIFakingTest
-{
-   
-   /**
-    * Inject clock object.
-    */
-   @Test
-   void injectClockObject() {
-      // Create a test clock with a fixed instant.
-      LocalDateTime testDateTime = LocalDateTime.parse("2014-05-10T10:15:30");
-      ZoneId zoneId = ZoneId.systemDefault();
-      Instant testInstant = testDateTime.toInstant(zoneId.getRules().getOffset(testDateTime));
-      Clock testClock = Clock.fixed(testInstant, zoneId);
+final class TimeAPIFakingTest {
 
-      // In production code, obtain local date & time from the test clock.
-      LocalDateTime now = LocalDateTime.now(testClock);
+    /**
+     * Inject clock object.
+     */
+    @Test
+    void injectClockObject() {
+        // Create a test clock with a fixed instant.
+        LocalDateTime testDateTime = LocalDateTime.parse("2014-05-10T10:15:30");
+        ZoneId zoneId = ZoneId.systemDefault();
+        Instant testInstant = testDateTime.toInstant(zoneId.getRules().getOffset(testDateTime));
+        Clock testClock = Clock.fixed(testInstant, zoneId);
 
-      assertEquals(testDateTime, now);
-   }
+        // In production code, obtain local date & time from the test clock.
+        LocalDateTime now = LocalDateTime.now(testClock);
 
-   /**
-    * Fake local date time.
-    */
-   @Test
-   void fakeLocalDateTime() {
-      LocalDateTime testDateTime = LocalDateTime.parse("2014-05-10T09:35:12");
-      new MockUp<LocalDateTime>() { @Mock LocalDateTime now() { return testDateTime; } };
+        assertEquals(testDateTime, now);
+    }
 
-      LocalDateTime now = LocalDateTime.now();
+    /**
+     * Fake local date time.
+     */
+    @Test
+    void fakeLocalDateTime() {
+        LocalDateTime testDateTime = LocalDateTime.parse("2014-05-10T09:35:12");
+        new MockUp<LocalDateTime>() {
+            @Mock
+            LocalDateTime now() {
+                return testDateTime;
+            }
+        };
 
-      assertSame(testDateTime, now);
-   }
+        LocalDateTime now = LocalDateTime.now();
 
-   /**
-    * Fake instant.
-    */
-   @Test
-   void fakeInstant() {
-      Instant testInstant = Instant.parse("2014-05-10T09:35:12Z");
-      new MockUp<Instant>() { @Mock Instant now() { return testInstant; } };
+        assertSame(testDateTime, now);
+    }
 
-      Instant now = Instant.now();
+    /**
+     * Fake instant.
+     */
+    @Test
+    void fakeInstant() {
+        Instant testInstant = Instant.parse("2014-05-10T09:35:12Z");
+        new MockUp<Instant>() {
+            @Mock
+            Instant now() {
+                return testInstant;
+            }
+        };
 
-      assertSame(testInstant, now);
-   }
+        Instant now = Instant.now();
+
+        assertSame(testInstant, now);
+    }
 }

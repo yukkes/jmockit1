@@ -10,45 +10,45 @@ import mockit.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
 
-final class TestedParameter extends TestedObject
-{
-   @Nonnull private final TestMethod testMethod;
-   @Nonnegative private final int parameterIndex;
+final class TestedParameter extends TestedObject {
+    @Nonnull
+    private final TestMethod testMethod;
+    @Nonnegative
+    private final int parameterIndex;
 
-   TestedParameter(
-      @Nonnull InjectionState injectionState, @Nonnull TestMethod testMethod, @Nonnegative int parameterIndex, @Nonnull Tested metadata
-   ) {
-      super(
-         injectionState, metadata,  testMethod.testClass, ParameterNames.getName(testMethod, parameterIndex),
-         testMethod.getParameterType(parameterIndex), testMethod.getParameterClass(parameterIndex));
-      this.testMethod = testMethod;
-      this.parameterIndex = parameterIndex;
-   }
+    TestedParameter(@Nonnull InjectionState injectionState, @Nonnull TestMethod testMethod,
+            @Nonnegative int parameterIndex, @Nonnull Tested metadata) {
+        super(injectionState, metadata, testMethod.testClass, ParameterNames.getName(testMethod, parameterIndex),
+                testMethod.getParameterType(parameterIndex), testMethod.getParameterClass(parameterIndex));
+        this.testMethod = testMethod;
+        this.parameterIndex = parameterIndex;
+    }
 
-   @Nullable @Override
-   Object getExistingTestedInstanceIfApplicable(@Nonnull Object testClassInstance) {
-      Object testedObject = null;
+    @Nullable
+    @Override
+    Object getExistingTestedInstanceIfApplicable(@Nonnull Object testClassInstance) {
+        Object testedObject = null;
 
-      if (!createAutomatically) {
-         String providedValue = metadata.value();
+        if (!createAutomatically) {
+            String providedValue = metadata.value();
 
-         if (!providedValue.isEmpty()) {
-            Class<?> parameterClass = testMethod.getParameterClass(parameterIndex);
-            testedObject = TypeConversion.convertFromString(parameterClass, providedValue);
+            if (!providedValue.isEmpty()) {
+                Class<?> parameterClass = testMethod.getParameterClass(parameterIndex);
+                testedObject = TypeConversion.convertFromString(parameterClass, providedValue);
 
-            if (testedObject != null) {
-               testMethod.setParameterValue(parameterIndex, testedObject);
+                if (testedObject != null) {
+                    testMethod.setParameterValue(parameterIndex, testedObject);
+                }
             }
-         }
 
-         createAutomatically = testedObject == null;
-      }
+            createAutomatically = testedObject == null;
+        }
 
-      return testedObject;
-   }
+        return testedObject;
+    }
 
-   @Override
-   void setInstance(@Nonnull Object testClassInstance, @Nullable Object testedInstance) {
-      testMethod.setParameterValue(parameterIndex, testedInstance);
-   }
+    @Override
+    void setInstance(@Nonnull Object testClassInstance, @Nullable Object testedInstance) {
+        testMethod.setParameterValue(parameterIndex, testedInstance);
+    }
 }

@@ -6,67 +6,67 @@ package mockit.coverage.reporting;
 
 import java.io.*;
 import java.security.*;
+
 import javax.annotation.*;
 
 import mockit.internal.util.*;
 
-final class StaticFiles
-{
-   @Nonnull private final String outputDir;
-   private long lastModifiedTimeOfCoverageJar;
+final class StaticFiles {
+    @Nonnull
+    private final String outputDir;
+    private long lastModifiedTimeOfCoverageJar;
 
-   StaticFiles(@Nonnull String outputDir) { this.outputDir = outputDir; }
+    StaticFiles(@Nonnull String outputDir) {
+        this.outputDir = outputDir;
+    }
 
-   void copyToOutputDir(boolean withSourceFilePages) throws IOException {
-      copyFile("index.css");
-      copyFile("coverage.js");
-      copyFile("logo.png");
-      copyFile("package.png");
-      copyFile("class.png");
-      copyFile("abstractClass.png");
-      copyFile("interface.png");
-      copyFile("annotation.png");
-      copyFile("exception.png");
-      copyFile("enum.png");
+    void copyToOutputDir(boolean withSourceFilePages) throws IOException {
+        copyFile("index.css");
+        copyFile("coverage.js");
+        copyFile("logo.png");
+        copyFile("package.png");
+        copyFile("class.png");
+        copyFile("abstractClass.png");
+        copyFile("interface.png");
+        copyFile("annotation.png");
+        copyFile("exception.png");
+        copyFile("enum.png");
 
-      if (withSourceFilePages) {
-         copyFile("source.css");
-         copyFile("prettify.js");
-      }
-   }
+        if (withSourceFilePages) {
+            copyFile("source.css");
+            copyFile("prettify.js");
+        }
+    }
 
-   private void copyFile(@Nonnull String fileName) throws IOException {
-      File outputFile = new File(outputDir, fileName);
+    private void copyFile(@Nonnull String fileName) throws IOException {
+        File outputFile = new File(outputDir, fileName);
 
-      if (outputFile.exists() && outputFile.lastModified() > getLastModifiedTimeOfCoverageJar()) {
-         return;
-      }
+        if (outputFile.exists() && outputFile.lastModified() > getLastModifiedTimeOfCoverageJar()) {
+            return;
+        }
 
-      try (
-         OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
-         InputStream input = new BufferedInputStream(StaticFiles.class.getResourceAsStream(fileName))
-      ) {
-         int b;
+        try (OutputStream output = new BufferedOutputStream(new FileOutputStream(outputFile));
+                InputStream input = new BufferedInputStream(StaticFiles.class.getResourceAsStream(fileName))) {
+            int b;
 
-         while ((b = input.read()) != -1) {
-            output.write(b);
-         }
-      }
-   }
+            while ((b = input.read()) != -1) {
+                output.write(b);
+            }
+        }
+    }
 
-   private long getLastModifiedTimeOfCoverageJar() {
-      if (lastModifiedTimeOfCoverageJar == 0) {
-         CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
+    private long getLastModifiedTimeOfCoverageJar() {
+        if (lastModifiedTimeOfCoverageJar == 0) {
+            CodeSource codeSource = getClass().getProtectionDomain().getCodeSource();
 
-         if (codeSource == null) {
-            lastModifiedTimeOfCoverageJar = -1;
-         }
-         else {
-            String pathToThisJar = Utilities.getClassFileLocationPath(codeSource);
-            lastModifiedTimeOfCoverageJar = new File(pathToThisJar).lastModified();
-         }
-      }
+            if (codeSource == null) {
+                lastModifiedTimeOfCoverageJar = -1;
+            } else {
+                String pathToThisJar = Utilities.getClassFileLocationPath(codeSource);
+                lastModifiedTimeOfCoverageJar = new File(pathToThisJar).lastModified();
+            }
+        }
 
-      return lastModifiedTimeOfCoverageJar;
-   }
+        return lastModifiedTimeOfCoverageJar;
+    }
 }

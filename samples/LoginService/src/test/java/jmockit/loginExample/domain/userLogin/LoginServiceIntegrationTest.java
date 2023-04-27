@@ -1,126 +1,137 @@
 package jmockit.loginExample.domain.userLogin;
 
-import org.testng.annotations.*;
-
 import static org.testng.Assert.*;
 
 import mockit.*;
+
+import org.testng.annotations.*;
 
 import jmockit.loginExample.domain.userAccount.*;
 
 /**
  * Equivalent to {@link LoginServiceNGTest}, but with minimal mocking and no redundant tests.
  */
-public final class LoginServiceIntegrationTest
-{
-   
-   /** The service. */
-   @Tested LoginService service;
-   
-   /** The user id. */
-   String userId;
-   
-   /** The user password. */
-   String userPassword;
-   
-   /** The account. */
-   UserAccount account;
+public final class LoginServiceIntegrationTest {
 
-   /**
-    * Sets the up one account to be found.
-    */
-   @BeforeMethod
-   public void setUpOneAccountToBeFound() {
-      userId = "john";
-      userPassword = "password";
-      account = new UserAccount(userId, userPassword);
+    /** The service. */
+    @Tested
+    LoginService service;
 
-      new MockUp<UserAccount>() { @Mock UserAccount find(String accountId) { return account; } };
-   }
+    /** The user id. */
+    String userId;
 
-   /**
-    * Sets the account to logged in when password matches.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void setAccountToLoggedInWhenPasswordMatches() throws Exception {
-      // Failed login attempts are inconsequential, provided they don't exceed the maximum number of attempts.
-      service.login(userId, "wrong password");
-      service.login(userId, "wrong password");
-      service.login(userId, userPassword);
-      service.login(userId, "wrong password");
+    /** The user password. */
+    String userPassword;
 
-      assertTrue(account.isLoggedIn());
-      assertFalse(account.isRevoked());
-   }
+    /** The account. */
+    UserAccount account;
 
-   /**
-    * Sets the account to revoked after three failed login attempts.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void setAccountToRevokedAfterThreeFailedLoginAttempts() throws Exception {
-      service.login(userId, "wrong password");
-      service.login(userId, "wrong password");
-      service.login(userId, "wrong password");
+    /**
+     * Sets the up one account to be found.
+     */
+    @BeforeMethod
+    public void setUpOneAccountToBeFound() {
+        userId = "john";
+        userPassword = "password";
+        account = new UserAccount(userId, userPassword);
 
-      assertFalse(account.isLoggedIn());
-      assertTrue(account.isRevoked());
-   }
+        new MockUp<UserAccount>() {
+            @Mock
+            UserAccount find(String accountId) {
+                return account;
+            }
+        };
+    }
 
-   /**
-    * Not revoke second account after two failed attempts on first account.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount() throws Exception {
-      UserAccount secondAccount = new UserAccount("roger", "password");
-      String accountId = account.getId();
-      account = secondAccount;
+    /**
+     * Sets the account to logged in when password matches.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void setAccountToLoggedInWhenPasswordMatches() throws Exception {
+        // Failed login attempts are inconsequential, provided they don't exceed the maximum number of attempts.
+        service.login(userId, "wrong password");
+        service.login(userId, "wrong password");
+        service.login(userId, userPassword);
+        service.login(userId, "wrong password");
 
-      service.login(accountId, "wrong password");
-      service.login(accountId, "wrong password");
-      service.login(secondAccount.getId(), "wrong password");
+        assertTrue(account.isLoggedIn());
+        assertFalse(account.isRevoked());
+    }
 
-      assertFalse(secondAccount.isRevoked());
-   }
+    /**
+     * Sets the account to revoked after three failed login attempts.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void setAccountToRevokedAfterThreeFailedLoginAttempts() throws Exception {
+        service.login(userId, "wrong password");
+        service.login(userId, "wrong password");
+        service.login(userId, "wrong password");
 
-   /**
-    * Disallow concurrent logins.
-    *
-    * @throws Exception the exception
-    */
-   @Test(expectedExceptions = AccountLoginLimitReachedException.class)
-   public void disallowConcurrentLogins() throws Exception {
-      account.setLoggedIn(true);
+        assertFalse(account.isLoggedIn());
+        assertTrue(account.isRevoked());
+    }
 
-      service.login(userId, userPassword);
-   }
+    /**
+     * Not revoke second account after two failed attempts on first account.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount() throws Exception {
+        UserAccount secondAccount = new UserAccount("roger", "password");
+        String accountId = account.getId();
+        account = secondAccount;
 
-   /**
-    * Throw exception if account not found.
-    *
-    * @throws Exception the exception
-    */
-   @Test(expectedExceptions = UserAccountNotFoundException.class)
-   public void throwExceptionIfAccountNotFound() throws Exception {
-      account = null;
+        service.login(accountId, "wrong password");
+        service.login(accountId, "wrong password");
+        service.login(secondAccount.getId(), "wrong password");
 
-      service.login("roger", "password");
-   }
+        assertFalse(secondAccount.isRevoked());
+    }
 
-   /**
-    * Disallow logging into revoked account.
-    *
-    * @throws Exception the exception
-    */
-   @Test(expectedExceptions = UserAccountRevokedException.class)
-   public void disallowLoggingIntoRevokedAccount() throws Exception {
-      account.setRevoked(true);
+    /**
+     * Disallow concurrent logins.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test(expectedExceptions = AccountLoginLimitReachedException.class)
+    public void disallowConcurrentLogins() throws Exception {
+        account.setLoggedIn(true);
 
-      service.login(userId, userPassword);
-   }
+        service.login(userId, userPassword);
+    }
+
+    /**
+     * Throw exception if account not found.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test(expectedExceptions = UserAccountNotFoundException.class)
+    public void throwExceptionIfAccountNotFound() throws Exception {
+        account = null;
+
+        service.login("roger", "password");
+    }
+
+    /**
+     * Disallow logging into revoked account.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test(expectedExceptions = UserAccountRevokedException.class)
+    public void disallowLoggingIntoRevokedAccount() throws Exception {
+        account.setRevoked(true);
+
+        service.login(userId, userPassword);
+    }
 }

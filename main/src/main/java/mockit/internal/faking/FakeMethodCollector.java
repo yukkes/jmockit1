@@ -4,7 +4,10 @@
  */
 package mockit.internal.faking;
 
+import static mockit.asm.jvmConstants.Access.*;
+
 import java.util.*;
+
 import javax.annotation.*;
 
 import mockit.*;
@@ -14,52 +17,53 @@ import mockit.asm.types.*;
 import mockit.internal.*;
 import mockit.internal.faking.FakeMethods.FakeMethod;
 import mockit.internal.util.*;
-import static mockit.asm.jvmConstants.Access.*;
 
 /**
  * Responsible for collecting the signatures of all methods defined in a given fake class which are explicitly annotated
  * as {@link Mock fakes}.
  */
-final class FakeMethodCollector
-{
-   private static final int INVALID_METHOD_ACCESSES = BRIDGE + SYNTHETIC + ABSTRACT + NATIVE;
-   private static final EnumSet<Attribute> ANNOTATIONS = EnumSet.of(Attribute.Annotations);
+final class FakeMethodCollector {
+    private static final int INVALID_METHOD_ACCESSES = BRIDGE + SYNTHETIC + ABSTRACT + NATIVE;
+    private static final EnumSet<Attribute> ANNOTATIONS = EnumSet.of(Attribute.Annotations);
 
-   @Nonnull private final FakeMethods fakeMethods;
-   private boolean collectingFromSuperClass;
+    @Nonnull
+    private final FakeMethods fakeMethods;
+    private boolean collectingFromSuperClass;
 
-   FakeMethodCollector(@Nonnull FakeMethods fakeMethods) { this.fakeMethods = fakeMethods; }
+    FakeMethodCollector(@Nonnull FakeMethods fakeMethods) {
+        this.fakeMethods = fakeMethods;
+    }
 
-   void collectFakeMethods(@Nonnull Class<?> fakeClass) {
-      ClassLoad.registerLoadedClass(fakeClass);
-      fakeMethods.setFakeClassInternalName(JavaType.getInternalName(fakeClass));
+    void collectFakeMethods(@Nonnull Class<?> fakeClass) {
+        ClassLoad.registerLoadedClass(fakeClass);
+        fakeMethods.setFakeClassInternalName(JavaType.getInternalName(fakeClass));
 
-      Class<?> classToCollectFakesFrom = fakeClass;
+        Class<?> classToCollectFakesFrom = fakeClass;
 
-      do {
-         byte[] classfileBytes = ClassFile.readBytesFromClassFile(classToCollectFakesFrom);
-         ClassMetadataReader cmr = new ClassMetadataReader(classfileBytes, ANNOTATIONS);
-         List<MethodInfo> methods = cmr.getMethods();
-         addFakeMethods(methods);
+        do {
+            byte[] classfileBytes = ClassFile.readBytesFromClassFile(classToCollectFakesFrom);
+            ClassMetadataReader cmr = new ClassMetadataReader(classfileBytes, ANNOTATIONS);
+            List<MethodInfo> methods = cmr.getMethods();
+            addFakeMethods(methods);
 
-         classToCollectFakesFrom = classToCollectFakesFrom.getSuperclass();
-         collectingFromSuperClass = true;
-      }
-      while (classToCollectFakesFrom != MockUp.class);
-   }
+            classToCollectFakesFrom = classToCollectFakesFrom.getSuperclass();
+            collectingFromSuperClass = true;
+        } while (classToCollectFakesFrom != MockUp.class);
+    }
 
-   private void addFakeMethods(@Nonnull List<MethodInfo> methods) {
-      for (MethodInfo method : methods) {
-         int access = method.accessFlags;
+    private void addFakeMethods(@Nonnull List<MethodInfo> methods) {
+        for (MethodInfo method : methods) {
+            int access = method.accessFlags;
 
-         if ((access & INVALID_METHOD_ACCESSES) == 0 && method.isMethod() && method.hasAnnotation("Lmockit/Mock;")) {
-            FakeMethod fakeMethod = fakeMethods.addMethod(collectingFromSuperClass, access, method.name, method.desc);
+            if ((access & INVALID_METHOD_ACCESSES) == 0 && method.isMethod() && method.hasAnnotation("Lmockit/Mock;")) {
+                FakeMethod fakeMethod = fakeMethods.addMethod(collectingFromSuperClass, access, method.name,
+                        method.desc);
 
-            if (fakeMethod != null && fakeMethod.requiresFakeState()) {
-               FakeState fakeState = new FakeState(fakeMethod);
-               fakeMethods.addFakeState(fakeState);
+                if (fakeMethod != null && fakeMethod.requiresFakeState()) {
+                    FakeState fakeState = new FakeState(fakeMethod);
+                    fakeMethods.addFakeState(fakeState);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 }

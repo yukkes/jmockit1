@@ -8,72 +8,70 @@ import javax.annotation.*;
 
 import mockit.asm.types.*;
 
-public final class TypeDescriptor
-{
-   private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
+public final class TypeDescriptor {
+    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
 
-   private TypeDescriptor() {}
+    private TypeDescriptor() {
+    }
 
-   @Nonnull
-   public static Class<?>[] getParameterTypes(@Nonnull String methodDesc) {
-      JavaType[] paramTypes = JavaType.getArgumentTypes(methodDesc);
+    @Nonnull
+    public static Class<?>[] getParameterTypes(@Nonnull String methodDesc) {
+        JavaType[] paramTypes = JavaType.getArgumentTypes(methodDesc);
 
-      if (paramTypes.length == 0) {
-         return NO_PARAMETERS;
-      }
+        if (paramTypes.length == 0) {
+            return NO_PARAMETERS;
+        }
 
-      Class<?>[] paramClasses = new Class<?>[paramTypes.length];
+        Class<?>[] paramClasses = new Class<?>[paramTypes.length];
 
-      for (int i = 0; i < paramTypes.length; i++) {
-         paramClasses[i] = getClassForType(paramTypes[i]);
-      }
+        for (int i = 0; i < paramTypes.length; i++) {
+            paramClasses[i] = getClassForType(paramTypes[i]);
+        }
 
-      return paramClasses;
-   }
+        return paramClasses;
+    }
 
-   @Nonnull
-   public static Class<?> getReturnType(@Nonnull String methodSignature) {
-      String methodDesc = methodDescriptionWithoutTypeArguments(methodSignature);
-      JavaType returnType = JavaType.getReturnType(methodDesc);
-      return getClassForType(returnType);
-   }
+    @Nonnull
+    public static Class<?> getReturnType(@Nonnull String methodSignature) {
+        String methodDesc = methodDescriptionWithoutTypeArguments(methodSignature);
+        JavaType returnType = JavaType.getReturnType(methodDesc);
+        return getClassForType(returnType);
+    }
 
-   @Nonnull
-   private static String methodDescriptionWithoutTypeArguments(@Nonnull String methodSignature) {
-      while (true) {
-         int p = methodSignature.indexOf('<');
+    @Nonnull
+    private static String methodDescriptionWithoutTypeArguments(@Nonnull String methodSignature) {
+        while (true) {
+            int p = methodSignature.indexOf('<');
 
-         if (p < 0) {
-            return methodSignature;
-         }
+            if (p < 0) {
+                return methodSignature;
+            }
 
-         String firstPart = methodSignature.substring(0, p);
-         int q = methodSignature.indexOf('>', p) + 1;
+            String firstPart = methodSignature.substring(0, p);
+            int q = methodSignature.indexOf('>', p) + 1;
 
-         if (methodSignature.charAt(q) == '.') { // in case there is an inner class
-            methodSignature = firstPart + '$' + methodSignature.substring(q + 1);
-         }
-         else {
-            methodSignature = firstPart + methodSignature.substring(q);
-         }
-      }
-   }
+            if (methodSignature.charAt(q) == '.') { // in case there is an inner class
+                methodSignature = firstPart + '$' + methodSignature.substring(q + 1);
+            } else {
+                methodSignature = firstPart + methodSignature.substring(q);
+            }
+        }
+    }
 
-   @Nonnull
-   public static Class<?> getClassForType(@Nonnull JavaType type) {
-      if (type instanceof PrimitiveType) {
-         return ((PrimitiveType) type).getType();
-      }
+    @Nonnull
+    public static Class<?> getClassForType(@Nonnull JavaType type) {
+        if (type instanceof PrimitiveType) {
+            return ((PrimitiveType) type).getType();
+        }
 
-      String className;
+        String className;
 
-      if (type instanceof ArrayType) {
-         className = type.getDescriptor().replace('/', '.');
-      }
-      else {
-         className = type.getClassName();
-      }
+        if (type instanceof ArrayType) {
+            className = type.getDescriptor().replace('/', '.');
+        } else {
+            className = type.getClassName();
+        }
 
-      return ClassLoad.loadClass(className);
-   }
+        return ClassLoad.loadClass(className);
+    }
 }

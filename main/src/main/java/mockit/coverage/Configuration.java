@@ -5,40 +5,43 @@
 package mockit.coverage;
 
 import java.io.*;
+
 import javax.annotation.*;
 
-public final class Configuration
-{
-   private static final String COVERAGE_PREFIX = "coverage-";
+public final class Configuration {
+    private static final String COVERAGE_PREFIX = "coverage-";
 
-   private Configuration() {}
+    private Configuration() {
+    }
 
-   @Nullable
-   public static String getProperty(@Nonnull String nameSuffix) {
-      return getProperty(nameSuffix, null);
-   }
+    @Nullable
+    public static String getProperty(@Nonnull String nameSuffix) {
+        return getProperty(nameSuffix, null);
+    }
 
-   public static String getProperty(@Nonnull String nameSuffix, @Nullable String defaultValue) {
-      return System.getProperty(COVERAGE_PREFIX + nameSuffix, defaultValue);
-   }
+    public static String getProperty(@Nonnull String nameSuffix, @Nullable String defaultValue) {
+        return System.getProperty(COVERAGE_PREFIX + nameSuffix, defaultValue);
+    }
 
-   @Nullable
-   public static String getOrChooseOutputDirectory(@Nonnull String outputDir) {
-      if (!outputDir.isEmpty()) {
-         return outputDir;
-      }
+    @Nullable
+    public static String getOrChooseOutputDirectory(@Nonnull String outputDir) {
+        if (!outputDir.isEmpty()) {
+            return outputDir;
+        }
 
-      return isTargetSubDirectoryAvailable() ? "target" : null;
-   }
+        return isTargetSubDirectoryAvailable() ? "target" : null;
+    }
 
-   private static boolean isTargetSubDirectoryAvailable() { return System.getProperty("basedir") != null || new File("target").exists(); }
+    private static boolean isTargetSubDirectoryAvailable() {
+        return System.getProperty("basedir") != null || new File("target").exists();
+    }
 
-   @Nonnull
-   public static String getOrChooseOutputDirectory(@Nonnull String outputDir, @Nonnull String defaultDir) {
-      if (!outputDir.isEmpty()) {
-         return outputDir;
-      }
+    @Nonnull
+    public static String getOrChooseOutputDirectory(@Nonnull String outputDir, @Nonnull String defaultDir) {
+        if (!outputDir.isEmpty()) {
+            return outputDir;
+        }
 
-      return isTargetSubDirectoryAvailable() ? "target/" + defaultDir : defaultDir;
-   }
+        return isTargetSubDirectoryAvailable() ? "target/" + defaultDir : defaultDir;
+    }
 }

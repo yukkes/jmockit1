@@ -7,63 +7,67 @@ package mockit.coverage.modification;
 import java.io.*;
 import java.security.*;
 import java.util.*;
+
 import javax.annotation.*;
 
 /**
  * Finds and loads all classes that should also be measured, but were not loaded until now.
  */
-public final class ClassesNotLoaded
-{
-   @Nonnull private final ClassModification classModification;
-   @Nonnegative private int firstPosAfterParentDir;
+public final class ClassesNotLoaded {
+    @Nonnull
+    private final ClassModification classModification;
+    @Nonnegative
+    private int firstPosAfterParentDir;
 
-   public ClassesNotLoaded(@Nonnull ClassModification classModification) { this.classModification = classModification; }
+    public ClassesNotLoaded(@Nonnull ClassModification classModification) {
+        this.classModification = classModification;
+    }
 
-   public void gatherCoverageData() {
-      Set<ProtectionDomain> protectionDomainsSoFar = new HashSet<>(classModification.protectionDomainsWithUniqueLocations);
+    public void gatherCoverageData() {
+        Set<ProtectionDomain> protectionDomainsSoFar = new HashSet<>(
+                classModification.protectionDomainsWithUniqueLocations);
 
-      for (ProtectionDomain pd : protectionDomainsSoFar) {
-         File classPathEntry = new File(pd.getCodeSource().getLocation().getPath());
+        for (ProtectionDomain pd : protectionDomainsSoFar) {
+            File classPathEntry = new File(pd.getCodeSource().getLocation().getPath());
 
-         if (!classPathEntry.getPath().endsWith(".jar")) {
-            firstPosAfterParentDir = classPathEntry.getPath().length() + 1;
-            loadAdditionalClasses(classPathEntry, pd);
-         }
-      }
-   }
-
-   private void loadAdditionalClasses(@Nonnull File classPathEntry, @Nonnull ProtectionDomain protectionDomain) {
-      File[] filesInDir = classPathEntry.listFiles();
-
-      if (filesInDir != null) {
-         for (File fileInDir : filesInDir) {
-            if (fileInDir.isDirectory()) {
-               loadAdditionalClasses(fileInDir, protectionDomain);
+            if (!classPathEntry.getPath().endsWith(".jar")) {
+                firstPosAfterParentDir = classPathEntry.getPath().length() + 1;
+                loadAdditionalClasses(classPathEntry, pd);
             }
-            else {
-               loadAdditionalClass(fileInDir.getPath(), protectionDomain);
+        }
+    }
+
+    private void loadAdditionalClasses(@Nonnull File classPathEntry, @Nonnull ProtectionDomain protectionDomain) {
+        File[] filesInDir = classPathEntry.listFiles();
+
+        if (filesInDir != null) {
+            for (File fileInDir : filesInDir) {
+                if (fileInDir.isDirectory()) {
+                    loadAdditionalClasses(fileInDir, protectionDomain);
+                } else {
+                    loadAdditionalClass(fileInDir.getPath(), protectionDomain);
+                }
             }
-         }
-      }
-   }
+        }
+    }
 
-   private void loadAdditionalClass(@Nonnull String filePath, @Nonnull ProtectionDomain protectionDomain) {
-      int p = filePath.lastIndexOf(".class");
+    private void loadAdditionalClass(@Nonnull String filePath, @Nonnull ProtectionDomain protectionDomain) {
+        int p = filePath.lastIndexOf(".class");
 
-      if (p > 0) {
-         String relativePath = filePath.substring(firstPosAfterParentDir, p);
-         String className = relativePath.replace(File.separatorChar, '.');
+        if (p > 0) {
+            String relativePath = filePath.substring(firstPosAfterParentDir, p);
+            String className = relativePath.replace(File.separatorChar, '.');
 
-         if (classModification.isToBeConsideredForCoverage(className, protectionDomain)) {
-            loadClass(className, protectionDomain);
-         }
-      }
-   }
+            if (classModification.isToBeConsideredForCoverage(className, protectionDomain)) {
+                loadClass(className, protectionDomain);
+            }
+        }
+    }
 
-   private static void loadClass(@Nonnull String className, @Nonnull ProtectionDomain protectionDomain) {
-      try {
-         Class.forName(className, false, protectionDomain.getClassLoader());
-      }
-      catch (ClassNotFoundException | NoClassDefFoundError ignore) {}
-   }
+    private static void loadClass(@Nonnull String className, @Nonnull ProtectionDomain protectionDomain) {
+        try {
+            Class.forName(className, false, protectionDomain.getClassLoader());
+        } catch (ClassNotFoundException | NoClassDefFoundError ignore) {
+        }
+    }
 }

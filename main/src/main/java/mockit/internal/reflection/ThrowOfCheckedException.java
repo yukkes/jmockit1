@@ -7,15 +7,19 @@ package mockit.internal.reflection;
 import javax.annotation.*;
 
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
-final class ThrowOfCheckedException
-{
-   private static Exception exceptionToThrow;
+final class ThrowOfCheckedException {
+    private static Exception exceptionToThrow;
 
-   ThrowOfCheckedException() throws Exception { throw exceptionToThrow; }
+    ThrowOfCheckedException() throws Exception {
+        throw exceptionToThrow;
+    }
 
-   @SuppressWarnings("deprecation")
-   static synchronized void doThrow(@Nonnull Exception checkedException) {
-      exceptionToThrow = checkedException;
-      try { ThrowOfCheckedException.class.newInstance(); } catch (InstantiationException | IllegalAccessException ignore) {}
-   }
+    @SuppressWarnings("deprecation")
+    static synchronized void doThrow(@Nonnull Exception checkedException) {
+        exceptionToThrow = checkedException;
+        try {
+            ThrowOfCheckedException.class.newInstance();
+        } catch (InstantiationException | IllegalAccessException ignore) {
+        }
+    }
 }

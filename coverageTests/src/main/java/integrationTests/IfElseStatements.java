@@ -4,314 +4,346 @@ package integrationTests;
  * The Class IfElseStatements.
  */
 @SuppressWarnings("ControlFlowStatementWithoutBraces")
-public final class IfElseStatements
-{
-   
-   /**
-    * Simple if.
-    *
-    * @param b the b
-    */
-   void simpleIf(boolean b)
-   {
-      if (b) {
-         System.gc(); System.runFinalization();
-      }
-   }
+public final class IfElseStatements {
 
-   /**
-    * If and else.
-    *
-    * @param b the b
-    */
-   void ifAndElse(boolean b)
-   {
-      if (b) {
-         System.gc();
-      }
-      else {
-         System.runFinalization();
-      }
-   }
+    /**
+     * Simple if.
+     *
+     * @param b
+     *            the b
+     */
+    void simpleIf(boolean b) {
+        if (b) {
+            System.gc();
+            System.runFinalization();
+        }
+    }
 
-   /**
-    * Single line if.
-    *
-    * @param b the b
-    */
-   void singleLineIf(boolean b)
-   {
-      if (b) System.gc();
-   }
+    /**
+     * If and else.
+     *
+     * @param b
+     *            the b
+     */
+    void ifAndElse(boolean b) {
+        if (b) {
+            System.gc();
+        } else {
+            System.runFinalization();
+        }
+    }
 
-   /**
-    * Single line if and else.
-    *
-    * @param b the b
-    */
-   void singleLineIfAndElse(boolean b)
-   {
-      if (b) System.gc(); else System.runFinalization();
-   }
+    /**
+     * Single line if.
+     *
+     * @param b
+     *            the b
+     */
+    void singleLineIf(boolean b) {
+        if (b)
+            System.gc();
+    }
 
-   /**
-    * Method with four different paths and simple lines.
-    *
-    * @param b the b
-    * @param i the i
-    */
-   void methodWithFourDifferentPathsAndSimpleLines(boolean b, int i)
-   {
-      if (b) {
-         System.gc();
-      }
-      else {
-         System.runFinalization();
-      }
+    /**
+     * Single line if and else.
+     *
+     * @param b
+     *            the b
+     */
+    void singleLineIfAndElse(boolean b) {
+        if (b)
+            System.gc();
+        else
+            System.runFinalization();
+    }
 
-      if (i > 0) {
-         System.gc();
-      }
-   }
+    /**
+     * Method with four different paths and simple lines.
+     *
+     * @param b
+     *            the b
+     * @param i
+     *            the i
+     */
+    void methodWithFourDifferentPathsAndSimpleLines(boolean b, int i) {
+        if (b) {
+            System.gc();
+        } else {
+            System.runFinalization();
+        }
 
-   /**
-    * Method with four different paths and segmented lines.
-    *
-    * @param b the b
-    * @param i the i
-    */
-   void methodWithFourDifferentPathsAndSegmentedLines(boolean b, int i)
-   {
-      if (b) { System.gc(); } else { System.runFinalization(); }
+        if (i > 0) {
+            System.gc();
+        }
+    }
 
-      if (i > 0) { System.gc(); }
-      else { System.runFinalization(); }
-   }
+    /**
+     * Method with four different paths and segmented lines.
+     *
+     * @param b
+     *            the b
+     * @param i
+     *            the i
+     */
+    void methodWithFourDifferentPathsAndSegmentedLines(boolean b, int i) {
+        if (b) {
+            System.gc();
+        } else {
+            System.runFinalization();
+        }
 
-   /**
-    * If else with complex boolean condition.
-    *
-    * @param a the a
-    * @param b the b
-    * @return true, if successful
-    */
-   boolean ifElseWithComplexBooleanCondition(boolean a, boolean b)
-   {
-      //noinspection RedundantIfStatement
-      if (a || b)
-         return true;
-      else
-         return false;
-   }
+        if (i > 0) {
+            System.gc();
+        } else {
+            System.runFinalization();
+        }
+    }
 
-   /**
-    * Return input.
-    *
-    * @param x the x
-    * @param a the a
-    * @param b the b
-    * @param c the c
-    * @return the int
-    */
-   // Must return the same value of x as it was called with. Some paths will fail that requirement.
-   @SuppressWarnings({"AssignmentToMethodParameter"})
-   int returnInput(int x, boolean a, boolean b, boolean c)
-   {
-      if (a) {
-         x++;
-      }
+    /**
+     * If else with complex boolean condition.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     *
+     * @return true, if successful
+     */
+    boolean ifElseWithComplexBooleanCondition(boolean a, boolean b) {
+        // noinspection RedundantIfStatement
+        if (a || b)
+            return true;
+        else
+            return false;
+    }
 
-      if (b) {
-         x--;
-      }
+    /**
+     * Return input.
+     *
+     * @param x
+     *            the x
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     * @param c
+     *            the c
+     *
+     * @return the int
+     */
+    // Must return the same value of x as it was called with. Some paths will fail that requirement.
+    @SuppressWarnings({ "AssignmentToMethodParameter" })
+    int returnInput(int x, boolean a, boolean b, boolean c) {
+        if (a) {
+            x++;
+        }
 
-      if (c) {
-         //noinspection SillyAssignment
-         x = x;
-      }
+        if (b) {
+            x--;
+        }
 
-      return x;
-   }
+        if (c) {
+            // noinspection SillyAssignment
+            x = x;
+        }
 
-   /**
-    * Nested if.
-    *
-    * @param a the a
-    * @param b the b
-    * @return the int
-    */
-   int nestedIf(boolean a, boolean b)
-   {
-      int i = 1;
+        return x;
+    }
 
-      if (a) {
-         if (b) {
-            i = 2;
-         }
-      }
+    /**
+     * Nested if.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     *
+     * @return the int
+     */
+    int nestedIf(boolean a, boolean b) {
+        int i = 1;
 
-      return i;
-   }
+        if (a) {
+            if (b) {
+                i = 2;
+            }
+        }
 
-   /**
-    * If else with nested if.
-    *
-    * @param a the a
-    * @param b the b
-    * @return the int
-    */
-   int ifElseWithNestedIf(boolean a, boolean b)
-   {
-      int i = 1;
+        return i;
+    }
 
-      if (a) {
-         if (b) {
-            i = 2;
-         }
-      }
-      else {
-         return 3;
-      }
+    /**
+     * If else with nested if.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     *
+     * @return the int
+     */
+    int ifElseWithNestedIf(boolean a, boolean b) {
+        int i = 1;
 
-      return i;
-   }
+        if (a) {
+            if (b) {
+                i = 2;
+            }
+        } else {
+            return 3;
+        }
 
-   /**
-    * Nested if else.
-    *
-    * @param a the a
-    * @param b the b
-    * @return the int
-    */
-   int nestedIfElse(boolean a, boolean b)
-   {
-      int i = 1;
+        return i;
+    }
 
-      if (a) {
-         if (b) {
-            i = 2;
-         }
-         else {
-            i = 3;
-         }
-      }
-      else if (b) {
-         i = 4;
-      }
+    /**
+     * Nested if else.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     *
+     * @return the int
+     */
+    int nestedIfElse(boolean a, boolean b) {
+        int i = 1;
 
-      return i;
-   }
+        if (a) {
+            if (b) {
+                i = 2;
+            } else {
+                i = 3;
+            }
+        } else if (b) {
+            i = 4;
+        }
 
-   /**
-    * Block comment with method signature: infeasiblePaths(boolean a).
-    *
-    * @param a the a
-    */
-   void infeasiblePaths(boolean a)
-   {
-      if (a) {
-         System.gc();
-      }
+        return i;
+    }
 
-      if (a) {
-         System.runFinalization();
-      }
-   }
+    /**
+     * Block comment with method signature: infeasiblePaths(boolean a).
+     *
+     * @param a
+     *            the a
+     */
+    void infeasiblePaths(boolean a) {
+        if (a) {
+            System.gc();
+        }
 
-   /**
-    * Another single line if and else.
-    *
-    * @param b the b
-    * @return the int
-    */
-   int anotherSingleLineIfAndElse(boolean b)
-   {
-      int r; if (b) r = 1; else r = 2; return r;
-   }
+        if (a) {
+            System.runFinalization();
+        }
+    }
 
-   /**
-    * Yet another single line if and else.
-    *
-    * @param b the b
-    * @return the int
-    */
-   int yetAnotherSingleLineIfAndElse(boolean b)
-   {
-      if (b) return 1; else return 2;
-   }
+    /**
+     * Another single line if and else.
+     *
+     * @param b
+     *            the b
+     *
+     * @return the int
+     */
+    int anotherSingleLineIfAndElse(boolean b) {
+        int r;
+        if (b)
+            r = 1;
+        else
+            r = 2;
+        return r;
+    }
 
-   /**
-    * If with boolean and operator.
-    *
-    * @param b1 the b 1
-    * @param b2 the b 2
-    */
-   void ifWithBooleanAndOperator(boolean b1, boolean b2)
-   {
-      if (b1 && b2) {
-         System.gc();
-      }
-   }
+    /**
+     * Yet another single line if and else.
+     *
+     * @param b
+     *            the b
+     *
+     * @return the int
+     */
+    int yetAnotherSingleLineIfAndElse(boolean b) {
+        if (b)
+            return 1;
+        else
+            return 2;
+    }
 
-   /**
-    * If with boolean or operator.
-    *
-    * @param b1 the b 1
-    * @param b2 the b 2
-    */
-   void ifWithBooleanOrOperator(boolean b1, boolean b2)
-   {
-      if (b1 || b2) {
-         System.gc();
-      }
-   }
+    /**
+     * If with boolean and operator.
+     *
+     * @param b1
+     *            the b 1
+     * @param b2
+     *            the b 2
+     */
+    void ifWithBooleanAndOperator(boolean b1, boolean b2) {
+        if (b1 && b2) {
+            System.gc();
+        }
+    }
 
-   /**
-    * Another if with boolean and operator.
-    *
-    * @param b1 the b 1
-    * @param b2 the b 2
-    */
-   void anotherIfWithBooleanAndOperator(boolean b1, boolean b2)
-   {
-      if (b1 && b2) {
-         System.gc();
-      }
-   }
+    /**
+     * If with boolean or operator.
+     *
+     * @param b1
+     *            the b 1
+     * @param b2
+     *            the b 2
+     */
+    void ifWithBooleanOrOperator(boolean b1, boolean b2) {
+        if (b1 || b2) {
+            System.gc();
+        }
+    }
 
-   /**
-    * If spanning multiple lines.
-    *
-    * @param b the b
-    * @param i the i
-    */
-   void ifSpanningMultipleLines(boolean b, int i)
-   {
-      if (
-         b ||
-         i > 0
-      ) {
-         System.gc();
-      }
-   }
+    /**
+     * Another if with boolean and operator.
+     *
+     * @param b1
+     *            the b 1
+     * @param b2
+     *            the b 2
+     */
+    void anotherIfWithBooleanAndOperator(boolean b1, boolean b2) {
+        if (b1 && b2) {
+            System.gc();
+        }
+    }
 
-   /**
-    * Method to be called from custom runner test.
-    *
-    * @param s the s
-    * @return the class loader
-    */
-   ClassLoader methodToBeCalledFromCustomRunnerTest(String s)
-   {
-      instanceField = s;
+    /**
+     * If spanning multiple lines.
+     *
+     * @param b
+     *            the b
+     * @param i
+     *            the i
+     */
+    void ifSpanningMultipleLines(boolean b, int i) {
+        if (b || i > 0) {
+            System.gc();
+        }
+    }
 
-      if (s.isEmpty()) {
-         return null;
-      }
+    /**
+     * Method to be called from custom runner test.
+     *
+     * @param s
+     *            the s
+     *
+     * @return the class loader
+     */
+    ClassLoader methodToBeCalledFromCustomRunnerTest(String s) {
+        instanceField = s;
 
-      return getClass().getClassLoader();
-   }
+        if (s.isEmpty()) {
+            return null;
+        }
 
-   /** The instance field. */
-   String instanceField;
+        return getClass().getClassLoader();
+    }
+
+    /** The instance field. */
+    String instanceField;
 }

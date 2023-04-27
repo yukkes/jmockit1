@@ -1,34 +1,37 @@
 package integrationTests;
 
 import java.beans.*;
+
 import javax.sql.*;
 
 /**
  * The Class ClassWithAnnotations.
  */
 @Deprecated
-final class ClassWithAnnotations
-{
-   
-   /** The data source. */
-   @SuppressWarnings("DefaultAnnotationParam")
-   @AnAnnotation(integers = {})
-   DataSource dataSource;
+final class ClassWithAnnotations {
 
-   /** The values. */
-   @Deprecated
-   @AnAnnotation(integers = {1, 2, 3})
-   int[] values;
+    /** The data source. */
+    @SuppressWarnings("DefaultAnnotationParam")
+    @AnAnnotation(integers = {})
+    DataSource dataSource;
 
-   /**
-    * Instantiates a new class with annotations.
-    */
-   @ConstructorProperties({"Ab", "cde"})
-   ClassWithAnnotations() {}
+    /** The values. */
+    @Deprecated
+    @AnAnnotation(integers = { 1, 2, 3 })
+    int[] values;
 
-   /**
-    * A method.
-    */
-   @AnAnnotation("some text") @Deprecated
-   void aMethod() {}
+    /**
+     * Instantiates a new class with annotations.
+     */
+    @ConstructorProperties({ "Ab", "cde" })
+    ClassWithAnnotations() {
+    }
+
+    /**
+     * A method.
+     */
+    @AnAnnotation("some text")
+    @Deprecated
+    void aMethod() {
+    }
 }

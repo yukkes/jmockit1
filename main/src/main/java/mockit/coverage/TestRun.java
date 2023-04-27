@@ -11,98 +11,110 @@ import mockit.coverage.lines.*;
 import mockit.coverage.testRedundancy.*;
 
 @SuppressWarnings("unused")
-public final class TestRun
-{
-   private static final Object LOCK = new Object();
-   private static boolean terminated;
+public final class TestRun {
+    private static final Object LOCK = new Object();
+    private static boolean terminated;
 
-   private TestRun() {}
+    private TestRun() {
+    }
 
-   public static void lineExecuted(@Nonnegative int fileIndex, @Nonnegative int line) {
-      if (terminated) return;
+    public static void lineExecuted(@Nonnegative int fileIndex, @Nonnegative int line) {
+        if (terminated)
+            return;
 
-      synchronized (LOCK) {
-         CoverageData coverageData = CoverageData.instance();
-         PerFileLineCoverage fileData = coverageData.getFileData(fileIndex).lineCoverageInfo;
-         CallPoint callPoint = null;
-
-         if (coverageData.isWithCallPoints() && fileData.acceptsAdditionalCallPoints(line)) {
-            callPoint = CallPoint.create(new Throwable());
-         }
-
-         int previousExecutionCount = fileData.registerExecution(line, callPoint);
-         recordNewLineOrSegmentAsCoveredIfApplicable(previousExecutionCount);
-      }
-   }
-
-   private static void recordNewLineOrSegmentAsCoveredIfApplicable(@Nonnegative int previousExecutionCount) {
-      TestCoverage testCoverage = TestCoverage.INSTANCE;
-
-      if (testCoverage != null) {
-         testCoverage.recordNewItemCoveredByTestIfApplicable(previousExecutionCount);
-      }
-   }
-
-   public static void branchExecuted(@Nonnegative int fileIndex, @Nonnegative int line, @Nonnegative int branchIndex) {
-      if (terminated) return;
-
-      synchronized (LOCK) {
-         CoverageData coverageData = CoverageData.instance();
-         PerFileLineCoverage fileData = coverageData.getFileData(fileIndex).lineCoverageInfo;
-
-         if (fileData.hasValidBranch(line, branchIndex)) {
+        synchronized (LOCK) {
+            CoverageData coverageData = CoverageData.instance();
+            PerFileLineCoverage fileData = coverageData.getFileData(fileIndex).lineCoverageInfo;
             CallPoint callPoint = null;
 
-            if (coverageData.isWithCallPoints() && fileData.acceptsAdditionalCallPoints(line, branchIndex)) {
-               callPoint = CallPoint.create(new Throwable());
+            if (coverageData.isWithCallPoints() && fileData.acceptsAdditionalCallPoints(line)) {
+                callPoint = CallPoint.create(new Throwable());
             }
 
-            int previousExecutionCount = fileData.registerExecution(line, branchIndex, callPoint);
+            int previousExecutionCount = fileData.registerExecution(line, callPoint);
             recordNewLineOrSegmentAsCoveredIfApplicable(previousExecutionCount);
-         }
-      }
-   }
+        }
+    }
 
-   public static void fieldAssigned(@Nonnull String file, @Nonnull String classAndFieldNames) {
-      if (terminated) return;
+    private static void recordNewLineOrSegmentAsCoveredIfApplicable(@Nonnegative int previousExecutionCount) {
+        TestCoverage testCoverage = TestCoverage.INSTANCE;
 
-      synchronized (LOCK) {
-         CoverageData coverageData = CoverageData.instance();
-         FileCoverageData fileData = coverageData.getFileData(file);
-         fileData.dataCoverageInfo.registerAssignmentToStaticField(classAndFieldNames);
-      }
-   }
+        if (testCoverage != null) {
+            testCoverage.recordNewItemCoveredByTestIfApplicable(previousExecutionCount);
+        }
+    }
 
-   public static void fieldRead(@Nonnull String file, @Nonnull String classAndFieldNames) {
-      if (terminated) return;
+    public static void branchExecuted(@Nonnegative int fileIndex, @Nonnegative int line, @Nonnegative int branchIndex) {
+        if (terminated)
+            return;
 
-      synchronized (LOCK) {
-         CoverageData coverageData = CoverageData.instance();
-         FileCoverageData fileData = coverageData.getFileData(file);
-         fileData.dataCoverageInfo.registerReadOfStaticField(classAndFieldNames);
-      }
-   }
+        synchronized (LOCK) {
+            CoverageData coverageData = CoverageData.instance();
+            PerFileLineCoverage fileData = coverageData.getFileData(fileIndex).lineCoverageInfo;
 
-   public static void fieldAssigned(@Nonnull Object instance, @Nonnull String file, @Nonnull String classAndFieldNames) {
-      if (terminated) return;
+            if (fileData.hasValidBranch(line, branchIndex)) {
+                CallPoint callPoint = null;
 
-      synchronized (LOCK) {
-         CoverageData coverageData = CoverageData.instance();
-         FileCoverageData fileData = coverageData.getFileData(file);
-         fileData.dataCoverageInfo.registerAssignmentToInstanceField(instance, classAndFieldNames);
-      }
-   }
+                if (coverageData.isWithCallPoints() && fileData.acceptsAdditionalCallPoints(line, branchIndex)) {
+                    callPoint = CallPoint.create(new Throwable());
+                }
 
-   public static void fieldRead(@Nonnull Object instance, @Nonnull String file, @Nonnull String classAndFieldNames) {
-      if (terminated) return;
+                int previousExecutionCount = fileData.registerExecution(line, branchIndex, callPoint);
+                recordNewLineOrSegmentAsCoveredIfApplicable(previousExecutionCount);
+            }
+        }
+    }
 
-      synchronized (LOCK) {
-         CoverageData coverageData = CoverageData.instance();
-         FileCoverageData fileData = coverageData.getFileData(file);
-         fileData.dataCoverageInfo.registerReadOfInstanceField(instance, classAndFieldNames);
-      }
-   }
+    public static void fieldAssigned(@Nonnull String file, @Nonnull String classAndFieldNames) {
+        if (terminated)
+            return;
 
-   static void terminate() { terminated = true; }
-   public static boolean isTerminated() { return terminated; }
+        synchronized (LOCK) {
+            CoverageData coverageData = CoverageData.instance();
+            FileCoverageData fileData = coverageData.getFileData(file);
+            fileData.dataCoverageInfo.registerAssignmentToStaticField(classAndFieldNames);
+        }
+    }
+
+    public static void fieldRead(@Nonnull String file, @Nonnull String classAndFieldNames) {
+        if (terminated)
+            return;
+
+        synchronized (LOCK) {
+            CoverageData coverageData = CoverageData.instance();
+            FileCoverageData fileData = coverageData.getFileData(file);
+            fileData.dataCoverageInfo.registerReadOfStaticField(classAndFieldNames);
+        }
+    }
+
+    public static void fieldAssigned(@Nonnull Object instance, @Nonnull String file,
+            @Nonnull String classAndFieldNames) {
+        if (terminated)
+            return;
+
+        synchronized (LOCK) {
+            CoverageData coverageData = CoverageData.instance();
+            FileCoverageData fileData = coverageData.getFileData(file);
+            fileData.dataCoverageInfo.registerAssignmentToInstanceField(instance, classAndFieldNames);
+        }
+    }
+
+    public static void fieldRead(@Nonnull Object instance, @Nonnull String file, @Nonnull String classAndFieldNames) {
+        if (terminated)
+            return;
+
+        synchronized (LOCK) {
+            CoverageData coverageData = CoverageData.instance();
+            FileCoverageData fileData = coverageData.getFileData(file);
+            fileData.dataCoverageInfo.registerReadOfInstanceField(instance, classAndFieldNames);
+        }
+    }
+
+    static void terminate() {
+        terminated = true;
+    }
+
+    public static boolean isTerminated() {
+        return terminated;
+    }
 }

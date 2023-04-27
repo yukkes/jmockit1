@@ -6,48 +6,47 @@ package mockit.coverage;
 
 import javax.annotation.*;
 
-public final class CoveragePercentage
-{
-   private CoveragePercentage() {}
+public final class CoveragePercentage {
+    private CoveragePercentage() {
+    }
 
-   public static int calculate(@Nonnegative int coveredCount, @Nonnegative int totalCount) {
-      if (totalCount == 0) {
-         return -1;
-      }
+    public static int calculate(@Nonnegative int coveredCount, @Nonnegative int totalCount) {
+        if (totalCount == 0) {
+            return -1;
+        }
 
-      //noinspection NumericCastThatLosesPrecision
-      return (int) (100.0 * coveredCount / totalCount + 0.5);
-   }
+        // noinspection NumericCastThatLosesPrecision
+        return (int) (100.0 * coveredCount / totalCount + 0.5);
+    }
 
-   @Nonnull
-   public static String percentageColor(@Nonnegative int coveredCount, @Nonnegative int totalCount) {
-      if (coveredCount == 0) {
-         return "ff0000";
-      }
-      else if (coveredCount == totalCount) {
-         return "00ff00";
-      }
+    @Nonnull
+    public static String percentageColor(@Nonnegative int coveredCount, @Nonnegative int totalCount) {
+        if (coveredCount == 0) {
+            return "ff0000";
+        } else if (coveredCount == totalCount) {
+            return "00ff00";
+        }
 
-      double percentage = 100.0 * coveredCount / totalCount;
-      //noinspection NumericCastThatLosesPrecision
-      int green = (int) (0xFF * percentage / 100.0 + 0.5);
-      int red = 0xFF - green;
+        double percentage = 100.0 * coveredCount / totalCount;
+        // noinspection NumericCastThatLosesPrecision
+        int green = (int) (0xFF * percentage / 100.0 + 0.5);
+        int red = 0xFF - green;
 
-      StringBuilder color = new StringBuilder(6);
-      appendColorInHexadecimal(color, red);
-      appendColorInHexadecimal(color, green);
-      color.append("00");
+        StringBuilder color = new StringBuilder(6);
+        appendColorInHexadecimal(color, red);
+        appendColorInHexadecimal(color, green);
+        color.append("00");
 
-      return color.toString();
-   }
+        return color.toString();
+    }
 
-   private static void appendColorInHexadecimal(@Nonnull StringBuilder colorInHexa, @Nonnegative int rgb) {
-      String hex = Integer.toHexString(rgb);
+    private static void appendColorInHexadecimal(@Nonnull StringBuilder colorInHexa, @Nonnegative int rgb) {
+        String hex = Integer.toHexString(rgb);
 
-      if (hex.length() == 1) {
-         colorInHexa.append('0');
-      }
+        if (hex.length() == 1) {
+            colorInHexa.append('0');
+        }
 
-      colorInHexa.append(hex);
-   }
+        colorInHexa.append(hex);
+    }
 }

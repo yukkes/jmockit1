@@ -4,78 +4,80 @@
  */
 package mockit.internal.expectations;
 
+import static mockit.internal.expectations.state.ExecutingTest.*;
+
 import java.util.*;
+
 import javax.annotation.*;
 
 import mockit.internal.expectations.invocation.*;
-import static mockit.internal.expectations.state.ExecutingTest.*;
 
-public final class RecordPhase extends TestOnlyPhase
-{
-   RecordPhase(@Nonnull PhasedExecutionState executionState) { super(executionState); }
+public final class RecordPhase extends TestOnlyPhase {
+    RecordPhase(@Nonnull PhasedExecutionState executionState) {
+        super(executionState);
+    }
 
-   void addResult(@Nullable Object result) {
-      if (currentExpectation != null) {
-         currentExpectation.addResult(result);
-      }
-   }
+    void addResult(@Nullable Object result) {
+        if (currentExpectation != null) {
+            currentExpectation.addResult(result);
+        }
+    }
 
-   public void addSequenceOfReturnValues(@Nonnull Object[] values) {
-      if (currentExpectation != null) {
-         currentExpectation.addSequenceOfReturnValues(values);
-      }
-   }
+    public void addSequenceOfReturnValues(@Nonnull Object[] values) {
+        if (currentExpectation != null) {
+            currentExpectation.addSequenceOfReturnValues(values);
+        }
+    }
 
-   @Nullable @Override
-   Object handleInvocation(
-      @Nullable Object mock, int mockAccess, @Nonnull String mockClassDesc, @Nonnull String mockNameAndDesc,
-      @Nullable String genericSignature, boolean withRealImpl, @Nonnull Object[] args
-   ) {
-      mock = configureMatchingOnMockInstanceIfSpecified(mock);
+    @Nullable
+    @Override
+    Object handleInvocation(@Nullable Object mock, int mockAccess, @Nonnull String mockClassDesc,
+            @Nonnull String mockNameAndDesc, @Nullable String genericSignature, boolean withRealImpl,
+            @Nonnull Object[] args) {
+        mock = configureMatchingOnMockInstanceIfSpecified(mock);
 
-      ExpectedInvocation invocation = new ExpectedInvocation(
-         mock, mockAccess, mockClassDesc, mockNameAndDesc, matchInstance, genericSignature, args);
+        ExpectedInvocation invocation = new ExpectedInvocation(mock, mockAccess, mockClassDesc, mockNameAndDesc,
+                matchInstance, genericSignature, args);
 
-      boolean nonStrictInvocation = false;
+        boolean nonStrictInvocation = false;
 
-      if (!matchInstance && invocation.isConstructor()) {
-         Map<Object, Object> replacementMap = getReplacementMap();
-         replacementMap.put(mock, mock);
-      }
-      else {
-         nonStrictInvocation = isInstanceMethodWithStandardBehavior(mock, mockNameAndDesc);
-      }
+        if (!matchInstance && invocation.isConstructor()) {
+            Map<Object, Object> replacementMap = getReplacementMap();
+            replacementMap.put(mock, mock);
+        } else {
+            nonStrictInvocation = isInstanceMethodWithStandardBehavior(mock, mockNameAndDesc);
+        }
 
-      currentExpectation = new Expectation(this, invocation, nonStrictInvocation);
+        currentExpectation = new Expectation(this, invocation, nonStrictInvocation);
 
-      if (argMatchers != null) {
-         invocation.arguments.setMatchers(argMatchers);
-         argMatchers = null;
-      }
+        if (argMatchers != null) {
+            invocation.arguments.setMatchers(argMatchers);
+            argMatchers = null;
+        }
 
-      executionState.addExpectation(currentExpectation);
+        executionState.addExpectation(currentExpectation);
 
-      return invocation.getDefaultValueForReturnType();
-   }
+        return invocation.getDefaultValueForReturnType();
+    }
 
-   @Nullable
-   private Object configureMatchingOnMockInstanceIfSpecified(@Nullable Object mock) {
-      matchInstance = false;
+    @Nullable
+    private Object configureMatchingOnMockInstanceIfSpecified(@Nullable Object mock) {
+        matchInstance = false;
 
-      if (mock == null) {
-         return null;
-      }
+        if (mock == null) {
+            return null;
+        }
 
-      Map<Object, Object> replacementMap = getReplacementMap();
-      Object replacementInstance = replacementMap.get(mock);
-      matchInstance = mock == replacementInstance || isEnumElement(mock);
-      return mock;
-   }
+        Map<Object, Object> replacementMap = getReplacementMap();
+        Object replacementInstance = replacementMap.get(mock);
+        matchInstance = mock == replacementInstance || isEnumElement(mock);
+        return mock;
+    }
 
-   @Override
-   void handleInvocationCountConstraint(int minInvocations, int maxInvocations) {
-      if (currentExpectation != null) {
-         currentExpectation.constraints.setLimits(minInvocations, maxInvocations);
-      }
-   }
+    @Override
+    void handleInvocationCountConstraint(int minInvocations, int maxInvocations) {
+        if (currentExpectation != null) {
+            currentExpectation.constraints.setLimits(minInvocations, maxInvocations);
+        }
+    }
 }

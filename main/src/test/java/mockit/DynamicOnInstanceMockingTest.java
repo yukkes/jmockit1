@@ -1,334 +1,409 @@
 package mockit;
 
-import org.junit.*;
-
 import static org.junit.Assert.*;
 
 import mockit.internal.expectations.invocation.*;
 
+import org.junit.*;
+
 /**
  * The Class DynamicOnInstanceMockingTest.
  */
-public final class DynamicOnInstanceMockingTest
-{
-   
-   /**
-    * The Class Collaborator.
-    */
-   static class Collaborator {
-      
-      /** The value. */
-      protected int value;
+public final class DynamicOnInstanceMockingTest {
 
-      /**
-       * Instantiates a new collaborator.
-       */
-      Collaborator() { value = -1; }
-      
-      /**
-       * Instantiates a new collaborator.
-       *
-       * @param value the value
-       */
-      Collaborator(int value) { this.value = value; }
+    /**
+     * The Class Collaborator.
+     */
+    static class Collaborator {
 
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      int getValue() { return value; }
-      
-      /**
-       * Sets the value.
-       *
-       * @param value the new value
-       */
-      void setValue(int value) { this.value = value; }
-   }
+        /** The value. */
+        protected int value;
 
-   /**
-    * The Class AnotherDependency.
-    */
-   static class AnotherDependency {
-      
-      /**
-       * Gets the name.
-       *
-       * @return the name
-       */
-      public String getName() { return ""; }
-   }
+        /**
+         * Instantiates a new collaborator.
+         */
+        Collaborator() {
+            value = -1;
+        }
 
-   /**
-    * Mocking one instance and matching invocations only on that instance.
-    */
-   @Test
-   public void mockingOneInstanceAndMatchingInvocationsOnlyOnThatInstance() {
-      Collaborator collaborator1 = new Collaborator();
-      Collaborator collaborator2 = new Collaborator();
-      final Collaborator collaborator3 = new Collaborator();
+        /**
+         * Instantiates a new collaborator.
+         *
+         * @param value
+         *            the value
+         */
+        Collaborator(int value) {
+            this.value = value;
+        }
 
-      new Expectations(collaborator3) {{
-         collaborator3.getValue(); result = 3;
-      }};
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return value;
+        }
 
-      assertEquals(-1, collaborator1.getValue());
-      assertEquals(-1, collaborator2.getValue());
-      assertEquals(3, collaborator3.getValue());
-      assertEquals(2, new Collaborator(2).getValue());
-   }
+        /**
+         * Sets the value.
+         *
+         * @param value
+         *            the new value
+         */
+        void setValue(int value) {
+            this.value = value;
+        }
+    }
 
-   /**
-    * Mocking two instances and matching invocations on each one.
-    */
-   @Test
-   public void mockingTwoInstancesAndMatchingInvocationsOnEachOne() {
-      final Collaborator collaborator1 = new Collaborator();
-      Collaborator collaborator2 = new Collaborator();
+    /**
+     * The Class AnotherDependency.
+     */
+    static class AnotherDependency {
 
-      new Expectations(collaborator1, collaborator2) {{
-         collaborator1.getValue(); result = 1;
-      }};
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
+        public String getName() {
+            return "";
+        }
+    }
 
-      collaborator2.setValue(2);
-      assertEquals(2, collaborator2.getValue());
-      assertEquals(1, collaborator1.getValue());
-      assertEquals(3, new Collaborator(3).getValue());
-   }
+    /**
+     * Mocking one instance and matching invocations only on that instance.
+     */
+    @Test
+    public void mockingOneInstanceAndMatchingInvocationsOnlyOnThatInstance() {
+        Collaborator collaborator1 = new Collaborator();
+        Collaborator collaborator2 = new Collaborator();
+        final Collaborator collaborator3 = new Collaborator();
 
-   /**
-    * Mocking one instance but recording on another.
-    */
-   @Test
-   public void mockingOneInstanceButRecordingOnAnother() {
-      Collaborator collaborator1 = new Collaborator();
-      final Collaborator collaborator2 = new Collaborator();
-      Collaborator collaborator3 = new Collaborator();
+        new Expectations(collaborator3) {
+            {
+                collaborator3.getValue();
+                result = 3;
+            }
+        };
 
-      new Expectations(collaborator1) {{
-         // A misuse of the API:
-         collaborator2.getValue(); result = -2;
-      }};
+        assertEquals(-1, collaborator1.getValue());
+        assertEquals(-1, collaborator2.getValue());
+        assertEquals(3, collaborator3.getValue());
+        assertEquals(2, new Collaborator(2).getValue());
+    }
 
-      collaborator1.setValue(1);
-      collaborator2.setValue(2);
-      collaborator3.setValue(3);
-      assertEquals(1, collaborator1.getValue());
-      assertEquals(-2, collaborator2.getValue());
-      assertEquals(3, collaborator3.getValue());
-   }
+    /**
+     * Mocking two instances and matching invocations on each one.
+     */
+    @Test
+    public void mockingTwoInstancesAndMatchingInvocationsOnEachOne() {
+        final Collaborator collaborator1 = new Collaborator();
+        Collaborator collaborator2 = new Collaborator();
 
-   /**
-    * The Class Foo.
-    */
-   public static class Foo {
-      
-      /**
-       * Builds the value.
-       *
-       * @param s the s
-       * @return the foo
-       */
-      Foo buildValue(@SuppressWarnings("unused") String s) { return this; }
-      
-      /**
-       * Do it.
-       *
-       * @return true, if successful
-       */
-      boolean doIt() { return false; }
-      
-      /**
-       * Do it again.
-       *
-       * @return true, if successful
-       */
-      boolean doItAgain() { return false; }
-      
-      /**
-       * Gets the bar.
-       *
-       * @return the bar
-       */
-      AnotherDependency getBar() { return null; }
-   }
+        new Expectations(collaborator1, collaborator2) {
+            {
+                collaborator1.getValue();
+                result = 1;
+            }
+        };
 
-   /**
-    * The Class SubFoo.
-    */
-   public static class SubFoo extends Foo {}
+        collaborator2.setValue(2);
+        assertEquals(2, collaborator2.getValue());
+        assertEquals(1, collaborator1.getValue());
+        assertEquals(3, new Collaborator(3).getValue());
+    }
 
-   /**
-    * Record duplicate invocation on two dynamic mocks of different types but shared base class.
-    */
-   @Test
-   public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass() {
-      final Foo f1 = new Foo();
-      final SubFoo f2 = new SubFoo();
+    /**
+     * Mocking one instance but recording on another.
+     */
+    @Test
+    public void mockingOneInstanceButRecordingOnAnother() {
+        Collaborator collaborator1 = new Collaborator();
+        final Collaborator collaborator2 = new Collaborator();
+        Collaborator collaborator3 = new Collaborator();
 
-      new Expectations(f1, f2) {{
-         f1.doIt(); result = true;
-         f2.doIt(); result = false;
-      }};
+        new Expectations(collaborator1) {
+            {
+                // A misuse of the API:
+                collaborator2.getValue();
+                result = -2;
+            }
+        };
 
-      assertTrue(f1.doIt());
-      assertFalse(f2.doIt());
-      assertFalse(new Foo().doIt());
-      assertFalse(new SubFoo().doIt());
-   }
+        collaborator1.setValue(1);
+        collaborator2.setValue(2);
+        collaborator3.setValue(3);
+        assertEquals(1, collaborator1.getValue());
+        assertEquals(-2, collaborator2.getValue());
+        assertEquals(3, collaborator3.getValue());
+    }
 
-   /**
-    * Verify method invocation count on mocked and non mocked instances.
-    */
-   @Test
-   public void verifyMethodInvocationCountOnMockedAndNonMockedInstances() {
-      final Foo foo1 = new Foo();
-      final Foo foo2 = new Foo();
+    /**
+     * The Class Foo.
+     */
+    public static class Foo {
 
-      new Expectations(foo1, foo2) {{
-         foo1.doIt(); result = true;
-      }};
+        /**
+         * Builds the value.
+         *
+         * @param s
+         *            the s
+         *
+         * @return the foo
+         */
+        Foo buildValue(@SuppressWarnings("unused") String s) {
+            return this;
+        }
 
-      assertTrue(foo1.doIt());
-      assertFalse(foo2.doItAgain());
-      assertFalse(foo2.doIt());
-      final Foo foo3 = new Foo();
-      assertFalse(foo1.doItAgain());
-      assertFalse(foo3.doItAgain());
-      assertFalse(foo3.doIt());
-      assertFalse(foo3.doItAgain());
+        /**
+         * Do it.
+         *
+         * @return true, if successful
+         */
+        boolean doIt() {
+            return false;
+        }
 
-      new Verifications() {{
-         assertFalse(foo2.doIt()); times = 1;
-         assertFalse(foo1.doItAgain()); times = 1;
-         assertFalse(foo3.doItAgain()); times = 2;
-      }};
-   }
+        /**
+         * Do it again.
+         *
+         * @return true, if successful
+         */
+        boolean doItAgain() {
+            return false;
+        }
 
-   /**
-    * Creates the cascaded mock from partially mocked instance.
-    */
-   @Test
-   public void createCascadedMockFromPartiallyMockedInstance() {
-      final Foo foo = new Foo();
+        /**
+         * Gets the bar.
+         *
+         * @return the bar
+         */
+        AnotherDependency getBar() {
+            return null;
+        }
+    }
 
-      new Expectations(foo) {{
-         foo.getBar().getName(); result = "cascade";
-      }};
+    /**
+     * The Class SubFoo.
+     */
+    public static class SubFoo extends Foo {
+    }
 
-      assertEquals("cascade", foo.getBar().getName());
-   }
+    /**
+     * Record duplicate invocation on two dynamic mocks of different types but shared base class.
+     */
+    @Test
+    public void recordDuplicateInvocationOnTwoDynamicMocksOfDifferentTypesButSharedBaseClass() {
+        final Foo f1 = new Foo();
+        final SubFoo f2 = new SubFoo();
 
-   /**
-    * Use available mocked instance as cascade from partially mocked instance.
-    *
-    * @param bar the bar
-    */
-   @Test
-   public void useAvailableMockedInstanceAsCascadeFromPartiallyMockedInstance(@Mocked AnotherDependency bar) {
-      final Foo foo = new Foo();
+        new Expectations(f1, f2) {
+            {
+                f1.doIt();
+                result = true;
+                f2.doIt();
+                result = false;
+            }
+        };
 
-      new Expectations(foo) {{
-         foo.getBar().getName(); result = "cascade";
-      }};
+        assertTrue(f1.doIt());
+        assertFalse(f2.doIt());
+        assertFalse(new Foo().doIt());
+        assertFalse(new SubFoo().doIt());
+    }
 
-      AnotherDependency cascadedBar = foo.getBar();
-      assertSame(bar, cascadedBar);
-      assertEquals("cascade", cascadedBar.getName());
-   }
+    /**
+     * Verify method invocation count on mocked and non mocked instances.
+     */
+    @Test
+    public void verifyMethodInvocationCountOnMockedAndNonMockedInstances() {
+        final Foo foo1 = new Foo();
+        final Foo foo2 = new Foo();
 
-   /**
-    * The Class Bar.
-    */
-   static final class Bar extends AnotherDependency {}
+        new Expectations(foo1, foo2) {
+            {
+                foo1.doIt();
+                result = true;
+            }
+        };
 
-   /**
-    * Use available mocked subclass instance as cascade from partially mocked instance.
-    *
-    * @param bar the bar
-    */
-   @Test
-   public void useAvailableMockedSubclassInstanceAsCascadeFromPartiallyMockedInstance(@Mocked Bar bar) {
-      final Foo foo = new Foo();
+        assertTrue(foo1.doIt());
+        assertFalse(foo2.doItAgain());
+        assertFalse(foo2.doIt());
+        final Foo foo3 = new Foo();
+        assertFalse(foo1.doItAgain());
+        assertFalse(foo3.doItAgain());
+        assertFalse(foo3.doIt());
+        assertFalse(foo3.doItAgain());
 
-      new Expectations(foo) {{
-         foo.getBar().getName(); result = "cascade";
-      }};
+        new Verifications() {
+            {
+                assertFalse(foo2.doIt());
+                times = 1;
+                assertFalse(foo1.doItAgain());
+                times = 1;
+                assertFalse(foo3.doItAgain());
+                times = 2;
+            }
+        };
+    }
 
-      AnotherDependency cascadedBar = foo.getBar();
-      assertSame(bar, cascadedBar);
-      assertEquals("cascade", cascadedBar.getName());
-   }
+    /**
+     * Creates the cascaded mock from partially mocked instance.
+     */
+    @Test
+    public void createCascadedMockFromPartiallyMockedInstance() {
+        final Foo foo = new Foo();
 
-   /**
-    * Use itself as cascade from partially mocked instance.
-    */
-   @Test
-   public void useItselfAsCascadeFromPartiallyMockedInstance() {
-      final Foo foo = new Foo();
+        new Expectations(foo) {
+            {
+                foo.getBar().getName();
+                result = "cascade";
+            }
+        };
 
-      new Expectations(foo) {{
-         foo.buildValue(anyString).doIt(); result = true;
-      }};
+        assertEquals("cascade", foo.getBar().getName());
+    }
 
-      Foo cascadedFoo = foo.buildValue("test");
-      assertSame(foo, cascadedFoo);
-      assertTrue(cascadedFoo.doIt());
-   }
+    /**
+     * Use available mocked instance as cascade from partially mocked instance.
+     *
+     * @param bar
+     *            the bar
+     */
+    @Test
+    public void useAvailableMockedInstanceAsCascadeFromPartiallyMockedInstance(@Mocked AnotherDependency bar) {
+        final Foo foo = new Foo();
 
-   /**
-    * Verify single invocation to mocked instance with additional invocation to same method on another instance.
-    */
-   @Test
-   public void verifySingleInvocationToMockedInstanceWithAdditionalInvocationToSameMethodOnAnotherInstance() {
-      final Collaborator mocked = new Collaborator();
+        new Expectations(foo) {
+            {
+                foo.getBar().getName();
+                result = "cascade";
+            }
+        };
 
-      new Expectations(mocked) {};
+        AnotherDependency cascadedBar = foo.getBar();
+        assertSame(bar, cascadedBar);
+        assertEquals("cascade", cascadedBar.getName());
+    }
 
-      Collaborator notMocked = new Collaborator();
-      assertEquals(-1, notMocked.getValue());
-      assertEquals(-1, mocked.getValue());
+    /**
+     * The Class Bar.
+     */
+    static final class Bar extends AnotherDependency {
+    }
 
-      new Verifications() {{
-         mocked.getValue();
-         times = 1;
-      }};
-   }
+    /**
+     * Use available mocked subclass instance as cascade from partially mocked instance.
+     *
+     * @param bar
+     *            the bar
+     */
+    @Test
+    public void useAvailableMockedSubclassInstanceAsCascadeFromPartiallyMockedInstance(@Mocked Bar bar) {
+        final Foo foo = new Foo();
 
-   /**
-    * Verify ordered invocations to dynamically mocked instance with another instance involved but missing an invocation.
-    */
-   @Test(expected = MissingInvocation.class)
-   public void verifyOrderedInvocationsToDynamicallyMockedInstanceWithAnotherInstanceInvolvedButMissingAnInvocation() {
-      final Collaborator mock = new Collaborator();
+        new Expectations(foo) {
+            {
+                foo.getBar().getName();
+                result = "cascade";
+            }
+        };
 
-      new Expectations(mock) {};
+        AnotherDependency cascadedBar = foo.getBar();
+        assertSame(bar, cascadedBar);
+        assertEquals("cascade", cascadedBar.getName());
+    }
 
-      mock.setValue(1);
-      new Collaborator().setValue(2);
+    /**
+     * Use itself as cascade from partially mocked instance.
+     */
+    @Test
+    public void useItselfAsCascadeFromPartiallyMockedInstance() {
+        final Foo foo = new Foo();
 
-      new VerificationsInOrder() {{
-         mock.setValue(1); times = 1;
-         mock.setValue(2); times = 1; // must be missing
-      }};
-   }
+        new Expectations(foo) {
+            {
+                foo.buildValue(anyString).doIt();
+                result = true;
+            }
+        };
 
-   /**
-    * Verify ordered invocations to dynamically mocked instance with another instance involved.
-    */
-   @Test
-   public void verifyOrderedInvocationsToDynamicallyMockedInstanceWithAnotherInstanceInvolved() {
-      final Collaborator mock = new Collaborator();
+        Foo cascadedFoo = foo.buildValue("test");
+        assertSame(foo, cascadedFoo);
+        assertTrue(cascadedFoo.doIt());
+    }
 
-      new Expectations(mock) {{ mock.setValue(anyInt); }};
+    /**
+     * Verify single invocation to mocked instance with additional invocation to same method on another instance.
+     */
+    @Test
+    public void verifySingleInvocationToMockedInstanceWithAdditionalInvocationToSameMethodOnAnotherInstance() {
+        final Collaborator mocked = new Collaborator();
 
-      mock.setValue(1);
-      new Collaborator().setValue(2);
+        new Expectations(mocked) {
+        };
 
-      new VerificationsInOrder() {{
-         mock.setValue(1); times = 1;
-         mock.setValue(2); times = 0;
-      }};
-   }
+        Collaborator notMocked = new Collaborator();
+        assertEquals(-1, notMocked.getValue());
+        assertEquals(-1, mocked.getValue());
+
+        new Verifications() {
+            {
+                mocked.getValue();
+                times = 1;
+            }
+        };
+    }
+
+    /**
+     * Verify ordered invocations to dynamically mocked instance with another instance involved but missing an
+     * invocation.
+     */
+    @Test(expected = MissingInvocation.class)
+    public void verifyOrderedInvocationsToDynamicallyMockedInstanceWithAnotherInstanceInvolvedButMissingAnInvocation() {
+        final Collaborator mock = new Collaborator();
+
+        new Expectations(mock) {
+        };
+
+        mock.setValue(1);
+        new Collaborator().setValue(2);
+
+        new VerificationsInOrder() {
+            {
+                mock.setValue(1);
+                times = 1;
+                mock.setValue(2);
+                times = 1; // must be missing
+            }
+        };
+    }
+
+    /**
+     * Verify ordered invocations to dynamically mocked instance with another instance involved.
+     */
+    @Test
+    public void verifyOrderedInvocationsToDynamicallyMockedInstanceWithAnotherInstanceInvolved() {
+        final Collaborator mock = new Collaborator();
+
+        new Expectations(mock) {
+            {
+                mock.setValue(anyInt);
+            }
+        };
+
+        mock.setValue(1);
+        new Collaborator().setValue(2);
+
+        new VerificationsInOrder() {
+            {
+                mock.setValue(1);
+                times = 1;
+                mock.setValue(2);
+                times = 0;
+            }
+        };
+    }
 }

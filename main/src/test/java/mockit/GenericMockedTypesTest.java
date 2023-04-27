@@ -1,639 +1,770 @@
 package mockit;
 
+import static java.util.Arrays.asList;
+
+import static org.junit.Assert.*;
+
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static java.util.Arrays.asList;
-
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  * The Class GenericMockedTypesTest.
  */
-public final class GenericMockedTypesTest
-{
-   
-   /** The mock 2. */
-   @Mocked Callable<Integer> mock2;
+public final class GenericMockedTypesTest {
 
-   /**
-    * Mock generic interfaces.
-    *
-    * @param mock1 the mock 1
-    * @throws Exception the exception
-    */
-   @Test
-   public void mockGenericInterfaces(@Mocked final Callable<?> mock1) throws Exception {
-      new Expectations() {{
-         mock1.call(); result = "mocked";
-         mock2.call(); result = 123;
-      }};
+    /** The mock 2. */
+    @Mocked
+    Callable<Integer> mock2;
 
-      assertEquals("mocked", mock1.call());
-      assertEquals(123, mock2.call().intValue());
-   }
+    /**
+     * Mock generic interfaces.
+     *
+     * @param mock1
+     *            the mock 1
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void mockGenericInterfaces(@Mocked final Callable<?> mock1) throws Exception {
+        new Expectations() {
+            {
+                mock1.call();
+                result = "mocked";
+                mock2.call();
+                result = 123;
+            }
+        };
 
-   /**
-    * Obtain generic superclass from class generated for non generic interface.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void obtainGenericSuperclassFromClassGeneratedForNonGenericInterface(@Mocked Runnable mock) {
-      Class<?> generatedClass = mock.getClass();
-      Type genericSuperClass = generatedClass.getGenericSuperclass();
+        assertEquals("mocked", mock1.call());
+        assertEquals(123, mock2.call().intValue());
+    }
 
-      // At one time, a "GenericSignatureFormatError: Signature Parse error: expected a class type
-      // Remaining input: nullLjava/lang/Runnable;" would occur.
-      assertSame(Object.class, genericSuperClass);
-   }
+    /**
+     * Obtain generic superclass from class generated for non generic interface.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void obtainGenericSuperclassFromClassGeneratedForNonGenericInterface(@Mocked Runnable mock) {
+        Class<?> generatedClass = mock.getClass();
+        Type genericSuperClass = generatedClass.getGenericSuperclass();
 
-   /**
-    * Mock generic abstract class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockGenericAbstractClass(@Mocked final Dictionary<Integer, String> mock) {
-      new Expectations() {{
-         mock.put(123, "test"); result = "mocked";
-      }};
+        // At one time, a "GenericSignatureFormatError: Signature Parse error: expected a class type
+        // Remaining input: nullLjava/lang/Runnable;" would occur.
+        assertSame(Object.class, genericSuperClass);
+    }
 
-      assertEquals("mocked", mock.put(123, "test"));
-   }
+    /**
+     * Mock generic abstract class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockGenericAbstractClass(@Mocked final Dictionary<Integer, String> mock) {
+        new Expectations() {
+            {
+                mock.put(123, "test");
+                result = "mocked";
+            }
+        };
 
-   /**
-    * The Interface InterfaceWithMethodParametersMixingGenericTypesAndArrays.
-    */
-   public interface InterfaceWithMethodParametersMixingGenericTypesAndArrays {
-      
-      /**
-       * Do something.
-       *
-       * @param <T> the generic type
-       * @param i the i
-       * @param b the b
-       */
-      <T> void doSomething(int[] i, T b);
-      
-      /**
-       * Do something.
-       *
-       * @param pc the pc
-       * @param ii the ii
-       */
-      void doSomething(Callable<int[]> pc, int[] ii);
-      
-      /**
-       * Do something.
-       *
-       * @param pc the pc
-       * @param i the i
-       * @param currencies the currencies
-       * @param ii the ii
-       */
-      void doSomething(Callable<String> pc, int[] i, boolean[] currencies, int[] ii);
-   }
+        assertEquals("mocked", mock.put(123, "test"));
+    }
 
-   /**
-    * Mock methods having generics and arrays.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockMethodsHavingGenericsAndArrays(@Mocked InterfaceWithMethodParametersMixingGenericTypesAndArrays mock) {
-      mock.doSomething((Callable<int[]>) null, new int[] {1, 2});
-      mock.doSomething(null, new int[] {1, 2}, null, new int[] {3, 4, 5});
-   }
+    /**
+     * The Interface InterfaceWithMethodParametersMixingGenericTypesAndArrays.
+     */
+    public interface InterfaceWithMethodParametersMixingGenericTypesAndArrays {
 
-   /**
-    * The Interface NonGenericInterfaceWithGenericMethods.
-    */
-   public interface NonGenericInterfaceWithGenericMethods {
-      
-      /**
-       * Generic method with unbounded return type.
-       *
-       * @param <T> the generic type
-       * @return the t
-       */
-      <T> T genericMethodWithUnboundedReturnType();
-      
-      /**
-       * Generic method with bounded return type.
-       *
-       * @param <T> the generic type
-       * @return the t
-       */
-      <T extends CharSequence> T genericMethodWithBoundedReturnType();
-   }
+        /**
+         * Do something.
+         *
+         * @param <T>
+         *            the generic type
+         * @param i
+         *            the i
+         * @param b
+         *            the b
+         */
+        <T> void doSomething(int[] i, T b);
 
-   /**
-    * Result from generic methods of non generic interface.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void resultFromGenericMethodsOfNonGenericInterface(@Mocked final NonGenericInterfaceWithGenericMethods mock) {
-      new Expectations() {{
-         mock.genericMethodWithUnboundedReturnType(); result = 123;
-         mock.genericMethodWithBoundedReturnType(); result = "test";
-      }};
+        /**
+         * Do something.
+         *
+         * @param pc
+         *            the pc
+         * @param ii
+         *            the ii
+         */
+        void doSomething(Callable<int[]> pc, int[] ii);
 
-      Object v1 = mock.genericMethodWithUnboundedReturnType();
-      assertEquals(123, v1);
+        /**
+         * Do something.
+         *
+         * @param pc
+         *            the pc
+         * @param i
+         *            the i
+         * @param currencies
+         *            the currencies
+         * @param ii
+         *            the ii
+         */
+        void doSomething(Callable<String> pc, int[] i, boolean[] currencies, int[] ii);
+    }
 
-      Object v2 = mock.genericMethodWithBoundedReturnType();
-      assertEquals("test", v2);
-   }
+    /**
+     * Mock methods having generics and arrays.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockMethodsHavingGenericsAndArrays(
+            @Mocked InterfaceWithMethodParametersMixingGenericTypesAndArrays mock) {
+        mock.doSomething((Callable<int[]>) null, new int[] { 1, 2 });
+        mock.doSomething(null, new int[] { 1, 2 }, null, new int[] { 3, 4, 5 });
+    }
 
-   /**
-    * The Class Item.
-    */
-   static class Item implements Serializable {}
-   
-   /**
-    * The Class GenericContainer.
-    *
-    * @param <T> the generic type
-    */
-   static class GenericContainer<T extends Serializable> { 
- /**
-  * Gets the item.
-  *
-  * @return the item
-  */
- final T getItem() { return null; } }
+    /**
+     * The Interface NonGenericInterfaceWithGenericMethods.
+     */
+    public interface NonGenericInterfaceWithGenericMethods {
 
-   /**
-    * Creates the first level cascaded mock from type parameter.
-    *
-    * @param mockContainer the mock container
-    */
-   @Test
-   public void createFirstLevelCascadedMockFromTypeParameter(@Mocked GenericContainer<Item> mockContainer) {
-      Serializable mock = mockContainer.getItem();
+        /**
+         * Generic method with unbounded return type.
+         *
+         * @param <T>
+         *            the generic type
+         *
+         * @return the t
+         */
+        <T> T genericMethodWithUnboundedReturnType();
 
-      assertSame(Item.class, mock.getClass());
-   }
+        /**
+         * Generic method with bounded return type.
+         *
+         * @param <T>
+         *            the generic type
+         *
+         * @return the t
+         */
+        <T extends CharSequence> T genericMethodWithBoundedReturnType();
+    }
 
-   /**
-    * The Class Factory1.
-    */
-   static class Factory1 { /**
-  * Gets the container.
-  *
-  * @return the container
-  */
- static GenericContainer<Item> getContainer() { return null; } }
+    /**
+     * Result from generic methods of non generic interface.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void resultFromGenericMethodsOfNonGenericInterface(
+            @Mocked final NonGenericInterfaceWithGenericMethods mock) {
+        new Expectations() {
+            {
+                mock.genericMethodWithUnboundedReturnType();
+                result = 123;
+                mock.genericMethodWithBoundedReturnType();
+                result = "test";
+            }
+        };
 
-   /**
-    * Creates the second level cascaded mock from type parameter in generic method resolved from first level return type.
-    *
-    * @param mockFactory the mock factory
-    */
-   @Test
-   public void createSecondLevelCascadedMockFromTypeParameterInGenericMethodResolvedFromFirstLevelReturnType(@Mocked Factory1 mockFactory) {
-      GenericContainer<Item> mockContainer = Factory1.getContainer();
-      Serializable cascadedMock = mockContainer.getItem();
+        Object v1 = mock.genericMethodWithUnboundedReturnType();
+        assertEquals(123, v1);
 
-      assertNotNull(cascadedMock);
-      assertSame(Item.class, cascadedMock.getClass());
-   }
+        Object v2 = mock.genericMethodWithBoundedReturnType();
+        assertEquals("test", v2);
+    }
 
-   /**
-    * The Class ConcreteContainer.
-    */
-   static class ConcreteContainer extends GenericContainer<Item> {}
-   
-   /**
-    * The Class Factory2.
-    */
-   static class Factory2 { 
- /**
-  * Gets the container.
-  *
-  * @return the container
-  */
- ConcreteContainer getContainer() { return null; } }
+    /**
+     * The Class Item.
+     */
+    static class Item implements Serializable {
+    }
 
-   /**
-    * Creates the second level cascaded mock from type parameter in base type of method return.
-    *
-    * @param mockFactory the mock factory
-    */
-   @Test
-   public void createSecondLevelCascadedMockFromTypeParameterInBaseTypeOfMethodReturn(@Mocked Factory2 mockFactory) {
-      ConcreteContainer mockContainer = mockFactory.getContainer();
-      Serializable cascadedMock = mockContainer.getItem();
+    /**
+     * The Class GenericContainer.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    static class GenericContainer<T extends Serializable> {
+        /**
+         * Gets the item.
+         *
+         * @return the item
+         */
+        final T getItem() {
+            return null;
+        }
+    }
 
-      assertSame(Item.class, cascadedMock.getClass());
-   }
+    /**
+     * Creates the first level cascaded mock from type parameter.
+     *
+     * @param mockContainer
+     *            the mock container
+     */
+    @Test
+    public void createFirstLevelCascadedMockFromTypeParameter(@Mocked GenericContainer<Item> mockContainer) {
+        Serializable mock = mockContainer.getItem();
 
-   /**
-    * The Class Collaborator.
-    */
-   static class Collaborator { /**
-  * Do something.
-  *
-  * @return the runnable
-  */
- Runnable doSomething() { return null; } }
-   
-   /**
-    * The Class Collaborator2.
-    */
-   static class Collaborator2 {}
+        assertSame(Item.class, mock.getClass());
+    }
 
-   /**
-    * Cascading class with name starting with another mocked class.
-    *
-    * @param regularMock the regular mock
-    * @param cascadingMock the cascading mock
-    */
-   @Test
-   public void cascadingClassWithNameStartingWithAnotherMockedClass(
-      @Mocked final Collaborator regularMock, @Mocked Collaborator2 cascadingMock
-   ) {
-      new Expectations() {{
-         regularMock.doSomething();
-      }};
+    /**
+     * The Class Factory1.
+     */
+    static class Factory1 {
+        /**
+         * Gets the container.
+         *
+         * @return the container
+         */
+        static GenericContainer<Item> getContainer() {
+            return null;
+        }
+    }
 
-      assertNotNull(regularMock.doSomething());
-   }
+    /**
+     * Creates the second level cascaded mock from type parameter in generic method resolved from first level return
+     * type.
+     *
+     * @param mockFactory
+     *            the mock factory
+     */
+    @Test
+    public void createSecondLevelCascadedMockFromTypeParameterInGenericMethodResolvedFromFirstLevelReturnType(
+            @Mocked Factory1 mockFactory) {
+        GenericContainer<Item> mockContainer = Factory1.getContainer();
+        Serializable cascadedMock = mockContainer.getItem();
 
-   /**
-    * The Interface InterfaceWithBoundedTypeParameter.
-    *
-    * @param <T> the generic type
-    */
-   public interface InterfaceWithBoundedTypeParameter<T extends Runnable> { /**
-  * Gets the foo.
-  *
-  * @return the foo
-  */
- T getFoo(); }
+        assertNotNull(cascadedMock);
+        assertSame(Item.class, cascadedMock.getClass());
+    }
 
-   /**
-    * Creates the cascaded mock from generic interface method which returns bounded type parameter.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void createCascadedMockFromGenericInterfaceMethodWhichReturnsBoundedTypeParameter(
-      @Mocked InterfaceWithBoundedTypeParameter<?> mock
-   ) {
-      Runnable foo = mock.getFoo();
-      assertNotNull(foo);
-      foo.run();
-   }
+    /**
+     * The Class ConcreteContainer.
+     */
+    static class ConcreteContainer extends GenericContainer<Item> {
+    }
 
-   /**
-    * The Interface InterfaceWhichExtendsInterfaceWithBoundedTypeParameter.
-    *
-    * @param <T> the generic type
-    */
-   public interface InterfaceWhichExtendsInterfaceWithBoundedTypeParameter<T extends Runnable>
-      extends InterfaceWithBoundedTypeParameter<T> {}
+    /**
+     * The Class Factory2.
+     */
+    static class Factory2 {
+        /**
+         * Gets the container.
+         *
+         * @return the container
+         */
+        ConcreteContainer getContainer() {
+            return null;
+        }
+    }
 
-   /**
-    * Creates the cascaded mock from generic method defined in super interface with bounded type parameter.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void createCascadedMockFromGenericMethodDefinedInSuperInterfaceWithBoundedTypeParameter(
-      @Mocked InterfaceWhichExtendsInterfaceWithBoundedTypeParameter<?> mock
-   ) {
-      Runnable foo = mock.getFoo();
-      assertNotNull(foo);
-      foo.run();
-   }
+    /**
+     * Creates the second level cascaded mock from type parameter in base type of method return.
+     *
+     * @param mockFactory
+     *            the mock factory
+     */
+    @Test
+    public void createSecondLevelCascadedMockFromTypeParameterInBaseTypeOfMethodReturn(@Mocked Factory2 mockFactory) {
+        ConcreteContainer mockContainer = mockFactory.getContainer();
+        Serializable cascadedMock = mockContainer.getItem();
 
-   /**
-    * The Class Abc.
-    */
-   static class Abc {}
-   
-   /**
-    * The Class GenericBase.
-    *
-    * @param <T> the generic type
-    */
-   static class GenericBase<T> { 
- /**
-  * Do something.
-  *
-  * @return the t
-  */
- T doSomething() { return null; } }
-   
-   /**
-    * The Class GenericSubclass.
-    *
-    * @param <T> the generic type
-    */
-   static class GenericSubclass<T> extends GenericBase<T> { 
- /**
-  * Gets the abc.
-  *
-  * @return the abc
-  */
- T getAbc() { return null; } }
+        assertSame(Item.class, cascadedMock.getClass());
+    }
 
-   /**
-    * Creates the cascaded mock from generic subclass having same type parameter name as base class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void createCascadedMockFromGenericSubclassHavingSameTypeParameterNameAsBaseClass(@Mocked GenericSubclass<Abc> mock) {
-      Abc abc = mock.getAbc();
-      assertNotNull(abc);
-   }
+    /**
+     * The Class Collaborator.
+     */
+    static class Collaborator {
+        /**
+         * Do something.
+         *
+         * @return the runnable
+         */
+        Runnable doSomething() {
+            return null;
+        }
+    }
 
-   /**
-    * Mock generic class having type argument of array type.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockGenericClassHavingTypeArgumentOfArrayType(@Mocked GenericBase<String[]> mock) {
-      String[] result = mock.doSomething();
+    /**
+     * The Class Collaborator2.
+     */
+    static class Collaborator2 {
+    }
 
-      assertEquals(0, result.length);
-   }
+    /**
+     * Cascading class with name starting with another mocked class.
+     *
+     * @param regularMock
+     *            the regular mock
+     * @param cascadingMock
+     *            the cascading mock
+     */
+    @Test
+    public void cascadingClassWithNameStartingWithAnotherMockedClass(@Mocked final Collaborator regularMock,
+            @Mocked Collaborator2 cascadingMock) {
+        new Expectations() {
+            {
+                regularMock.doSomething();
+            }
+        };
 
-   /**
-    * Mock generic class having type argument of array type with primitive component.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockGenericClassHavingTypeArgumentOfArrayTypeWithPrimitiveComponent(@Mocked GenericBase<int[]> mock) {
-      int[] result = mock.doSomething();
+        assertNotNull(regularMock.doSomething());
+    }
 
-      assertEquals(0, result.length);
-   }
+    /**
+     * The Interface InterfaceWithBoundedTypeParameter.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    public interface InterfaceWithBoundedTypeParameter<T extends Runnable> {
+        /**
+         * Gets the foo.
+         *
+         * @return the foo
+         */
+        T getFoo();
+    }
 
-   /**
-    * Mock generic class having type argument of array type with 2 D primitive component.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockGenericClassHavingTypeArgumentOfArrayTypeWith2DPrimitiveComponent(@Mocked GenericBase<int[][]> mock) {
-      int[][] result = mock.doSomething();
+    /**
+     * Creates the cascaded mock from generic interface method which returns bounded type parameter.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void createCascadedMockFromGenericInterfaceMethodWhichReturnsBoundedTypeParameter(
+            @Mocked InterfaceWithBoundedTypeParameter<?> mock) {
+        Runnable foo = mock.getFoo();
+        assertNotNull(foo);
+        foo.run();
+    }
 
-      assertEquals(0, result.length);
-   }
+    /**
+     * The Interface InterfaceWhichExtendsInterfaceWithBoundedTypeParameter.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    public interface InterfaceWhichExtendsInterfaceWithBoundedTypeParameter<T extends Runnable>
+            extends InterfaceWithBoundedTypeParameter<T> {
+    }
 
-   /**
-    * Mock generic class having type argument of array type with generic component.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockGenericClassHavingTypeArgumentOfArrayTypeWithGenericComponent(@Mocked GenericBase<List<?>[]> mock) {
-      List<?>[] result = mock.doSomething();
+    /**
+     * Creates the cascaded mock from generic method defined in super interface with bounded type parameter.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void createCascadedMockFromGenericMethodDefinedInSuperInterfaceWithBoundedTypeParameter(
+            @Mocked InterfaceWhichExtendsInterfaceWithBoundedTypeParameter<?> mock) {
+        Runnable foo = mock.getFoo();
+        assertNotNull(foo);
+        foo.run();
+    }
 
-      assertEquals(0, result.length);
-   }
+    /**
+     * The Class Abc.
+     */
+    static class Abc {
+    }
 
-   /**
-    * The Class DerivedClass.
-    */
-   static final class DerivedClass extends GenericBase<Number[]> {}
+    /**
+     * The Class GenericBase.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    static class GenericBase<T> {
+        /**
+         * Do something.
+         *
+         * @return the t
+         */
+        T doSomething() {
+            return null;
+        }
+    }
 
-   /**
-    * Mock class extending A generic base class having type argument of array type.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockClassExtendingAGenericBaseClassHavingTypeArgumentOfArrayType(@Mocked DerivedClass mock) {
-      Number[] result = mock.doSomething();
+    /**
+     * The Class GenericSubclass.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    static class GenericSubclass<T> extends GenericBase<T> {
+        /**
+         * Gets the abc.
+         *
+         * @return the abc
+         */
+        T getAbc() {
+            return null;
+        }
+    }
 
-      assertEquals(0, result.length);
-   }
+    /**
+     * Creates the cascaded mock from generic subclass having same type parameter name as base class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void createCascadedMockFromGenericSubclassHavingSameTypeParameterNameAsBaseClass(
+            @Mocked GenericSubclass<Abc> mock) {
+        Abc abc = mock.getAbc();
+        assertNotNull(abc);
+    }
 
-   /**
-    * The Interface BaseGenericInterface.
-    *
-    * @param <V> the value type
-    */
-   public interface BaseGenericInterface<V> { /**
-  * Do something.
-  *
-  * @return the v
-  */
- V doSomething(); }
-   
-   /**
-    * The Interface DerivedGenericInterface.
-    *
-    * @param <V> the value type
-    */
-   public interface DerivedGenericInterface<V> extends BaseGenericInterface<List<V>> { 
- /**
-  * Do something else.
-  *
-  * @return the v
-  */
- V doSomethingElse(); }
+    /**
+     * Mock generic class having type argument of array type.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockGenericClassHavingTypeArgumentOfArrayType(@Mocked GenericBase<String[]> mock) {
+        String[] result = mock.doSomething();
 
-   /**
-    * Record generic interface method with return type given by type parameter dependent on another type parameter of same name.
-    *
-    * @param dep the dep
-    */
-   @Test
-   public void recordGenericInterfaceMethodWithReturnTypeGivenByTypeParameterDependentOnAnotherTypeParameterOfSameName(
-      @Mocked final DerivedGenericInterface<String> dep
-   ) {
-      final List<String> values = asList("a", "b");
+        assertEquals(0, result.length);
+    }
 
-      new Expectations() {{
-         dep.doSomething(); result = values;
-         dep.doSomethingElse(); result = "Abc";
-      }};
+    /**
+     * Mock generic class having type argument of array type with primitive component.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockGenericClassHavingTypeArgumentOfArrayTypeWithPrimitiveComponent(@Mocked GenericBase<int[]> mock) {
+        int[] result = mock.doSomething();
 
-      List<String> resultFromBase = dep.doSomething();
-      String resultFromSub = dep.doSomethingElse();
+        assertEquals(0, result.length);
+    }
 
-      assertSame(values, resultFromBase);
-      assertEquals("Abc", resultFromSub);
-   }
+    /**
+     * Mock generic class having type argument of array type with 2 D primitive component.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockGenericClassHavingTypeArgumentOfArrayTypeWith2DPrimitiveComponent(
+            @Mocked GenericBase<int[][]> mock) {
+        int[][] result = mock.doSomething();
 
-   /**
-    * Mock generic type with generic multi dimensional array type argument.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockGenericTypeWithGenericMultiDimensionalArrayTypeArgument(@Mocked GenericBase<List<?>[][]> mock) {
-      List<?>[][] result = mock.doSomething();
+        assertEquals(0, result.length);
+    }
 
-      assertEquals(0, result.length);
-   }
+    /**
+     * Mock generic class having type argument of array type with generic component.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockGenericClassHavingTypeArgumentOfArrayTypeWithGenericComponent(@Mocked GenericBase<List<?>[]> mock) {
+        List<?>[] result = mock.doSomething();
 
-   /**
-    * The Interface BaseInterface.
-    *
-    * @param <T> the generic type
-    */
-   public interface BaseInterface<T> { /**
-  * Do something.
-  *
-  * @param t the t
-  */
- void doSomething(T t); }
-   
-   /**
-    * The Interface SubInterface.
-    */
-   public interface SubInterface extends BaseInterface<String> {
-      
-      /**
-       * Do something.
-       *
-       * @param s the s
-       */
-      @SuppressWarnings("AbstractMethodOverridesAbstractMethod") @Override void doSomething(String s);
-   }
+        assertEquals(0, result.length);
+    }
 
-   /**
-    * Invoke generic base interface method that is overridden in mocked sub interface.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void invokeGenericBaseInterfaceMethodThatIsOverriddenInMockedSubInterface(@Mocked final SubInterface mock) {
-      @SuppressWarnings("UnnecessaryLocalVariable") BaseInterface<String> base = mock;
-      base.doSomething("test");
+    /**
+     * The Class DerivedClass.
+     */
+    static final class DerivedClass extends GenericBase<Number[]> {
+    }
 
-      new Verifications() {{ mock.doSomething("test"); }};
-   }
+    /**
+     * Mock class extending A generic base class having type argument of array type.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockClassExtendingAGenericBaseClassHavingTypeArgumentOfArrayType(@Mocked DerivedClass mock) {
+        Number[] result = mock.doSomething();
 
-   /**
-    * The Class Outer.
-    *
-    * @param <T> the generic type
-    */
-   public static class Outer<T> {
-      
-      /**
-       * The Class Inner.
-       */
-      public abstract class Inner { 
- /**
-  * Gets the some value.
-  *
-  * @return the some value
-  */
- public abstract T getSomeValue(); }
-      
-      /**
-       * The Class SubInner.
-       */
-      public abstract class SubInner extends Inner {}
-   }
+        assertEquals(0, result.length);
+    }
 
-   /**
-    * Mock inner class which uses type variable of outer class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockInnerClassWhichUsesTypeVariableOfOuterClass(@Mocked Outer<String>.Inner mock) {
-      String in = mock.getSomeValue();
-      assertNull(in);
-   }
+    /**
+     * The Interface BaseGenericInterface.
+     *
+     * @param <V>
+     *            the value type
+     */
+    public interface BaseGenericInterface<V> {
+        /**
+         * Do something.
+         *
+         * @return the v
+         */
+        V doSomething();
+    }
 
-   /**
-    * Mock abstract sub class of inner class which uses type variable of outer class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockAbstractSubClassOfInnerClassWhichUsesTypeVariableOfOuterClass(@Mocked Outer<String>.SubInner mock) {
-      String in = mock.getSomeValue();
-      assertNull(in);
-   }
+    /**
+     * The Interface DerivedGenericInterface.
+     *
+     * @param <V>
+     *            the value type
+     */
+    public interface DerivedGenericInterface<V> extends BaseGenericInterface<List<V>> {
+        /**
+         * Do something else.
+         *
+         * @return the v
+         */
+        V doSomethingElse();
+    }
 
-   /**
-    * The Class T1.
-    */
-   static class T1 {}
-   
-   /**
-    * The Class T2.
-    */
-   static class T2 {}
+    /**
+     * Record generic interface method with return type given by type parameter dependent on another type parameter of
+     * same name.
+     *
+     * @param dep
+     *            the dep
+     */
+    @Test
+    public void recordGenericInterfaceMethodWithReturnTypeGivenByTypeParameterDependentOnAnotherTypeParameterOfSameName(
+            @Mocked final DerivedGenericInterface<String> dep) {
+        final List<String> values = asList("a", "b");
 
-   /**
-    * Cascade from generic method of second mocked generic type having different parameter type from first mocked type.
-    *
-    * @param mock1 the mock 1
-    * @param mock3 the mock 3
-    */
-   @Test
-   public void cascadeFromGenericMethodOfSecondMockedGenericTypeHavingDifferentParameterTypeFromFirstMockedType(
-      @Mocked GenericBase<T1> mock1, @Mocked GenericBase<T2> mock3
-   ) {
-      T2 r = mock3.doSomething();
-      assertNotNull(r);
-   }
+        new Expectations() {
+            {
+                dep.doSomething();
+                result = values;
+                dep.doSomethingElse();
+                result = "Abc";
+            }
+        };
 
-   /**
-    * The Class AClass.
-    */
-   static class AClass {
-      
-      /**
-       * Generic method.
-       *
-       * @param <R> the generic type
-       * @return the r
-       */
-      <R> R genericMethod() { return null; }
-      
-      /**
-       * Generic method with parameter.
-       *
-       * @param <R> the generic type
-       * @param value the value
-       * @return the r
-       */
-      <R> R genericMethodWithParameter(R value) { return value; }
-      
-      /**
-       * Generic method with two type parameters.
-       *
-       * @param <R> the generic type
-       * @param <S> the generic type
-       * @param s the s
-       * @return the r
-       */
-      <R, S> R genericMethodWithTwoTypeParameters(@SuppressWarnings("unused") S s) { return null; }
-   }
+        List<String> resultFromBase = dep.doSomething();
+        String resultFromSub = dep.doSomethingElse();
 
-   /**
-    * Return null from generic method.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void returnNullFromGenericMethod(@Mocked AClass mock) {
-      String test1 = mock.genericMethod();
-      String test2 = mock.genericMethodWithParameter("test2");
-      String test3 = mock.genericMethodWithTwoTypeParameters(1);
+        assertSame(values, resultFromBase);
+        assertEquals("Abc", resultFromSub);
+    }
 
-      assertNull(test1);
-      assertNull(test2);
-      assertNull(test3);
-   }
+    /**
+     * Mock generic type with generic multi dimensional array type argument.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockGenericTypeWithGenericMultiDimensionalArrayTypeArgument(@Mocked GenericBase<List<?>[][]> mock) {
+        List<?>[][] result = mock.doSomething();
+
+        assertEquals(0, result.length);
+    }
+
+    /**
+     * The Interface BaseInterface.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    public interface BaseInterface<T> {
+        /**
+         * Do something.
+         *
+         * @param t
+         *            the t
+         */
+        void doSomething(T t);
+    }
+
+    /**
+     * The Interface SubInterface.
+     */
+    public interface SubInterface extends BaseInterface<String> {
+
+        /**
+         * Do something.
+         *
+         * @param s
+         *            the s
+         */
+        @SuppressWarnings("AbstractMethodOverridesAbstractMethod")
+        @Override
+        void doSomething(String s);
+    }
+
+    /**
+     * Invoke generic base interface method that is overridden in mocked sub interface.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void invokeGenericBaseInterfaceMethodThatIsOverriddenInMockedSubInterface(@Mocked final SubInterface mock) {
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        BaseInterface<String> base = mock;
+        base.doSomething("test");
+
+        new Verifications() {
+            {
+                mock.doSomething("test");
+            }
+        };
+    }
+
+    /**
+     * The Class Outer.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    public static class Outer<T> {
+
+        /**
+         * The Class Inner.
+         */
+        public abstract class Inner {
+            /**
+             * Gets the some value.
+             *
+             * @return the some value
+             */
+            public abstract T getSomeValue();
+        }
+
+        /**
+         * The Class SubInner.
+         */
+        public abstract class SubInner extends Inner {
+        }
+    }
+
+    /**
+     * Mock inner class which uses type variable of outer class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockInnerClassWhichUsesTypeVariableOfOuterClass(@Mocked Outer<String>.Inner mock) {
+        String in = mock.getSomeValue();
+        assertNull(in);
+    }
+
+    /**
+     * Mock abstract sub class of inner class which uses type variable of outer class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockAbstractSubClassOfInnerClassWhichUsesTypeVariableOfOuterClass(@Mocked Outer<String>.SubInner mock) {
+        String in = mock.getSomeValue();
+        assertNull(in);
+    }
+
+    /**
+     * The Class T1.
+     */
+    static class T1 {
+    }
+
+    /**
+     * The Class T2.
+     */
+    static class T2 {
+    }
+
+    /**
+     * Cascade from generic method of second mocked generic type having different parameter type from first mocked type.
+     *
+     * @param mock1
+     *            the mock 1
+     * @param mock3
+     *            the mock 3
+     */
+    @Test
+    public void cascadeFromGenericMethodOfSecondMockedGenericTypeHavingDifferentParameterTypeFromFirstMockedType(
+            @Mocked GenericBase<T1> mock1, @Mocked GenericBase<T2> mock3) {
+        T2 r = mock3.doSomething();
+        assertNotNull(r);
+    }
+
+    /**
+     * The Class AClass.
+     */
+    static class AClass {
+
+        /**
+         * Generic method.
+         *
+         * @param <R>
+         *            the generic type
+         *
+         * @return the r
+         */
+        <R> R genericMethod() {
+            return null;
+        }
+
+        /**
+         * Generic method with parameter.
+         *
+         * @param <R>
+         *            the generic type
+         * @param value
+         *            the value
+         *
+         * @return the r
+         */
+        <R> R genericMethodWithParameter(R value) {
+            return value;
+        }
+
+        /**
+         * Generic method with two type parameters.
+         *
+         * @param <R>
+         *            the generic type
+         * @param <S>
+         *            the generic type
+         * @param s
+         *            the s
+         *
+         * @return the r
+         */
+        <R, S> R genericMethodWithTwoTypeParameters(@SuppressWarnings("unused") S s) {
+            return null;
+        }
+    }
+
+    /**
+     * Return null from generic method.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void returnNullFromGenericMethod(@Mocked AClass mock) {
+        String test1 = mock.genericMethod();
+        String test2 = mock.genericMethodWithParameter("test2");
+        String test3 = mock.genericMethodWithTwoTypeParameters(1);
+
+        assertNull(test1);
+        assertNull(test2);
+        assertNull(test3);
+    }
 }

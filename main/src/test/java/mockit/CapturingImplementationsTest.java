@@ -1,5 +1,7 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.lang.management.*;
 import java.lang.reflect.*;
 import java.util.concurrent.*;
@@ -8,606 +10,752 @@ import javax.faces.event.*;
 import javax.servlet.*;
 import javax.xml.parsers.*;
 
-import org.junit.*;
-import static org.junit.Assert.*;
-
 import mockit.internal.*;
+
+import org.junit.*;
 
 /**
  * The Class CapturingImplementationsTest.
  */
-public final class CapturingImplementationsTest
-{
-   
-   /**
-    * The Interface ServiceToBeStubbedOut.
-    */
-   interface ServiceToBeStubbedOut { 
- /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething(); }
+public final class CapturingImplementationsTest {
 
-   /** The unused. */
-   // Just to cause any implementing classes to be stubbed out.
-   @Capturing ServiceToBeStubbedOut unused;
+    /**
+     * The Interface ServiceToBeStubbedOut.
+     */
+    interface ServiceToBeStubbedOut {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething();
+    }
 
-   /**
-    * The Class ServiceLocator.
-    */
-   static final class ServiceLocator {
-      
-      /**
-       * Gets the single instance of ServiceLocator.
-       *
-       * @param <S> the generic type
-       * @param serviceInterface the service interface
-       * @return single instance of ServiceLocator
-       */
-      @SuppressWarnings("unused")
-      static <S> S getInstance(Class<S> serviceInterface) {
-         ServiceToBeStubbedOut service = new ServiceToBeStubbedOut() {
-            @Override public int doSomething() { return 10; }
-         };
-         //noinspection unchecked
-         return (S) service;
-      }
-   }
+    /** The unused. */
+    // Just to cause any implementing classes to be stubbed out.
+    @Capturing
+    ServiceToBeStubbedOut unused;
 
-   /**
-    * Capture implementation loaded by service locator.
-    */
-   @Test
-   public void captureImplementationLoadedByServiceLocator() {
-      ServiceToBeStubbedOut service = ServiceLocator.getInstance(ServiceToBeStubbedOut.class);
-      assertEquals(0, service.doSomething());
-   }
+    /**
+     * The Class ServiceLocator.
+     */
+    static final class ServiceLocator {
 
-   /**
-    * The Interface Service1.
-    */
-   public interface Service1 { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething(); }
-   
-   /**
-    * The Class Service1Impl.
-    */
-   static final class Service1Impl implements Service1 { @Override public int doSomething() { return 1; } }
+        /**
+         * Gets the single instance of ServiceLocator.
+         *
+         * @param <S>
+         *            the generic type
+         * @param serviceInterface
+         *            the service interface
+         *
+         * @return single instance of ServiceLocator
+         */
+        @SuppressWarnings("unused")
+        static <S> S getInstance(Class<S> serviceInterface) {
+            ServiceToBeStubbedOut service = new ServiceToBeStubbedOut() {
+                @Override
+                public int doSomething() {
+                    return 10;
+                }
+            };
+            // noinspection unchecked
+            return (S) service;
+        }
+    }
 
-   /** The mock service 1. */
-   @Capturing Service1 mockService1;
+    /**
+     * Capture implementation loaded by service locator.
+     */
+    @Test
+    public void captureImplementationLoadedByServiceLocator() {
+        ServiceToBeStubbedOut service = ServiceLocator.getInstance(ServiceToBeStubbedOut.class);
+        assertEquals(0, service.doSomething());
+    }
 
-   /**
-    * Capture implementation using mock field.
-    */
-   @Test
-   public void captureImplementationUsingMockField() {
-      Service1 service = new Service1Impl();
+    /**
+     * The Interface Service1.
+     */
+    public interface Service1 {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething();
+    }
 
-      new Expectations() {{
-         mockService1.doSomething();
-         returns(2, 3);
-      }};
+    /**
+     * The Class Service1Impl.
+     */
+    static final class Service1Impl implements Service1 {
+        @Override
+        public int doSomething() {
+            return 1;
+        }
+    }
 
-      assertEquals(2, service.doSomething());
-      assertEquals(3, new Service1Impl().doSomething());
-   }
+    /** The mock service 1. */
+    @Capturing
+    Service1 mockService1;
 
-   /**
-    * The Interface Service2.
-    */
-   public interface Service2 { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething(); }
-   
-   /**
-    * The Class Service2Impl.
-    */
-   static final class Service2Impl implements Service2 { @Override public int doSomething() { return 1; } }
+    /**
+     * Capture implementation using mock field.
+     */
+    @Test
+    public void captureImplementationUsingMockField() {
+        Service1 service = new Service1Impl();
 
-   /**
-    * Capture implementation using mock parameter.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureImplementationUsingMockParameter(@Capturing final Service2 mock) {
-      Service2Impl service = new Service2Impl();
+        new Expectations() {
+            {
+                mockService1.doSomething();
+                returns(2, 3);
+            }
+        };
 
-      new Expectations() {{
-         mock.doSomething();
-         returns(3, 2);
-      }};
+        assertEquals(2, service.doSomething());
+        assertEquals(3, new Service1Impl().doSomething());
+    }
 
-      assertEquals(3, service.doSomething());
-      assertEquals(2, new Service2Impl().doSomething());
-   }
+    /**
+     * The Interface Service2.
+     */
+    public interface Service2 {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething();
+    }
 
-   /**
-    * The Class AbstractService.
-    */
-   public abstract static class AbstractService { /**
-  * Do something.
-  *
-  * @return true, if successful
-  */
- protected abstract boolean doSomething(); }
+    /**
+     * The Class Service2Impl.
+     */
+    static final class Service2Impl implements Service2 {
+        @Override
+        public int doSomething() {
+            return 1;
+        }
+    }
 
-   /**
-    * The Class DefaultServiceImpl.
-    */
-   static final class DefaultServiceImpl extends AbstractService {
-      @Override
-      protected boolean doSomething() { return true; }
-   }
+    /**
+     * Capture implementation using mock parameter.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureImplementationUsingMockParameter(@Capturing final Service2 mock) {
+        Service2Impl service = new Service2Impl();
 
-   /**
-    * Capture implementation of abstract class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureImplementationOfAbstractClass(@Capturing AbstractService mock) {
-      assertFalse(new DefaultServiceImpl().doSomething());
+        new Expectations() {
+            {
+                mock.doSomething();
+                returns(3, 2);
+            }
+        };
 
-      assertFalse(new AbstractService() {
-         @Override
-         protected boolean doSomething() { throw new RuntimeException(); }
-      }.doSomething());
-   }
+        assertEquals(3, service.doSomething());
+        assertEquals(2, new Service2Impl().doSomething());
+    }
 
-   /** The Constant customLoadedClass. */
-   static final Class<? extends Service2> customLoadedClass = new ClassLoader() {
-      @Override
-      protected Class<? extends Service2> findClass(String name) {
-         byte[] bytecode = ClassFile.readBytesFromClassFile(name.replace('.', '/'));
-         //noinspection unchecked
-         return (Class<? extends Service2>) defineClass(name, bytecode, 0, bytecode.length);
-      }
-   }.findClass(Service2Impl.class.getName());
+    /**
+     * The Class AbstractService.
+     */
+    public abstract static class AbstractService {
+        /**
+         * Do something.
+         *
+         * @return true, if successful
+         */
+        protected abstract boolean doSomething();
+    }
 
-   /** The service 2. */
-   Service2 service2;
+    /**
+     * The Class DefaultServiceImpl.
+     */
+    static final class DefaultServiceImpl extends AbstractService {
+        @Override
+        protected boolean doSomething() {
+            return true;
+        }
+    }
 
-   /**
-    * Instantiate custom loaded class.
-    *
-    * @throws Exception the exception
-    */
-   @Before
-   public void instantiateCustomLoadedClass() throws Exception {
-      Constructor<?> defaultConstructor = customLoadedClass.getDeclaredConstructors()[0];
-      defaultConstructor.setAccessible(true);
-      service2 = (Service2) defaultConstructor.newInstance();
-   }
+    /**
+     * Capture implementation of abstract class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureImplementationOfAbstractClass(@Capturing AbstractService mock) {
+        assertFalse(new DefaultServiceImpl().doSomething());
 
-   /**
-    * Capture class previously loaded by class loader other than context.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureClassPreviouslyLoadedByClassLoaderOtherThanContext(@Capturing final Service2 mock) {
-      new Expectations() {{ mock.doSomething(); result = 15; }};
+        assertFalse(new AbstractService() {
+            @Override
+            protected boolean doSomething() {
+                throw new RuntimeException();
+            }
+        }.doSomething());
+    }
 
-      assertEquals(15, service2.doSomething());
-   }
+    /** The Constant customLoadedClass. */
+    static final Class<? extends Service2> customLoadedClass = new ClassLoader() {
+        @Override
+        protected Class<? extends Service2> findClass(String name) {
+            byte[] bytecode = ClassFile.readBytesFromClassFile(name.replace('.', '/'));
+            // noinspection unchecked
+            return (Class<? extends Service2>) defineClass(name, bytecode, 0, bytecode.length);
+        }
+    }.findClass(Service2Impl.class.getName());
 
-   /**
-    * The Interface Service3.
-    */
-   public interface Service3 { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething(); }
-   
-   /** The proxy instance. */
-   static Service3 proxyInstance;
+    /** The service 2. */
+    Service2 service2;
 
-   /**
-    * Generate dynamic proxy class.
-    */
-   @BeforeClass
-   public static void generateDynamicProxyClass() {
-      ClassLoader loader = Service3.class.getClassLoader();
-      Class<?>[] interfaces = {Service3.class};
-      InvocationHandler invocationHandler = new InvocationHandler() {
-         @Override
-         public Object invoke(Object proxy, Method method, Object[] args) {
-            fail("Should be mocked out");
+    /**
+     * Instantiate custom loaded class.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Before
+    public void instantiateCustomLoadedClass() throws Exception {
+        Constructor<?> defaultConstructor = customLoadedClass.getDeclaredConstructors()[0];
+        defaultConstructor.setAccessible(true);
+        service2 = (Service2) defaultConstructor.newInstance();
+    }
+
+    /**
+     * Capture class previously loaded by class loader other than context.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureClassPreviouslyLoadedByClassLoaderOtherThanContext(@Capturing final Service2 mock) {
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = 15;
+            }
+        };
+
+        assertEquals(15, service2.doSomething());
+    }
+
+    /**
+     * The Interface Service3.
+     */
+    public interface Service3 {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething();
+    }
+
+    /** The proxy instance. */
+    static Service3 proxyInstance;
+
+    /**
+     * Generate dynamic proxy class.
+     */
+    @BeforeClass
+    public static void generateDynamicProxyClass() {
+        ClassLoader loader = Service3.class.getClassLoader();
+        Class<?>[] interfaces = { Service3.class };
+        InvocationHandler invocationHandler = new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) {
+                fail("Should be mocked out");
+                return null;
+            }
+        };
+
+        proxyInstance = (Service3) Proxy.newProxyInstance(loader, interfaces, invocationHandler);
+    }
+
+    /**
+     * Capture dynamically generated proxy class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureDynamicallyGeneratedProxyClass(@Capturing final Service3 mock) {
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = 123;
+            }
+        };
+
+        assertEquals(123, proxyInstance.doSomething());
+    }
+
+    /**
+     * The Interface Interface.
+     */
+    interface Interface {
+        /**
+         * Op.
+         */
+        void op();
+    }
+
+    /**
+     * The Interface SubInterface.
+     */
+    interface SubInterface extends Interface {
+    }
+
+    /**
+     * The Class Implementation.
+     */
+    static class Implementation implements SubInterface {
+        @Override
+        public void op() {
+            throw new RuntimeException();
+        }
+    }
+
+    /**
+     * Capture class implementing sub interface of captured interface.
+     *
+     * @param base
+     *            the base
+     */
+    @Test
+    public void captureClassImplementingSubInterfaceOfCapturedInterface(@Capturing Interface base) {
+        Interface impl = new Implementation();
+        impl.op();
+    }
+
+    /**
+     * Capture classes from the java management API.
+     *
+     * @param anyThreadMXBean
+     *            the any thread MX bean
+     */
+    @Test
+    public void captureClassesFromTheJavaManagementAPI(@Capturing ThreadMXBean anyThreadMXBean) {
+        ThreadMXBean threadingBean = ManagementFactory.getThreadMXBean();
+        int threadCount = threadingBean.getThreadCount();
+
+        assertEquals(0, threadCount);
+    }
+
+    /**
+     * Capture classes from the SAX parser API.
+     *
+     * @param anyParser
+     *            the any parser
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void captureClassesFromTheSAXParserAPI(@Capturing final SAXParser anyParser) throws Exception {
+        new Expectations() {
+            {
+                anyParser.isNamespaceAware();
+                result = true;
+            }
+        };
+
+        SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+        boolean b = parser.isNamespaceAware();
+
+        assertTrue(b);
+    }
+
+    /**
+     * Capture classes from the java concurrency API.
+     *
+     * @param anyExecutorService
+     *            the any executor service
+     */
+    @Test
+    public void captureClassesFromTheJavaConcurrencyAPI(@Capturing ExecutorService anyExecutorService) {
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(2);
+        ExecutorService cachedThreadPoolExecutor = Executors.newCachedThreadPool();
+        ExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(3);
+
+        // These calls would throw a NPE unless mocked.
+        singleThreadExecutor.submit((Runnable) null);
+        threadPoolExecutor.submit((Runnable) null);
+        cachedThreadPoolExecutor.submit((Runnable) null);
+        scheduledThreadPoolExecutor.submit((Callable<Object>) null);
+    }
+
+    /**
+     * The Interface Interface2.
+     */
+    interface Interface2 {
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething();
+    }
+
+    /**
+     * The Interface SubInterface2.
+     */
+    interface SubInterface2 extends Interface2 {
+    }
+
+    /**
+     * The Class ClassImplementingSubInterfaceAndExtendingUnrelatedBase.
+     */
+    static class ClassImplementingSubInterfaceAndExtendingUnrelatedBase extends Implementation
+            implements SubInterface2 {
+        @Override
+        public int doSomething() {
+            return 123;
+        }
+    }
+
+    /**
+     * Capture class which implements captured base interface and extends unrelated base.
+     *
+     * @param captured
+     *            the captured
+     */
+    @Test
+    public void captureClassWhichImplementsCapturedBaseInterfaceAndExtendsUnrelatedBase(
+            @Capturing Interface2 captured) {
+        int i = new ClassImplementingSubInterfaceAndExtendingUnrelatedBase().doSomething();
+
+        assertEquals(0, i);
+    }
+
+    /**
+     * The Class Base.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    static class Base<T> {
+
+        /**
+         * Do something.
+         *
+         * @return the t
+         */
+        T doSomething() {
             return null;
-         }
-      };
+        }
 
-      proxyInstance = (Service3) Proxy.newProxyInstance(loader, interfaces, invocationHandler);
-   }
+        /**
+         * Do something.
+         *
+         * @param t
+         *            the t
+         */
+        void doSomething(T t) {
+            System.out.println("test");
+        }
 
-   /**
-    * Capture dynamically generated proxy class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureDynamicallyGeneratedProxyClass(@Capturing final Service3 mock) {
-      new Expectations() {{ mock.doSomething(); result = 123; }};
+        /**
+         * Do something return.
+         *
+         * @param t
+         *            the t
+         *
+         * @return the t
+         */
+        T doSomethingReturn(T t) {
+            return t;
+        }
+    }
 
-      assertEquals(123, proxyInstance.doSomething());
-   }
+    /**
+     * The Class Impl.
+     */
+    static final class Impl extends Base<Integer> {
+        @Override
+        Integer doSomething() {
+            return 1;
+        }
 
-   /**
-    * The Interface Interface.
-    */
-   interface Interface { /**
-  * Op.
-  */
- void op(); }
-   
-   /**
-    * The Interface SubInterface.
-    */
-   interface SubInterface extends Interface {}
-   
-   /**
-    * The Class Implementation.
-    */
-   static class Implementation implements SubInterface { @Override public void op() { throw new RuntimeException(); } }
+        @Override
+        void doSomething(Integer i) {
+        }
 
-   /**
-    * Capture class implementing sub interface of captured interface.
-    *
-    * @param base the base
-    */
-   @Test
-   public void captureClassImplementingSubInterfaceOfCapturedInterface(@Capturing Interface base) {
-      Interface impl = new Implementation();
-      impl.op();
-   }
+        @Override
+        Integer doSomethingReturn(Integer t) {
+            return null;
+        }
+    }
 
-   /**
-    * Capture classes from the java management API.
-    *
-    * @param anyThreadMXBean the any thread MX bean
-    */
-   @Test
-   public void captureClassesFromTheJavaManagementAPI(@Capturing ThreadMXBean anyThreadMXBean) {
-      ThreadMXBean threadingBean = ManagementFactory.getThreadMXBean();
-      int threadCount = threadingBean.getThreadCount();
+    /**
+     * Capture implementations of generic type.
+     *
+     * @param anyInstance
+     *            the any instance
+     */
+    @Test
+    public void captureImplementationsOfGenericType(@Capturing final Base<Integer> anyInstance) {
+        new Expectations() {
+            {
+                anyInstance.doSomething();
+                result = 2;
+                anyInstance.doSomethingReturn(0);
+                anyInstance.doSomething(0);
+            }
+        };
 
-      assertEquals(0, threadCount);
-   }
+        Base<Integer> impl = new Impl();
+        int i = impl.doSomething();
+        impl.doSomethingReturn(0);
+        impl.doSomething(0);
 
-   /**
-    * Capture classes from the SAX parser API.
-    *
-    * @param anyParser the any parser
-    * @throws Exception the exception
-    */
-   @Test
-   public void captureClassesFromTheSAXParserAPI(@Capturing final SAXParser anyParser) throws Exception {
-      new Expectations() {{ anyParser.isNamespaceAware(); result = true; }};
+        assertEquals(2, i);
+    }
 
-      SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-      boolean b = parser.isNamespaceAware();
+    /**
+     * The Class Base2.
+     */
+    static class Base2 {
+        /**
+         * Base.
+         */
+        void base() {
+        }
+    }
 
-      assertTrue(b);
-   }
+    /**
+     * The Class Sub.
+     */
+    static class Sub extends Base2 {
+    }
 
-   /**
-    * Capture classes from the java concurrency API.
-    *
-    * @param anyExecutorService the any executor service
-    */
-   @Test
-   public void captureClassesFromTheJavaConcurrencyAPI(@Capturing ExecutorService anyExecutorService) {
-      ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
-      ExecutorService threadPoolExecutor = Executors.newFixedThreadPool(2);
-      ExecutorService cachedThreadPoolExecutor = Executors.newCachedThreadPool();
-      ExecutorService scheduledThreadPoolExecutor = Executors.newScheduledThreadPool(3);
+    /**
+     * The Class Sub2.
+     */
+    static class Sub2 extends Sub {
+        @Override
+        void base() {
+            throw new RuntimeException();
+        }
+    }
 
-      // These calls would throw a NPE unless mocked.
-      singleThreadExecutor.submit((Runnable) null);
-      threadPoolExecutor.submit((Runnable) null);
-      cachedThreadPoolExecutor.submit((Runnable) null);
-      scheduledThreadPoolExecutor.submit((Callable<Object>) null);
-   }
+    /**
+     * Verify invocation to method from base class on captured subclass of intermediate subclass.
+     *
+     * @param sub
+     *            the sub
+     */
+    @Test
+    public void verifyInvocationToMethodFromBaseClassOnCapturedSubclassOfIntermediateSubclass(
+            @Capturing final Sub sub) {
+        Sub impl = new Sub2();
+        impl.base();
 
-   /**
-    * The Interface Interface2.
-    */
-   interface Interface2 { /**
-  * Do something.
-  *
-  * @return the int
-  */
- int doSomething(); }
-   
-   /**
-    * The Interface SubInterface2.
-    */
-   interface SubInterface2 extends Interface2 {}
-   
-   /**
-    * The Class ClassImplementingSubInterfaceAndExtendingUnrelatedBase.
-    */
-   static class ClassImplementingSubInterfaceAndExtendingUnrelatedBase extends Implementation implements SubInterface2 {
-      @Override public int doSomething() { return 123; }
-   }
+        new Verifications() {
+            {
+                sub.base();
+            }
+        };
+    }
 
-   /**
-    * Capture class which implements captured base interface and extends unrelated base.
-    *
-    * @param captured the captured
-    */
-   @Test
-   public void captureClassWhichImplementsCapturedBaseInterfaceAndExtendsUnrelatedBase(@Capturing Interface2 captured) {
-      int i = new ClassImplementingSubInterfaceAndExtendingUnrelatedBase().doSomething();
+    /**
+     * The Interface BaseItf.
+     */
+    public interface BaseItf {
+        /**
+         * Base.
+         */
+        void base();
+    }
 
-      assertEquals(0, i);
-   }
+    /**
+     * The Interface SubItf.
+     */
+    public interface SubItf extends BaseItf {
+    }
 
-   /**
-    * The Class Base.
-    *
-    * @param <T> the generic type
-    */
-   static class Base<T> {
-      
-      /**
-       * Do something.
-       *
-       * @return the t
-       */
-      T doSomething() { return null; }
-      
-      /**
-       * Do something.
-       *
-       * @param t the t
-       */
-      void doSomething(T t) { System.out.println("test");}
-      
-      /**
-       * Do something return.
-       *
-       * @param t the t
-       * @return the t
-       */
-      T doSomethingReturn(T t) { return t;}
-   }
+    /**
+     * Verify invocation to base interface method on captured implementation of sub interface.
+     *
+     * @param sub
+     *            the sub
+     */
+    @Test
+    public void verifyInvocationToBaseInterfaceMethodOnCapturedImplementationOfSubInterface(
+            @Capturing final SubItf sub) {
+        SubItf impl = new SubItf() {
+            @Override
+            public void base() {
+            }
+        };
+        impl.base();
 
-   /**
-    * The Class Impl.
-    */
-   static final class Impl extends Base<Integer> {
-      @Override Integer doSomething() { return 1; }
-      @Override void doSomething(Integer i) {}
-      @Override Integer doSomethingReturn(Integer t) { return null;}
-   }
+        new Verifications() {
+            {
+                sub.base();
+            }
+        };
+    }
 
-   /**
-    * Capture implementations of generic type.
-    *
-    * @param anyInstance the any instance
-    */
-   @Test
-   public void captureImplementationsOfGenericType(@Capturing final Base<Integer> anyInstance) {
-      new Expectations() {{
-         anyInstance.doSomething(); result = 2;
-         anyInstance.doSomethingReturn(0);
-         anyInstance.doSomething(0);
-      }};
+    /**
+     * The listener interface for receiving myAction events. The class that is interested in processing a myAction event
+     * implements this interface, and the object created with that class is registered with a component using the
+     * component's <code>addMyActionListener<code> method. When the myAction event occurs, that object's appropriate
+     * method is invoked.
+     *
+     * @see MyActionEvent
+     */
+    static final class MyActionListener implements ActionListener {
+        @Override
+        public void processAction(ActionEvent event) {
+        }
 
-      Base<Integer> impl = new Impl();
-      int i = impl.doSomething();
-      impl.doSomethingReturn(0);
-      impl.doSomething(0);
+        /**
+         * Do something.
+         *
+         * @return true, if successful
+         */
+        boolean doSomething() {
+            return true;
+        }
+    }
 
-      assertEquals(2, i);
-   }
+    /**
+     * Capture user defined class implementing external API.
+     *
+     * @param actionListener
+     *            the action listener
+     */
+    @Test
+    public void captureUserDefinedClassImplementingExternalAPI(@Capturing ActionListener actionListener) {
+        boolean notCaptured = new MyActionListener().doSomething();
+        assertFalse(notCaptured);
+    }
 
-   /**
-    * The Class Base2.
-    */
-   static class Base2 { /**
-  * Base.
-  */
- void base() {} }
-   
-   /**
-    * The Class Sub.
-    */
-   static class Sub extends Base2 {}
-   
-   /**
-    * The Class Sub2.
-    */
-   static class Sub2 extends Sub { @Override void base() { throw new RuntimeException(); } }
+    /**
+     * Capture library class implementing interface from another library.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureLibraryClassImplementingInterfaceFromAnotherLibrary(
+            @Capturing final ServletContextListener mock) {
+        // noinspection UnnecessaryFullyQualifiedName
+        ServletContextListener contextListener = new org.springframework.web.util.WebAppRootListener();
+        contextListener.contextInitialized(null);
 
-   /**
-    * Verify invocation to method from base class on captured subclass of intermediate subclass.
-    *
-    * @param sub the sub
-    */
-   @Test
-   public void verifyInvocationToMethodFromBaseClassOnCapturedSubclassOfIntermediateSubclass(@Capturing final Sub sub) {
-      Sub impl = new Sub2();
-      impl.base();
+        new Verifications() {
+            {
+                mock.contextInitialized(null);
+            }
+        };
+    }
 
-      new Verifications() {{
-         sub.base();
-      }};
-   }
+    /**
+     * The Class BaseGenericReturnTypes.
+     */
+    static class BaseGenericReturnTypes {
 
-   /**
-    * The Interface BaseItf.
-    */
-   public interface BaseItf { /**
-  * Base.
-  */
- void base(); }
-   
-   /**
-    * The Interface SubItf.
-    */
-   public interface SubItf extends BaseItf {}
+        /**
+         * Method one.
+         *
+         * @return the class
+         */
+        Class<?> methodOne() {
+            return null;
+        }
 
-   /**
-    * Verify invocation to base interface method on captured implementation of sub interface.
-    *
-    * @param sub the sub
-    */
-   @Test
-   public void verifyInvocationToBaseInterfaceMethodOnCapturedImplementationOfSubInterface(@Capturing final SubItf sub) {
-      SubItf impl = new SubItf() { @Override public void base() {} };
-      impl.base();
+        /**
+         * Method two.
+         *
+         * @return the class
+         */
+        Class<?> methodTwo() {
+            return null;
+        }
+    }
 
-      new Verifications() {{
-         sub.base();
-      }};
-   }
+    /**
+     * The Class SubGenericReturnTypes.
+     */
+    static class SubGenericReturnTypes extends BaseGenericReturnTypes {
+    }
 
-   /**
-    * The listener interface for receiving myAction events.
-    * The class that is interested in processing a myAction
-    * event implements this interface, and the object created
-    * with that class is registered with a component using the
-    * component's <code>addMyActionListener<code> method. When
-    * the myAction event occurs, that object's appropriate
-    * method is invoked.
-    *
-    * @see MyActionEvent
-    */
-   static final class MyActionListener implements ActionListener {
-      @Override public void processAction(ActionEvent event) {}
-      
-      /**
-       * Do something.
-       *
-       * @return true, if successful
-       */
-      boolean doSomething() { return true; }
-   }
+    /**
+     * Capture method with generic return types.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureMethodWithGenericReturnTypes(@Capturing final BaseGenericReturnTypes mock) {
+        new Expectations() {
+            {
+                mock.methodOne();
+                result = BaseGenericReturnTypes.class;
+                times = 1;
 
-   /**
-    * Capture user defined class implementing external API.
-    *
-    * @param actionListener the action listener
-    */
-   @Test
-   public void captureUserDefinedClassImplementingExternalAPI(@Capturing ActionListener actionListener) {
-      boolean notCaptured = new MyActionListener().doSomething();
-      assertFalse(notCaptured);
-   }
+                mock.methodTwo();
+                result = SubGenericReturnTypes.class;
+                times = 1;
+            }
+        };
+        SubGenericReturnTypes subBaseGenericReturnTypes = new SubGenericReturnTypes();
+        assertEquals(BaseGenericReturnTypes.class, subBaseGenericReturnTypes.methodOne());
+        assertEquals(SubGenericReturnTypes.class, subBaseGenericReturnTypes.methodTwo());
+    }
 
-   /**
-    * Capture library class implementing interface from another library.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureLibraryClassImplementingInterfaceFromAnotherLibrary(@Capturing final ServletContextListener mock) {
-      //noinspection UnnecessaryFullyQualifiedName
-      ServletContextListener contextListener = new org.springframework.web.util.WebAppRootListener();
-      contextListener.contextInitialized(null);
+    /**
+     * The Class BaseR.
+     */
+    static class BaseR {
 
-      new Verifications() {{ mock.contextInitialized(null); }};
-   }
+        /**
+         * Foo.
+         */
+        void foo() {
+        };
 
-   /**
-    * The Class BaseGenericReturnTypes.
-    */
-   static class BaseGenericReturnTypes {
-      
-      /**
-       * Method one.
-       *
-       * @return the class
-       */
-      Class<?> methodOne() {return null;}
-      
-      /**
-       * Method two.
-       *
-       * @return the class
-       */
-      Class<?> methodTwo() {return null;}
-   }
-   
-   /**
-    * The Class SubGenericReturnTypes.
-    */
-   static class SubGenericReturnTypes extends BaseGenericReturnTypes {}
+        /**
+         * Bar.
+         */
+        void bar() {
+        };
+    }
 
-   /**
-    * Capture method with generic return types.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureMethodWithGenericReturnTypes(@Capturing final BaseGenericReturnTypes mock) {
-      new Expectations () {{
-         mock.methodOne();
-         result = BaseGenericReturnTypes.class;
-         times = 1;
+    /**
+     * The Class SubR.
+     */
+    static class SubR extends BaseR {
+    }
 
-         mock.methodTwo();
-         result = SubGenericReturnTypes.class;
-         times = 1;
-      }};
-      SubGenericReturnTypes subBaseGenericReturnTypes = new SubGenericReturnTypes();
-      assertEquals(BaseGenericReturnTypes.class, subBaseGenericReturnTypes.methodOne());
-      assertEquals(SubGenericReturnTypes.class, subBaseGenericReturnTypes.methodTwo());
-   }
+    /**
+     * Capture R.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void captureR(@Capturing final BaseR mock) {
+        new Expectations() {
+            {
+                mock.foo();
+                times = 1;
 
-   /**
-    * The Class BaseR.
-    */
-   static class BaseR {
-     
-     /**
-      * Foo.
-      */
-     void foo() {};
-     
-     /**
-      * Bar.
-      */
-     void bar() {};
-   }
-
-   /**
-    * The Class SubR.
-    */
-   static class SubR extends BaseR {}
-
-   /**
-    * Capture R.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void captureR(@Capturing final BaseR mock) {
-      new Expectations () {{
-         mock.foo();
-         times = 1;
-
-         mock.bar();
-         times = 1;
-      }};
-     SubR subR = new SubR();
-     subR.foo();
-     subR.bar();
-   }
+                mock.bar();
+                times = 1;
+            }
+        };
+        SubR subR = new SubR();
+        subR.foo();
+        subR.bar();
+    }
 
 }

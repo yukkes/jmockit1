@@ -1,66 +1,78 @@
 package mockit;
 
 import static org.junit.Assert.*;
+
 import org.junit.*;
 
 /**
  * The Class DynamicMockingInBeforeMethodTest.
  */
-public final class DynamicMockingInBeforeMethodTest
-{
-   
-   /**
-    * The Class MockedClass.
-    */
-   static final class MockedClass { 
- /**
-  * Do something.
-  *
-  * @param i the i
-  * @return true, if successful
-  */
- boolean doSomething(int i) { return i > 0; } }
+public final class DynamicMockingInBeforeMethodTest {
 
-   /** The an instance. */
-   final MockedClass anInstance = new MockedClass();
+    /**
+     * The Class MockedClass.
+     */
+    static final class MockedClass {
+        /**
+         * Do something.
+         *
+         * @param i
+         *            the i
+         *
+         * @return true, if successful
+         */
+        boolean doSomething(int i) {
+            return i > 0;
+        }
+    }
 
-   /**
-    * Record expectations on dynamically mocked class.
-    */
-   @Before
-   public void recordExpectationsOnDynamicallyMockedClass() {
-      assertTrue(anInstance.doSomething(56));
+    /** The an instance. */
+    final MockedClass anInstance = new MockedClass();
 
-      new Expectations(anInstance) {{
-         anInstance.doSomething(anyInt); result = true; minTimes = 0;
-      }};
+    /**
+     * Record expectations on dynamically mocked class.
+     */
+    @Before
+    public void recordExpectationsOnDynamicallyMockedClass() {
+        assertTrue(anInstance.doSomething(56));
 
-      assertTrue(anInstance.doSomething(-56));
-   }
+        new Expectations(anInstance) {
+            {
+                anInstance.doSomething(anyInt);
+                result = true;
+                minTimes = 0;
+            }
+        };
 
-   /**
-    * Verify that dynamically mocked class is still mocked.
-    */
-   @After
-   public void verifyThatDynamicallyMockedClassIsStillMocked() {
-      new FullVerifications() {{
-         anInstance.doSomething(anyInt); times = 2;
-      }};
-   }
+        assertTrue(anInstance.doSomething(-56));
+    }
 
-   /**
-    * Test something.
-    */
-   @Test
-   public void testSomething() {
-      assertTrue(anInstance.doSomething(56));
-   }
+    /**
+     * Verify that dynamically mocked class is still mocked.
+     */
+    @After
+    public void verifyThatDynamicallyMockedClassIsStillMocked() {
+        new FullVerifications() {
+            {
+                anInstance.doSomething(anyInt);
+                times = 2;
+            }
+        };
+    }
 
-   /**
-    * Test something else.
-    */
-   @Test
-   public void testSomethingElse() {
-      assertTrue(anInstance.doSomething(-129));
-   }
+    /**
+     * Test something.
+     */
+    @Test
+    public void testSomething() {
+        assertTrue(anInstance.doSomething(56));
+    }
+
+    /**
+     * Test something else.
+     */
+    @Test
+    public void testSomethingElse() {
+        assertTrue(anInstance.doSomething(-129));
+    }
 }

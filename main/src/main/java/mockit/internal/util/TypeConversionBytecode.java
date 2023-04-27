@@ -4,87 +4,86 @@
  */
 package mockit.internal.util;
 
+import static mockit.asm.jvmConstants.Opcodes.*;
+
 import javax.annotation.*;
 
 import mockit.asm.methods.*;
 import mockit.asm.types.*;
-import static mockit.asm.jvmConstants.Opcodes.*;
 
-public final class TypeConversionBytecode
-{
-   private TypeConversionBytecode() {}
+public final class TypeConversionBytecode {
+    private TypeConversionBytecode() {
+    }
 
-   public static void generateCastToObject(@Nonnull MethodVisitor mv, @Nonnull JavaType type) {
-      if (type instanceof PrimitiveType) {
-         String wrapperTypeDesc = ((PrimitiveType) type).getWrapperTypeDesc();
-         String desc = '(' + type.getDescriptor() + ")L" + wrapperTypeDesc + ';';
+    public static void generateCastToObject(@Nonnull MethodVisitor mv, @Nonnull JavaType type) {
+        if (type instanceof PrimitiveType) {
+            String wrapperTypeDesc = ((PrimitiveType) type).getWrapperTypeDesc();
+            String desc = '(' + type.getDescriptor() + ")L" + wrapperTypeDesc + ';';
 
-         mv.visitMethodInsn(INVOKESTATIC, wrapperTypeDesc, "valueOf", desc, false);
-      }
-   }
+            mv.visitMethodInsn(INVOKESTATIC, wrapperTypeDesc, "valueOf", desc, false);
+        }
+    }
 
-   public static void generateCastFromObject(@Nonnull MethodVisitor mv, @Nonnull JavaType toType) {
-      if (toType instanceof PrimitiveType) {
-         PrimitiveType primitiveType = (PrimitiveType) toType;
+    public static void generateCastFromObject(@Nonnull MethodVisitor mv, @Nonnull JavaType toType) {
+        if (toType instanceof PrimitiveType) {
+            PrimitiveType primitiveType = (PrimitiveType) toType;
 
-         if (primitiveType.getType() == void.class) {
-            mv.visitInsn(POP);
-         }
-         else {
-            generateTypeCheck(mv, primitiveType);
-            generateUnboxing(mv, primitiveType);
-         }
-      }
-      else {
-         generateTypeCheck(mv, toType);
-      }
-   }
+            if (primitiveType.getType() == void.class) {
+                mv.visitInsn(POP);
+            } else {
+                generateTypeCheck(mv, primitiveType);
+                generateUnboxing(mv, primitiveType);
+            }
+        } else {
+            generateTypeCheck(mv, toType);
+        }
+    }
 
-   private static void generateTypeCheck(@Nonnull MethodVisitor mv, @Nonnull JavaType toType) {
-      String typeDesc;
+    private static void generateTypeCheck(@Nonnull MethodVisitor mv, @Nonnull JavaType toType) {
+        String typeDesc;
 
-      if (toType instanceof ReferenceType) {
-         typeDesc = ((ReferenceType) toType).getInternalName();
-      }
-      else {
-         typeDesc = ((PrimitiveType) toType).getWrapperTypeDesc();
-      }
+        if (toType instanceof ReferenceType) {
+            typeDesc = ((ReferenceType) toType).getInternalName();
+        } else {
+            typeDesc = ((PrimitiveType) toType).getWrapperTypeDesc();
+        }
 
-      mv.visitTypeInsn(CHECKCAST, typeDesc);
-   }
+        mv.visitTypeInsn(CHECKCAST, typeDesc);
+    }
 
-   private static void generateUnboxing(@Nonnull MethodVisitor mv, @Nonnull PrimitiveType primitiveType) {
-      String owner = primitiveType.getWrapperTypeDesc();
-      String methodName = primitiveType.getClassName() + "Value";
-      String methodDesc = "()" + primitiveType.getTypeCode();
+    private static void generateUnboxing(@Nonnull MethodVisitor mv, @Nonnull PrimitiveType primitiveType) {
+        String owner = primitiveType.getWrapperTypeDesc();
+        String methodName = primitiveType.getClassName() + "Value";
+        String methodDesc = "()" + primitiveType.getTypeCode();
 
-      mv.visitMethodInsn(INVOKEVIRTUAL, owner, methodName, methodDesc, false);
-   }
+        mv.visitMethodInsn(INVOKEVIRTUAL, owner, methodName, methodDesc, false);
+    }
 
-   public static void generateCastOrUnboxing(@Nonnull MethodVisitor mv, @Nonnull JavaType parameterType, @Nonnegative int opcode) {
-      if (opcode == ASTORE) {
-         generateTypeCheck(mv, parameterType);
-         return;
-      }
+    public static void generateCastOrUnboxing(@Nonnull MethodVisitor mv, @Nonnull JavaType parameterType,
+            @Nonnegative int opcode) {
+        if (opcode == ASTORE) {
+            generateTypeCheck(mv, parameterType);
+            return;
+        }
 
-      String typeDesc = ((ReferenceType) parameterType).getInternalName();
-      mv.visitTypeInsn(CHECKCAST, typeDesc);
+        String typeDesc = ((ReferenceType) parameterType).getInternalName();
+        mv.visitTypeInsn(CHECKCAST, typeDesc);
 
-      PrimitiveType primitiveType = PrimitiveType.getCorrespondingPrimitiveTypeIfWrapperType(typeDesc);
-      assert primitiveType != null;
+        PrimitiveType primitiveType = PrimitiveType.getCorrespondingPrimitiveTypeIfWrapperType(typeDesc);
+        assert primitiveType != null;
 
-      generateUnboxing(mv, primitiveType);
-   }
+        generateUnboxing(mv, primitiveType);
+    }
 
-   public static boolean isPrimitiveWrapper(@Nonnull String typeDesc) {
-      return PrimitiveType.getCorrespondingPrimitiveTypeIfWrapperType(typeDesc) != null;
-   }
+    public static boolean isPrimitiveWrapper(@Nonnull String typeDesc) {
+        return PrimitiveType.getCorrespondingPrimitiveTypeIfWrapperType(typeDesc) != null;
+    }
 
-   public static boolean isBoxing(@Nonnull String owner, @Nonnull String name, @Nonnull String desc) {
-      return desc.charAt(2) == ')' && "valueOf".equals(name) && isPrimitiveWrapper(owner);
-   }
+    public static boolean isBoxing(@Nonnull String owner, @Nonnull String name, @Nonnull String desc) {
+        return desc.charAt(2) == ')' && "valueOf".equals(name) && isPrimitiveWrapper(owner);
+    }
 
-   public static boolean isUnboxing(@Nonnegative int opcode, @Nonnull String owner, @Nonnull String desc) {
-      return opcode == INVOKEVIRTUAL && desc.charAt(1) == ')' && isPrimitiveWrapper(owner);
-   }
+    public static boolean isUnboxing(@Nonnegative int opcode, @Nonnull String owner, @Nonnull String desc) {
+        return opcode == INVOKEVIRTUAL && desc.charAt(1) == ')' && isPrimitiveWrapper(owner);
+    }
 }

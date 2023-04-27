@@ -1,9 +1,9 @@
 package petclinic.util;
 
-import java.lang.annotation.*;
-
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;
+
+import java.lang.annotation.*;
 
 import mockit.*;
 
@@ -14,4 +14,5 @@ import mockit.*;
 @Target(FIELD)
 @Retention(RUNTIME)
 @Tested(fullyInitialized = true)
-public @interface SUT {}
+public @interface SUT {
+}

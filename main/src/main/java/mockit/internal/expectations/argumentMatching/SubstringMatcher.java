@@ -6,12 +6,16 @@ package mockit.internal.expectations.argumentMatching;
 
 import javax.annotation.*;
 
-abstract class SubstringMatcher implements ArgumentMatcher<SubstringMatcher>
-{
-   @Nonnull final String substring;
+abstract class SubstringMatcher implements ArgumentMatcher<SubstringMatcher> {
+    @Nonnull
+    final String substring;
 
-   SubstringMatcher(@Nonnull CharSequence substring) { this.substring = substring.toString(); }
+    SubstringMatcher(@Nonnull CharSequence substring) {
+        this.substring = substring.toString();
+    }
 
-   @Override
-   public final boolean same(@Nonnull SubstringMatcher other) { return substring.equals(other.substring); }
+    @Override
+    public final boolean same(@Nonnull SubstringMatcher other) {
+        return substring.equals(other.substring);
+    }
 }

@@ -5,19 +5,20 @@
 package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.*;
+
 import javax.annotation.*;
 
-public final class CascadingTypeRedefinition extends BaseTypeRedefinition
-{
-   @Nonnull private final Type mockedType;
+public final class CascadingTypeRedefinition extends BaseTypeRedefinition {
+    @Nonnull
+    private final Type mockedType;
 
-   public CascadingTypeRedefinition(@Nonnull String cascadingMethodName, @Nonnull Type mockedType) {
-      super(new MockedType(cascadingMethodName, mockedType));
-      this.mockedType = mockedType;
-   }
+    public CascadingTypeRedefinition(@Nonnull String cascadingMethodName, @Nonnull Type mockedType) {
+        super(new MockedType(cascadingMethodName, mockedType));
+        this.mockedType = mockedType;
+    }
 
-   @Nullable
-   public InstanceFactory redefineType() {
-      return redefineType(mockedType);
-   }
+    @Nullable
+    public InstanceFactory redefineType() {
+        return redefineType(mockedType);
+    }
 }

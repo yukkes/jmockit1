@@ -1,93 +1,123 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.util.*;
+
 import javax.annotation.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 /**
  * The Class NaturalOrderingTest.
  */
-public final class NaturalOrderingTest
-{
-   
-   /**
-    * Verify standard comparable behavior in mocked class.
-    *
-    * @param a the a
-    * @param b the b
-    */
-   @Test
-   public void verifyStandardComparableBehaviorInMockedClass(@Mocked Date a, @Mocked Date b) {
-      //noinspection EqualsWithItself
-      assertEquals(0, a.compareTo(a));
-      //noinspection EqualsWithItself
-      assertEquals(0, b.compareTo(b));
+public final class NaturalOrderingTest {
 
-      int aXb = a.compareTo(b);
-      assertTrue(aXb != 0);
+    /**
+     * Verify standard comparable behavior in mocked class.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     */
+    @Test
+    public void verifyStandardComparableBehaviorInMockedClass(@Mocked Date a, @Mocked Date b) {
+        // noinspection EqualsWithItself
+        assertEquals(0, a.compareTo(a));
+        // noinspection EqualsWithItself
+        assertEquals(0, b.compareTo(b));
 
-      int bXa = b.compareTo(a);
-      assertTrue(bXa != 0);
+        int aXb = a.compareTo(b);
+        assertTrue(aXb != 0);
 
-      assertEquals(aXb, -bXa);
-   }
+        int bXa = b.compareTo(a);
+        assertTrue(bXa != 0);
 
-   /**
-    * The Class ComparableClass.
-    */
-   @SuppressWarnings("ComparableImplementedButEqualsNotOverridden")
-   static final class ComparableClass implements Comparable<String> {
-      
-      /** The value. */
-      final String value;
-      
-      /**
-       * Instantiates a new comparable class.
-       *
-       * @param value the value
-       */
-      ComparableClass(String value) { this.value = value; }
-      @Override public int compareTo(@Nonnull String s) { return value.compareTo(s); }
-   }
+        assertEquals(aXb, -bXa);
+    }
 
-   /**
-    * Mock override of compare to method.
-    *
-    * @param a the a
-    * @param b the b
-    */
-   @Test
-   public void mockOverrideOfCompareToMethod(@Mocked final ComparableClass a, @Mocked final ComparableClass b) {
-      new Expectations() {{
-         a.compareTo(null); result = 5;
-         a.compareTo(anyString); result = 123;
-      }};
+    /**
+     * The Class ComparableClass.
+     */
+    @SuppressWarnings("ComparableImplementedButEqualsNotOverridden")
+    static final class ComparableClass implements Comparable<String> {
 
-      new Expectations() {{ b.compareTo("test"); result = -50; }};
+        /** The value. */
+        final String value;
 
-      assertEquals(5, a.compareTo(null));
-      assertEquals(123, a.compareTo("test"));
-      assertEquals(-50, b.compareTo("test"));
-   }
+        /**
+         * Instantiates a new comparable class.
+         *
+         * @param value
+         *            the value
+         */
+        ComparableClass(String value) {
+            this.value = value;
+        }
 
-   /**
-    * Mock override of compare to method in JRE class.
-    *
-    * @param a the a
-    * @param b the b
-    */
-   @Test
-   public void mockOverrideOfCompareToMethodInJREClass(@Mocked final Date a, @Mocked final Date b) {
-      new Expectations() {{ a.compareTo(b); result = 5; }};
+        @Override
+        public int compareTo(@Nonnull String s) {
+            return value.compareTo(s);
+        }
+    }
 
-      assertEquals(5, a.compareTo(b));
-      assertTrue(b.compareTo(a) != 0);
+    /**
+     * Mock override of compare to method.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     */
+    @Test
+    public void mockOverrideOfCompareToMethod(@Mocked final ComparableClass a, @Mocked final ComparableClass b) {
+        new Expectations() {
+            {
+                a.compareTo(null);
+                result = 5;
+                a.compareTo(anyString);
+                result = 123;
+            }
+        };
 
-      new Verifications() {{
-         a.compareTo((Date) any);
-         b.compareTo(a);
-      }};
-   }
+        new Expectations() {
+            {
+                b.compareTo("test");
+                result = -50;
+            }
+        };
+
+        assertEquals(5, a.compareTo(null));
+        assertEquals(123, a.compareTo("test"));
+        assertEquals(-50, b.compareTo("test"));
+    }
+
+    /**
+     * Mock override of compare to method in JRE class.
+     *
+     * @param a
+     *            the a
+     * @param b
+     *            the b
+     */
+    @Test
+    public void mockOverrideOfCompareToMethodInJREClass(@Mocked final Date a, @Mocked final Date b) {
+        new Expectations() {
+            {
+                a.compareTo(b);
+                result = 5;
+            }
+        };
+
+        assertEquals(5, a.compareTo(b));
+        assertTrue(b.compareTo(a) != 0);
+
+        new Verifications() {
+            {
+                a.compareTo((Date) any);
+                b.compareTo(a);
+            }
+        };
+    }
 }

@@ -1,5 +1,7 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.awt.*;
 import java.lang.reflect.*;
 import java.rmi.*;
@@ -12,366 +14,421 @@ import javax.swing.plaf.basic.*;
 
 import org.junit.*;
 import org.junit.rules.*;
-import static org.junit.Assert.*;
 
 /**
  * The Class FakingTest.
  */
-public final class FakingTest
-{
-   
-   /** The thrown. */
-   @Rule public final ExpectedException thrown = ExpectedException.none();
+public final class FakingTest {
 
-   /**
-    * Attempt to apply fake without the target type.
-    */
-   @Test
-   public void attemptToApplyFakeWithoutTheTargetType() {
-      thrown.expect(IllegalArgumentException.class);
-      thrown.expectMessage("No target type");
+    /** The thrown. */
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
-      new MockUp() {};
-   }
+    /**
+     * Attempt to apply fake without the target type.
+     */
+    @Test
+    public void attemptToApplyFakeWithoutTheTargetType() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("No target type");
 
-   // Fakes for classes ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        new MockUp() {
+        };
+    }
 
-   /**
-    * Fake A class.
-    */
-   @Test
-   public void fakeAClass() {
-      new MockUp<Panel>() {
-         @Mock
-         int getComponentCount() { return 123; }
-      };
+    // Fakes for classes
+    // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      assertEquals(123, new Panel().getComponentCount());
-   }
+    /**
+     * Fake A class.
+     */
+    @Test
+    public void fakeAClass() {
+        new MockUp<Panel>() {
+            @Mock
+            int getComponentCount() {
+                return 123;
+            }
+        };
 
-   /**
-    * The Class Main.
-    */
-   static final class Main {
-      
-      /** The Constant atomicCount. */
-      static final AtomicIntegerFieldUpdater<Main> atomicCount = AtomicIntegerFieldUpdater.newUpdater(Main.class, "count");
+        assertEquals(123, new Panel().getComponentCount());
+    }
 
-      /** The count. */
-      volatile int count;
-      
-      /** The max. */
-      int max = 2;
+    /**
+     * The Class Main.
+     */
+    static final class Main {
 
-      /**
-       * Increment.
-       *
-       * @return true, if successful
-       */
-      boolean increment() {
-         while (true) {
-            int currentCount = count;
+        /** The Constant atomicCount. */
+        static final AtomicIntegerFieldUpdater<Main> atomicCount = AtomicIntegerFieldUpdater.newUpdater(Main.class,
+                "count");
 
-            if (currentCount >= max) {
-               return false;
+        /** The count. */
+        volatile int count;
+
+        /** The max. */
+        int max = 2;
+
+        /**
+         * Increment.
+         *
+         * @return true, if successful
+         */
+        boolean increment() {
+            while (true) {
+                int currentCount = count;
+
+                if (currentCount >= max) {
+                    return false;
+                }
+
+                if (atomicCount.compareAndSet(this, currentCount, currentCount + 1)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    /**
+     * Fake A given class.
+     */
+    @Test
+    public void fakeAGivenClass() {
+        final Main main = new Main();
+
+        new MockUp<AtomicIntegerFieldUpdater<?>>(Main.atomicCount.getClass()) {
+            boolean second;
+
+            @Mock
+            public boolean compareAndSet(Object obj, int expect, int update) {
+                assertSame(main, obj);
+                assertEquals(0, expect);
+                assertEquals(1, update);
+
+                if (second) {
+                    return true;
+                }
+
+                second = true;
+                return false;
+            }
+        };
+
+        assertTrue(main.increment());
+    }
+
+    /**
+     * Attempt to fake given class but pass null.
+     */
+    @Test
+    public void attemptToFakeGivenClassButPassNull() {
+        thrown.expect(NullPointerException.class);
+
+        new MockUp<Panel>(null) {
+        };
+    }
+
+    /**
+     * The Class FakeForGivenClass.
+     */
+    @SuppressWarnings("rawtypes")
+    static class FakeForGivenClass extends MockUp {
+
+        /**
+         * Instantiates a new fake for given class.
+         */
+        @SuppressWarnings("unchecked")
+        FakeForGivenClass() {
+            super(Panel.class);
+        }
+
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
+        @Mock
+        String getName() {
+            return "mock";
+        }
+    }
+
+    /**
+     * Fake given class using named fake.
+     */
+    @Test
+    public void fakeGivenClassUsingNamedFake() {
+        new FakeForGivenClass();
+
+        String s = new Panel().getName();
+
+        assertEquals("mock", s);
+    }
+
+    // Fakes for other situations
+    // //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Attempt to fake class and interface at once.
+     *
+     * @param <M>
+     *            the generic type
+     */
+    @Test
+    public <M extends Panel & Runnable> void attemptToFakeClassAndInterfaceAtOnce() {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("Unable to capture");
+
+        new MockUp<M>() {
+            @Mock
+            String getName() {
+                return "";
             }
 
-            if (atomicCount.compareAndSet(this, currentCount, currentCount + 1)) {
-               return true;
+            @Mock
+            void run() {
             }
-         }
-      }
-   }
+        };
+    }
 
-   /**
-    * Fake A given class.
-    */
-   @Test
-   public void fakeAGivenClass() {
-      final Main main = new Main();
-
-      new MockUp<AtomicIntegerFieldUpdater<?>>(Main.atomicCount.getClass()) {
-         boolean second;
-
-         @Mock
-         public boolean compareAndSet(Object obj, int expect, int update) {
-            assertSame(main, obj);
-            assertEquals(0, expect);
-            assertEquals(1, update);
-
-            if (second) {
-               return true;
+    /**
+     * Fake using invocation parameters.
+     */
+    @Test
+    public void fakeUsingInvocationParameters() {
+        new MockUp<Panel>() {
+            @Mock
+            void $init(Invocation inv) {
+                Panel it = inv.getInvokedInstance();
+                assertNotNull(it);
             }
 
-            second = true;
-            return false;
-         }
-      };
+            @Mock
+            int getBaseline(Invocation inv, int w, int h) {
+                return inv.proceed();
+            }
+        };
 
-      assertTrue(main.increment());
-   }
+        int i = new Panel().getBaseline(20, 15);
 
-   /**
-    * Attempt to fake given class but pass null.
-    */
-   @Test
-   public void attemptToFakeGivenClassButPassNull() {
-      thrown.expect(NullPointerException.class);
+        assertEquals(-1, i);
+    }
 
-      new MockUp<Panel>(null) {};
-   }
+    /**
+     * The Class PublicNamedFakeWithNoInvocationParameters.
+     */
+    public static class PublicNamedFakeWithNoInvocationParameters extends MockUp<Panel> {
 
-   /**
-    * The Class FakeForGivenClass.
-    */
-   @SuppressWarnings("rawtypes")
-   static class FakeForGivenClass extends MockUp {
-      
-      /**
-       * Instantiates a new fake for given class.
-       */
-      @SuppressWarnings("unchecked")
-      FakeForGivenClass() { super(Panel.class); }
+        /** The executed. */
+        boolean executed;
 
-      /**
-       * Gets the name.
-       *
-       * @return the name
-       */
-      @Mock
-      String getName() { return "mock"; }
-   }
+        /**
+         * $init.
+         */
+        @Mock
+        public void $init() {
+            executed = true;
+        }
 
-   /**
-    * Fake given class using named fake.
-    */
-   @Test
-   public void fakeGivenClassUsingNamedFake() {
-      new FakeForGivenClass();
+        /**
+         * Gets the name.
+         *
+         * @return the name
+         */
+        @Mock
+        public String getName() {
+            return "test";
+        }
+    }
 
-      String s = new Panel().getName();
+    /**
+     * Public named fake with no invocation parameter.
+     */
+    @Test
+    public void publicNamedFakeWithNoInvocationParameter() {
+        PublicNamedFakeWithNoInvocationParameters fake = new PublicNamedFakeWithNoInvocationParameters();
 
-      assertEquals("mock", s);
-   }
+        Panel applet = new Panel();
+        assertTrue(fake.executed);
 
-   // Fakes for other situations //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        String name = applet.getName();
+        assertEquals("test", name);
+    }
 
-   /**
-    * Attempt to fake class and interface at once.
-    *
-    * @param <M> the generic type
-    */
-   @Test
-   public <M extends Panel & Runnable> void attemptToFakeClassAndInterfaceAtOnce() {
-      thrown.expect(UnsupportedOperationException.class);
-      thrown.expectMessage("Unable to capture");
+    /**
+     * Faking of annotated class.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    @SuppressWarnings("deprecation")
+    public void fakingOfAnnotatedClass() throws Exception {
+        new MockUp<RMISecurityException>() {
+            @Mock
+            void $init(String s) {
+                assertNotNull(s);
+            }
+        };
 
-      new MockUp<M>() {
-         @Mock String getName() { return ""; }
-         @Mock void run() {}
-      };
-   }
+        assertTrue(RMISecurityException.class.isAnnotationPresent(Deprecated.class));
 
-   /**
-    * Fake using invocation parameters.
-    */
-   @Test
-   public void fakeUsingInvocationParameters() {
-      new MockUp<Panel>() {
-         @Mock
-         void $init(Invocation inv) {
-            Panel it = inv.getInvokedInstance();
-            assertNotNull(it);
-         }
+        Constructor<RMISecurityException> aConstructor = RMISecurityException.class
+                .getDeclaredConstructor(String.class);
+        assertTrue(aConstructor.isAnnotationPresent(Deprecated.class));
 
-         @Mock
-         int getBaseline(Invocation inv, int w, int h) {
-            return inv.proceed();
-         }
-      };
+        Deprecated deprecated = aConstructor.getAnnotation(Deprecated.class);
+        assertNotNull(deprecated);
+    }
 
-      int i = new Panel().getBaseline(20, 15);
+    /**
+     * Fake same class twice using separate fakes.
+     */
+    @Test
+    public void fakeSameClassTwiceUsingSeparateFakes() {
+        Panel a = new Panel();
 
-      assertEquals(-1, i);
-   }
+        class Fake1 extends MockUp<Panel> {
+            @Mock
+            void addNotify() {
+            }
+        }
+        new Fake1();
+        a.addNotify();
 
-   /**
-    * The Class PublicNamedFakeWithNoInvocationParameters.
-    */
-   public static class PublicNamedFakeWithNoInvocationParameters extends MockUp<Panel> {
-      
-      /** The executed. */
-      boolean executed;
-      
-      /**
-       * $init.
-       */
-      @Mock public void $init() { executed = true; }
-      
-      /**
-       * Gets the name.
-       *
-       * @return the name
-       */
-      @Mock public String getName() { return "test"; }
-   }
+        new MockUp<Panel>() {
+            @Mock
+            AccessibleContext getAccessibleContext() {
+                return null;
+            }
+        };
+        a.addNotify(); // still faked
+        a.getAccessibleContext();
+    }
 
-   /**
-    * Public named fake with no invocation parameter.
-    */
-   @Test
-   public void publicNamedFakeWithNoInvocationParameter() {
-      PublicNamedFakeWithNoInvocationParameters fake = new PublicNamedFakeWithNoInvocationParameters();
+    /**
+     * Fake constructor of inner class.
+     */
+    @Test
+    public void fakeConstructorOfInnerClass() {
+        final BasicColorChooserUI outer = new BasicColorChooserUI();
+        final boolean[] constructed = { false };
 
-      Panel applet = new Panel();
-      assertTrue(fake.executed);
+        new MockUp<BasicColorChooserUI.PropertyHandler>() {
+            @Mock
+            void $init(BasicColorChooserUI o) {
+                assertSame(outer, o);
+                constructed[0] = true;
+            }
+        };
 
-      String name = applet.getName();
-      assertEquals("test", name);
-   }
+        outer.new PropertyHandler();
+        assertTrue(constructed[0]);
+    }
 
-   /**
-    * Faking of annotated class.
-    *
-    * @throws Exception the exception
-    */
-   @Test @SuppressWarnings("deprecation")
-   public void fakingOfAnnotatedClass() throws Exception {
-      new MockUp<RMISecurityException>() {
-         @Mock void $init(String s) { assertNotNull(s); }
-      };
+    /**
+     * Call fake method from AWT event dispatching thread.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void callFakeMethodFromAWTEventDispatchingThread() throws Exception {
+        new MockUp<Panel>() {
+            @Mock
+            int getComponentCount() {
+                return 10;
+            }
+        };
 
-      assertTrue(RMISecurityException.class.isAnnotationPresent(Deprecated.class));
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                int i = new Panel().getComponentCount();
+                assertEquals(10, i);
+            }
+        });
+    }
 
-      Constructor<RMISecurityException> aConstructor = RMISecurityException.class.getDeclaredConstructor(String.class);
-      assertTrue(aConstructor.isAnnotationPresent(Deprecated.class));
+    /**
+     * The Class JRESubclass.
+     */
+    static final class JRESubclass extends Patch {
+        /**
+         * Instantiates a new JRE subclass.
+         *
+         * @param i
+         *            the i
+         * @param j
+         *            the j
+         */
+        JRESubclass(int i, int j) {
+            super(i, j);
+        }
+    }
 
-      Deprecated deprecated = aConstructor.getAnnotation(Deprecated.class);
-      assertNotNull(deprecated);
-   }
+    /**
+     * Anonymous fake for JRE subclass having fake method for JRE method.
+     */
+    @Test
+    public void anonymousFakeForJRESubclassHavingFakeMethodForJREMethod() {
+        new MockUp<JRESubclass>() {
+            @Mock
+            int getBank() {
+                return 123;
+            }
+        };
 
-   /**
-    * Fake same class twice using separate fakes.
-    */
-   @Test
-   public void fakeSameClassTwiceUsingSeparateFakes() {
-      Panel a = new Panel();
+        Patch t = new JRESubclass(1, 2);
+        int i = t.getBank();
 
-      class Fake1 extends MockUp<Panel> { @Mock void addNotify() {} }
-      new Fake1();
-      a.addNotify();
+        assertEquals(123, i);
+    }
 
-      new MockUp<Panel>() { @Mock AccessibleContext getAccessibleContext() { return null; } };
-      a.addNotify(); // still faked
-      a.getAccessibleContext();
-   }
+    /** The fake torn down. */
+    static Boolean fakeTornDown;
 
-   /**
-    * Fake constructor of inner class.
-    */
-   @Test
-   public void fakeConstructorOfInnerClass() {
-      final BasicColorChooserUI outer = new BasicColorChooserUI();
-      final boolean[] constructed = {false};
+    /**
+     * The Class FakeWithActionOnTearDown.
+     */
+    static final class FakeWithActionOnTearDown extends MockUp<Panel> {
+        @Override
+        protected void onTearDown() {
+            fakeTornDown = true;
+        }
+    }
 
-      new MockUp<BasicColorChooserUI.PropertyHandler>() {
-         @Mock
-         void $init(BasicColorChooserUI o) {
-            assertSame(outer, o);
-            constructed[0] = true;
-         }
-      };
+    /**
+     * Perform action on fake tear down.
+     */
+    @Test
+    public void performActionOnFakeTearDown() {
+        fakeTornDown = false;
+        new FakeWithActionOnTearDown();
+        assertFalse(fakeTornDown);
+    }
 
-      outer.new PropertyHandler();
-      assertTrue(constructed[0]);
-   }
+    /**
+     * Verify fake applied in test was torn down.
+     */
+    @AfterClass
+    public static void verifyFakeAppliedInTestWasTornDown() {
+        assertTrue(fakeTornDown == null || fakeTornDown);
+    }
 
-   /**
-    * Call fake method from AWT event dispatching thread.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void callFakeMethodFromAWTEventDispatchingThread() throws Exception {
-      new MockUp<Panel>() {
-         @Mock int getComponentCount() { return 10; }
-      };
+    /**
+     * Fake varargs method with proceeding fake method which passes replacement arguments.
+     */
+    @Test
+    public void fakeVarargsMethodWithProceedingFakeMethodWhichPassesReplacementArguments() {
+        new MockUp<ProcessBuilder>() {
+            @Mock
+            ProcessBuilder command(Invocation inv, String... command) {
+                String[] newArgs = { "replaced" };
+                return inv.proceed((Object) newArgs);
+            }
+        };
 
-      SwingUtilities.invokeAndWait(new Runnable() {
-         @Override
-         public void run() {
-            int i = new Panel().getComponentCount();
-            assertEquals(10, i);
-         }
-      });
-   }
-
-   /**
-    * The Class JRESubclass.
-    */
-   static final class JRESubclass extends Patch { /**
-  * Instantiates a new JRE subclass.
-  *
-  * @param i the i
-  * @param j the j
-  */
- JRESubclass(int i, int j) { super(i, j); } }
-
-   /**
-    * Anonymous fake for JRE subclass having fake method for JRE method.
-    */
-   @Test
-   public void anonymousFakeForJRESubclassHavingFakeMethodForJREMethod() {
-      new MockUp<JRESubclass>() { @Mock int getBank() { return 123; } };
-
-      Patch t = new JRESubclass(1, 2);
-      int i = t.getBank();
-
-      assertEquals(123, i);
-   }
-
-   /** The fake torn down. */
-   static Boolean fakeTornDown;
-
-   /**
-    * The Class FakeWithActionOnTearDown.
-    */
-   static final class FakeWithActionOnTearDown extends MockUp<Panel> {
-      @Override
-      protected void onTearDown() { fakeTornDown = true; }
-   }
-
-   /**
-    * Perform action on fake tear down.
-    */
-   @Test
-   public void performActionOnFakeTearDown() {
-      fakeTornDown = false;
-      new FakeWithActionOnTearDown();
-      assertFalse(fakeTornDown);
-   }
-
-   /**
-    * Verify fake applied in test was torn down.
-    */
-   @AfterClass
-   public static void verifyFakeAppliedInTestWasTornDown() {
-      assertTrue(fakeTornDown == null || fakeTornDown);
-   }
-
-   /**
-    * Fake varargs method with proceeding fake method which passes replacement arguments.
-    */
-   @Test
-   public void fakeVarargsMethodWithProceedingFakeMethodWhichPassesReplacementArguments() {
-      new MockUp<ProcessBuilder>() {
-         @Mock
-         ProcessBuilder command(Invocation inv, String... command) {
-            String[] newArgs = {"replaced"};
-            return inv.proceed((Object) newArgs);
-         }
-      };
-
-      new ProcessBuilder().command("test", "something");
-   }
+        new ProcessBuilder().command("test", "something");
+    }
 }

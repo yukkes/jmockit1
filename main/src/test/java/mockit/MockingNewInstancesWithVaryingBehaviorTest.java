@@ -1,197 +1,236 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.text.*;
 import java.util.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 
 /**
  * The Class MockingNewInstancesWithVaryingBehaviorTest.
  */
-public final class MockingNewInstancesWithVaryingBehaviorTest
-{
-   
-   /** The Constant DATE_FORMAT. */
-   static final String DATE_FORMAT = "yyyy-MM-dd";
-   
-   /** The Constant FORMATTED_DATE. */
-   static final String FORMATTED_DATE = "2012-02-28";
+public final class MockingNewInstancesWithVaryingBehaviorTest {
 
-   /** The Constant TIME_FORMAT. */
-   static final String TIME_FORMAT = "HH";
-   
-   /** The Constant FORMATTED_TIME. */
-   static final String FORMATTED_TIME = "13";
+    /** The Constant DATE_FORMAT. */
+    static final String DATE_FORMAT = "yyyy-MM-dd";
 
-   /**
-    * Exercise and verify tested code.
-    */
-   void exerciseAndVerifyTestedCode() {
-      Date now = new Date();
+    /** The Constant FORMATTED_DATE. */
+    static final String FORMATTED_DATE = "2012-02-28";
 
-      String hour = new SimpleDateFormat(TIME_FORMAT).format(now);
-      assertEquals(FORMATTED_TIME, hour);
+    /** The Constant TIME_FORMAT. */
+    static final String TIME_FORMAT = "HH";
 
-      String date = new SimpleDateFormat(DATE_FORMAT).format(now);
-      assertEquals(FORMATTED_DATE, date);
-   }
+    /** The Constant FORMATTED_TIME. */
+    static final String FORMATTED_TIME = "13";
 
-   /// Tests using the Faking API /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Exercise and verify tested code.
+     */
+    void exerciseAndVerifyTestedCode() {
+        Date now = new Date();
 
-   /** The date format. */
-   DateFormat dateFormat;
-   
-   /** The hour format. */
-   DateFormat hourFormat;
+        String hour = new SimpleDateFormat(TIME_FORMAT).format(now);
+        assertEquals(FORMATTED_TIME, hour);
 
-   /**
-    * Using fakes with invocation parameter.
-    */
-   @Test
-   public void usingFakesWithInvocationParameter() {
-      new MockUp<SimpleDateFormat>() {
-         @Mock
-         void $init(Invocation inv, String pattern) {
-            DateFormat dt = inv.getInvokedInstance();
-            if (DATE_FORMAT.equals(pattern)) dateFormat = dt;
-            else if (TIME_FORMAT.equals(pattern)) hourFormat = dt;
-         }
-      };
+        String date = new SimpleDateFormat(DATE_FORMAT).format(now);
+        assertEquals(FORMATTED_DATE, date);
+    }
 
-      new MockUp<DateFormat>() {
-         @Mock
-         String format(Invocation inv, Date d) {
-            assertNotNull(d);
-            DateFormat dt = inv.getInvokedInstance();
-            if (dt == dateFormat) return FORMATTED_DATE;
-            else if (dt == hourFormat) return FORMATTED_TIME;
-            else return null;
-         }
-      };
+    /// Tests using the Faking API
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      exerciseAndVerifyTestedCode();
-   }
+    /** The date format. */
+    DateFormat dateFormat;
 
-   /// Tests using the Mocking API ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** The hour format. */
+    DateFormat hourFormat;
 
-   /**
-    * Using instantiation recording.
-    *
-    * @param anyDateFormat the any date format
-    */
-   @Test
-   public void usingInstantiationRecording(@Mocked SimpleDateFormat anyDateFormat) {
-      new Expectations() {{
-         SimpleDateFormat dateFmt = new SimpleDateFormat(DATE_FORMAT);
-         dateFmt.format((Date) any); result = FORMATTED_DATE;
+    /**
+     * Using fakes with invocation parameter.
+     */
+    @Test
+    public void usingFakesWithInvocationParameter() {
+        new MockUp<SimpleDateFormat>() {
+            @Mock
+            void $init(Invocation inv, String pattern) {
+                DateFormat dt = inv.getInvokedInstance();
+                if (DATE_FORMAT.equals(pattern))
+                    dateFormat = dt;
+                else if (TIME_FORMAT.equals(pattern))
+                    hourFormat = dt;
+            }
+        };
 
-         SimpleDateFormat hourFmt = new SimpleDateFormat(TIME_FORMAT);
-         hourFmt.format((Date) any); result = FORMATTED_TIME;
-      }};
+        new MockUp<DateFormat>() {
+            @Mock
+            String format(Invocation inv, Date d) {
+                assertNotNull(d);
+                DateFormat dt = inv.getInvokedInstance();
+                if (dt == dateFormat)
+                    return FORMATTED_DATE;
+                else if (dt == hourFormat)
+                    return FORMATTED_TIME;
+                else
+                    return null;
+            }
+        };
 
-      exerciseAndVerifyTestedCode();
-   }
+        exerciseAndVerifyTestedCode();
+    }
 
-   /**
-    * The Class Collaborator.
-    */
-   static class Collaborator {
-      
-      /** The value. */
-      final int value;
-      
-      /**
-       * Instantiates a new collaborator.
-       */
-      Collaborator() { value = -1; }
-      
-      /**
-       * Instantiates a new collaborator.
-       *
-       * @param value the value
-       */
-      Collaborator(int value) { this.value = value; }
-      
-      /**
-       * Gets the value.
-       *
-       * @return the value
-       */
-      int getValue() { return value; }
-      
-      /**
-       * Checks if is positive.
-       *
-       * @return true, if is positive
-       */
-      boolean isPositive() { return value > 0; }
-   }
+    /// Tests using the Mocking API
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-   /** The col. */
-   Collaborator col;
-   
-   /** The col 5. */
-   Collaborator col5;
-   
-   /** The col 6. */
-   Collaborator col6;
+    /**
+     * Using instantiation recording.
+     *
+     * @param anyDateFormat
+     *            the any date format
+     */
+    @Test
+    public void usingInstantiationRecording(@Mocked SimpleDateFormat anyDateFormat) {
+        new Expectations() {
+            {
+                SimpleDateFormat dateFmt = new SimpleDateFormat(DATE_FORMAT);
+                dateFmt.format((Date) any);
+                result = FORMATTED_DATE;
 
-   /**
-    * Match method calls on instances created with specific constructor calls.
-    *
-    * @param anyCol the any col
-    */
-   @Test
-   public void matchMethodCallsOnInstancesCreatedWithSpecificConstructorCalls(@Mocked final Collaborator anyCol) {
-      new Expectations() {{
-         col5 = new Collaborator(5);
-         col5.getValue(); result = 123; times = 2;
+                SimpleDateFormat hourFmt = new SimpleDateFormat(TIME_FORMAT);
+                hourFmt.format((Date) any);
+                result = FORMATTED_TIME;
+            }
+        };
 
-         col = new Collaborator(); times = 1;
-         col6 = new Collaborator(6);
-      }};
+        exerciseAndVerifyTestedCode();
+    }
 
-      assertEquals(0, new Collaborator().getValue());
+    /**
+     * The Class Collaborator.
+     */
+    static class Collaborator {
 
-      Collaborator newCol1 = new Collaborator(5);
-      assertEquals(123, newCol1.getValue());
+        /** The value. */
+        final int value;
 
-      Collaborator newCol2 = new Collaborator(6);
-      assertEquals(0, newCol2.getValue());
-      assertFalse(newCol2.isPositive());
+        /**
+         * Instantiates a new collaborator.
+         */
+        Collaborator() {
+            value = -1;
+        }
 
-      Collaborator newCol3 = new Collaborator(5);
-      assertEquals(123, newCol3.getValue());
-      assertFalse(newCol3.isPositive());
+        /**
+         * Instantiates a new collaborator.
+         *
+         * @param value
+         *            the value
+         */
+        Collaborator(int value) {
+            this.value = value;
+        }
 
-      new Verifications() {{
-         new Collaborator(anyInt); times = 3;
-         col.getValue(); times = 1;
-         col6.getValue(); times = 1;
-         col5.isPositive(); times = 1;
-         col6.isPositive(); times = 1;
-      }};
-   }
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return value;
+        }
 
-   /**
-    * Record different results for instances created with different constructors.
-    *
-    * @param anyCol the any col
-    */
-   @Test
-   public void recordDifferentResultsForInstancesCreatedWithDifferentConstructors(@Mocked final Collaborator anyCol) {
-      new Expectations() {{
-         anyCol.getValue(); result = 1;
+        /**
+         * Checks if is positive.
+         *
+         * @return true, if is positive
+         */
+        boolean isPositive() {
+            return value > 0;
+        }
+    }
 
-         Collaborator col2 = new Collaborator(anyInt);
-         col2.getValue(); result = 2;
-      }};
+    /** The col. */
+    Collaborator col;
 
-      int valueFromRecordedConstructor = new Collaborator(10).getValue();
-      int valueFromAnyOtherConstructor = new Collaborator().getValue();
+    /** The col 5. */
+    Collaborator col5;
 
-      assertEquals(2, valueFromRecordedConstructor);
-      assertEquals(1, valueFromAnyOtherConstructor);
-   }
+    /** The col 6. */
+    Collaborator col6;
+
+    /**
+     * Match method calls on instances created with specific constructor calls.
+     *
+     * @param anyCol
+     *            the any col
+     */
+    @Test
+    public void matchMethodCallsOnInstancesCreatedWithSpecificConstructorCalls(@Mocked final Collaborator anyCol) {
+        new Expectations() {
+            {
+                col5 = new Collaborator(5);
+                col5.getValue();
+                result = 123;
+                times = 2;
+
+                col = new Collaborator();
+                times = 1;
+                col6 = new Collaborator(6);
+            }
+        };
+
+        assertEquals(0, new Collaborator().getValue());
+
+        Collaborator newCol1 = new Collaborator(5);
+        assertEquals(123, newCol1.getValue());
+
+        Collaborator newCol2 = new Collaborator(6);
+        assertEquals(0, newCol2.getValue());
+        assertFalse(newCol2.isPositive());
+
+        Collaborator newCol3 = new Collaborator(5);
+        assertEquals(123, newCol3.getValue());
+        assertFalse(newCol3.isPositive());
+
+        new Verifications() {
+            {
+                new Collaborator(anyInt);
+                times = 3;
+                col.getValue();
+                times = 1;
+                col6.getValue();
+                times = 1;
+                col5.isPositive();
+                times = 1;
+                col6.isPositive();
+                times = 1;
+            }
+        };
+    }
+
+    /**
+     * Record different results for instances created with different constructors.
+     *
+     * @param anyCol
+     *            the any col
+     */
+    @Test
+    public void recordDifferentResultsForInstancesCreatedWithDifferentConstructors(@Mocked final Collaborator anyCol) {
+        new Expectations() {
+            {
+                anyCol.getValue();
+                result = 1;
+
+                Collaborator col2 = new Collaborator(anyInt);
+                col2.getValue();
+                result = 2;
+            }
+        };
+
+        int valueFromRecordedConstructor = new Collaborator(10).getValue();
+        int valueFromAnyOtherConstructor = new Collaborator().getValue();
+
+        assertEquals(2, valueFromRecordedConstructor);
+        assertEquals(1, valueFromAnyOtherConstructor);
+    }
 }

@@ -9,9 +9,8 @@ import javax.annotation.*;
 import mockit.internal.injection.*;
 import mockit.internal.injection.full.*;
 
-public final class FieldInjection extends Injector
-{
-   public FieldInjection(@Nonnull InjectionState injectionState, @Nullable FullInjection fullInjection) {
-      super(injectionState, fullInjection);
-   }
+public final class FieldInjection extends Injector {
+    public FieldInjection(@Nonnull InjectionState injectionState, @Nullable FullInjection fullInjection) {
+        super(injectionState, fullInjection);
+    }
 }

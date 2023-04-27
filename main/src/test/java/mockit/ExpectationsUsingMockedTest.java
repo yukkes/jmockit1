@@ -1,237 +1,290 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.beans.*;
 
-import static org.junit.Assert.*;
 import org.junit.*;
 
 /**
  * The Class ExpectationsUsingMockedTest.
  */
-public final class ExpectationsUsingMockedTest
-{
-   
-   /**
-    * The Interface Dependency.
-    */
-   public interface Dependency { 
- /**
-  * Do something.
-  *
-  * @param b the b
-  * @return the string
-  */
- String doSomething(boolean b); }
+public final class ExpectationsUsingMockedTest {
 
-   /**
-    * The Class AbstractBase.
-    */
-   public abstract static class AbstractBase {
-      
-      /**
-       * Adds the.
-       *
-       * @param i the i
-       * @return true, if successful
-       */
-      protected abstract boolean add(Integer i);
-      
-      /**
-       * Do something.
-       *
-       * @return the int
-       */
-      final int doSomething() { return -1; }
-   }
+    /**
+     * The Interface Dependency.
+     */
+    public interface Dependency {
+        /**
+         * Do something.
+         *
+         * @param b
+         *            the b
+         *
+         * @return the string
+         */
+        String doSomething(boolean b);
+    }
 
-   /** The base. */
-   @Mocked AbstractBase base;
+    /**
+     * The Class AbstractBase.
+     */
+    public abstract static class AbstractBase {
 
-   /**
-    * Multiple mock parameters of same mocked type.
-    *
-    * @param dependency1 the dependency 1
-    * @param dependency2 the dependency 2
-    */
-   @Test
-   public void multipleMockParametersOfSameMockedType(
-      @Mocked final Dependency dependency1, @Mocked final Dependency dependency2
-   ) {
-      new Expectations() {{
-         dependency1.doSomething(true); result = "1";
-         dependency2.doSomething(false); result = "2";
-      }};
+        /**
+         * Adds the.
+         *
+         * @param i
+         *            the i
+         *
+         * @return true, if successful
+         */
+        protected abstract boolean add(Integer i);
 
-      assertEquals("1", dependency1.doSomething(true));
-      assertNull(dependency1.doSomething(false));
-      assertEquals("2", dependency2.doSomething(false));
-      assertNull(dependency2.doSomething(true));
-   }
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        final int doSomething() {
+            return -1;
+        }
+    }
 
-   /**
-    * Mock field for abstract class.
-    */
-   @Test
-   public void mockFieldForAbstractClass() {
-      new Expectations() {{
-         base.add(1); result = true;
-      }};
+    /** The base. */
+    @Mocked
+    AbstractBase base;
 
-      assertFalse(base.add(0));
-      assertTrue(base.add(1));
-      assertFalse(base.add(2));
-   }
+    /**
+     * Multiple mock parameters of same mocked type.
+     *
+     * @param dependency1
+     *            the dependency 1
+     * @param dependency2
+     *            the dependency 2
+     */
+    @Test
+    public void multipleMockParametersOfSameMockedType(@Mocked final Dependency dependency1,
+            @Mocked final Dependency dependency2) {
+        new Expectations() {
+            {
+                dependency1.doSomething(true);
+                result = "1";
+                dependency2.doSomething(false);
+                result = "2";
+            }
+        };
 
-   /**
-    * The Class ClassWithStaticInitializer2.
-    */
-   static class ClassWithStaticInitializer2 {
-      
-      /** The initialized. */
-      static boolean initialized = true;
-      
-      /**
-       * Initialized.
-       *
-       * @return the int
-       */
-      static int initialized() { return initialized ? 1 : -1; }
-   }
+        assertEquals("1", dependency1.doSomething(true));
+        assertNull(dependency1.doSomething(false));
+        assertEquals("2", dependency2.doSomething(false));
+        assertNull(dependency2.doSomething(true));
+    }
 
-   /**
-    * Do not stub out static initializers by default.
-    *
-    * @param unused the unused
-    */
-   @Test
-   public void doNotStubOutStaticInitializersByDefault(@Mocked ClassWithStaticInitializer2 unused) {
-      assertEquals(0, ClassWithStaticInitializer2.initialized());
-      assertTrue(ClassWithStaticInitializer2.initialized);
-   }
+    /**
+     * Mock field for abstract class.
+     */
+    @Test
+    public void mockFieldForAbstractClass() {
+        new Expectations() {
+            {
+                base.add(1);
+                result = true;
+            }
+        };
 
-   /**
-    * The Class AnotherClassWithStaticInitializer.
-    */
-   static class AnotherClassWithStaticInitializer {
-      
-      /** The initialized. */
-      static boolean initialized = true;
-      
-      /**
-       * Initialized.
-       *
-       * @return the int
-       */
-      static int initialized() { return initialized ? 1 : -1; }
-   }
+        assertFalse(base.add(0));
+        assertTrue(base.add(1));
+        assertFalse(base.add(2));
+    }
 
-   /**
-    * Mock everything without stubbing static initializers.
-    *
-    * @param unused the unused
-    */
-   @Test
-   public void mockEverythingWithoutStubbingStaticInitializers(@Mocked AnotherClassWithStaticInitializer unused) {
-      assertEquals(0, AnotherClassWithStaticInitializer.initialized());
-      assertTrue(AnotherClassWithStaticInitializer.initialized);
-   }
+    /**
+     * The Class ClassWithStaticInitializer2.
+     */
+    static class ClassWithStaticInitializer2 {
 
-   /**
-    * The Class InnerClass.
-    */
-   class InnerClass { /**
-  * Gets the value.
-  *
-  * @return the value
-  */
- int getValue() { return -1; } }
+        /** The initialized. */
+        static boolean initialized = true;
 
-   /**
-    * Mock inner class.
-    *
-    * @param innerMock the inner mock
-    */
-   @Test
-   public void mockInnerClass(@Mocked final InnerClass innerMock) {
-      assertEquals(0, innerMock.getValue());
+        /**
+         * Initialized.
+         *
+         * @return the int
+         */
+        static int initialized() {
+            return initialized ? 1 : -1;
+        }
+    }
 
-      new Expectations() {{
-         innerMock.getValue(); result = 123; times = 1;
-      }};
+    /**
+     * Do not stub out static initializers by default.
+     *
+     * @param unused
+     *            the unused
+     */
+    @Test
+    public void doNotStubOutStaticInitializersByDefault(@Mocked ClassWithStaticInitializer2 unused) {
+        assertEquals(0, ClassWithStaticInitializer2.initialized());
+        assertTrue(ClassWithStaticInitializer2.initialized);
+    }
 
-      assertEquals(123, new InnerClass().getValue());
-   }
+    /**
+     * The Class AnotherClassWithStaticInitializer.
+     */
+    static class AnotherClassWithStaticInitializer {
 
-   /**
-    * The Class SubClass.
-    */
-   static final class SubClass extends AbstractBase { @Override protected boolean add(Integer i) { return false; } }
+        /** The initialized. */
+        static boolean initialized = true;
 
-   /**
-    * Record method from abstract base class and replay on subclass.
-    */
-   @Test
-   public void recordMethodFromAbstractBaseClassAndReplayOnSubclass() {
-      new Expectations() {{ base.doSomething(); result = 1; }};
+        /**
+         * Initialized.
+         *
+         * @return the int
+         */
+        static int initialized() {
+            return initialized ? 1 : -1;
+        }
+    }
 
-      assertEquals( 1, base.doSomething());
-      assertEquals(-1, new SubClass().doSomething());
-   }
+    /**
+     * Mock everything without stubbing static initializers.
+     *
+     * @param unused
+     *            the unused
+     */
+    @Test
+    public void mockEverythingWithoutStubbingStaticInitializers(@Mocked AnotherClassWithStaticInitializer unused) {
+        assertEquals(0, AnotherClassWithStaticInitializer.initialized());
+        assertTrue(AnotherClassWithStaticInitializer.initialized);
+    }
 
-   /**
-    * The Interface BusinessInterface.
-    */
-   public interface BusinessInterface {}
+    /**
+     * The Class InnerClass.
+     */
+    class InnerClass {
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        int getValue() {
+            return -1;
+        }
+    }
 
-   /**
-    * Gets the bean info from mocked interface.
-    *
-    * @param mock the mock
-    * @return the bean info from mocked interface
-    * @throws Exception the exception
-    */
-   @Test
-   public void getBeanInfoFromMockedInterface(@Mocked BusinessInterface mock) throws Exception {
-      Class<? extends BusinessInterface> mockClass = mock.getClass();
+    /**
+     * Mock inner class.
+     *
+     * @param innerMock
+     *            the inner mock
+     */
+    @Test
+    public void mockInnerClass(@Mocked final InnerClass innerMock) {
+        assertEquals(0, innerMock.getValue());
 
-      BeanInfo info = Introspector.getBeanInfo(mockClass);
+        new Expectations() {
+            {
+                innerMock.getValue();
+                result = 123;
+                times = 1;
+            }
+        };
 
-      assertNotNull(info);
-   }
+        assertEquals(123, new InnerClass().getValue());
+    }
 
-   /**
-    * The Class GenericBase.
-    *
-    * @param <B> the generic type
-    */
-   static class GenericBase<B extends Runnable> { /**
-  * Base.
-  *
-  * @return the b
-  */
- public B base() { return null; } }
-   
-   /**
-    * The Class GenericSubclass.
-    *
-    * @param <S> the generic type
-    */
-   public static final class GenericSubclass<S extends Runnable> extends GenericBase<S> { /* bridge method here */ }
+    /**
+     * The Class SubClass.
+     */
+    static final class SubClass extends AbstractBase {
+        @Override
+        protected boolean add(Integer i) {
+            return false;
+        }
+    }
 
-   /**
-    * Record expectation on base method having A synthetic bridge method in subclass.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void recordExpectationOnBaseMethodHavingASyntheticBridgeMethodInSubclass(
-      @Mocked final GenericSubclass<?> mock
-   ) {
-      new Expectations() {{
-         mock.base();
-         result = null;
-      }};
+    /**
+     * Record method from abstract base class and replay on subclass.
+     */
+    @Test
+    public void recordMethodFromAbstractBaseClassAndReplayOnSubclass() {
+        new Expectations() {
+            {
+                base.doSomething();
+                result = 1;
+            }
+        };
 
-      assertNull(mock.base());
-   }
+        assertEquals(1, base.doSomething());
+        assertEquals(-1, new SubClass().doSomething());
+    }
+
+    /**
+     * The Interface BusinessInterface.
+     */
+    public interface BusinessInterface {
+    }
+
+    /**
+     * Gets the bean info from mocked interface.
+     *
+     * @param mock
+     *            the mock
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void beanInfoFromMockedInterface(@Mocked BusinessInterface mock) throws Exception {
+        Class<? extends BusinessInterface> mockClass = mock.getClass();
+
+        BeanInfo info = Introspector.getBeanInfo(mockClass);
+
+        assertNotNull(info);
+    }
+
+    /**
+     * The Class GenericBase.
+     *
+     * @param <B>
+     *            the generic type
+     */
+    static class GenericBase<B extends Runnable> {
+        /**
+         * Base.
+         *
+         * @return the b
+         */
+        public B base() {
+            return null;
+        }
+    }
+
+    /**
+     * The Class GenericSubclass.
+     *
+     * @param <S>
+     *            the generic type
+     */
+    public static final class GenericSubclass<S extends Runnable> extends GenericBase<S> {
+        /* bridge method here */ }
+
+    /**
+     * Record expectation on base method having A synthetic bridge method in subclass.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void recordExpectationOnBaseMethodHavingASyntheticBridgeMethodInSubclass(
+            @Mocked final GenericSubclass<?> mock) {
+        new Expectations() {
+            {
+                mock.base();
+                result = null;
+            }
+        };
+
+        assertNull(mock.base());
+    }
 }

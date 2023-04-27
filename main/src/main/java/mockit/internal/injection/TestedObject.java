@@ -4,159 +4,167 @@
  */
 package mockit.internal.injection;
 
+import static mockit.internal.util.AutoBoxing.*;
+import static mockit.internal.util.DefaultValues.*;
+
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import java.util.*;
+
 import javax.annotation.*;
 
 import mockit.*;
 import mockit.internal.injection.field.*;
 import mockit.internal.injection.full.*;
-import static mockit.internal.util.AutoBoxing.*;
-import static mockit.internal.util.DefaultValues.*;
 
-abstract class TestedObject
-{
-   @Nonnull private final InjectionState injectionState;
-   @Nonnull final Tested metadata;
-   @Nonnull private final String testedName;
-   @Nullable private final FullInjection fullInjection;
-   @Nonnull private final TestedClass testedClass;
-   @Nullable private final TestedObjectCreation testedObjectCreation;
-   @Nullable private List<Field> targetFields;
-   boolean createAutomatically;
+abstract class TestedObject {
+    @Nonnull
+    private final InjectionState injectionState;
+    @Nonnull
+    final Tested metadata;
+    @Nonnull
+    private final String testedName;
+    @Nullable
+    private final FullInjection fullInjection;
+    @Nonnull
+    private final TestedClass testedClass;
+    @Nullable
+    private final TestedObjectCreation testedObjectCreation;
+    @Nullable
+    private List<Field> targetFields;
+    boolean createAutomatically;
 
-   @Nullable
-   static Tested getTestedAnnotationIfPresent(@Nonnull Annotation annotation) {
-      if (annotation instanceof Tested) {
-         return (Tested) annotation;
-      }
+    @Nullable
+    static Tested getTestedAnnotationIfPresent(@Nonnull Annotation annotation) {
+        if (annotation instanceof Tested) {
+            return (Tested) annotation;
+        }
 
-      return annotation.annotationType().getAnnotation(Tested.class);
-   }
+        return annotation.annotationType().getAnnotation(Tested.class);
+    }
 
-   TestedObject(
-      @Nonnull InjectionState injectionState, @Nonnull Tested metadata, @Nonnull Class<?> testClass,
-      @Nonnull String testedName, @Nonnull Type testedType, @Nonnull Class<?> testedClass
-   ) {
-      this.injectionState = injectionState;
-      this.metadata = metadata;
-      this.testedName = testedName;
-      fullInjection = metadata.fullyInitialized() ? new FullInjection(injectionState, testedClass, testedName) : null;
+    TestedObject(@Nonnull InjectionState injectionState, @Nonnull Tested metadata, @Nonnull Class<?> testClass,
+            @Nonnull String testedName, @Nonnull Type testedType, @Nonnull Class<?> testedClass) {
+        this.injectionState = injectionState;
+        this.metadata = metadata;
+        this.testedName = testedName;
+        fullInjection = metadata.fullyInitialized() ? new FullInjection(injectionState, testedClass, testedName) : null;
 
-      if (testedClass.isInterface() || testedClass.isEnum() || testedClass.isPrimitive() || testedClass.isArray()) {
-         testedObjectCreation = null;
-         this.testedClass = new TestedClass(testedType, testedClass);
-      }
-      else {
-         testedObjectCreation = new TestedObjectCreation(injectionState, fullInjection, testedType, testedClass);
-         this.testedClass = testedObjectCreation.testedClass;
-         injectionState.lifecycleMethods.findLifecycleMethods(testedClass);
-      }
+        if (testedClass.isInterface() || testedClass.isEnum() || testedClass.isPrimitive() || testedClass.isArray()) {
+            testedObjectCreation = null;
+            this.testedClass = new TestedClass(testedType, testedClass);
+        } else {
+            testedObjectCreation = new TestedObjectCreation(injectionState, fullInjection, testedType, testedClass);
+            this.testedClass = testedObjectCreation.testedClass;
+            injectionState.lifecycleMethods.findLifecycleMethods(testedClass);
+        }
 
-      this.testedClass.testClass = testClass;
-   }
+        this.testedClass.testClass = testClass;
+    }
 
-   boolean isAvailableDuringSetup() { return metadata.availableDuringSetup(); }
+    boolean isAvailableDuringSetup() {
+        return metadata.availableDuringSetup();
+    }
 
-   void instantiateWithInjectableValues(@Nonnull Object testClassInstance) {
-      if (alreadyInstantiated(testClassInstance)) {
-         return;
-      }
-
-      Object testedObject = getExistingTestedInstanceIfApplicable(testClassInstance);
-      Class<?> testedObjectClass = testedClass.targetClass;
-      InjectionPoint injectionPoint = new InjectionPoint(testedClass.declaredType, testedName);
-
-      if (isNonInstantiableType(testedObjectClass, testedObject)) {
-         reusePreviouslyCreatedInstance(testClassInstance, injectionPoint);
-         return;
-      }
-
-      if (testedObject == null && createAutomatically) {
-         if (reusePreviouslyCreatedInstance(testClassInstance, injectionPoint)) {
+    void instantiateWithInjectableValues(@Nonnull Object testClassInstance) {
+        if (alreadyInstantiated(testClassInstance)) {
             return;
-         }
+        }
 
-         testedObject = createAndRegisterNewObject(testClassInstance, injectionPoint);
-      }
-      else if (testedObject != null) {
-         registerTestedObject(injectionPoint, testedObject);
-         testedObjectClass = testedObject.getClass();
-      }
+        Object testedObject = getExistingTestedInstanceIfApplicable(testClassInstance);
+        Class<?> testedObjectClass = testedClass.targetClass;
+        InjectionPoint injectionPoint = new InjectionPoint(testedClass.declaredType, testedName);
 
-      if (testedObject != null && testedObjectClass.getClassLoader() != null) {
-         performFieldInjection(testedObjectClass, testedObject);
+        if (isNonInstantiableType(testedObjectClass, testedObject)) {
+            reusePreviouslyCreatedInstance(testClassInstance, injectionPoint);
+            return;
+        }
 
-         if (createAutomatically) {
-            injectionState.lifecycleMethods.executeInitializationMethodsIfAny(testedObjectClass, testedObject);
-         }
-      }
-   }
+        if (testedObject == null && createAutomatically) {
+            if (reusePreviouslyCreatedInstance(testClassInstance, injectionPoint)) {
+                return;
+            }
 
-   boolean alreadyInstantiated(@Nonnull Object testClassInstance) { return false; }
+            testedObject = createAndRegisterNewObject(testClassInstance, injectionPoint);
+        } else if (testedObject != null) {
+            registerTestedObject(injectionPoint, testedObject);
+            testedObjectClass = testedObject.getClass();
+        }
 
-   @Nullable
-   abstract Object getExistingTestedInstanceIfApplicable(@Nonnull Object testClassInstance);
+        if (testedObject != null && testedObjectClass.getClassLoader() != null) {
+            performFieldInjection(testedObjectClass, testedObject);
 
-   static boolean isNonInstantiableType(@Nonnull Class<?> targetClass, @Nullable Object currentValue) {
-      return
-         targetClass.isPrimitive() && defaultValueForPrimitiveType(targetClass).equals(currentValue) ||
-         currentValue == null && (
-            targetClass.isArray() || targetClass.isEnum() || targetClass.isAnnotation() || isWrapperOfPrimitiveType(targetClass)
-         );
-   }
+            if (createAutomatically) {
+                injectionState.lifecycleMethods.executeInitializationMethodsIfAny(testedObjectClass, testedObject);
+            }
+        }
+    }
 
-   private boolean reusePreviouslyCreatedInstance(@Nonnull Object testClassInstance, @Nonnull InjectionPoint injectionPoint) {
-      Object previousInstance = injectionState.getTestedInstance(injectionPoint, metadata.global());
+    boolean alreadyInstantiated(@Nonnull Object testClassInstance) {
+        return false;
+    }
 
-      if (previousInstance != null) {
-         setInstance(testClassInstance, previousInstance);
-         return true;
-      }
+    @Nullable
+    abstract Object getExistingTestedInstanceIfApplicable(@Nonnull Object testClassInstance);
 
-      return false;
-   }
+    static boolean isNonInstantiableType(@Nonnull Class<?> targetClass, @Nullable Object currentValue) {
+        return targetClass.isPrimitive() && defaultValueForPrimitiveType(targetClass).equals(currentValue)
+                || currentValue == null && (targetClass.isArray() || targetClass.isEnum() || targetClass.isAnnotation()
+                        || isWrapperOfPrimitiveType(targetClass));
+    }
 
-   abstract void setInstance(@Nonnull Object testClassInstance, @Nullable Object testedInstance);
+    private boolean reusePreviouslyCreatedInstance(@Nonnull Object testClassInstance,
+            @Nonnull InjectionPoint injectionPoint) {
+        Object previousInstance = injectionState.getTestedInstance(injectionPoint, metadata.global());
 
-   @Nullable
-   private Object createAndRegisterNewObject(@Nonnull Object testClassInstance, @Nonnull InjectionPoint injectionPoint) {
-      Object testedInstance = null;
+        if (previousInstance != null) {
+            setInstance(testClassInstance, previousInstance);
+            return true;
+        }
 
-      if (testedObjectCreation != null) {
-         testedInstance = testedObjectCreation.create(false, true);
+        return false;
+    }
 
-         if (testedInstance != null) {
-            setInstance(testClassInstance, testedInstance);
-            registerTestedObject(injectionPoint, testedInstance);
-         }
-      }
+    abstract void setInstance(@Nonnull Object testClassInstance, @Nullable Object testedInstance);
 
-      return testedInstance;
-   }
+    @Nullable
+    private Object createAndRegisterNewObject(@Nonnull Object testClassInstance,
+            @Nonnull InjectionPoint injectionPoint) {
+        Object testedInstance = null;
 
-   private void registerTestedObject(@Nonnull InjectionPoint injectionPoint, @Nonnull Object testedObject) {
-      injectionState.saveTestedObject(injectionPoint, testedObject, metadata.global());
-   }
+        if (testedObjectCreation != null) {
+            testedInstance = testedObjectCreation.create(false, true);
 
-   private void performFieldInjection(@Nonnull Class<?> targetClass, @Nonnull Object testedObject) {
-      FieldInjection fieldInjection = new FieldInjection(injectionState, fullInjection);
+            if (testedInstance != null) {
+                setInstance(testClassInstance, testedInstance);
+                registerTestedObject(injectionPoint, testedInstance);
+            }
+        }
 
-      if (targetFields == null) {
-         targetFields = Injector.findAllTargetInstanceFieldsInTestedClassHierarchy(targetClass, testedClass);
-      }
+        return testedInstance;
+    }
 
-      fieldInjection.injectIntoEligibleFields(targetFields, testedObject, testedClass);
-   }
+    private void registerTestedObject(@Nonnull InjectionPoint injectionPoint, @Nonnull Object testedObject) {
+        injectionState.saveTestedObject(injectionPoint, testedObject, metadata.global());
+    }
 
-   void clearIfAutomaticCreation(@Nonnull Object testClassInstance, boolean duringTearDown) {
-      if (createAutomatically && (duringTearDown || !isAvailableDuringSetup())) {
-         setInstance(testClassInstance, null);
+    private void performFieldInjection(@Nonnull Class<?> targetClass, @Nonnull Object testedObject) {
+        FieldInjection fieldInjection = new FieldInjection(injectionState, fullInjection);
 
-         if (fullInjection != null) {
-            fullInjection.clear();
-         }
-      }
-   }
+        if (targetFields == null) {
+            targetFields = Injector.findAllTargetInstanceFieldsInTestedClassHierarchy(targetClass, testedClass);
+        }
+
+        fieldInjection.injectIntoEligibleFields(targetFields, testedObject, testedClass);
+    }
+
+    void clearIfAutomaticCreation(@Nonnull Object testClassInstance, boolean duringTearDown) {
+        if (createAutomatically && (duringTearDown || !isAvailableDuringSetup())) {
+            setInstance(testClassInstance, null);
+
+            if (fullInjection != null) {
+                fullInjection.clear();
+            }
+        }
+    }
 }

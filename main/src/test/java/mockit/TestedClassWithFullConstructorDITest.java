@@ -1,226 +1,250 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import javax.inject.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * The Class TestedClassWithFullConstructorDITest.
  */
-public final class TestedClassWithFullConstructorDITest
-{
-   
-   /**
-    * The Interface Dependency.
-    */
-   public interface Dependency {}
-   
-   /**
-    * The Class DependencyImpl.
-    */
-   public static final class DependencyImpl implements Dependency {}
-   
-   /**
-    * The Class Collaborator.
-    */
-   public static class Collaborator {}
+public final class TestedClassWithFullConstructorDITest {
 
-   /**
-    * The Class TestedClassWithSinglePublicConstructor.
-    */
-   @SuppressWarnings("unused")
-   public static final class TestedClassWithSinglePublicConstructor {
-      
-      /** The dependency. */
-      final Dependency dependency;
-      
-      /** The collaborator 1. */
-      final Collaborator collaborator1;
-      
-      /** The collaborator 2. */
-      Collaborator collaborator2;
+    /**
+     * The Interface Dependency.
+     */
+    public interface Dependency {
+    }
 
-      /**
-       * Instantiates a new tested class with single public constructor.
-       *
-       * @param dependency the dependency
-       * @param collaborator the collaborator
-       */
-      public TestedClassWithSinglePublicConstructor(Dependency dependency, Collaborator collaborator) {
-         this.dependency = dependency;
-         collaborator1 = collaborator;
-      }
+    /**
+     * The Class DependencyImpl.
+     */
+    public static final class DependencyImpl implements Dependency {
+    }
 
-      /**
-       * Instantiates a new tested class with single public constructor.
-       */
-      TestedClassWithSinglePublicConstructor() {
-         dependency = null;
-         collaborator1 = null;
-      }
-   }
+    /**
+     * The Class Collaborator.
+     */
+    public static class Collaborator {
+    }
 
-   /** The dep. */
-   @Tested DependencyImpl dep;
-   
-   /** The tested 1. */
-   @Tested(fullyInitialized = true) TestedClassWithSinglePublicConstructor tested1;
+    /**
+     * The Class TestedClassWithSinglePublicConstructor.
+     */
+    @SuppressWarnings("unused")
+    public static final class TestedClassWithSinglePublicConstructor {
 
-   /**
-    * Verify instantiation of tested objects through public constructor.
-    */
-   @Test
-   public void verifyInstantiationOfTestedObjectsThroughPublicConstructor() {
-      assertTrue(tested1.dependency instanceof DependencyImpl);
-      assertNotNull(tested1.collaborator1);
-      assertSame(tested1.collaborator1, tested1.collaborator2);
-   }
+        /** The dependency. */
+        final Dependency dependency;
 
-   /**
-    * The Class TestedClassWithAnnotatedConstructor.
-    */
-   public static final class TestedClassWithAnnotatedConstructor {
-      
-      /** The i. */
-      int i;
-      
-      /** The s. */
-      String s;
-      
-      /** The dependency. */
-      Dependency dependency;
-      
-      /** The collaborator 1. */
-      Collaborator collaborator1;
-      
-      /** The collaborator 2. */
-      @Inject Collaborator collaborator2;
+        /** The collaborator 1. */
+        final Collaborator collaborator1;
 
-      /**
-       * Instantiates a new tested class with annotated constructor.
-       */
-      @SuppressWarnings("unused")
-      public TestedClassWithAnnotatedConstructor() {}
+        /** The collaborator 2. */
+        Collaborator collaborator2;
 
-      /**
-       * Instantiates a new tested class with annotated constructor.
-       *
-       * @param i the i
-       * @param s the s
-       * @param dependency the dependency
-       * @param collaborator the collaborator
-       */
-      @Inject
-      TestedClassWithAnnotatedConstructor(int i, String s, Dependency dependency, Collaborator collaborator) {
-         this.i = i;
-         this.s = s;
-         this.dependency = dependency;
-         collaborator1 = collaborator;
-      }
-   }
+        /**
+         * Instantiates a new tested class with single public constructor.
+         *
+         * @param dependency
+         *            the dependency
+         * @param collaborator
+         *            the collaborator
+         */
+        public TestedClassWithSinglePublicConstructor(Dependency dependency, Collaborator collaborator) {
+            this.dependency = dependency;
+            collaborator1 = collaborator;
+        }
 
-   /** The tested 2. */
-   @Tested(fullyInitialized = true) TestedClassWithAnnotatedConstructor tested2;
-   
-   /** The number. */
-   @Injectable final int number = 123;
-   
-   /** The text. */
-   @Injectable final String text = "text";
+        /**
+         * Instantiates a new tested class with single public constructor.
+         */
+        TestedClassWithSinglePublicConstructor() {
+            dependency = null;
+            collaborator1 = null;
+        }
+    }
 
-   /**
-    * Verify instantiation of tested object through annotated constructor.
-    */
-   @Test
-   public void verifyInstantiationOfTestedObjectThroughAnnotatedConstructor() {
-      assertNotNull(tested2);
-      assertEquals(123, tested2.i);
-      assertEquals("text", tested2.s);
-      assertTrue(tested2.dependency instanceof DependencyImpl);
-      assertNotNull(tested2.collaborator1);
-      assertSame(tested2.collaborator1, tested2.collaborator2);
-   }
+    /** The dep. */
+    @Tested
+    DependencyImpl dep;
 
-   /**
-    * The Class TestedClassWithQualifiedConstructorParameters.
-    */
-   static class TestedClassWithQualifiedConstructorParameters {
-      
-      /** The col 1. */
-      final Collaborator col1;
-      
-      /** The col 2. */
-      final Collaborator col2;
+    /** The tested 1. */
+    @Tested(fullyInitialized = true)
+    TestedClassWithSinglePublicConstructor tested1;
 
-      /**
-       * Instantiates a new tested class with qualified constructor parameters.
-       *
-       * @param p1 the p 1
-       * @param p2 the p 2
-       */
-      TestedClassWithQualifiedConstructorParameters(@Named("one") Collaborator p1, @Qualifier("two") Collaborator p2) {
-         col1 = p1;
-         col2 = p2;
-      }
-   }
+    /**
+     * Verify instantiation of tested objects through public constructor.
+     */
+    @Test
+    public void verifyInstantiationOfTestedObjectsThroughPublicConstructor() {
+        assertTrue(tested1.dependency instanceof DependencyImpl);
+        assertNotNull(tested1.collaborator1);
+        assertSame(tested1.collaborator1, tested1.collaborator2);
+    }
 
-   /** The tested 3. */
-   @Tested(fullyInitialized = true) TestedClassWithQualifiedConstructorParameters tested3;
+    /**
+     * The Class TestedClassWithAnnotatedConstructor.
+     */
+    public static final class TestedClassWithAnnotatedConstructor {
 
-   /**
-    * Verify instantiation of tested class with qualified constructor parameters.
-    */
-   @Test
-   public void verifyInstantiationOfTestedClassWithQualifiedConstructorParameters() {
-      assertNotNull(tested3.col1);
-      assertNotSame(tested3.col1, tested3.col2);
-   }
+        /** The i. */
+        int i;
 
-   /**
-    * The Class TestedClassWithDependencyHavingConstructorParameter.
-    */
-   static class TestedClassWithDependencyHavingConstructorParameter {
-      
-      /** The dependency. */
-      final DependencyWithConstructorParameter dependency;
+        /** The s. */
+        String s;
 
-      /**
-       * Instantiates a new tested class with dependency having constructor parameter.
-       *
-       * @param dependency the dependency
-       */
-      TestedClassWithDependencyHavingConstructorParameter(DependencyWithConstructorParameter dependency) {
-         this.dependency = dependency;
-      }
-   }
+        /** The dependency. */
+        Dependency dependency;
 
-   /**
-    * The Class DependencyWithConstructorParameter.
-    */
-   static class DependencyWithConstructorParameter {
-      
-      /** The par. */
-      final String par;
-      
-      /**
-       * Instantiates a new dependency with constructor parameter.
-       *
-       * @param par1 the par 1
-       */
-      DependencyWithConstructorParameter(String par1) { par = par1; }
-   }
+        /** The collaborator 1. */
+        Collaborator collaborator1;
 
-   /** The tested 4. */
-   @Tested(fullyInitialized = true) TestedClassWithDependencyHavingConstructorParameter tested4;
+        /** The collaborator 2. */
+        @Inject
+        Collaborator collaborator2;
 
-   /**
-    * Verify recursive instantiation of dependency with constructor parameter.
-    */
-   @Test
-   public void verifyRecursiveInstantiationOfDependencyWithConstructorParameter() {
-      assertEquals("text", tested4.dependency.par);
-   }
+        /**
+         * Instantiates a new tested class with annotated constructor.
+         */
+        @SuppressWarnings("unused")
+        public TestedClassWithAnnotatedConstructor() {
+        }
+
+        /**
+         * Instantiates a new tested class with annotated constructor.
+         *
+         * @param i
+         *            the i
+         * @param s
+         *            the s
+         * @param dependency
+         *            the dependency
+         * @param collaborator
+         *            the collaborator
+         */
+        @Inject
+        TestedClassWithAnnotatedConstructor(int i, String s, Dependency dependency, Collaborator collaborator) {
+            this.i = i;
+            this.s = s;
+            this.dependency = dependency;
+            collaborator1 = collaborator;
+        }
+    }
+
+    /** The tested 2. */
+    @Tested(fullyInitialized = true)
+    TestedClassWithAnnotatedConstructor tested2;
+
+    /** The number. */
+    @Injectable
+    final int number = 123;
+
+    /** The text. */
+    @Injectable
+    final String text = "text";
+
+    /**
+     * Verify instantiation of tested object through annotated constructor.
+     */
+    @Test
+    public void verifyInstantiationOfTestedObjectThroughAnnotatedConstructor() {
+        assertNotNull(tested2);
+        assertEquals(123, tested2.i);
+        assertEquals("text", tested2.s);
+        assertTrue(tested2.dependency instanceof DependencyImpl);
+        assertNotNull(tested2.collaborator1);
+        assertSame(tested2.collaborator1, tested2.collaborator2);
+    }
+
+    /**
+     * The Class TestedClassWithQualifiedConstructorParameters.
+     */
+    static class TestedClassWithQualifiedConstructorParameters {
+
+        /** The col 1. */
+        final Collaborator col1;
+
+        /** The col 2. */
+        final Collaborator col2;
+
+        /**
+         * Instantiates a new tested class with qualified constructor parameters.
+         *
+         * @param p1
+         *            the p 1
+         * @param p2
+         *            the p 2
+         */
+        TestedClassWithQualifiedConstructorParameters(@Named("one") Collaborator p1,
+                @Qualifier("two") Collaborator p2) {
+            col1 = p1;
+            col2 = p2;
+        }
+    }
+
+    /** The tested 3. */
+    @Tested(fullyInitialized = true)
+    TestedClassWithQualifiedConstructorParameters tested3;
+
+    /**
+     * Verify instantiation of tested class with qualified constructor parameters.
+     */
+    @Test
+    public void verifyInstantiationOfTestedClassWithQualifiedConstructorParameters() {
+        assertNotNull(tested3.col1);
+        assertNotSame(tested3.col1, tested3.col2);
+    }
+
+    /**
+     * The Class TestedClassWithDependencyHavingConstructorParameter.
+     */
+    static class TestedClassWithDependencyHavingConstructorParameter {
+
+        /** The dependency. */
+        final DependencyWithConstructorParameter dependency;
+
+        /**
+         * Instantiates a new tested class with dependency having constructor parameter.
+         *
+         * @param dependency
+         *            the dependency
+         */
+        TestedClassWithDependencyHavingConstructorParameter(DependencyWithConstructorParameter dependency) {
+            this.dependency = dependency;
+        }
+    }
+
+    /**
+     * The Class DependencyWithConstructorParameter.
+     */
+    static class DependencyWithConstructorParameter {
+
+        /** The par. */
+        final String par;
+
+        /**
+         * Instantiates a new dependency with constructor parameter.
+         *
+         * @param par1
+         *            the par 1
+         */
+        DependencyWithConstructorParameter(String par1) {
+            par = par1;
+        }
+    }
+
+    /** The tested 4. */
+    @Tested(fullyInitialized = true)
+    TestedClassWithDependencyHavingConstructorParameter tested4;
+
+    /**
+     * Verify recursive instantiation of dependency with constructor parameter.
+     */
+    @Test
+    public void verifyRecursiveInstantiationOfDependencyWithConstructorParameter() {
+        assertEquals("text", tested4.dependency.par);
+    }
 }

@@ -5,96 +5,101 @@
 package mockit.coverage.reporting.parsing;
 
 import java.util.*;
+
 import javax.annotation.*;
 
-public final class FileParser
-{
-   private static final class PendingClass {
-      @Nonnull final String className;
-      int braceBalance;
-      PendingClass(@Nonnull String className) { this.className = className; }
-   }
+public final class FileParser {
+    private static final class PendingClass {
+        @Nonnull
+        final String className;
+        int braceBalance;
 
-   @Nonnull public final LineParser lineParser = new LineParser();
-   @Nonnull public final List<PendingClass> currentClasses = new ArrayList<>(2);
+        PendingClass(@Nonnull String className) {
+            this.className = className;
+        }
+    }
 
-   @Nullable private PendingClass currentClass;
-   private boolean openingBraceForClassFound;
-   private int currentBraceBalance;
+    @Nonnull
+    public final LineParser lineParser = new LineParser();
+    @Nonnull
+    public final List<PendingClass> currentClasses = new ArrayList<>(2);
 
-   public boolean parseCurrentLine(@Nonnull String line) {
-      if (!lineParser.parse(line)) {
-         return false;
-      }
+    @Nullable
+    private PendingClass currentClass;
+    private boolean openingBraceForClassFound;
+    private int currentBraceBalance;
 
-      LineElement firstElement = lineParser.getInitialElement();
-      LineElement classDeclaration = findClassNameInNewClassDeclaration();
+    public boolean parseCurrentLine(@Nonnull String line) {
+        if (!lineParser.parse(line)) {
+            return false;
+        }
 
-      if (classDeclaration != null) {
-         firstElement = classDeclaration;
-         registerStartOfClassDeclaration(classDeclaration);
-      }
+        LineElement firstElement = lineParser.getInitialElement();
+        LineElement classDeclaration = findClassNameInNewClassDeclaration();
 
-      if (currentClass != null) {
-         detectPotentialEndOfClassDeclaration(firstElement);
-      }
+        if (classDeclaration != null) {
+            firstElement = classDeclaration;
+            registerStartOfClassDeclaration(classDeclaration);
+        }
 
-      return true;
-   }
+        if (currentClass != null) {
+            detectPotentialEndOfClassDeclaration(firstElement);
+        }
 
-   @Nullable
-   private LineElement findClassNameInNewClassDeclaration() {
-      LineElement previous = null;
+        return true;
+    }
 
-      for (LineElement element : lineParser.getInitialElement()) {
-         if (element.isKeyword("class") && (previous == null || !previous.isDotSeparator())) {
-            return element.getNextCodeElement();
-         }
+    @Nullable
+    private LineElement findClassNameInNewClassDeclaration() {
+        LineElement previous = null;
 
-         previous = element;
-      }
+        for (LineElement element : lineParser.getInitialElement()) {
+            if (element.isKeyword("class") && (previous == null || !previous.isDotSeparator())) {
+                return element.getNextCodeElement();
+            }
 
-      return null;
-   }
+            previous = element;
+        }
 
-   private void registerStartOfClassDeclaration(@Nonnull LineElement elementWithClassName) {
-      String className = elementWithClassName.getText();
+        return null;
+    }
 
-      if (currentClass != null) {
-         currentClass.braceBalance = currentBraceBalance;
-      }
+    private void registerStartOfClassDeclaration(@Nonnull LineElement elementWithClassName) {
+        String className = elementWithClassName.getText();
 
-      currentClass = new PendingClass(className);
-      currentClasses.add(currentClass);
-      currentBraceBalance = 0;
-   }
+        if (currentClass != null) {
+            currentClass.braceBalance = currentBraceBalance;
+        }
 
-   private void detectPotentialEndOfClassDeclaration(@Nonnull LineElement firstElement) {
-      // TODO: how to deal with classes defined entirely in one line?
-      currentBraceBalance += firstElement.getBraceBalanceUntilEndOfLine();
+        currentClass = new PendingClass(className);
+        currentClasses.add(currentClass);
+        currentBraceBalance = 0;
+    }
 
-      if (!openingBraceForClassFound && currentBraceBalance > 0) {
-         openingBraceForClassFound = true;
-      }
-      else if (openingBraceForClassFound && currentBraceBalance == 0) {
-         restorePreviousPendingClassIfAny();
-      }
-   }
+    private void detectPotentialEndOfClassDeclaration(@Nonnull LineElement firstElement) {
+        // TODO: how to deal with classes defined entirely in one line?
+        currentBraceBalance += firstElement.getBraceBalanceUntilEndOfLine();
 
-   private void restorePreviousPendingClassIfAny() {
-      currentClasses.remove(currentClass);
+        if (!openingBraceForClassFound && currentBraceBalance > 0) {
+            openingBraceForClassFound = true;
+        } else if (openingBraceForClassFound && currentBraceBalance == 0) {
+            restorePreviousPendingClassIfAny();
+        }
+    }
 
-      if (currentClasses.isEmpty()) {
-         currentClass = null;
-      }
-      else {
-         currentClass = currentClasses.get(currentClasses.size() - 1);
-         currentBraceBalance = currentClass.braceBalance;
-      }
-   }
+    private void restorePreviousPendingClassIfAny() {
+        currentClasses.remove(currentClass);
 
-   @Nullable
-   public String getCurrentlyPendingClass() {
-      return currentClass == null ? null : currentClass.className;
-   }
+        if (currentClasses.isEmpty()) {
+            currentClass = null;
+        } else {
+            currentClass = currentClasses.get(currentClasses.size() - 1);
+            currentBraceBalance = currentClass.braceBalance;
+        }
+    }
+
+    @Nullable
+    public String getCurrentlyPendingClass() {
+        return currentClass == null ? null : currentClass.className;
+    }
 }

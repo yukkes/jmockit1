@@ -4,157 +4,186 @@
  */
 package mockit.internal.expectations;
 
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.*;
+
 import javax.annotation.*;
 
 import mockit.internal.expectations.argumentMatching.*;
 import mockit.internal.expectations.transformation.*;
 import mockit.internal.state.*;
 import mockit.internal.util.*;
-import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.*;
 
 @SuppressWarnings("unused")
-public final class ActiveInvocations
-{
-   private ActiveInvocations() {}
+public final class ActiveInvocations {
+    private ActiveInvocations() {
+    }
 
-   public static void anyString()  { addArgMatcher(ANY_STRING); }
-   public static void anyBoolean() { addArgMatcher(ANY_BOOLEAN); }
-   public static void anyChar()    { addArgMatcher(ANY_CHAR); }
-   public static void anyByte()    { addArgMatcher(ANY_BYTE); }
-   public static void anyShort()   { addArgMatcher(ANY_SHORT); }
-   public static void anyInt()     { addArgMatcher(ANY_INT); }
-   public static void anyFloat()   { addArgMatcher(ANY_FLOAT); }
-   public static void anyLong()    { addArgMatcher(ANY_LONG); }
-   public static void anyDouble()  { addArgMatcher(ANY_DOUBLE); }
-   public static void any()        { addArgMatcher(ANY_VALUE); }
+    public static void anyString() {
+        addArgMatcher(ANY_STRING);
+    }
 
-   private static void addArgMatcher(@Nonnull ArgumentMatcher<?> argumentMatcher) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+    public static void anyBoolean() {
+        addArgMatcher(ANY_BOOLEAN);
+    }
 
-      if (instance != null) {
-         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+    public static void anyChar() {
+        addArgMatcher(ANY_CHAR);
+    }
 
-         if (currentPhase != null) {
-            currentPhase.addArgMatcher(argumentMatcher);
-         }
-      }
-   }
+    public static void anyByte() {
+        addArgMatcher(ANY_BYTE);
+    }
 
-   public static void moveArgMatcher(@Nonnegative int originalMatcherIndex, @Nonnegative int toIndex) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+    public static void anyShort() {
+        addArgMatcher(ANY_SHORT);
+    }
 
-      if (instance != null) {
-         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+    public static void anyInt() {
+        addArgMatcher(ANY_INT);
+    }
 
-         if (currentPhase != null) {
-            currentPhase.moveArgMatcher(originalMatcherIndex, toIndex);
-         }
-      }
-   }
+    public static void anyFloat() {
+        addArgMatcher(ANY_FLOAT);
+    }
 
-   public static void setExpectedArgumentType(@Nonnegative int parameterIndex, @Nonnull String typeDesc) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+    public static void anyLong() {
+        addArgMatcher(ANY_LONG);
+    }
 
-      if (instance != null) {
-         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+    public static void anyDouble() {
+        addArgMatcher(ANY_DOUBLE);
+    }
 
-         if (currentPhase != null) {
-            Class<?> argumentType = ClassLoad.loadByInternalName(typeDesc);
-            currentPhase.setExpectedSingleArgumentType(parameterIndex, argumentType);
-         }
-      }
-   }
+    public static void any() {
+        addArgMatcher(ANY_VALUE);
+    }
 
-   public static void setExpectedArgumentType(@Nonnegative int parameterIndex, int varIndex) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+    private static void addArgMatcher(@Nonnull ArgumentMatcher<?> argumentMatcher) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
-      if (instance != null) {
-         String typeDesc = ArgumentCapturing.extractArgumentType(varIndex);
-
-         if (typeDesc != null) {
+        if (instance != null) {
             TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
 
             if (currentPhase != null) {
-               Class<?> argumentType = ClassLoad.loadByInternalName(typeDesc);
-               currentPhase.setExpectedMultiArgumentType(parameterIndex, argumentType);
+                currentPhase.addArgMatcher(argumentMatcher);
             }
-         }
-      }
-   }
+        }
+    }
 
-   @Nullable
-   public static Object matchedArgument(@Nonnegative int parameterIndex, @Nullable String argTypeDesc) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+    public static void moveArgMatcher(@Nonnegative int originalMatcherIndex, @Nonnegative int toIndex) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
-      if (instance != null) {
-         BaseVerificationPhase verificationPhase = (BaseVerificationPhase) instance.getCurrentTestOnlyPhase();
+        if (instance != null) {
+            TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
 
-         if (verificationPhase != null) {
-            return verificationPhase.getArgumentValueForCurrentVerification(parameterIndex);
-         }
-      }
+            if (currentPhase != null) {
+                currentPhase.moveArgMatcher(originalMatcherIndex, toIndex);
+            }
+        }
+    }
 
-      return null;
-   }
+    public static void setExpectedArgumentType(@Nonnegative int parameterIndex, @Nonnull String typeDesc) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
-   public static void addResult(@Nullable Object result) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+        if (instance != null) {
+            TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
 
-      if (instance != null) {
-         RecordPhase recordPhase = instance.getRecordPhase();
+            if (currentPhase != null) {
+                Class<?> argumentType = ClassLoad.loadByInternalName(typeDesc);
+                currentPhase.setExpectedSingleArgumentType(parameterIndex, argumentType);
+            }
+        }
+    }
 
-         if (recordPhase != null) {
-            recordPhase.addResult(result);
-         }
-      }
-   }
+    public static void setExpectedArgumentType(@Nonnegative int parameterIndex, int varIndex) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
-   public static void times(int n) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+        if (instance != null) {
+            String typeDesc = ArgumentCapturing.extractArgumentType(varIndex);
 
-      if (instance != null) {
-         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+            if (typeDesc != null) {
+                TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
 
-         if (currentPhase != null) {
-            currentPhase.handleInvocationCountConstraint(n, n);
-         }
-      }
-   }
+                if (currentPhase != null) {
+                    Class<?> argumentType = ClassLoad.loadByInternalName(typeDesc);
+                    currentPhase.setExpectedMultiArgumentType(parameterIndex, argumentType);
+                }
+            }
+        }
+    }
 
-   public static void minTimes(int n) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+    @Nullable
+    public static Object matchedArgument(@Nonnegative int parameterIndex, @Nullable String argTypeDesc) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
-      if (instance != null) {
-         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+        if (instance != null) {
+            BaseVerificationPhase verificationPhase = (BaseVerificationPhase) instance.getCurrentTestOnlyPhase();
 
-         if (currentPhase != null) {
-            currentPhase.handleInvocationCountConstraint(n, -1);
-         }
-      }
-   }
+            if (verificationPhase != null) {
+                return verificationPhase.getArgumentValueForCurrentVerification(parameterIndex);
+            }
+        }
 
-   public static void maxTimes(int n) {
-      RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+        return null;
+    }
 
-      if (instance != null) {
-         TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+    public static void addResult(@Nullable Object result) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
 
-         if (currentPhase != null) {
-            currentPhase.setMaxInvocationCount(n);
-         }
-      }
-   }
+        if (instance != null) {
+            RecordPhase recordPhase = instance.getRecordPhase();
 
-   public static void endInvocations() {
-      TestRun.enterNoMockingZone();
+            if (recordPhase != null) {
+                recordPhase.addResult(result);
+            }
+        }
+    }
 
-      try {
-         RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
-         assert instance != null;
-         instance.endInvocations();
-      }
-      finally {
-         TestRun.exitNoMockingZone();
-      }
-   }
+    public static void times(int n) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+
+        if (instance != null) {
+            TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+
+            if (currentPhase != null) {
+                currentPhase.handleInvocationCountConstraint(n, n);
+            }
+        }
+    }
+
+    public static void minTimes(int n) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+
+        if (instance != null) {
+            TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+
+            if (currentPhase != null) {
+                currentPhase.handleInvocationCountConstraint(n, -1);
+            }
+        }
+    }
+
+    public static void maxTimes(int n) {
+        RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+
+        if (instance != null) {
+            TestOnlyPhase currentPhase = instance.getCurrentTestOnlyPhase();
+
+            if (currentPhase != null) {
+                currentPhase.setMaxInvocationCount(n);
+            }
+        }
+    }
+
+    public static void endInvocations() {
+        TestRun.enterNoMockingZone();
+
+        try {
+            RecordAndReplayExecution instance = TestRun.getRecordAndReplayForRunningTest();
+            assert instance != null;
+            instance.endInvocations();
+        } finally {
+            TestRun.exitNoMockingZone();
+        }
+    }
 }

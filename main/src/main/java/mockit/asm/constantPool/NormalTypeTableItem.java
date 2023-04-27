@@ -1,29 +1,31 @@
 package mockit.asm.constantPool;
 
-import javax.annotation.*;
-
 import static mockit.asm.constantPool.TypeTableItem.SpecialType.NORMAL;
 
-final class NormalTypeTableItem extends TypeTableItem
-{
-   NormalTypeTableItem() { type = NORMAL; }
+import javax.annotation.*;
 
-   NormalTypeTableItem(@Nonnegative int index, @Nonnull NormalTypeTableItem item) {
-      super(index, item);
-   }
+final class NormalTypeTableItem extends TypeTableItem {
+    NormalTypeTableItem() {
+        type = NORMAL;
+    }
 
-   /**
-    * Sets the type of this normal type table item.
-    *
-    * @param type the internal name to be added to the type table.
-    */
-   void set(@Nonnull String type) {
-      typeDesc = type;
-      setHashCode(type.hashCode());
-   }
+    NormalTypeTableItem(@Nonnegative int index, @Nonnull NormalTypeTableItem item) {
+        super(index, item);
+    }
 
-   @Override
-   boolean isEqualTo(@Nonnull Item item) {
-      return ((TypeTableItem) item).typeDesc.equals(typeDesc);
-   }
+    /**
+     * Sets the type of this normal type table item.
+     *
+     * @param type
+     *            the internal name to be added to the type table.
+     */
+    void set(@Nonnull String type) {
+        typeDesc = type;
+        setHashCode(type.hashCode());
+    }
+
+    @Override
+    boolean isEqualTo(@Nonnull Item item) {
+        return ((TypeTableItem) item).typeDesc.equals(typeDesc);
+    }
 }

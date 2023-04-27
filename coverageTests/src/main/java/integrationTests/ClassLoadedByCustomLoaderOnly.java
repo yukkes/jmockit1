@@ -3,23 +3,27 @@ package integrationTests;
 /**
  * The Class ClassLoadedByCustomLoaderOnly.
  */
-public final class ClassLoadedByCustomLoaderOnly
-{
-   
-   /** The value. */
-   private final String value;
+public final class ClassLoadedByCustomLoaderOnly {
 
-   /**
-    * Instantiates a new class loaded by custom loader only.
-    *
-    * @param value the value
-    */
-   public ClassLoadedByCustomLoaderOnly(String value) { this.value = value; }
+    /** The value. */
+    private final String value;
 
-   /**
-    * Gets the value.
-    *
-    * @return the value
-    */
-   public String getValue() { return value; }
+    /**
+     * Instantiates a new class loaded by custom loader only.
+     *
+     * @param value
+     *            the value
+     */
+    public ClassLoadedByCustomLoaderOnly(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
 }

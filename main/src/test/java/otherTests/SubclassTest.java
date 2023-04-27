@@ -1,107 +1,117 @@
 package otherTests;
 
 import static org.junit.Assert.*;
-import org.junit.*;
-import org.junit.runners.*;
 
 import mockit.*;
+
+import org.junit.*;
+import org.junit.runners.*;
 
 /**
  * The Class SubclassTest.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class SubclassTest
-{
-   
-   /** The super class constructor called. */
-   private static boolean superClassConstructorCalled;
-   
-   /** The sub class constructor called. */
-   private static boolean subClassConstructorCalled;
+public final class SubclassTest {
 
-   /**
-    * The Class SuperClass.
-    */
-   public static class SuperClass {
-      
-      /** The name. */
-      final String name;
+    /** The super class constructor called. */
+    private static boolean superClassConstructorCalled;
 
-      /**
-       * Instantiates a new super class.
-       *
-       * @param x the x
-       * @param name the name
-       */
-      public SuperClass(int x, String name) {
-         this.name = name + x;
-         superClassConstructorCalled = true;
-      }
-   }
+    /** The sub class constructor called. */
+    private static boolean subClassConstructorCalled;
 
-   /**
-    * The Class SubClass.
-    */
-   public static class SubClass extends SuperClass {
-      
-      /**
-       * Instantiates a new sub class.
-       *
-       * @param name the name
-       */
-      public SubClass(String name) {
-         super(name.length(), name);
-         subClassConstructorCalled = true;
-      }
-   }
+    /**
+     * The Class SuperClass.
+     */
+    public static class SuperClass {
 
-   /**
-    * Sets the up.
-    */
-   @Before
-   public void setUp() {
-      superClassConstructorCalled = false;
-      subClassConstructorCalled = false;
-   }
+        /** The name. */
+        final String name;
 
-   /**
-    * Capture subclass through classfile transformer.
-    *
-    * @param captured the captured
-    */
-   @Test
-   public void captureSubclassThroughClassfileTransformer(@Capturing SuperClass captured) {
-      new SubClass("capture");
+        /**
+         * Instantiates a new super class.
+         *
+         * @param x
+         *            the x
+         * @param name
+         *            the name
+         */
+        public SuperClass(int x, String name) {
+            this.name = name + x;
+            superClassConstructorCalled = true;
+        }
+    }
 
-      assertFalse(superClassConstructorCalled);
-      assertFalse(subClassConstructorCalled);
-   }
+    /**
+     * The Class SubClass.
+     */
+    public static class SubClass extends SuperClass {
 
-   /**
-    * Capture subclass through redefinition of previously loaded classes.
-    *
-    * @param captured the captured
-    */
-   @Test
-   public void captureSubclassThroughRedefinitionOfPreviouslyLoadedClasses(@Capturing SuperClass captured) {
-      new SubClass("capture");
+        /**
+         * Instantiates a new sub class.
+         *
+         * @param name
+         *            the name
+         */
+        public SubClass(String name) {
+            super(name.length(), name);
+            subClassConstructorCalled = true;
+        }
+    }
 
-      assertFalse(superClassConstructorCalled);
-      assertFalse(subClassConstructorCalled);
-   }
+    /**
+     * Sets the up.
+     */
+    @Before
+    public void setUp() {
+        superClassConstructorCalled = false;
+        subClassConstructorCalled = false;
+    }
 
-   /**
-    * Mock subclass using expectations with first super constructor.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void mockSubclassUsingExpectationsWithFirstSuperConstructor(@Mocked SubClass mock) {
-      new Expectations() {{ new SubClass("test"); }};
+    /**
+     * Capture subclass through classfile transformer.
+     *
+     * @param captured
+     *            the captured
+     */
+    @Test
+    public void captureSubclassThroughClassfileTransformer(@Capturing SuperClass captured) {
+        new SubClass("capture");
 
-      new SubClass("test");
+        assertFalse(superClassConstructorCalled);
+        assertFalse(subClassConstructorCalled);
+    }
 
-      assertFalse(superClassConstructorCalled);
-      assertFalse(subClassConstructorCalled);
-   }
+    /**
+     * Capture subclass through redefinition of previously loaded classes.
+     *
+     * @param captured
+     *            the captured
+     */
+    @Test
+    public void captureSubclassThroughRedefinitionOfPreviouslyLoadedClasses(@Capturing SuperClass captured) {
+        new SubClass("capture");
+
+        assertFalse(superClassConstructorCalled);
+        assertFalse(subClassConstructorCalled);
+    }
+
+    /**
+     * Mock subclass using expectations with first super constructor.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void mockSubclassUsingExpectationsWithFirstSuperConstructor(@Mocked SubClass mock) {
+        new Expectations() {
+            {
+                new SubClass("test");
+            }
+        };
+
+        new SubClass("test");
+
+        assertFalse(superClassConstructorCalled);
+        assertFalse(subClassConstructorCalled);
+    }
 }

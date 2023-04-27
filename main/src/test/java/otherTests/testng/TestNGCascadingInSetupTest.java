@@ -1,26 +1,41 @@
 package otherTests.testng;
 
-import org.testng.annotations.*;
 import static org.testng.Assert.*;
 
 import mockit.*;
 
-public final class TestNGCascadingInSetupTest
-{
-   static class Foo { Bar getBar() { return null; } }
-   static class Bar { String getValue() { return null; } }
+import org.testng.annotations.*;
 
-   @Mocked Foo foo;
+public final class TestNGCascadingInSetupTest {
+    static class Foo {
+        Bar getBar() {
+            return null;
+        }
+    }
 
-   @BeforeMethod
-   public void recordValueForCascadedInstance() {
-      new Expectations() {{ foo.getBar().getValue(); result = "test"; }};
-   }
+    static class Bar {
+        String getValue() {
+            return null;
+        }
+    }
 
-   @Test
-   public void useExpectationResultRecordedOnCascadedInstanceFromSetupMethod() {
-      String value = foo.getBar().getValue();
+    @Mocked
+    Foo foo;
 
-      assertNotNull(value);
-   }
+    @BeforeMethod
+    public void recordValueForCascadedInstance() {
+        new Expectations() {
+            {
+                foo.getBar().getValue();
+                result = "test";
+            }
+        };
+    }
+
+    @Test
+    public void useExpectationResultRecordedOnCascadedInstanceFromSetupMethod() {
+        String value = foo.getBar().getValue();
+
+        assertNotNull(value);
+    }
 }

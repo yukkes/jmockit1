@@ -5,6 +5,7 @@
 package mockit.internal.util;
 
 import java.util.*;
+
 import javax.annotation.*;
 
 import mockit.asm.metadata.*;
@@ -12,33 +13,33 @@ import mockit.asm.metadata.ClassMetadataReader.*;
 import mockit.internal.*;
 import mockit.internal.state.*;
 
-public final class ParameterNameExtractor
-{
-   private static final EnumSet<Attribute> PARAMETERS = EnumSet.of(Attribute.Parameters);
+public final class ParameterNameExtractor {
+    private static final EnumSet<Attribute> PARAMETERS = EnumSet.of(Attribute.Parameters);
 
-   private ParameterNameExtractor() {}
+    private ParameterNameExtractor() {
+    }
 
-   @Nonnull
-   public static String extractNames(@Nonnull Class<?> classOfInterest) {
-      String className = classOfInterest.getName();
-      String classDesc = className.replace('.', '/');
+    @Nonnull
+    public static String extractNames(@Nonnull Class<?> classOfInterest) {
+        String className = classOfInterest.getName();
+        String classDesc = className.replace('.', '/');
 
-      if (!ParameterNames.hasNamesForClass(classDesc)) {
-         byte[] classfile = ClassFile.readBytesFromClassFile(classDesc);
-         ClassMetadataReader cmr = new ClassMetadataReader(classfile, PARAMETERS);
-         List<MethodInfo> methods = cmr.getMethods();
+        if (!ParameterNames.hasNamesForClass(classDesc)) {
+            byte[] classfile = ClassFile.readBytesFromClassFile(classDesc);
+            ClassMetadataReader cmr = new ClassMetadataReader(classfile, PARAMETERS);
+            List<MethodInfo> methods = cmr.getMethods();
 
-         for (MethodInfo method : methods) {
-            if (!method.isSynthetic()) {
-               String[] parameters = method.parameters;
+            for (MethodInfo method : methods) {
+                if (!method.isSynthetic()) {
+                    String[] parameters = method.parameters;
 
-               if (parameters != null) {
-                  ParameterNames.register(classDesc, method.name, method.desc, parameters);
-               }
+                    if (parameters != null) {
+                        ParameterNames.register(classDesc, method.name, method.desc, parameters);
+                    }
+                }
             }
-         }
-      }
+        }
 
-      return classDesc;
-   }
+        return classDesc;
+    }
 }

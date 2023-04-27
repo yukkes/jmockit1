@@ -1,8 +1,8 @@
 package jmockit.loginExample.domain.userLogin;
 
-import org.testng.annotations.*;
-
 import mockit.*;
+
+import org.testng.annotations.*;
 
 import jmockit.loginExample.domain.userAccount.*;
 
@@ -10,142 +10,200 @@ import jmockit.loginExample.domain.userAccount.*;
  * A small TestNG test suite for a single class (<code>LoginService</code>), based on
  * <a href="http://schuchert.wikispaces.com/Mockito.LoginServiceExample">this article</a>.
  */
-public final class LoginServiceNGTest
-{
-   
-   /** The service. */
-   @Tested LoginService service;
-   
-   /** The account. */
-   @Mocked UserAccount account;
+public final class LoginServiceNGTest {
 
-   /**
-    * This test is redundant, as it exercises the same path as the last test.
-    * It cannot simply be removed, because the last test does not perform the "account.setLoggedIn(true)" verification;
-    * if said verification is added there, however, then this test could be removed without weakening the test suite.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void setAccountToLoggedInWhenPasswordMatches() throws Exception {
-      willMatchPassword(true);
+    /** The service. */
+    @Tested
+    LoginService service;
 
-      service.login("john", "password");
+    /** The account. */
+    @Mocked
+    UserAccount account;
 
-      new Verifications() {{ account.setLoggedIn(true); }};
-   }
+    /**
+     * This test is redundant, as it exercises the same path as the last test. It cannot simply be removed, because the
+     * last test does not perform the "account.setLoggedIn(true)" verification; if said verification is added there,
+     * however, then this test could be removed without weakening the test suite.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void setAccountToLoggedInWhenPasswordMatches() throws Exception {
+        willMatchPassword(true);
 
-   /**
-    * Will match password.
-    *
-    * @param matches the matches
-    */
-   void willMatchPassword(boolean... matches) {
-      new Expectations() {{ account.passwordMatches(anyString); result = matches; }};
-   }
+        service.login("john", "password");
 
-   /**
-    * Sets the account to revoked after three failed login attempts.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void setAccountToRevokedAfterThreeFailedLoginAttempts() throws Exception {
-      willMatchPassword(false);
+        new Verifications() {
+            {
+                account.setLoggedIn(true);
+            }
+        };
+    }
 
-      for (int i = 0; i < 3; i++) {
-         service.login("john", "password");
-      }
+    /**
+     * Will match password.
+     *
+     * @param matches
+     *            the matches
+     */
+    void willMatchPassword(boolean... matches) {
+        new Expectations() {
+            {
+                account.passwordMatches(anyString);
+                result = matches;
+            }
+        };
+    }
 
-      new Verifications() {{ account.setRevoked(true); }};
-   }
+    /**
+     * Sets the account to revoked after three failed login attempts.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void setAccountToRevokedAfterThreeFailedLoginAttempts() throws Exception {
+        willMatchPassword(false);
 
-   /**
-    * This test is also redundant, as it exercises the same path as the previous one.
-    * Again, it cannot simply be removed since the previous test does not verify that "account.setLoggedIn(true)" is
-    * never called; if said verification is added there, however, this test could safely be removed.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void notSetAccountLoggedInIfPasswordDoesNotMatch() throws Exception {
-      willMatchPassword(false);
+        for (int i = 0; i < 3; i++) {
+            service.login("john", "password");
+        }
 
-      service.login("john", "password");
+        new Verifications() {
+            {
+                account.setRevoked(true);
+            }
+        };
+    }
 
-      new Verifications() {{ account.setLoggedIn(true); times = 0; }};
-   }
+    /**
+     * This test is also redundant, as it exercises the same path as the previous one. Again, it cannot simply be
+     * removed since the previous test does not verify that "account.setLoggedIn(true)" is never called; if said
+     * verification is added there, however, this test could safely be removed.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void notSetAccountLoggedInIfPasswordDoesNotMatch() throws Exception {
+        willMatchPassword(false);
 
-   /**
-    * Not revoke second account after two failed attempts on first account.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount() throws Exception {
-      new Expectations() {{ account.passwordMatches(anyString); result = false; }};
+        service.login("john", "password");
 
-      service.login("john", "password");
-      service.login("john", "password");
-      service.login("roger", "password");
+        new Verifications() {
+            {
+                account.setLoggedIn(true);
+                times = 0;
+            }
+        };
+    }
 
-      new Verifications() {{ account.setRevoked(true); times = 0; }};
-   }
+    /**
+     * Not revoke second account after two failed attempts on first account.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void notRevokeSecondAccountAfterTwoFailedAttemptsOnFirstAccount() throws Exception {
+        new Expectations() {
+            {
+                account.passwordMatches(anyString);
+                result = false;
+            }
+        };
 
-   /**
-    * Disallow concurrent logins.
-    *
-    * @throws Exception the exception
-    */
-   @Test(expectedExceptions = AccountLoginLimitReachedException.class)
-   public void disallowConcurrentLogins() throws Exception {
-      willMatchPassword(true);
+        service.login("john", "password");
+        service.login("john", "password");
+        service.login("roger", "password");
 
-      new Expectations() {{ account.isLoggedIn(); result = true; }};
+        new Verifications() {
+            {
+                account.setRevoked(true);
+                times = 0;
+            }
+        };
+    }
 
-      service.login("john", "password");
-   }
+    /**
+     * Disallow concurrent logins.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test(expectedExceptions = AccountLoginLimitReachedException.class)
+    public void disallowConcurrentLogins() throws Exception {
+        willMatchPassword(true);
 
-   /**
-    * Throw exception if account not found.
-    *
-    * @throws Exception the exception
-    */
-   @Test(expectedExceptions = UserAccountNotFoundException.class)
-   public void throwExceptionIfAccountNotFound() throws Exception {
-      new Expectations() {{ UserAccount.find("roger"); result = null; }};
+        new Expectations() {
+            {
+                account.isLoggedIn();
+                result = true;
+            }
+        };
 
-      service.login("roger", "password");
-   }
+        service.login("john", "password");
+    }
 
-   /**
-    * Disallow logging into revoked account.
-    *
-    * @throws Exception the exception
-    */
-   @Test(expectedExceptions = UserAccountRevokedException.class)
-   public void disallowLoggingIntoRevokedAccount() throws Exception {
-      willMatchPassword(true);
+    /**
+     * Throw exception if account not found.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test(expectedExceptions = UserAccountNotFoundException.class)
+    public void throwExceptionIfAccountNotFound() throws Exception {
+        new Expectations() {
+            {
+                UserAccount.find("roger");
+                result = null;
+            }
+        };
 
-      new Expectations() {{ account.isRevoked(); result = true; }};
+        service.login("roger", "password");
+    }
 
-      service.login("john", "password");
-   }
+    /**
+     * Disallow logging into revoked account.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test(expectedExceptions = UserAccountRevokedException.class)
+    public void disallowLoggingIntoRevokedAccount() throws Exception {
+        willMatchPassword(true);
 
-   /**
-    * Reset back to initial state after successful login.
-    *
-    * @throws Exception the exception
-    */
-   @Test
-   public void resetBackToInitialStateAfterSuccessfulLogin() throws Exception {
-      willMatchPassword(false, false, true, false);
+        new Expectations() {
+            {
+                account.isRevoked();
+                result = true;
+            }
+        };
 
-      service.login("john", "password");
-      service.login("john", "password");
-      service.login("john", "password");
-      service.login("john", "password");
+        service.login("john", "password");
+    }
 
-      new Verifications() {{ account.setRevoked(true); times = 0; }};
-   }
+    /**
+     * Reset back to initial state after successful login.
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void resetBackToInitialStateAfterSuccessfulLogin() throws Exception {
+        willMatchPassword(false, false, true, false);
+
+        service.login("john", "password");
+        service.login("john", "password");
+        service.login("john", "password");
+        service.login("john", "password");
+
+        new Verifications() {
+            {
+                account.setRevoked(true);
+                times = 0;
+            }
+        };
+    }
 }

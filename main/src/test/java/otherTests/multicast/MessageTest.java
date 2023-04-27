@@ -1,68 +1,86 @@
 package otherTests.multicast;
 
+import static java.util.Arrays.asList;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import static java.util.Arrays.asList;
-import org.junit.*;
-
 import mockit.*;
 
-public final class MessageTest
-{
-   // A general-purpose utility class that waits for background task completion.
-   abstract static class TaskExecution implements Runnable {
-      {
-         List<Thread> tasksBefore = getActiveTasks();
+import org.junit.*;
 
-         try {
-            //noinspection OverriddenMethodCallDuringObjectConstruction,OverridableMethodCallDuringObjectConstruction
-            run();
-         }
-         finally {
-            waitForCompletionOfNewTasks(tasksBefore);
-         }
-      }
+public final class MessageTest {
+    // A general-purpose utility class that waits for background task completion.
+    abstract static class TaskExecution implements Runnable {
+        {
+            List<Thread> tasksBefore = getActiveTasks();
 
-      private List<Thread> getActiveTasks() {
-         Thread[] tasks = new Thread[2 * Thread.activeCount()];
-         Thread.enumerate(tasks);
-         return new ArrayList<>(asList(tasks));
-      }
+            try {
+                // noinspection
+                // OverriddenMethodCallDuringObjectConstruction,OverridableMethodCallDuringObjectConstruction
+                run();
+            } finally {
+                waitForCompletionOfNewTasks(tasksBefore);
+            }
+        }
 
-      private void waitForCompletionOfNewTasks(List<Thread> tasksBefore) {
-         List<Thread> tasksAfter = getActiveTasks();
-         tasksAfter.removeAll(tasksBefore);
+        private List<Thread> getActiveTasks() {
+            Thread[] tasks = new Thread[2 * Thread.activeCount()];
+            Thread.enumerate(tasks);
+            return new ArrayList<>(asList(tasks));
+        }
 
-         for (Thread task : tasksAfter) {
-            try { task.join(); } catch (InterruptedException ignore) {}
-         }
-      }
-   }
+        private void waitForCompletionOfNewTasks(List<Thread> tasksBefore) {
+            List<Thread> tasksAfter = getActiveTasks();
+            tasksAfter.removeAll(tasksBefore);
 
-   @Injectable final String testContents = "hello there";
-   @Injectable final Client[] testClients = {new Client("client1"), new Client("client2")};
-   @Injectable StatusListener listener;
-   @Tested Message message;// = new Message(testClients, testContents, listener);
+            for (Thread task : tasksAfter) {
+                try {
+                    task.join();
+                } catch (InterruptedException ignore) {
+                }
+            }
+        }
+    }
 
-   @Test
-   public void sendMessageToMultipleClients(@Mocked final Socket con) throws Exception {
-      new Expectations() {{
-         con.getOutputStream(); result = new ByteArrayOutputStream();
-         con.getInputStream(); result = "reply1\n reply2\n";
-      }};
+    @Injectable
+    final String testContents = "hello there";
+    @Injectable
+    final Client[] testClients = { new Client("client1"), new Client("client2") };
+    @Injectable
+    StatusListener listener;
+    @Tested
+    Message message;// = new Message(testClients, testContents, listener);
 
-      // Code under test:
-      new TaskExecution() { @Override public void run() { message.dispatch(); } };
+    @Test
+    public void sendMessageToMultipleClients(@Mocked final Socket con) throws Exception {
+        new Expectations() {
+            {
+                con.getOutputStream();
+                result = new ByteArrayOutputStream();
+                con.getInputStream();
+                result = "reply1\n reply2\n";
+            }
+        };
 
-      // Verification that each client received the expected invocations:
-      for (final Client client : testClients) {
-         new VerificationsInOrder() {{
-            listener.messageSent(client);
-            listener.messageDisplayedByClient(client);
-            listener.messageReadByClient(client);
-         }};
-      }
-   }
+        // Code under test:
+        new TaskExecution() {
+            @Override
+            public void run() {
+                message.dispatch();
+            }
+        };
+
+        // Verification that each client received the expected invocations:
+        for (final Client client : testClients) {
+            new VerificationsInOrder() {
+                {
+                    listener.messageSent(client);
+                    listener.messageDisplayedByClient(client);
+                    listener.messageReadByClient(client);
+                }
+            };
+        }
+    }
 }

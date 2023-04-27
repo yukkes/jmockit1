@@ -7,73 +7,88 @@ package mockit.internal.expectations.mocking;
 import javax.annotation.*;
 
 import mockit.internal.util.*;
+
 import org.objenesis.ObjenesisHelper;
 
 /**
- * Factory for the creation of new mocked instances, and for obtaining/clearing the last instance created.
- * There are separate subclasses dedicated to mocked interfaces and mocked classes.
+ * Factory for the creation of new mocked instances, and for obtaining/clearing the last instance created. There are
+ * separate subclasses dedicated to mocked interfaces and mocked classes.
  */
-public abstract class InstanceFactory
-{
+public abstract class InstanceFactory {
 
-   @Nonnull private final Class<?> concreteClass;
-   @Nullable Object lastInstance;
+    @Nonnull
+    private final Class<?> concreteClass;
+    @Nullable
+    Object lastInstance;
 
-   InstanceFactory(@Nonnull Class<?> concreteClass) { this.concreteClass = concreteClass; }
+    InstanceFactory(@Nonnull Class<?> concreteClass) {
+        this.concreteClass = concreteClass;
+    }
 
-   @Nonnull
-   @SuppressWarnings("unchecked")
-   final <T> T newUninitializedConcreteClassInstance() {
-      try {
-         return (T) ObjenesisHelper.newInstance(concreteClass);
-      }
-      catch (Exception e) {
-         StackTrace.filterStackTrace(e);
-         e.printStackTrace();
-         throw e;
-      }
-   }
+    @Nonnull
+    @SuppressWarnings("unchecked")
+    final <T> T newUninitializedConcreteClassInstance() {
+        try {
+            return (T) ObjenesisHelper.newInstance(concreteClass);
+        } catch (Exception e) {
+            StackTrace.filterStackTrace(e);
+            e.printStackTrace();
+            throw e;
+        }
+    }
 
-   @Nonnull public abstract Object create();
+    @Nonnull
+    public abstract Object create();
 
-   @Nullable public final Object getLastInstance() { return lastInstance; }
-   public abstract void clearLastInstance();
+    @Nullable
+    public final Object getLastInstance() {
+        return lastInstance;
+    }
 
-   static final class InterfaceInstanceFactory extends InstanceFactory {
-      @Nullable private Object emptyProxy;
+    public abstract void clearLastInstance();
 
-      InterfaceInstanceFactory(@Nonnull Object emptyProxy) {
-         super(emptyProxy.getClass());
-         this.emptyProxy = emptyProxy;
-      }
+    static final class InterfaceInstanceFactory extends InstanceFactory {
+        @Nullable
+        private Object emptyProxy;
 
-      @Nonnull @Override
-      public Object create() {
-         if (emptyProxy == null) {
-            emptyProxy = newUninitializedConcreteClassInstance();
-         }
+        InterfaceInstanceFactory(@Nonnull Object emptyProxy) {
+            super(emptyProxy.getClass());
+            this.emptyProxy = emptyProxy;
+        }
 
-         lastInstance = emptyProxy;
-         return emptyProxy;
-      }
+        @Nonnull
+        @Override
+        public Object create() {
+            if (emptyProxy == null) {
+                emptyProxy = newUninitializedConcreteClassInstance();
+            }
 
-      @Override
-      public void clearLastInstance() {
-         emptyProxy = null;
-         lastInstance = null;
-      }
-   }
+            lastInstance = emptyProxy;
+            return emptyProxy;
+        }
 
-   static final class ClassInstanceFactory extends InstanceFactory {
-      ClassInstanceFactory(@Nonnull Class<?> concreteClass) { super(concreteClass); }
+        @Override
+        public void clearLastInstance() {
+            emptyProxy = null;
+            lastInstance = null;
+        }
+    }
 
-      @Override @Nonnull
-      public Object create() {
-         lastInstance = newUninitializedConcreteClassInstance();
-         return lastInstance;
-      }
+    static final class ClassInstanceFactory extends InstanceFactory {
+        ClassInstanceFactory(@Nonnull Class<?> concreteClass) {
+            super(concreteClass);
+        }
 
-      @Override
-      public void clearLastInstance() { lastInstance = null; }
-   }
+        @Override
+        @Nonnull
+        public Object create() {
+            lastInstance = newUninitializedConcreteClassInstance();
+            return lastInstance;
+        }
+
+        @Override
+        public void clearLastInstance() {
+            lastInstance = null;
+        }
+    }
 }

@@ -1,673 +1,838 @@
 package mockit;
 
+import static org.junit.Assert.*;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.*;
 import org.junit.runners.*;
-import static org.junit.Assert.*;
 
 /**
  * The Class CascadingWithGenericsTest.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class CascadingWithGenericsTest
-{
-   
-   /**
-    * The Class Foo.
-    */
-   static class Foo {
-      
-      /**
-       * Return type with wildcard.
-       *
-       * @return the callable
-       */
-      Callable<?> returnTypeWithWildcard() { return null; }
-      
-      /**
-       * Return type with bounded type variable.
-       *
-       * @param <RT> the generic type
-       * @return the rt
-       */
-      <RT extends Baz> RT returnTypeWithBoundedTypeVariable() { return null; }
+public final class CascadingWithGenericsTest {
 
-      /**
-       * Generic method with non mockable bounded type variable and class parameter.
-       *
-       * @param <N> the number type
-       * @param c the c
-       * @return the n
-       */
-      <N extends Number> N genericMethodWithNonMockableBoundedTypeVariableAndClassParameter(@SuppressWarnings("unused") Class<N> c)
-      { return null; }
+    /**
+     * The Class Foo.
+     */
+    static class Foo {
 
-      /**
-       * Generic method with bounded type variable and class parameter.
-       *
-       * @param <RT> the generic type
-       * @param cl the cl
-       * @return the rt
-       */
-      <RT extends Bar> RT genericMethodWithBoundedTypeVariableAndClassParameter(@SuppressWarnings("unused") Class<RT> cl) { return null; }
+        /**
+         * Return type with wildcard.
+         *
+         * @return the callable
+         */
+        Callable<?> returnTypeWithWildcard() {
+            return null;
+        }
 
-      /**
-       * Return type with multiple type variables.
-       *
-       * @param <T1> the generic type
-       * @param <T2> the generic type
-       * @return the pair
-       */
-      <T1 extends Baz, T2 extends List<? extends Number>> Pair<T1, T2> returnTypeWithMultipleTypeVariables()
-      { return null; }
+        /**
+         * Return type with bounded type variable.
+         *
+         * @param <RT>
+         *            the generic type
+         *
+         * @return the rt
+         */
+        <RT extends Baz> RT returnTypeWithBoundedTypeVariable() {
+            return null;
+        }
 
-      /**
-       * Return generic type with type argument.
-       *
-       * @return the callable
-       */
-      Callable<Baz> returnGenericTypeWithTypeArgument() { return null; }
-      
-      /**
-       * Bar.
-       *
-       * @return the bar
-       */
-      Bar bar() { return null; }
-   }
+        /**
+         * Generic method with non mockable bounded type variable and class parameter.
+         *
+         * @param <N>
+         *            the number type
+         * @param c
+         *            the c
+         *
+         * @return the n
+         */
+        <N extends Number> N genericMethodWithNonMockableBoundedTypeVariableAndClassParameter(
+                @SuppressWarnings("unused") Class<N> c) {
+            return null;
+        }
 
-   /**
-    * The Interface Pair.
-    *
-    * @param <K> the key type
-    * @param <V> the value type
-    */
-   @SuppressWarnings("unused")
-   public interface Pair<K, V> {}
+        /**
+         * Generic method with bounded type variable and class parameter.
+         *
+         * @param <RT>
+         *            the generic type
+         * @param cl
+         *            the cl
+         *
+         * @return the rt
+         */
+        <RT extends Bar> RT genericMethodWithBoundedTypeVariableAndClassParameter(
+                @SuppressWarnings("unused") Class<RT> cl) {
+            return null;
+        }
 
-   /**
-    * The Class Bar.
-    */
-   static class Bar {
-      
-      /**
-       * Instantiates a new bar.
-       */
-      Bar() { throw new RuntimeException(); }
-      
-      /**
-       * Do something.
-       *
-       * @return the int
-       */
-      int doSomething() { return 1; }
-      
-      /**
-       * Static method.
-       *
-       * @return the string
-       */
-      static String staticMethod() { return "notMocked"; }
-   }
+        /**
+         * Return type with multiple type variables.
+         *
+         * @param <T1>
+         *            the generic type
+         * @param <T2>
+         *            the generic type
+         *
+         * @return the pair
+         */
+        <T1 extends Baz, T2 extends List<? extends Number>> Pair<T1, T2> returnTypeWithMultipleTypeVariables() {
+            return null;
+        }
 
-   /**
-    * The Class SubBar.
-    */
-   static final class SubBar extends Bar {}
+        /**
+         * Return generic type with type argument.
+         *
+         * @return the callable
+         */
+        Callable<Baz> returnGenericTypeWithTypeArgument() {
+            return null;
+        }
 
-   /**
-    * The Interface Baz.
-    */
-   public interface Baz { /**
-  * Gets the date.
-  *
-  * @return the date
-  */
- Date getDate(); }
+        /**
+         * Bar.
+         *
+         * @return the bar
+         */
+        Bar bar() {
+            return null;
+        }
+    }
 
-   /**
-    * Cascade one level during replay.
-    *
-    * @param foo the foo
-    */
-   @Test
-   public void cascadeOneLevelDuringReplay(@Mocked Foo foo) {
-      assertNotNull(foo.returnTypeWithWildcard());
-      assertNotNull(foo.returnTypeWithBoundedTypeVariable());
+    /**
+     * The Interface Pair.
+     *
+     * @param <K>
+     *            the key type
+     * @param <V>
+     *            the value type
+     */
+    @SuppressWarnings("unused")
+    public interface Pair<K, V> {
+    }
 
-      Pair<Baz, List<Integer>> x = foo.returnTypeWithMultipleTypeVariables();
-      assertNotNull(x);
-   }
+    /**
+     * The Class Bar.
+     */
+    static class Bar {
 
-   /**
-    * Cascade one level during record.
-    *
-    * @param action the action
-    * @param mockFoo the mock foo
-    */
-   @Test
-   public void cascadeOneLevelDuringRecord(@Mocked Callable<String> action, @Mocked Foo mockFoo) {
-      Foo foo = new Foo();
-      Callable<?> cascaded = foo.returnTypeWithWildcard();
+        /**
+         * Instantiates a new bar.
+         */
+        Bar() {
+            throw new RuntimeException();
+        }
 
-      assertSame(action, cascaded);
-   }
+        /**
+         * Do something.
+         *
+         * @return the int
+         */
+        int doSomething() {
+            return 1;
+        }
 
-   /**
-    * Cascade two levels during record.
-    *
-    * @param mockFoo the mock foo
-    */
-   @Test
-   public void cascadeTwoLevelsDuringRecord(@Mocked final Foo mockFoo) {
-      final Date now = new Date();
+        /**
+         * Static method.
+         *
+         * @return the string
+         */
+        static String staticMethod() {
+            return "notMocked";
+        }
+    }
 
-      new Expectations() {{
-         mockFoo.returnTypeWithBoundedTypeVariable().getDate(); result = now;
-      }};
+    /**
+     * The Class SubBar.
+     */
+    static final class SubBar extends Bar {
+    }
 
-      Foo foo = new Foo();
-      assertSame(now, foo.returnTypeWithBoundedTypeVariable().getDate());
-   }
+    /**
+     * The Interface Baz.
+     */
+    public interface Baz {
+        /**
+         * Gets the date.
+         *
+         * @return the date
+         */
+        Date getDate();
+    }
 
-   /**
-    * The Class GenericFoo.
-    *
-    * @param <T> the generic type
-    * @param <U> the generic type
-    */
-   static class GenericFoo<T, U extends Bar> {
-      
-      /**
-       * Return type with unbounded type variable.
-       *
-       * @return the t
-       */
-      T returnTypeWithUnboundedTypeVariable() { return null; }
-      
-      /**
-       * Return type with bounded type variable.
-       *
-       * @return the u
-       */
-      U returnTypeWithBoundedTypeVariable() { return null; }
-   }
+    /**
+     * Cascade one level during replay.
+     *
+     * @param foo
+     *            the foo
+     */
+    @Test
+    public void cascadeOneLevelDuringReplay(@Mocked Foo foo) {
+        assertNotNull(foo.returnTypeWithWildcard());
+        assertNotNull(foo.returnTypeWithBoundedTypeVariable());
 
-   /**
-    * Cascade generic methods.
-    *
-    * @param foo the foo
-    */
-   @Test
-   public void cascadeGenericMethods(@Mocked GenericFoo<Baz, SubBar> foo) {
-      Baz t = foo.returnTypeWithUnboundedTypeVariable();
-      assertNotNull(t);
+        Pair<Baz, List<Integer>> x = foo.returnTypeWithMultipleTypeVariables();
+        assertNotNull(x);
+    }
 
-      SubBar u = foo.returnTypeWithBoundedTypeVariable();
-      assertNotNull(u);
-   }
+    /**
+     * Cascade one level during record.
+     *
+     * @param action
+     *            the action
+     * @param mockFoo
+     *            the mock foo
+     */
+    @Test
+    public void cascadeOneLevelDuringRecord(@Mocked Callable<String> action, @Mocked Foo mockFoo) {
+        Foo foo = new Foo();
+        Callable<?> cascaded = foo.returnTypeWithWildcard();
 
-   /**
-    * The Class A.
-    */
-   static class A { /**
-  * Gets the b.
-  *
-  * @return the b
-  */
- B<?> getB() { return null; } }
-   
-   /**
-    * The Class B.
-    *
-    * @param <T> the generic type
-    */
-   static class B<T> { 
- /**
-  * Gets the value.
-  *
-  * @return the value
-  */
- T getValue() { return null; } }
+        assertSame(action, cascaded);
+    }
 
-   /**
-    * Cascade on method returning A parameterized class with A generic method.
-    *
-    * @param a the a
-    */
-   @Test
-   public void cascadeOnMethodReturningAParameterizedClassWithAGenericMethod(@Injectable final A a) {
-      new Expectations() {{
-         a.getB().getValue(); result = "test";
-      }};
+    /**
+     * Cascade two levels during record.
+     *
+     * @param mockFoo
+     *            the mock foo
+     */
+    @Test
+    public void cascadeTwoLevelsDuringRecord(@Mocked final Foo mockFoo) {
+        final Date now = new Date();
 
-      assertEquals("test", a.getB().getValue());
-   }
+        new Expectations() {
+            {
+                mockFoo.returnTypeWithBoundedTypeVariable().getDate();
+                result = now;
+            }
+        };
 
-   /**
-    * The Class C.
-    *
-    * @param <T> the generic type
-    */
-   @SuppressWarnings("unused") static class C<T> {}
-   
-   /**
-    * The Class D.
-    */
-   static class D extends C<Foo> { 
- /**
-  * Do something.
-  *
-  * @param <T> the generic type
-  * @return the t
-  */
- <T extends Bar> T doSomething() { return null; } }
+        Foo foo = new Foo();
+        assertSame(now, foo.returnTypeWithBoundedTypeVariable().getDate());
+    }
 
-   /**
-    * Cascade from generic method using type parameter of same name as type parameter from base class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromGenericMethodUsingTypeParameterOfSameNameAsTypeParameterFromBaseClass(@Mocked D mock) {
-      Bar cascaded = mock.doSomething();
+    /**
+     * The Class GenericFoo.
+     *
+     * @param <T>
+     *            the generic type
+     * @param <U>
+     *            the generic type
+     */
+    static class GenericFoo<T, U extends Bar> {
 
-      assertNotNull(cascaded);
-   }
+        /**
+         * Return type with unbounded type variable.
+         *
+         * @return the t
+         */
+        T returnTypeWithUnboundedTypeVariable() {
+            return null;
+        }
 
-   /**
-    * The Class Factory.
-    */
-   static class Factory {
-      
-      /**
-       * Bar.
-       *
-       * @param <T> the generic type
-       * @return the t
-       */
-      static <T extends Bar> T bar() { return null; }
-      
-      /**
-       * Bar.
-       *
-       * @param <T> the generic type
-       * @param c the c
-       * @return the t
-       */
-      static <T extends Bar> T bar(@SuppressWarnings("UnusedParameters") Class<T> c) { return null; }
-      
-      /**
-       * Static init.
-       *
-       * @return the with static init
-       */
-      WithStaticInit staticInit() { return null; }
-   }
+        /**
+         * Return type with bounded type variable.
+         *
+         * @return the u
+         */
+        U returnTypeWithBoundedTypeVariable() {
+            return null;
+        }
+    }
 
-   /**
-    * The Class WithStaticInit.
-    */
-   static class WithStaticInit {
-      
-      /** The Constant T. */
-      static final Bar T = Factory.bar();
-      
-      /** The Constant S. */
-      static final SubBar S = Factory.bar(SubBar.class);
-   }
+    /**
+     * Cascade generic methods.
+     *
+     * @param foo
+     *            the foo
+     */
+    @Test
+    public void cascadeGenericMethods(@Mocked GenericFoo<Baz, SubBar> foo) {
+        Baz t = foo.returnTypeWithUnboundedTypeVariable();
+        assertNotNull(t);
 
-   /**
-    * Cascade during static initialization of cascaded class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeDuringStaticInitializationOfCascadedClass(@Mocked Factory mock) {
-      assertNotNull(mock.staticInit());
-      assertNotNull(WithStaticInit.T);
-      assertNotNull(WithStaticInit.S);
-   }
+        SubBar u = foo.returnTypeWithBoundedTypeVariable();
+        assertNotNull(u);
+    }
 
-   /**
-    * Cascade from generic method where concrete return type is given by class parameter but is not mockable.
-    *
-    * @param foo the foo
-    */
-   @Test
-   public void cascadeFromGenericMethodWhereConcreteReturnTypeIsGivenByClassParameterButIsNotMockable(@Mocked Foo foo) {
-      Integer n = foo.genericMethodWithNonMockableBoundedTypeVariableAndClassParameter(Integer.class);
+    /**
+     * The Class A.
+     */
+    static class A {
+        /**
+         * Gets the b.
+         *
+         * @return the b
+         */
+        B<?> getB() {
+            return null;
+        }
+    }
 
-      assertNotNull(n);
-   }
+    /**
+     * The Class B.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    static class B<T> {
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        T getValue() {
+            return null;
+        }
+    }
 
-   /**
-    * Cascade from generic method where concrete return type is given by class parameter.
-    *
-    * @param foo the foo
-    */
-   @Test
-   public void cascadeFromGenericMethodWhereConcreteReturnTypeIsGivenByClassParameter(@Mocked Foo foo) {
-      SubBar subBar = foo.genericMethodWithBoundedTypeVariableAndClassParameter(SubBar.class);
+    /**
+     * Cascade on method returning A parameterized class with A generic method.
+     *
+     * @param a
+     *            the a
+     */
+    @Test
+    public void cascadeOnMethodReturningAParameterizedClassWithAGenericMethod(@Injectable final A a) {
+        new Expectations() {
+            {
+                a.getB().getValue();
+                result = "test";
+            }
+        };
 
-      assertNotNull(subBar);
-   }
+        assertEquals("test", a.getB().getValue());
+    }
 
-   /**
-    * Cascade from generic method whose return type comes from parameter on owner type.
-    *
-    * @param foo the foo
-    * @param cascadedBaz the cascaded baz
-    * @throws Exception the exception
-    */
-   @Test
-   public void cascadeFromGenericMethodWhoseReturnTypeComesFromParameterOnOwnerType(
-      @Mocked Foo foo, @Mocked final Baz cascadedBaz
-   ) throws Exception {
-      final Date date = new Date();
-      new Expectations() {{ cascadedBaz.getDate(); result = date; }};
+    /**
+     * The Class C.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    @SuppressWarnings("unused")
+    static class C<T> {
+    }
 
-      Callable<Baz> callable = foo.returnGenericTypeWithTypeArgument();
-      Baz baz = callable.call();
+    /**
+     * The Class D.
+     */
+    static class D extends C<Foo> {
+        /**
+         * Do something.
+         *
+         * @param <T>
+         *            the generic type
+         *
+         * @return the t
+         */
+        <T extends Bar> T doSomething() {
+            return null;
+        }
+    }
 
-      assertSame(cascadedBaz, baz);
-      assertSame(date, baz.getDate());
-   }
+    /**
+     * Cascade from generic method using type parameter of same name as type parameter from base class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromGenericMethodUsingTypeParameterOfSameNameAsTypeParameterFromBaseClass(@Mocked D mock) {
+        Bar cascaded = mock.doSomething();
 
-   /**
-    * The Interface GenericInterface.
-    *
-    * @param <T> the generic type
-    */
-   public interface GenericInterface<T> { /**
-  * Save.
-  *
-  * @param <S> the generic type
-  * @param entity the entity
-  * @return the s
-  */
- <S extends T> S save(S entity); }
-   
-   /**
-    * The Interface ConcreteInterface.
-    */
-   public interface ConcreteInterface extends GenericInterface<Foo> {}
+        assertNotNull(cascaded);
+    }
 
-   /**
-    * Cascading from generic method whose type parameter extends another.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadingFromGenericMethodWhoseTypeParameterExtendsAnother(@Mocked ConcreteInterface mock) {
-      Foo value = new Foo();
+    /**
+     * The Class Factory.
+     */
+    static class Factory {
 
-      Foo saved = mock.save(value);
+        /**
+         * Bar.
+         *
+         * @param <T>
+         *            the generic type
+         *
+         * @return the t
+         */
+        static <T extends Bar> T bar() {
+            return null;
+        }
 
-      assertNotNull(saved);
-      assertNotSame(value, saved);
-   }
+        /**
+         * Bar.
+         *
+         * @param <T>
+         *            the generic type
+         * @param c
+         *            the c
+         *
+         * @return the t
+         */
+        static <T extends Bar> T bar(@SuppressWarnings("UnusedParameters") Class<T> c) {
+            return null;
+        }
 
-   /**
-    * The Interface GenericInterfaceWithBoundedTypeParameter.
-    *
-    * @param <B> the generic type
-    */
-   public interface GenericInterfaceWithBoundedTypeParameter<B extends Serializable> { /**
-  * Gets the.
-  *
-  * @param id the id
-  * @return the b
-  */
- B get(int id); }
+        /**
+         * Static init.
+         *
+         * @return the with static init
+         */
+        WithStaticInit staticInit() {
+            return null;
+        }
+    }
 
-   /**
-    * Cascade from method returning A type variable.
-    *
-    * @param <T> the generic type
-    * @param mock the mock
-    */
-   @Test
-   public <T extends Serializable> void cascadeFromMethodReturningATypeVariable(
-      @Mocked final GenericInterfaceWithBoundedTypeParameter<T> mock
-   ) {
-      new Expectations() {{
-         mock.get(1); result = "test";
-         mock.get(2); result = null;
-      }};
+    /**
+     * The Class WithStaticInit.
+     */
+    static class WithStaticInit {
 
-      assertEquals("test", mock.get(1));
-      assertNull(mock.get(2));
-   }
+        /** The Constant T. */
+        static final Bar T = Factory.bar();
 
-   /**
-    * The Class TypeWithUnusedTypeParameterInGenericMethod.
-    */
-   static class TypeWithUnusedTypeParameterInGenericMethod { /**
-  * Foo.
-  *
-  * @param <U> the generic type
-  * @return the foo
-  */
- @SuppressWarnings("unused") <U> Foo foo() {return null;} }
+        /** The Constant S. */
+        static final SubBar S = Factory.bar(SubBar.class);
+    }
 
-   /**
-    * Cascade from method having unused type parameter.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromMethodHavingUnusedTypeParameter(@Mocked TypeWithUnusedTypeParameterInGenericMethod mock) {
-      Foo foo = mock.foo();
-      Bar bar = foo.bar();
-      assertNotNull(bar);
-   }
+    /**
+     * Cascade during static initialization of cascaded class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeDuringStaticInitializationOfCascadedClass(@Mocked Factory mock) {
+        assertNotNull(mock.staticInit());
+        assertNotNull(WithStaticInit.T);
+        assertNotNull(WithStaticInit.S);
+    }
 
-   /**
-    * Cascade from generic method whose return type resolves to another generic type.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromGenericMethodWhoseReturnTypeResolvesToAnotherGenericType(@Mocked B<C<?>> mock) {
-      C<?> c = mock.getValue();
+    /**
+     * Cascade from generic method where concrete return type is given by class parameter but is not mockable.
+     *
+     * @param foo
+     *            the foo
+     */
+    @Test
+    public void cascadeFromGenericMethodWhereConcreteReturnTypeIsGivenByClassParameterButIsNotMockable(
+            @Mocked Foo foo) {
+        Integer n = foo.genericMethodWithNonMockableBoundedTypeVariableAndClassParameter(Integer.class);
 
-      assertNotNull(c);
-   }
+        assertNotNull(n);
+    }
 
-   /**
-    * The Interface BaseGenericInterface.
-    *
-    * @param <B> the generic type
-    */
-   public interface BaseGenericInterface<B> { /**
-  * Generic method.
-  *
-  * @return the b
-  */
- B genericMethod(); }
-   
-   /**
-    * The Interface GenericSubInterface.
-    *
-    * @param <S> the generic type
-    */
-   public interface GenericSubInterface<S> extends BaseGenericInterface<S> {}
-   
-   /**
-    * The Interface NonGenericInterface.
-    */
-   public interface NonGenericInterface extends GenericSubInterface<Bar> {}
+    /**
+     * Cascade from generic method where concrete return type is given by class parameter.
+     *
+     * @param foo
+     *            the foo
+     */
+    @Test
+    public void cascadeFromGenericMethodWhereConcreteReturnTypeIsGivenByClassParameter(@Mocked Foo foo) {
+        SubBar subBar = foo.genericMethodWithBoundedTypeVariableAndClassParameter(SubBar.class);
 
-   /**
-    * Cascade from generic method defined two levels deep in inheritance hierarchy.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromGenericMethodDefinedTwoLevelsDeepInInheritanceHierarchy(@Mocked NonGenericInterface mock) {
-      Bar cascadedResult = mock.genericMethod();
+        assertNotNull(subBar);
+    }
 
-      assertNotNull(cascadedResult);
-   }
+    /**
+     * Cascade from generic method whose return type comes from parameter on owner type.
+     *
+     * @param foo
+     *            the foo
+     * @param cascadedBaz
+     *            the cascaded baz
+     *
+     * @throws Exception
+     *             the exception
+     */
+    @Test
+    public void cascadeFromGenericMethodWhoseReturnTypeComesFromParameterOnOwnerType(@Mocked Foo foo,
+            @Mocked final Baz cascadedBaz) throws Exception {
+        final Date date = new Date();
+        new Expectations() {
+            {
+                cascadedBaz.getDate();
+                result = date;
+            }
+        };
 
-   /**
-    * The Interface NonPublicInterfaceWithGenericMethod.
-    */
-   interface NonPublicInterfaceWithGenericMethod { /**
-  * Do something.
-  *
-  * @param <T> the generic type
-  * @return the t
-  */
- <T extends Runnable> T doSomething(); }
+        Callable<Baz> callable = foo.returnGenericTypeWithTypeArgument();
+        Baz baz = callable.call();
 
-   /**
-    * Cascade from generic method of non public interface.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromGenericMethodOfNonPublicInterface(@Mocked NonPublicInterfaceWithGenericMethod mock) {
-      Runnable result = mock.doSomething();
+        assertSame(cascadedBaz, baz);
+        assertSame(date, baz.getDate());
+    }
 
-      assertNotNull(result);
-   }
+    /**
+     * The Interface GenericInterface.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    public interface GenericInterface<T> {
+        /**
+         * Save.
+         *
+         * @param <S>
+         *            the generic type
+         * @param entity
+         *            the entity
+         *
+         * @return the s
+         */
+        <S extends T> S save(S entity);
+    }
 
-   /**
-    * The Interface FactoryInterface.
-    */
-   public interface FactoryInterface { /**
-  * Generic with class.
-  *
-  * @param <T> the generic type
-  * @param type the type
-  * @return the t
-  */
- <T> T genericWithClass(Class<T> type); }
+    /**
+     * The Interface ConcreteInterface.
+     */
+    public interface ConcreteInterface extends GenericInterface<Foo> {
+    }
 
-   /**
-    * Cascade from generic method with class parameter of mocked interface.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromGenericMethodWithClassParameterOfMockedInterface(@Mocked FactoryInterface mock) {
-      Foo cascaded = mock.genericWithClass(Foo.class);
+    /**
+     * Cascading from generic method whose type parameter extends another.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadingFromGenericMethodWhoseTypeParameterExtendsAnother(@Mocked ConcreteInterface mock) {
+        Foo value = new Foo();
 
-      assertNotNull(cascaded);
-   }
+        Foo saved = mock.save(value);
 
-   /**
-    * The Class Outer.
-    *
-    * @param <T> the generic type
-    */
-   @SuppressWarnings("unused") static class Outer<T> { /**
-  * The Class Inner.
-  */
- class Inner {} }
-   
-   /**
-    * The Class Client.
-    */
-   static class Client { 
- /**
-  * Do something.
-  *
-  * @return the outer. inner
-  */
- Outer<String>.Inner doSomething() { return null; } }
+        assertNotNull(saved);
+        assertNotSame(value, saved);
+    }
 
-   /**
-    * Cascade from method returning inner instance of generic class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromMethodReturningInnerInstanceOfGenericClass(@Mocked final Client mock) {
-      final Outer<?>.Inner innerInstance = new Outer().new Inner();
+    /**
+     * The Interface GenericInterfaceWithBoundedTypeParameter.
+     *
+     * @param <B>
+     *            the generic type
+     */
+    public interface GenericInterfaceWithBoundedTypeParameter<B extends Serializable> {
+        /**
+         * Gets the.
+         *
+         * @param id
+         *            the id
+         *
+         * @return the b
+         */
+        B get(int id);
+    }
 
-      new Expectations() {{
-         mock.doSomething();
-         result = innerInstance;
-      }};
+    /**
+     * Cascade from method returning A type variable.
+     *
+     * @param <T>
+     *            the generic type
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public <T extends Serializable> void cascadeFromMethodReturningATypeVariable(
+            @Mocked final GenericInterfaceWithBoundedTypeParameter<T> mock) {
+        new Expectations() {
+            {
+                mock.get(1);
+                result = "test";
+                mock.get(2);
+                result = null;
+            }
+        };
 
-      assertSame(innerInstance, mock.doSomething());
-   }
+        assertEquals("test", mock.get(1));
+        assertNull(mock.get(2));
+    }
 
-   /**
-    * The Class SubB.
-    *
-    * @param <T> the generic type
-    */
-   static class SubB<T> extends B<T> {}
-   
-   /**
-    * The Class ClassWithMethodReturningGenericClassInstance.
-    */
-   static class ClassWithMethodReturningGenericClassInstance { 
- /**
-  * Do something.
-  *
-  * @return the sub B
-  */
- SubB<C<?>> doSomething() { return null; } }
+    /**
+     * The Class TypeWithUnusedTypeParameterInGenericMethod.
+     */
+    static class TypeWithUnusedTypeParameterInGenericMethod {
+        /**
+         * Foo.
+         *
+         * @param <U>
+         *            the generic type
+         *
+         * @return the foo
+         */
+        @SuppressWarnings("unused")
+        <U> Foo foo() {
+            return null;
+        }
+    }
 
-   /**
-    * Cascade from method returning instance of generic subclass then from generic method of generic base class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromMethodReturningInstanceOfGenericSubclassThenFromGenericMethodOfGenericBaseClass(
-      @Mocked ClassWithMethodReturningGenericClassInstance mock
-   ) {
-      SubB<C<?>> cascade1 = mock.doSomething();
-      C<?> cascade2 = cascade1.getValue();
+    /**
+     * Cascade from method having unused type parameter.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromMethodHavingUnusedTypeParameter(@Mocked TypeWithUnusedTypeParameterInGenericMethod mock) {
+        Foo foo = mock.foo();
+        Bar bar = foo.bar();
+        assertNotNull(bar);
+    }
 
-      assertNotNull(cascade2);
-   }
+    /**
+     * Cascade from generic method whose return type resolves to another generic type.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromGenericMethodWhoseReturnTypeResolvesToAnotherGenericType(@Mocked B<C<?>> mock) {
+        C<?> c = mock.getValue();
 
-   /**
-    * The Interface InterfaceWithGenericMethod.
-    *
-    * @param <T> the generic type
-    */
-   public interface InterfaceWithGenericMethod<T> { /**
-  * Generic method.
-  *
-  * @return the t
-  */
- @SuppressWarnings("unused") T genericMethod(); }
-   
-   /**
-    * The Class BaseClass.
-    */
-   static class BaseClass { 
- /**
-  * Generic method.
-  *
-  * @return the bar
-  */
- public Bar genericMethod() { return null; } }
-   
-   /**
-    * The Class SubClass.
-    */
-   static class SubClass extends BaseClass implements InterfaceWithGenericMethod<Bar> {}
+        assertNotNull(c);
+    }
 
-   /**
-    * Cascade from generic interface method implemented in base class of mocked sub class.
-    *
-    * @param mock the mock
-    */
-   @Test
-   public void cascadeFromGenericInterfaceMethodImplementedInBaseClassOfMockedSubClass(@Mocked SubClass mock) {
-      Bar cascaded = mock.genericMethod();
-      assertNotNull(cascaded);
-   }
+    /**
+     * The Interface BaseGenericInterface.
+     *
+     * @param <B>
+     *            the generic type
+     */
+    public interface BaseGenericInterface<B> {
+        /**
+         * Generic method.
+         *
+         * @return the b
+         */
+        B genericMethod();
+    }
+
+    /**
+     * The Interface GenericSubInterface.
+     *
+     * @param <S>
+     *            the generic type
+     */
+    public interface GenericSubInterface<S> extends BaseGenericInterface<S> {
+    }
+
+    /**
+     * The Interface NonGenericInterface.
+     */
+    public interface NonGenericInterface extends GenericSubInterface<Bar> {
+    }
+
+    /**
+     * Cascade from generic method defined two levels deep in inheritance hierarchy.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromGenericMethodDefinedTwoLevelsDeepInInheritanceHierarchy(@Mocked NonGenericInterface mock) {
+        Bar cascadedResult = mock.genericMethod();
+
+        assertNotNull(cascadedResult);
+    }
+
+    /**
+     * The Interface NonPublicInterfaceWithGenericMethod.
+     */
+    interface NonPublicInterfaceWithGenericMethod {
+        /**
+         * Do something.
+         *
+         * @param <T>
+         *            the generic type
+         *
+         * @return the t
+         */
+        <T extends Runnable> T doSomething();
+    }
+
+    /**
+     * Cascade from generic method of non public interface.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromGenericMethodOfNonPublicInterface(@Mocked NonPublicInterfaceWithGenericMethod mock) {
+        Runnable result = mock.doSomething();
+
+        assertNotNull(result);
+    }
+
+    /**
+     * The Interface FactoryInterface.
+     */
+    public interface FactoryInterface {
+        /**
+         * Generic with class.
+         *
+         * @param <T>
+         *            the generic type
+         * @param type
+         *            the type
+         *
+         * @return the t
+         */
+        <T> T genericWithClass(Class<T> type);
+    }
+
+    /**
+     * Cascade from generic method with class parameter of mocked interface.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromGenericMethodWithClassParameterOfMockedInterface(@Mocked FactoryInterface mock) {
+        Foo cascaded = mock.genericWithClass(Foo.class);
+
+        assertNotNull(cascaded);
+    }
+
+    /**
+     * The Class Outer.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    @SuppressWarnings("unused")
+    static class Outer<T> {
+        /**
+         * The Class Inner.
+         */
+        class Inner {
+        }
+    }
+
+    /**
+     * The Class Client.
+     */
+    static class Client {
+        /**
+         * Do something.
+         *
+         * @return the outer. inner
+         */
+        Outer<String>.Inner doSomething() {
+            return null;
+        }
+    }
+
+    /**
+     * Cascade from method returning inner instance of generic class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromMethodReturningInnerInstanceOfGenericClass(@Mocked final Client mock) {
+        final Outer<?>.Inner innerInstance = new Outer().new Inner();
+
+        new Expectations() {
+            {
+                mock.doSomething();
+                result = innerInstance;
+            }
+        };
+
+        assertSame(innerInstance, mock.doSomething());
+    }
+
+    /**
+     * The Class SubB.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    static class SubB<T> extends B<T> {
+    }
+
+    /**
+     * The Class ClassWithMethodReturningGenericClassInstance.
+     */
+    static class ClassWithMethodReturningGenericClassInstance {
+        /**
+         * Do something.
+         *
+         * @return the sub B
+         */
+        SubB<C<?>> doSomething() {
+            return null;
+        }
+    }
+
+    /**
+     * Cascade from method returning instance of generic subclass then from generic method of generic base class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromMethodReturningInstanceOfGenericSubclassThenFromGenericMethodOfGenericBaseClass(
+            @Mocked ClassWithMethodReturningGenericClassInstance mock) {
+        SubB<C<?>> cascade1 = mock.doSomething();
+        C<?> cascade2 = cascade1.getValue();
+
+        assertNotNull(cascade2);
+    }
+
+    /**
+     * The Interface InterfaceWithGenericMethod.
+     *
+     * @param <T>
+     *            the generic type
+     */
+    public interface InterfaceWithGenericMethod<T> {
+        /**
+         * Generic method.
+         *
+         * @return the t
+         */
+        @SuppressWarnings("unused")
+        T genericMethod();
+    }
+
+    /**
+     * The Class BaseClass.
+     */
+    static class BaseClass {
+        /**
+         * Generic method.
+         *
+         * @return the bar
+         */
+        public Bar genericMethod() {
+            return null;
+        }
+    }
+
+    /**
+     * The Class SubClass.
+     */
+    static class SubClass extends BaseClass implements InterfaceWithGenericMethod<Bar> {
+    }
+
+    /**
+     * Cascade from generic interface method implemented in base class of mocked sub class.
+     *
+     * @param mock
+     *            the mock
+     */
+    @Test
+    public void cascadeFromGenericInterfaceMethodImplementedInBaseClassOfMockedSubClass(@Mocked SubClass mock) {
+        Bar cascaded = mock.genericMethod();
+        assertNotNull(cascaded);
+    }
 }

@@ -4,7 +4,6 @@
  */
 package mockit.coverage.modification;
 
-final class VisitInterruptedException extends RuntimeException
-{
-   static final VisitInterruptedException INSTANCE = new VisitInterruptedException();
+final class VisitInterruptedException extends RuntimeException {
+    static final VisitInterruptedException INSTANCE = new VisitInterruptedException();
 }

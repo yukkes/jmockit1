@@ -6,19 +6,24 @@ package mockit.internal.expectations.argumentMatching;
 
 import javax.annotation.*;
 
-public final class NullityMatcher implements ArgumentMatcher<NullityMatcher>
-{
-   public static final ArgumentMatcher<?> INSTANCE = new NullityMatcher();
+public final class NullityMatcher implements ArgumentMatcher<NullityMatcher> {
+    public static final ArgumentMatcher<?> INSTANCE = new NullityMatcher();
 
-   private NullityMatcher() {}
+    private NullityMatcher() {
+    }
 
-   @Override
-   public boolean same(@Nonnull NullityMatcher other) { return true; }
+    @Override
+    public boolean same(@Nonnull NullityMatcher other) {
+        return true;
+    }
 
-   @Override
-   public boolean matches(@Nullable Object argValue) { return argValue == null; }
+    @Override
+    public boolean matches(@Nullable Object argValue) {
+        return argValue == null;
+    }
 
-   @Override
-   public void writeMismatchPhrase(@Nonnull ArgumentMismatch argumentMismatch) { argumentMismatch.append("null"); }
+    @Override
+    public void writeMismatchPhrase(@Nonnull ArgumentMismatch argumentMismatch) {
+        argumentMismatch.append("null");
+    }
 }
-

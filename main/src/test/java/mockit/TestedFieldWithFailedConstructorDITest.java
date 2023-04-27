@@ -1,57 +1,64 @@
 package mockit;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.*;
 import org.junit.rules.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * The Class TestedFieldWithFailedConstructorDITest.
  */
-public final class TestedFieldWithFailedConstructorDITest
-{
-   
-   /** The thrown. */
-   @Rule public final ExpectedException thrown = ExpectedException.none();
+public final class TestedFieldWithFailedConstructorDITest {
 
-   /**
-    * Configure expected exception.
-    */
-   @Before
-   public void configureExpectedException() {
-      thrown.expect(IllegalArgumentException.class);
-      thrown.expectMessage("No injectable value available for parameter \"value\" in constructor ");
-      thrown.expectMessage("ClassWithOneParameter(Integer value)");
-   }
+    /** The thrown. */
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
 
-   /**
-    * The Class ClassWithOneParameter.
-    */
-   static class ClassWithOneParameter {
-      
-      /** The value. */
-      Integer value;
-      
-      /**
-       * Instantiates a new class with one parameter.
-       *
-       * @param value the value
-       */
-      ClassWithOneParameter(Integer value) { this.value = value; }
-   }
+    /**
+     * Configure expected exception.
+     */
+    @Before
+    public void configureExpectedException() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("No injectable value available for parameter \"value\" in constructor ");
+        thrown.expectMessage("ClassWithOneParameter(Integer value)");
+    }
 
-   /** The tested. */
-   @Tested ClassWithOneParameter tested;
-   
-   /** The foo. */
-   @Injectable Integer foo;
+    /**
+     * The Class ClassWithOneParameter.
+     */
+    static class ClassWithOneParameter {
 
-   /**
-    * Attempt to use tested object whose creation failed due to injectable without A value.
-    *
-    * @param s the s
-    */
-   @Test
-   public void attemptToUseTestedObjectWhoseCreationFailedDueToInjectableWithoutAValue(@Injectable String s) {
-      assertEquals("", s);
-   }
+        /** The value. */
+        Integer value;
+
+        /**
+         * Instantiates a new class with one parameter.
+         *
+         * @param value
+         *            the value
+         */
+        ClassWithOneParameter(Integer value) {
+            this.value = value;
+        }
+    }
+
+    /** The tested. */
+    @Tested
+    ClassWithOneParameter tested;
+
+    /** The foo. */
+    @Injectable
+    Integer foo;
+
+    /**
+     * Attempt to use tested object whose creation failed due to injectable without A value.
+     *
+     * @param s
+     *            the s
+     */
+    @Test
+    public void attemptToUseTestedObjectWhoseCreationFailedDueToInjectableWithoutAValue(@Injectable String s) {
+        assertEquals("", s);
+    }
 }
