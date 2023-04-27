@@ -1,27 +1,71 @@
 package integrationTests;
 
+/**
+ * The Class BooleanExpressions.
+ */
 public final class BooleanExpressions
 {
+   
+   /**
+    * Eval 1.
+    *
+    * @param x the x
+    * @param y the y
+    * @param z the z
+    * @return true, if successful
+    */
    public boolean eval1(boolean x, boolean y, int z)
    {
       return x && (y || z > 0) ? true : false;
    }
 
+   /**
+    * Eval 2.
+    *
+    * @param x the x
+    * @param y the y
+    * @param z the z
+    * @return true, if successful
+    */
    public boolean eval2(boolean x, boolean y, int z)
    {
       return x && (y || z > 0);
    }
 
+   /**
+    * Eval 3.
+    *
+    * @param x the x
+    * @param y the y
+    * @param z the z
+    * @return true, if successful
+    */
    public boolean eval3(boolean x, boolean y, boolean z)
    {
       return x && (y || z); // LOAD 1 IFEQ L1, LOAD 2 IFNE L2, LOAD 3 IFEQ L1, [L2 1 GOTO L3], [L1 0 L3 RETURN]
    }
 
+   /**
+    * Eval 4.
+    *
+    * @param x the x
+    * @param y the y
+    * @param z the z
+    * @return true, if successful
+    */
    public boolean eval4(boolean x, boolean y, boolean z)
    {
       return x && (!y || z);
    }
 
+   /**
+    * Eval 5.
+    *
+    * @param a the a
+    * @param b the b
+    * @param c the c
+    * @return true, if successful
+    */
    public boolean eval5(boolean a, boolean b, boolean c)
    {
       if (a) return true;
@@ -30,6 +74,13 @@ public final class BooleanExpressions
       return !c;
    }
 
+   /**
+    * Checks if is same type ignoring auto boxing.
+    *
+    * @param firstType the first type
+    * @param secondType the second type
+    * @return true, if is same type ignoring auto boxing
+    */
    static boolean isSameTypeIgnoringAutoBoxing(Class<?> firstType, Class<?> secondType)
    {
       return
@@ -38,6 +89,13 @@ public final class BooleanExpressions
          secondType.isPrimitive() && isWrapperOfPrimitiveType(secondType, firstType);
    }
 
+   /**
+    * Checks if is wrapper of primitive type.
+    *
+    * @param primitiveType the primitive type
+    * @param otherType the other type
+    * @return true, if is wrapper of primitive type
+    */
    static boolean isWrapperOfPrimitiveType(Class<?> primitiveType, Class<?> otherType)
    {
       return
@@ -48,16 +106,35 @@ public final class BooleanExpressions
          primitiveType == boolean.class && otherType == Boolean.class;
    }
 
+   /**
+    * Simply returns input.
+    *
+    * @param b the b
+    * @return true, if successful
+    */
    public boolean simplyReturnsInput(boolean b)
    {
       return b;
    }
 
+   /**
+    * Returns negated input.
+    *
+    * @param b the b
+    * @return true, if successful
+    */
    public boolean returnsNegatedInput(boolean b)
    {
       return !b; // LOAD 1 IFNE L1, 1 GOTO L2, L1 0 L2 RETURN
    }
 
+   /**
+    * Returns trivial result from input after if else.
+    *
+    * @param b the b
+    * @param i the i
+    * @return true, if successful
+    */
    public boolean returnsTrivialResultFromInputAfterIfElse(boolean b, int i)
    {
       String s;
@@ -72,6 +149,13 @@ public final class BooleanExpressions
       return i != 0 ? true : false; // LOAD 2 IFEQ L1, 1 GOTO L2, L1 0 L2 RETURN
    }
 
+   /**
+    * Returns result previously computed from input.
+    *
+    * @param b the b
+    * @param i the i
+    * @return true, if successful
+    */
    public boolean returnsResultPreviouslyComputedFromInput(boolean b, int i)
    {
       String s = b ? "a" : "b";
@@ -86,6 +170,14 @@ public final class BooleanExpressions
       return res;
    }
 
+   /**
+    * Method with too many conditions for path analysis.
+    *
+    * @param i the i
+    * @param j the j
+    * @param b the b
+    * @return true, if successful
+    */
    public boolean methodWithTooManyConditionsForPathAnalysis(int i, int j, boolean b)
    {
       if (i > 0 && j < 5 || b && i > 1 || !b && j > 5 || (i <= 3 || j >= 4) && b) {
@@ -98,6 +190,12 @@ public final class BooleanExpressions
       return b;
    }
 
+   /**
+    * Returns negated input from local variable.
+    *
+    * @param b the b
+    * @return true, if successful
+    */
    public boolean returnsNegatedInputFromLocalVariable(boolean b)
    {
       boolean var = !b; return var; // LOAD 1 IFNE L1, [1 GOTO L2], [L1 0], L2 STORE 2, L3 LOAD 2 RETURN
