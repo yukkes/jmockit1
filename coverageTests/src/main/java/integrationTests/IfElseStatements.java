@@ -40,9 +40,9 @@ public final class IfElseStatements {
      *            the b
      */
     void singleLineIf(boolean b) {
-        if (b) {
-            System.gc();
-        }
+        // @formatter:off
+        if (b) { System.gc(); }
+        // @formatter:on
     }
 
     /**
@@ -52,11 +52,9 @@ public final class IfElseStatements {
      *            the b
      */
     void singleLineIfAndElse(boolean b) {
-        if (b) {
-            System.gc();
-        } else {
-            System.runFinalization();
-        }
+        // @formatter:off
+        if (b) { System.gc(); } else { System.runFinalization(); }
+        // @formatter:on
     }
 
     /**
@@ -246,13 +244,9 @@ public final class IfElseStatements {
      * @return the int
      */
     int anotherSingleLineIfAndElse(boolean b) {
-        int r;
-        if (b) {
-            r = 1;
-        } else {
-            r = 2;
-        }
-        return r;
+        // @formatter:off
+        int r; if (b) { r = 1; } else { r = 2; } return r;
+        // @formatter:on
     }
 
     /**
@@ -264,10 +258,9 @@ public final class IfElseStatements {
      * @return the int
      */
     int yetAnotherSingleLineIfAndElse(boolean b) {
-        if (b) {
-            return 1;
-        }
-        return 2;
+        // @formatter:off
+        if (b) { return 1; } return 2;
+        // @formatter:on
     }
 
     /**
@@ -321,9 +314,14 @@ public final class IfElseStatements {
      *            the i
      */
     void ifSpanningMultipleLines(boolean b, int i) {
-        if (b || i > 0) {
+        // @formatter:off
+        if (
+           b ||
+           i > 0
+        ) {
             System.gc();
         }
+        // @formatter:on
     }
 
     /**

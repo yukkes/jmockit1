@@ -12,13 +12,13 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.simpleIf(true);
         tested.simpleIf(false);
 
-        assertLines(8, 11, 3);
-        assertLine(8, 1, 1, 2);
-        assertLine(9, 1, 1, 1);
-        assertLine(11, 1, 1, 2);
+        assertLines(16, 20, 4);
+        assertLine(16, 1, 1, 2);
+        assertLine(17, 1, 1, 1);
+        assertLine(20, 1, 1, 2);
 
-        assertBranchingPoints(8, 2, 1); // TODO: should be 2 covered, not 1
-        assertBranchingPoints(9, 0, 0);
+        assertBranchingPoints(16, 2, 1); // TODO: should be 2 covered, not 1
+        assertBranchingPoints(17, 0, 0);
     }
 
     @Test
@@ -32,7 +32,9 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.singleLineIf(true);
         tested.singleLineIf(false);
 
-        // TODO: assertions
+        assertLines(43, 46, 2);
+        assertLine(44, 2, 2, 2, 1);
+        assertLine(46, 1, 1, 2);
     }
 
     @Test
@@ -40,17 +42,17 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.singleLineIfAndElse(true);
         tested.singleLineIfAndElse(false);
 
-        assertLines(30, 31, 2);
-        assertLine(30, 3, 3, 2, 1, 1);
-        assertLine(31, 1, 1, 2);
+        assertLines(55, 58, 2);
+        assertLine(56, 3, 3, 2, 1, 1);
+        assertLine(58, 1, 1, 2);
     }
 
     @Test
     public void singleLineIfAndElseWhereOnlyTheElseIsExecuted() {
         tested.anotherSingleLineIfAndElse(false);
 
-        assertLines(148, 148, 1);
-        assertLine(148, 3, 2, 1, 0, 1);
+        assertLines(248, 248, 1);
+        assertLine(248, 3, 2, 1, 0, 1);
     }
 
     @Test
@@ -59,8 +61,8 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.yetAnotherSingleLineIfAndElse(true);
         tested.yetAnotherSingleLineIfAndElse(false);
 
-        assertLines(153, 153, 1);
-        assertLine(153, 3, 3, 3, 1, 2);
+        assertLines(262, 262, 1);
+        assertLine(262, 3, 3, 3, 1, 2);
     }
 
     @Test
@@ -68,10 +70,10 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.ifWithBooleanAndOperator(true, false);
         tested.ifWithBooleanAndOperator(false, true);
 
-        assertLines(158, 161, 2);
-        assertLine(158, 2, 2, 2, 1);
-        assertLine(159, 1, 0, 0);
-        assertLine(161, 1, 1, 2);
+        assertLines(275, 278, 2);
+        assertLine(275, 2, 2, 2, 1);
+        assertLine(276, 1, 0, 0);
+        assertLine(278, 1, 1, 2);
     }
 
     @Test
@@ -91,10 +93,10 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.ifWithBooleanOrOperator(false, false);
         tested.ifWithBooleanOrOperator(true, true);
 
-        assertLines(165, 168, 3);
-        assertLine(165, 2, 2, 2, 1);
-        assertLine(166, 1, 1, 1);
-        assertLine(168, 1, 1, 2);
+        assertLines(289, 292, 3);
+        assertLine(289, 2, 2, 2, 1);
+        assertLine(290, 1, 1, 1);
+        assertLine(292, 1, 1, 2);
     }
 
     @Test
@@ -172,8 +174,9 @@ public final class IfElseStatementsTest extends CoverageTest {
         tested.ifSpanningMultipleLines(true, 0);
         tested.ifSpanningMultipleLines(false, -1);
 
-        assertLine(179, 2, 2, 2, 1);
-        assertLine(183, 1, 1, 1);
-        assertLine(185, 1, 1, 2);
+        assertLine(319, 1, 1, 2, 1);
+        assertLine(320, 1, 1, 1);
+        assertLine(322, 1, 1, 1);
+        assertLine(325, 1, 1, 2);
     }
 }
