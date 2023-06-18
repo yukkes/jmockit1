@@ -1,0 +1,48 @@
+package integrationTests;
+
+import static java.lang.annotation.RetentionPolicy.*;
+
+import static org.junit.Assert.*;
+
+import java.beans.*;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+
+import mockit.*;
+
+import org.junit.*;
+
+public final class MiscellaneousTest {
+    @Test
+    public void methodWithIINCWideInstruction() {
+        int i = 0;
+        i += 1000; // compiled to opcode iinc_w
+        assert i == 1000;
+    }
+
+    @Retention(RUNTIME)
+    public @interface Dummy {
+        Class<?> value();
+    }
+
+    @Dummy(String.class)
+    static class AnnotatedClass {
+    }
+
+    @Test
+    public void havingAnnotationWithClassValue(@Injectable AnnotatedClass dummy) {
+        assertNotNull(dummy);
+    }
+
+    @Test
+    public void verifyAnnotationsArePreserved() throws Exception {
+        Constructor<ClassWithAnnotations> constructor = ClassWithAnnotations.class.getDeclaredConstructor();
+
+        assertTrue(constructor.isAnnotationPresent(ConstructorProperties.class));
+    }
+
+    @Test
+    public void mockingAnAnnotation(@Tested @Mocked AnAnnotation mockedAnnotation) {
+        assertNull(mockedAnnotation.value());
+    }
+}
