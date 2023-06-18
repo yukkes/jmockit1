@@ -6,18 +6,23 @@ package mockit.internal.startup;
 
 import static java.util.Arrays.asList;
 
-import static mockit.internal.util.ClassLoad.*;
+import static mockit.internal.util.ClassLoad.loadClassAtStartup;
+import static mockit.internal.util.ClassLoad.searchTypeInClasspath;
 
-import java.lang.instrument.*;
-import java.util.*;
+import java.lang.instrument.Instrumentation;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.*;
-import mockit.coverage.*;
-import mockit.integration.junit4.*;
-import mockit.internal.reflection.*;
-import mockit.internal.util.*;
+import mockit.MockUp;
+import mockit.coverage.CodeCoverage;
+import mockit.integration.junit4.FakeFrameworkMethod;
+import mockit.integration.junit4.FakeRunNotifier;
+import mockit.internal.reflection.ConstructorReflection;
+import mockit.internal.util.StackTrace;
 
 final class JMockitInitialization {
     private JMockitInitialization() {

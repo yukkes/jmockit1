@@ -2,7 +2,8 @@ package mockit.asm.constantPool;
 
 import static mockit.asm.constantPool.TypeTableItem.SpecialType.MERGED;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 final class MergedTypeTableItem extends TypeTableItem {
     private int type1;

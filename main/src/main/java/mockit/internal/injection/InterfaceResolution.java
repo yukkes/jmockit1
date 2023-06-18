@@ -7,11 +7,16 @@ package mockit.internal.injection;
 import static mockit.internal.reflection.MethodReflection.invoke;
 import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
+import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 final class InterfaceResolution {
     @Nonnull

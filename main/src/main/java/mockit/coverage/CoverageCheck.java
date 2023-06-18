@@ -4,13 +4,17 @@
  */
 package mockit.coverage;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.data.*;
+import mockit.coverage.data.CoverageData;
 
 final class CoverageCheck {
     private static final String configuration = Configuration.getProperty("check", "");

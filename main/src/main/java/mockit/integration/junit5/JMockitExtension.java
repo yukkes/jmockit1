@@ -4,22 +4,39 @@
  */
 package mockit.integration.junit5;
 
-import static mockit.internal.util.StackTrace.*;
+import static mockit.internal.util.StackTrace.filterStackTrace;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.integration.*;
-import mockit.internal.expectations.*;
-import mockit.internal.state.*;
+import mockit.Capturing;
+import mockit.Injectable;
+import mockit.Mocked;
+import mockit.Tested;
+import mockit.integration.TestRunnerDecorator;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.state.SavePoint;
+import mockit.internal.state.TestRun;
 import mockit.internal.util.Utilities;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 @SuppressWarnings("Since15")
 public final class JMockitExtension extends TestRunnerDecorator implements BeforeAllCallback, AfterAllCallback,

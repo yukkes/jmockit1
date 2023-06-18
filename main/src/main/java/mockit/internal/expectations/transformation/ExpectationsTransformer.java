@@ -4,14 +4,20 @@
  */
 package mockit.internal.expectations.transformation;
 
-import java.lang.instrument.*;
-import java.security.*;
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.methods.*;
-import mockit.internal.util.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.asm.classes.ClassWriter;
+import mockit.asm.classes.WrappingClassVisitor;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.methods.MethodWriter;
+import mockit.internal.util.ClassNaming;
+import mockit.internal.util.VisitInterruptedException;
 
 public final class ExpectationsTransformer implements ClassFileTransformer {
     private static final String BASE_CLASSES = "mockit/Expectations mockit/Verifications mockit/VerificationsInOrder mockit/FullVerifications";

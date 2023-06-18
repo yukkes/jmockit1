@@ -4,11 +4,13 @@
  */
 package mockit.integration.springframework;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.injection.*;
+import mockit.internal.injection.BeanExporter;
 
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 final class BeanLookup {
     private BeanLookup() {

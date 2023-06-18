@@ -1,10 +1,21 @@
 package mockit.asm.types;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.DCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.DLOAD;
+import static mockit.asm.jvmConstants.Opcodes.FCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.FLOAD;
+import static mockit.asm.jvmConstants.Opcodes.IALOAD;
+import static mockit.asm.jvmConstants.Opcodes.IASTORE;
+import static mockit.asm.jvmConstants.Opcodes.ICONST_0;
+import static mockit.asm.jvmConstants.Opcodes.ILOAD;
+import static mockit.asm.jvmConstants.Opcodes.LCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.LLOAD;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.jvmConstants.*;
+import mockit.asm.jvmConstants.ArrayElementType;
 
 public final class PrimitiveType extends JavaType {
     private static final Class<?>[] TYPES = { void.class, boolean.class, char.class, byte.class, short.class, int.class,

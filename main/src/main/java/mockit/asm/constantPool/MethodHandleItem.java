@@ -1,10 +1,11 @@
 package mockit.asm.constantPool;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.HANDLE_BASE;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.util.*;
+import mockit.asm.util.MethodHandle;
 
 public final class MethodHandleItem extends Item {
     private MethodHandle methodHandle;

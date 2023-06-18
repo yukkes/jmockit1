@@ -4,11 +4,12 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
+import mockit.internal.expectations.MockingFilters;
 
 class TypeRedefinition extends BaseTypeRedefinition {
     TypeRedefinition(@Nonnull MockedType typeMetadata) {

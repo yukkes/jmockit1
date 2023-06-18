@@ -4,7 +4,8 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class NullityMatcher implements ArgumentMatcher<NullityMatcher> {
     public static final ArgumentMatcher<?> INSTANCE = new NullityMatcher();

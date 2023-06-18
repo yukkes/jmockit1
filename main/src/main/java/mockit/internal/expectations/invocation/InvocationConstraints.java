@@ -4,9 +4,12 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class InvocationConstraints {
     public int minInvocations;

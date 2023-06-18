@@ -4,14 +4,16 @@
  */
 package mockit.internal.state;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.expectations.state.*;
-import mockit.internal.faking.*;
-import mockit.internal.injection.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.expectations.mocking.FieldTypeRedefinitions;
+import mockit.internal.expectations.state.ExecutingTest;
+import mockit.internal.faking.FakeClasses;
+import mockit.internal.faking.FakeStates;
+import mockit.internal.injection.TestedClassInstantiations;
+import mockit.internal.util.StackTrace;
 
 /**
  * A singleton which stores several data structures which in turn hold global state for individual test methods, test

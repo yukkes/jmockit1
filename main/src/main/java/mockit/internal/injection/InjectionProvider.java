@@ -4,10 +4,11 @@
  */
 package mockit.internal.injection;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Provides type, name, and value(s) for an injection point, which is either a field to be injected or a parameter in

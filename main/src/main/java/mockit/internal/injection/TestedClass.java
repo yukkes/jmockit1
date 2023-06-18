@@ -4,14 +4,16 @@
  */
 package mockit.internal.injection;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.security.*;
+import java.io.File;
+import java.lang.reflect.Type;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.reflection.*;
-import mockit.internal.util.*;
+import mockit.internal.reflection.GenericTypeReflection;
+import mockit.internal.util.Utilities;
 
 public final class TestedClass {
     @Nonnull

@@ -6,18 +6,24 @@ package mockit.internal.expectations.invocation;
 
 import static mockit.internal.util.TypeDescriptor.getClassForType;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
-import mockit.internal.expectations.argumentMatching.*;
-import mockit.internal.expectations.state.*;
-import mockit.internal.reflection.*;
-import mockit.internal.reflection.GenericTypeReflection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.asm.types.JavaType;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.state.MockedTypeCascade;
+import mockit.internal.reflection.GenericTypeReflection;
+import mockit.internal.reflection.GenericTypeReflection.GenericSignature;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ClassLoad;
+import mockit.internal.util.DefaultValues;
+import mockit.internal.util.ObjectMethods;
+import mockit.internal.util.StackTrace;
 
 @SuppressWarnings("OverlyComplexClass")
 public final class ExpectedInvocation {

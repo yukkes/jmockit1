@@ -4,20 +4,34 @@
  */
 package mockit.internal.injection.constructor;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.PRIVATE;
+import static java.lang.reflect.Modifier.PROTECTED;
+import static java.lang.reflect.Modifier.PUBLIC;
 
-import static mockit.internal.injection.InjectionPoint.*;
+import static mockit.internal.injection.InjectionPoint.getQualifiedName;
+import static mockit.internal.injection.InjectionPoint.getTypeOfInjectionPointFromVarargsParameter;
+import static mockit.internal.injection.InjectionPoint.kindOfInjectionPoint;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
-import mockit.internal.injection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.asm.types.JavaType;
+import mockit.internal.injection.InjectionPoint;
+import mockit.internal.injection.InjectionPoint.KindOfInjectionPoint;
+import mockit.internal.injection.InjectionProvider;
+import mockit.internal.injection.InjectionProviders;
+import mockit.internal.injection.InjectionState;
+import mockit.internal.injection.TestedClass;
+import mockit.internal.state.ParameterNames;
+import mockit.internal.util.ParameterNameExtractor;
 
 public final class ConstructorSearch {
     private static final int CONSTRUCTOR_ACCESS = PUBLIC + PROTECTED + PRIVATE;

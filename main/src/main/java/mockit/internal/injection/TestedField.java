@@ -6,14 +6,16 @@ package mockit.internal.injection;
 
 import static java.lang.reflect.Modifier.isFinal;
 
-import static mockit.internal.reflection.FieldReflection.*;
+import static mockit.internal.reflection.FieldReflection.getFieldValue;
+import static mockit.internal.reflection.FieldReflection.setFieldValue;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.util.*;
+import mockit.Tested;
+import mockit.internal.util.TypeConversion;
 
 final class TestedField extends TestedObject {
     @Nonnull

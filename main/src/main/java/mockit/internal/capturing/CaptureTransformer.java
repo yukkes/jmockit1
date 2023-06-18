@@ -4,20 +4,25 @@
  */
 package mockit.internal.capturing;
 
-import static mockit.internal.capturing.CapturedType.*;
+import static mockit.internal.capturing.CapturedType.isNotToBeCaptured;
 
-import java.lang.instrument.*;
-import java.security.*;
-import java.util.*;
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.metadata.*;
-import mockit.asm.types.*;
-import mockit.internal.*;
-import mockit.internal.startup.*;
-import mockit.internal.state.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.asm.metadata.ClassMetadataReader;
+import mockit.asm.types.JavaType;
+import mockit.internal.ClassFile;
+import mockit.internal.ClassIdentification;
+import mockit.internal.startup.Startup;
+import mockit.internal.state.TestRun;
 
 public final class CaptureTransformer<M> implements ClassFileTransformer {
     @Nonnull

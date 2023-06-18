@@ -4,13 +4,16 @@
  */
 package mockit.coverage.data;
 
-import java.io.*;
+import java.io.Serializable;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.coverage.dataItems.*;
-import mockit.coverage.lines.*;
+import mockit.coverage.CoveragePercentage;
+import mockit.coverage.TestRun;
+import mockit.coverage.dataItems.PerFileDataCoverage;
+import mockit.coverage.lines.PerFileLineCoverage;
 
 /**
  * Coverage data gathered for the lines, branching points, and fields of a single source file.

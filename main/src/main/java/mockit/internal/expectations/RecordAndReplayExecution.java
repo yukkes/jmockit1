@@ -4,19 +4,26 @@
  */
 package mockit.internal.expectations;
 
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.NO_ARGS;
 
-import java.util.*;
-import java.util.concurrent.locks.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.expectations.invocation.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.expectations.state.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.Expectations;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
+import mockit.internal.expectations.mocking.CaptureOfNewInstances;
+import mockit.internal.expectations.mocking.FieldTypeRedefinitions;
+import mockit.internal.expectations.mocking.PartialMocking;
+import mockit.internal.expectations.mocking.TypeRedefinitions;
+import mockit.internal.expectations.state.ExecutingTest;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ClassNaming;
+import mockit.internal.util.DefaultValues;
+import mockit.internal.util.ObjectMethods;
 
 public final class RecordAndReplayExecution {
     public static final ReentrantLock RECORD_OR_REPLAY_LOCK = new ReentrantLock();

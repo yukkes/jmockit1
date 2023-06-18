@@ -4,12 +4,13 @@
  */
 package mockit.internal.util;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.state.*;
+import mockit.internal.state.ParameterNames;
 
 public final class MethodFormatter {
     private static final Pattern CONSTRUCTOR_NAME = Pattern.compile("<init>");

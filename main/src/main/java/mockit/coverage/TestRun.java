@@ -4,11 +4,13 @@
  */
 package mockit.coverage;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.coverage.data.*;
-import mockit.coverage.lines.*;
-import mockit.coverage.testRedundancy.*;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.data.FileCoverageData;
+import mockit.coverage.lines.PerFileLineCoverage;
+import mockit.coverage.testRedundancy.TestCoverage;
 
 @SuppressWarnings("unused")
 public final class TestRun {

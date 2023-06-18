@@ -4,16 +4,21 @@
  */
 package mockit.integration.junit4;
 
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.faking.*;
-import mockit.internal.util.*;
+import mockit.Expectations;
+import mockit.Invocation;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Tested;
+import mockit.internal.faking.FakeInvocation;
+import mockit.internal.util.StackTrace;
 
-import org.junit.runners.model.*;
+import org.junit.runners.model.FrameworkMethod;
 
 /**
  * Startup fake that modifies the JUnit 4.5+ test runner so that it calls back to JMockit immediately after every test

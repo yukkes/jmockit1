@@ -4,12 +4,14 @@
  */
 package mockit.internal.capturing;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.internal.*;
-import mockit.internal.startup.*;
-import mockit.internal.state.*;
+import mockit.asm.classes.ClassReader;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.ClassFile;
+import mockit.internal.startup.Startup;
+import mockit.internal.state.TestRun;
 
 public abstract class CaptureOfImplementations<M> {
     protected CaptureOfImplementations() {

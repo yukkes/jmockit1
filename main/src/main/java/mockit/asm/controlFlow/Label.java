@@ -1,8 +1,10 @@
 package mockit.asm.controlFlow;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.util.*;
+import mockit.asm.util.ByteVector;
 
 /**
  * A label represents a position in the bytecode of a method. Labels are used for jump, goto, and switch instructions,

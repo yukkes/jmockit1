@@ -4,14 +4,17 @@
  */
 package mockit.internal;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.internal.state.*;
+import mockit.asm.classes.ClassReader;
+import mockit.internal.state.CachedClassfiles;
+import mockit.internal.state.TestRun;
 
 public final class ClassFile {
     private static final Map<String, ClassReader> CLASS_FILES = new ConcurrentHashMap<>();

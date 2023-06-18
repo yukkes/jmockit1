@@ -4,14 +4,16 @@
  */
 package mockit.internal.state;
 
-import static mockit.internal.expectations.RecordAndReplayExecution.*;
+import static mockit.internal.expectations.RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.*;
-import mockit.internal.faking.*;
+import mockit.internal.ClassIdentification;
+import mockit.internal.faking.FakeClasses;
 
 public final class SavePoint {
     @Nonnull

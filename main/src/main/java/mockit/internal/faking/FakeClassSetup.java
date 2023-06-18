@@ -6,16 +6,20 @@ package mockit.internal.faking;
 
 import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.instrument.*;
-import java.lang.reflect.*;
+import java.lang.instrument.ClassDefinition;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.asm.classes.*;
-import mockit.internal.*;
-import mockit.internal.startup.*;
-import mockit.internal.state.*;
+import mockit.MockUp;
+import mockit.asm.classes.ClassReader;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.ClassFile;
+import mockit.internal.startup.Startup;
+import mockit.internal.state.CachedClassfiles;
+import mockit.internal.state.TestRun;
 
 public final class FakeClassSetup {
     @Nonnull

@@ -1,13 +1,15 @@
 package mockit.asm;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.annotations.*;
-import mockit.asm.constantPool.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.util.*;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.util.ByteVector;
 
 public class BaseWriter {
     /**

@@ -4,23 +4,34 @@
  */
 package mockit.internal.expectations.state;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.INTERFACE;
+import static java.lang.reflect.Modifier.PUBLIC;
+import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Collections.synchronizedList;
 
-import static mockit.asm.types.JavaType.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.asm.types.JavaType.getInternalName;
+import static mockit.internal.util.Utilities.containsReference;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.reflection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.MockingFilters;
+import mockit.internal.expectations.mocking.CascadingTypeRedefinition;
+import mockit.internal.expectations.mocking.InstanceFactory;
+import mockit.internal.reflection.GenericTypeReflection;
+import mockit.internal.reflection.RealMethodOrConstructor;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.DefaultValues;
 
 public final class MockedTypeCascade {
     @Nonnull

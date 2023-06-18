@@ -4,9 +4,10 @@
  */
 package mockit.internal.util;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Proxy;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class GeneratedClasses {
     private static final String IMPLCLASS_PREFIX = "$Impl_";

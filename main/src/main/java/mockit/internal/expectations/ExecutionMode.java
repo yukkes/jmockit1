@@ -4,11 +4,13 @@
  */
 package mockit.internal.expectations;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isNative;
+import static java.lang.reflect.Modifier.isStatic;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.state.*;
+import mockit.internal.state.TestRun;
 
 public enum ExecutionMode {
     Regular {

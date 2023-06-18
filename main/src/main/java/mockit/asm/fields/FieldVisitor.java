@@ -1,12 +1,15 @@
 package mockit.asm.fields;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.classes.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.types.*;
-import mockit.asm.util.*;
+import mockit.asm.BaseWriter;
+import mockit.asm.SignatureWriter;
+import mockit.asm.classes.ClassWriter;
+import mockit.asm.jvmConstants.Opcodes;
+import mockit.asm.types.JavaType;
+import mockit.asm.util.ByteVector;
 
 /**
  * A visitor to visit a Java field, in the following order: ({@link #visitAnnotation})* {@link #visitEnd}.

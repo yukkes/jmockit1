@@ -4,12 +4,15 @@
  */
 package mockit.internal.util;
 
-import static mockit.internal.util.AutoBoxing.*;
+import static mockit.internal.util.AutoBoxing.isWrapperOfPrimitiveType;
 
-import java.math.*;
-import java.util.concurrent.atomic.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class TypeConversion {
     private TypeConversion() {

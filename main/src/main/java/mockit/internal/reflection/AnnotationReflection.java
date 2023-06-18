@@ -4,11 +4,13 @@
  */
 package mockit.internal.reflection;
 
-import static mockit.internal.reflection.ParameterReflection.*;
+import static mockit.internal.reflection.ParameterReflection.NO_PARAMETERS;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class AnnotationReflection {
     private AnnotationReflection() {

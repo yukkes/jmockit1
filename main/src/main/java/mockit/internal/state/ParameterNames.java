@@ -4,11 +4,14 @@
  */
 package mockit.internal.state;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.TestMethod;
 
 public final class ParameterNames {
     private static final Map<String, Map<String, String[]>> classesToMethodsToParameters = new HashMap<>();

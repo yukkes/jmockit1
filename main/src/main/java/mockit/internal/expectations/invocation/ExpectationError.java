@@ -4,9 +4,9 @@
  */
 package mockit.internal.expectations.invocation;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.util.*;
+import mockit.internal.util.StackTrace;
 
 final class ExpectationError extends AssertionError {
     private String message;

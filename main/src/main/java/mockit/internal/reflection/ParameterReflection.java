@@ -4,15 +4,16 @@
  */
 package mockit.internal.reflection;
 
-import static mockit.internal.reflection.MethodReflection.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.reflection.MethodReflection.JAVA_LANG;
+import static mockit.internal.util.Utilities.JAVA8;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.*;
-import mockit.internal.util.*;
+import mockit.Invocation;
+import mockit.internal.util.AutoBoxing;
 
 public final class ParameterReflection {
     @Nonnull

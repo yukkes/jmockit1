@@ -4,26 +4,38 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isPublic;
 
-import static mockit.internal.util.GeneratedClasses.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.GeneratedClasses.getNameForGeneratedClass;
+import static mockit.internal.util.Utilities.JAVA8;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.instrument.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.instrument.ClassDefinition;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.jvmConstants.*;
-import mockit.internal.*;
-import mockit.internal.classGeneration.*;
-import mockit.internal.expectations.mocking.InstanceFactory.*;
-import mockit.internal.reflection.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.asm.jvmConstants.ClassVersion;
+import mockit.internal.ClassFile;
+import mockit.internal.classGeneration.ImplementationClass;
+import mockit.internal.expectations.mocking.InstanceFactory.ClassInstanceFactory;
+import mockit.internal.expectations.mocking.InstanceFactory.InterfaceInstanceFactory;
+import mockit.internal.reflection.ConstructorReflection;
 import mockit.internal.reflection.EmptyProxy.Impl;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ClassLoad;
+import mockit.internal.util.VisitInterruptedException;
 
 class BaseTypeRedefinition {
     private static final ClassDefinition[] CLASS_DEFINITIONS = new ClassDefinition[0];

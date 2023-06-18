@@ -1,6 +1,6 @@
 package mockit.asm.controlFlow;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 /**
  * An edge in the control flow graph of a method body. See {@link Label}.

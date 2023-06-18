@@ -1,8 +1,9 @@
 package mockit.asm.constantPool;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.NAME_TYPE;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public final class NameAndTypeItem extends TypeOrMemberItem {
     public NameAndTypeItem(@Nonnegative int index) {

@@ -4,14 +4,19 @@
  */
 package mockit.coverage.lines;
 
-import java.io.*;
-import java.util.*;
-import java.util.Map.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.coverage.data.*;
+import mockit.coverage.CallPoint;
+import mockit.coverage.CoveragePercentage;
+import mockit.coverage.data.PerFileCoverage;
 
 public final class PerFileLineCoverage implements PerFileCoverage {
     private static final long serialVersionUID = 6318915843739466316L;

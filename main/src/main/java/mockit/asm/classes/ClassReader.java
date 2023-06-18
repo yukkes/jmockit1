@@ -1,11 +1,14 @@
 package mockit.asm.classes;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.fields.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.methods.*;
+import mockit.asm.AnnotatedReader;
+import mockit.asm.fields.FieldReader;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.jvmConstants.ClassVersion;
+import mockit.asm.methods.MethodReader;
 
 /**
  * A Java class parser to make a {@link ClassVisitor} visit an existing class.

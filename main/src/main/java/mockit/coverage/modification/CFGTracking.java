@@ -4,14 +4,20 @@
  */
 package mockit.coverage.modification;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ICONST_0;
+import static mockit.asm.jvmConstants.Opcodes.ICONST_1;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEVIRTUAL;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.controlFlow.*;
-import mockit.coverage.lines.*;
+import mockit.asm.controlFlow.Label;
+import mockit.coverage.lines.BranchCoverageData;
+import mockit.coverage.lines.LineCoverageData;
+import mockit.coverage.lines.PerFileLineCoverage;
 
 final class CFGTracking {
     @Nonnull

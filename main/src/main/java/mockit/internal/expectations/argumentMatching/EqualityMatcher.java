@@ -6,7 +6,8 @@ package mockit.internal.expectations.argumentMatching;
 
 import java.lang.reflect.Array;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class EqualityMatcher implements ArgumentMatcher<EqualityMatcher> {
     @Nullable

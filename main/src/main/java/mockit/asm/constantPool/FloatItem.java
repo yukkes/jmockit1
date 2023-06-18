@@ -1,8 +1,9 @@
 package mockit.asm.constantPool;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FLOAT;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public final class FloatItem extends IntValueItem {
     public FloatItem(@Nonnegative int index) {

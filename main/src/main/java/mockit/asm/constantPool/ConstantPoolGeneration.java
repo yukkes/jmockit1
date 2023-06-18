@@ -1,14 +1,32 @@
 package mockit.asm.constantPool;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.CLASS;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.DOUBLE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FIELD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FLOAT;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.IMETHOD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.INTEGER;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.LONG;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_HANDLE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_TYPE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.NAME_TYPE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.STRING;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.UTF8;
 import static mockit.internal.util.ClassLoad.OBJECT;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.jvmConstants.*;
-import mockit.asm.types.*;
-import mockit.asm.util.*;
-import mockit.internal.util.*;
+import mockit.asm.jvmConstants.ConstantPoolTypes;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.MethodType;
+import mockit.asm.types.PrimitiveType;
+import mockit.asm.types.ReferenceType;
+import mockit.asm.util.ByteVector;
+import mockit.asm.util.MethodHandle;
+import mockit.internal.util.ClassLoad;
 
 /**
  * Allows the constant pool for a classfile to be created from scratch, when that classfile itself is being generated or

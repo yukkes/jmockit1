@@ -4,7 +4,8 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Matches a decimal argument against another within a given margin of error.

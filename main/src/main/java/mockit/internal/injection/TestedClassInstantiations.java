@@ -4,17 +4,23 @@
  */
 package mockit.internal.injection;
 
-import static mockit.internal.injection.TestedObject.*;
+import static mockit.internal.injection.TestedObject.getTestedAnnotationIfPresent;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.*;
-import mockit.asm.jvmConstants.*;
-import mockit.internal.expectations.mocking.*;
+import mockit.Injectable;
+import mockit.Tested;
+import mockit.asm.jvmConstants.Access;
+import mockit.internal.expectations.mocking.MockedType;
 
 public final class TestedClassInstantiations {
     private static final int FIELD_ACCESS_MASK = Access.SYNTHETIC + Access.STATIC;

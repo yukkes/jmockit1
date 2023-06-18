@@ -6,24 +6,33 @@ package mockit.internal.expectations.mocking;
 
 import static java.lang.reflect.Modifier.isStatic;
 
-import static mockit.asm.jvmConstants.Access.*;
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Access.FINAL;
+import static mockit.asm.jvmConstants.Access.PUBLIC;
+import static mockit.asm.jvmConstants.Access.isSynthetic;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESPECIAL;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.annotations.*;
-import mockit.asm.classes.*;
-import mockit.asm.fields.*;
-import mockit.asm.metadata.*;
-import mockit.asm.metadata.ClassMetadataReader.*;
-import mockit.asm.methods.*;
-import mockit.internal.*;
-import mockit.internal.classGeneration.*;
-import mockit.internal.reflection.*;
-import mockit.internal.reflection.GenericTypeReflection.*;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.classes.ClassInfo;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.fields.FieldVisitor;
+import mockit.asm.metadata.ClassMetadataReader;
+import mockit.asm.metadata.ClassMetadataReader.Attribute;
+import mockit.asm.metadata.ClassMetadataReader.MethodInfo;
+import mockit.asm.methods.MethodVisitor;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.ClassFile;
+import mockit.internal.classGeneration.MockedTypeInfo;
+import mockit.internal.reflection.GenericTypeReflection;
+import mockit.internal.reflection.GenericTypeReflection.GenericSignature;
 
 final class InterfaceImplementationGenerator extends BaseClassModifier {
     private static final int CLASS_ACCESS = PUBLIC + FINAL;

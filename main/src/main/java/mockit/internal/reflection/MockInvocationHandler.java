@@ -4,12 +4,15 @@
  */
 package mockit.internal.reflection;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.DefaultValues;
+import mockit.internal.util.ObjectMethods;
 
 /**
  * Handles invocations to all kinds of mock implementations created for interfaces and annotation types through any of

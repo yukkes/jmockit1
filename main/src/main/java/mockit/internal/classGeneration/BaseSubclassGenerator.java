@@ -4,24 +4,32 @@
  */
 package mockit.internal.classGeneration;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESPECIAL;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.fields.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.metadata.*;
-import mockit.asm.metadata.ClassMetadataReader.*;
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
-import mockit.internal.*;
-import mockit.internal.util.*;
+import mockit.asm.classes.ClassInfo;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.fields.FieldVisitor;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.metadata.ClassMetadataReader;
+import mockit.asm.metadata.ClassMetadataReader.MethodInfo;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.types.JavaType;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.ClassFile;
+import mockit.internal.util.TypeDescriptor;
 
 public class BaseSubclassGenerator extends BaseClassModifier {
     private static final int CLASS_ACCESS_MASK = 0xFFFF - Access.ABSTRACT;

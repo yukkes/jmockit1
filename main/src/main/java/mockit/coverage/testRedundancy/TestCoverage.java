@@ -4,13 +4,18 @@
  */
 package mockit.coverage.testRedundancy;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
+import mockit.coverage.Configuration;
 
 public final class TestCoverage {
     @Nullable

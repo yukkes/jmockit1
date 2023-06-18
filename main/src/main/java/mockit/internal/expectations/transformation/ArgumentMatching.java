@@ -4,12 +4,14 @@
  */
 package mockit.internal.expectations.transformation;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.GETFIELD;
+import static mockit.asm.jvmConstants.Opcodes.SIPUSH;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
+import mockit.asm.methods.MethodWriter;
+import mockit.asm.types.JavaType;
 
 final class ArgumentMatching {
     private static final JavaType[] NO_PARAMETERS = new JavaType[0];

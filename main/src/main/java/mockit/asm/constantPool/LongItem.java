@@ -1,8 +1,9 @@
 package mockit.asm.constantPool;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.LONG;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public final class LongItem extends LongValueItem {
     public LongItem(@Nonnegative int index) {

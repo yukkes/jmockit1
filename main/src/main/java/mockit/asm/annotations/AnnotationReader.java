@@ -1,11 +1,14 @@
 package mockit.asm.annotations;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
-import mockit.asm.util.*;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.PrimitiveType;
+import mockit.asm.util.BytecodeReader;
 
 public final class AnnotationReader extends BytecodeReader {
     public AnnotationReader(@Nonnull BytecodeReader br) {

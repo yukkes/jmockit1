@@ -4,7 +4,7 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 abstract class SubstringMatcher implements ArgumentMatcher<SubstringMatcher> {
     @Nonnull

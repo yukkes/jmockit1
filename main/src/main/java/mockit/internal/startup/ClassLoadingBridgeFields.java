@@ -4,18 +4,27 @@
  */
 package mockit.internal.startup;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.PUBLIC;
+import static java.lang.reflect.Modifier.STATIC;
+import static java.lang.reflect.Modifier.isPublic;
 
-import java.lang.instrument.*;
-import java.security.*;
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
+import java.security.ProtectionDomain;
+import java.security.Provider;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.jvmConstants.*;
-import mockit.internal.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.faking.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.asm.classes.ClassWriter;
+import mockit.asm.classes.WrappingClassVisitor;
+import mockit.asm.jvmConstants.Access;
+import mockit.internal.ClassLoadingBridge;
+import mockit.internal.expectations.mocking.MockedBridge;
+import mockit.internal.faking.FakeBridge;
+import mockit.internal.faking.FakeMethodBridge;
 
 final class ClassLoadingBridgeFields {
     private ClassLoadingBridgeFields() {

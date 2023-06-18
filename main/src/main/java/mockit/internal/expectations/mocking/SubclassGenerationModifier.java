@@ -6,12 +6,13 @@ package mockit.internal.expectations.mocking;
 
 import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.jvmConstants.*;
-import mockit.internal.classGeneration.*;
-import mockit.internal.util.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.jvmConstants.Access;
+import mockit.internal.classGeneration.BaseSubclassGenerator;
+import mockit.internal.util.ObjectMethods;
 
 public final class SubclassGenerationModifier extends BaseSubclassGenerator {
     public SubclassGenerationModifier(@Nonnull Class<?> baseClass, @Nonnull Type mockedType, @Nonnull ClassReader cr,

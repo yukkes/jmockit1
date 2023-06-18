@@ -4,14 +4,15 @@
  */
 package mockit.internal.injection.constructor;
 
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.injection.*;
+import mockit.internal.injection.InjectionProvider;
 
 final class ConstructorParameter extends InjectionProvider {
     @Nonnull

@@ -4,18 +4,22 @@
  */
 package mockit.internal.injection;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isAbstract;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.internal.classGeneration.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.injection.constructor.*;
-import mockit.internal.injection.full.*;
-import mockit.internal.state.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.internal.classGeneration.ImplementationClass;
+import mockit.internal.expectations.mocking.SubclassGenerationModifier;
+import mockit.internal.injection.constructor.ConstructorInjection;
+import mockit.internal.injection.constructor.ConstructorSearch;
+import mockit.internal.injection.full.FullInjection;
+import mockit.internal.state.TestRun;
 
 public final class TestedObjectCreation {
     @Nonnull

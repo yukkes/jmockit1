@@ -4,12 +4,17 @@
  */
 package mockit.asm.metadata;
 
-import java.nio.charset.*;
-import java.util.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.jvmConstants.*;
+import mockit.asm.jvmConstants.Access;
 
 public final class ClassMetadataReader extends ObjectWithAttributes {
     private static final Charset UTF8 = Charset.forName("UTF-8");

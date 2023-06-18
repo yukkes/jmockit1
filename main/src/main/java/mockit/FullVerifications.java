@@ -4,7 +4,7 @@
  */
 package mockit;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 /**
  * Same as {@link Verifications}, but checking that <em>all</em> invocations from code under test are explicitly

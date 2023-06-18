@@ -4,12 +4,13 @@
  */
 package mockit.internal.faking;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.*;
-import mockit.internal.state.*;
+import mockit.internal.ClassLoadingBridge;
+import mockit.internal.state.TestRun;
 
 public final class FakeBridge extends ClassLoadingBridge {
     @Nonnull

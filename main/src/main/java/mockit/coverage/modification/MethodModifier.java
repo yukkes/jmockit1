@@ -4,15 +4,38 @@
  */
 package mockit.coverage.modification;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ACONST_NULL;
+import static mockit.asm.jvmConstants.Opcodes.DCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.DUP;
+import static mockit.asm.jvmConstants.Opcodes.DUP2_X1;
+import static mockit.asm.jvmConstants.Opcodes.DUP_X1;
+import static mockit.asm.jvmConstants.Opcodes.DUP_X2;
+import static mockit.asm.jvmConstants.Opcodes.FCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.GETFIELD;
+import static mockit.asm.jvmConstants.Opcodes.GETSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.GOTO;
+import static mockit.asm.jvmConstants.Opcodes.ICONST_0;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESPECIAL;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESTATIC;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEVIRTUAL;
+import static mockit.asm.jvmConstants.Opcodes.IRETURN;
+import static mockit.asm.jvmConstants.Opcodes.LCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.POP;
+import static mockit.asm.jvmConstants.Opcodes.POP2;
+import static mockit.asm.jvmConstants.Opcodes.PUTSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.RETURN;
+import static mockit.asm.jvmConstants.Opcodes.SIPUSH;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.annotations.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.methods.*;
-import mockit.coverage.data.*;
-import mockit.coverage.lines.*;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.methods.MethodWriter;
+import mockit.asm.methods.WrappingMethodVisitor;
+import mockit.coverage.data.FileCoverageData;
+import mockit.coverage.lines.PerFileLineCoverage;
 
 final class MethodModifier extends WrappingMethodVisitor {
     private static final String DATA_RECORDING_CLASS = "mockit/coverage/TestRun";

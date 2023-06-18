@@ -4,13 +4,15 @@
  */
 package mockit.integration.springframework;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.injection.*;
-import mockit.internal.state.*;
+import mockit.internal.injection.BeanExporter;
+import mockit.internal.injection.TestedClassInstantiations;
+import mockit.internal.state.TestRun;
 
-import org.springframework.beans.factory.*;
-import org.springframework.web.context.support.*;
+import org.springframework.beans.factory.BeanDefinitionStoreException;
+import org.springframework.web.context.support.StaticWebApplicationContext;
 
 /**
  * A {@link org.springframework.web.context.WebApplicationContext} implementation which exposes the

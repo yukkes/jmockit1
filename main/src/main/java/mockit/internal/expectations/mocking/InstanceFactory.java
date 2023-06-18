@@ -4,9 +4,10 @@
  */
 package mockit.internal.expectations.mocking;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.StackTrace;
 
 import org.objenesis.ObjenesisHelper;
 

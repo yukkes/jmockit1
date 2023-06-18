@@ -4,16 +4,20 @@
  */
 package mockit.integration.junit4;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.*;
-import mockit.coverage.testRedundancy.*;
-import mockit.integration.*;
-import mockit.internal.faking.*;
+import mockit.Invocation;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.coverage.testRedundancy.JUnitListener;
+import mockit.coverage.testRedundancy.TestCoverage;
+import mockit.integration.TestRunnerDecorator;
+import mockit.internal.faking.FakeInvocation;
 import mockit.internal.state.TestRun;
 
-import org.junit.runner.*;
-import org.junit.runner.notification.*;
+import org.junit.runner.Description;
+import org.junit.runner.Result;
+import org.junit.runner.notification.RunNotifier;
 
 /**
  * Startup fake which works in conjunction with {@link JUnit4TestRunnerDecorator} to provide JUnit 4.5+ integration.

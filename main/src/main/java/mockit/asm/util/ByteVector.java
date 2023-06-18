@@ -1,6 +1,7 @@
 package mockit.asm.util;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 /**
  * A dynamically extensible vector of bytes. This class is roughly equivalent to a DataOutputStream on top of a

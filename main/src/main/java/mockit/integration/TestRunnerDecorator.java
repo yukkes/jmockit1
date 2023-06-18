@@ -4,19 +4,29 @@
  */
 package mockit.integration;
 
-import static mockit.internal.reflection.ParameterReflection.*;
+import static mockit.internal.reflection.ParameterReflection.getParameterCount;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.invocation.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.injection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.expectations.invocation.MissingInvocation;
+import mockit.internal.expectations.invocation.UnexpectedInvocation;
+import mockit.internal.expectations.mocking.FieldTypeRedefinitions;
+import mockit.internal.expectations.mocking.ParameterTypeRedefinitions;
+import mockit.internal.expectations.mocking.TypeRedefinitions;
+import mockit.internal.injection.InjectionProvider;
+import mockit.internal.injection.TestedClassInstantiations;
+import mockit.internal.injection.TestedParameters;
+import mockit.internal.state.SavePoint;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ParameterNameExtractor;
+import mockit.internal.util.StackTrace;
+import mockit.internal.util.TestMethod;
 
 /**
  * Base class for "test runner decorators", which provide integration between JMockit and specific test runners from

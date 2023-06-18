@@ -1,6 +1,7 @@
 package mockit.asm.classes;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Holds additional information about a classfile: {@link #signature}, {@link #superName}, {@link #interfaces},

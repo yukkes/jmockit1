@@ -1,13 +1,46 @@
 package mockit.asm.controlFlow;
 
-import static mockit.asm.controlFlow.FrameTypeMask.*;
+import static mockit.asm.controlFlow.FrameTypeMask.ARRAY_OF;
+import static mockit.asm.controlFlow.FrameTypeMask.BASE;
+import static mockit.asm.controlFlow.FrameTypeMask.BASE_KIND;
+import static mockit.asm.controlFlow.FrameTypeMask.BASE_VALUE;
+import static mockit.asm.controlFlow.FrameTypeMask.BOOLEAN;
+import static mockit.asm.controlFlow.FrameTypeMask.BYTE;
+import static mockit.asm.controlFlow.FrameTypeMask.CHAR;
+import static mockit.asm.controlFlow.FrameTypeMask.DIM;
+import static mockit.asm.controlFlow.FrameTypeMask.DOUBLE;
+import static mockit.asm.controlFlow.FrameTypeMask.ELEMENT_OF;
+import static mockit.asm.controlFlow.FrameTypeMask.FLOAT;
+import static mockit.asm.controlFlow.FrameTypeMask.INTEGER;
+import static mockit.asm.controlFlow.FrameTypeMask.KIND;
+import static mockit.asm.controlFlow.FrameTypeMask.LOCAL;
+import static mockit.asm.controlFlow.FrameTypeMask.LONG;
+import static mockit.asm.controlFlow.FrameTypeMask.NULL;
+import static mockit.asm.controlFlow.FrameTypeMask.OBJECT;
+import static mockit.asm.controlFlow.FrameTypeMask.SHORT;
+import static mockit.asm.controlFlow.FrameTypeMask.STACK;
+import static mockit.asm.controlFlow.FrameTypeMask.TOP;
+import static mockit.asm.controlFlow.FrameTypeMask.TOP_IF_LONG_OR_DOUBLE;
+import static mockit.asm.controlFlow.FrameTypeMask.UNINITIALIZED;
+import static mockit.asm.controlFlow.FrameTypeMask.UNINITIALIZED_THIS;
+import static mockit.asm.controlFlow.FrameTypeMask.VALUE;
 import static mockit.asm.jvmConstants.Opcodes.*;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.types.*;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.constantPool.DynamicItem;
+import mockit.asm.constantPool.Item;
+import mockit.asm.constantPool.StringItem;
+import mockit.asm.constantPool.TypeOrMemberItem;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.jvmConstants.ArrayElementType;
+import mockit.asm.jvmConstants.ConstantPoolTypes;
+import mockit.asm.types.ArrayType;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.PrimitiveType;
 
 /**
  * Information about the input and output stack map frames of a basic block.

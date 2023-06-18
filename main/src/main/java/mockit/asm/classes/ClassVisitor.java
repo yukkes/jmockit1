@@ -1,12 +1,14 @@
 package mockit.asm.classes;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.fields.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
+import mockit.asm.BaseWriter;
+import mockit.asm.fields.FieldVisitor;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.jvmConstants.Opcodes;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.types.JavaType;
 
 /**
  * A visitor to visit a Java class, in the following order:<br>

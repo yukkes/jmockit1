@@ -4,14 +4,16 @@
  */
 package mockit.coverage;
 
-import java.lang.instrument.*;
-import java.security.*;
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.data.*;
-import mockit.coverage.modification.*;
-import mockit.internal.startup.*;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.modification.ClassModification;
+import mockit.coverage.modification.ClassesNotLoaded;
+import mockit.internal.startup.Startup;
 
 public final class CodeCoverage implements ClassFileTransformer {
     @Nonnull

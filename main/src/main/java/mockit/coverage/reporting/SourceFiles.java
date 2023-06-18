@@ -4,10 +4,11 @@
  */
 package mockit.coverage.reporting;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 final class SourceFiles {
     @Nonnull

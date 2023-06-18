@@ -4,23 +4,36 @@
  */
 package mockit.internal.injection.full;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isStatic;
 
-import static mockit.internal.injection.InjectionPoint.*;
-import static mockit.internal.reflection.ConstructorReflection.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.injection.InjectionPoint.CONVERSATION_CLASS;
+import static mockit.internal.injection.InjectionPoint.INJECT_CLASS;
+import static mockit.internal.injection.InjectionPoint.PERSISTENCE_UNIT_CLASS;
+import static mockit.internal.injection.InjectionPoint.SERVLET_CLASS;
+import static mockit.internal.reflection.ConstructorReflection.newInstanceUsingDefaultConstructorIfAvailable;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.logging.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.logging.Logger;
 
-import javax.annotation.*;
-import javax.enterprise.context.*;
-import javax.inject.*;
-import javax.sql.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.Resource;
+import javax.enterprise.context.Conversation;
+import javax.inject.Provider;
+import javax.inject.Singleton;
+import javax.sql.CommonDataSource;
 
-import mockit.asm.jvmConstants.*;
-import mockit.internal.injection.*;
+import mockit.asm.jvmConstants.Access;
+import mockit.internal.injection.InjectionPoint;
+import mockit.internal.injection.InjectionProvider;
+import mockit.internal.injection.InjectionState;
+import mockit.internal.injection.Injector;
+import mockit.internal.injection.TestedClass;
+import mockit.internal.injection.TestedObjectCreation;
 
 /**
  * Responsible for recursive injection of dependencies into a <code>@Tested(fullyInitialized = true)</code> object.

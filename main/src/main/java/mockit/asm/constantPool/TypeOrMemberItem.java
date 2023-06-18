@@ -1,8 +1,9 @@
 package mockit.asm.constantPool;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.types.*;
+import mockit.asm.types.JavaType;
 
 public class TypeOrMemberItem extends Item {
     @Nonnull

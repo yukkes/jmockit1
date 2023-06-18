@@ -4,12 +4,17 @@
  */
 package mockit.coverage.reporting.packages;
 
-import java.io.*;
-import java.util.*;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.data.*;
+import mockit.coverage.data.FileCoverageData;
 
 final class PackageCoverageReport extends ListWithFilesAndPercentages {
     @Nonnull

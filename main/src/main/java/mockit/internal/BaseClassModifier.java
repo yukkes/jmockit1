@@ -4,20 +4,48 @@
  */
 package mockit.internal;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isStatic;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.AASTORE;
+import static mockit.asm.jvmConstants.Opcodes.ACONST_NULL;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
+import static mockit.asm.jvmConstants.Opcodes.ANEWARRAY;
+import static mockit.asm.jvmConstants.Opcodes.DUP;
+import static mockit.asm.jvmConstants.Opcodes.GETSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.ICONST_0;
+import static mockit.asm.jvmConstants.Opcodes.ILOAD;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEINTERFACE;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESPECIAL;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESTATIC;
+import static mockit.asm.jvmConstants.Opcodes.IRETURN;
+import static mockit.asm.jvmConstants.Opcodes.NEW;
+import static mockit.asm.jvmConstants.Opcodes.NEWARRAY;
+import static mockit.asm.jvmConstants.Opcodes.RETURN;
+import static mockit.asm.jvmConstants.Opcodes.SIPUSH;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.annotations.*;
-import mockit.asm.classes.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
-import mockit.internal.expectations.*;
-import mockit.internal.util.*;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.classes.ClassInfo;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassWriter;
+import mockit.asm.classes.WrappingClassVisitor;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.jvmConstants.ClassVersion;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.methods.MethodWriter;
+import mockit.asm.methods.WrappingMethodVisitor;
+import mockit.asm.types.ArrayType;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.ObjectType;
+import mockit.asm.types.PrimitiveType;
+import mockit.asm.types.ReferenceType;
+import mockit.internal.expectations.ExecutionMode;
+import mockit.internal.util.ClassLoad;
+import mockit.internal.util.TypeConversionBytecode;
 
 public class BaseClassModifier extends WrappingClassVisitor {
     private static final int METHOD_ACCESS_MASK = 0xFFFF - Access.ABSTRACT - Access.NATIVE;

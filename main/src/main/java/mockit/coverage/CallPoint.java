@@ -4,16 +4,19 @@
  */
 package mockit.coverage;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isPublic;
 
-import java.io.*;
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.StackTrace;
 
 public final class CallPoint implements Serializable {
     private static final long serialVersionUID = 362727169057343840L;

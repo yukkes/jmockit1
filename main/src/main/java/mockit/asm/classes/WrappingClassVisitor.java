@@ -1,10 +1,11 @@
 package mockit.asm.classes;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.annotations.*;
-import mockit.asm.fields.*;
-import mockit.asm.methods.*;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.fields.FieldVisitor;
+import mockit.asm.methods.MethodVisitor;
 
 /**
  * Same as {@link ClassVisitor}, except it always wraps a {@link ClassWriter}.

@@ -4,12 +4,14 @@
  */
 package mockit.coverage;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.data.*;
-import mockit.coverage.reporting.*;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.reporting.CoverageReport;
 
 @SuppressWarnings("DynamicRegexReplaceableByCompiledPattern")
 final class OutputFileGenerator {

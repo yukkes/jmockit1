@@ -4,19 +4,25 @@
  */
 package mockit.internal.faking;
 
-import static mockit.asm.jvmConstants.Access.*;
+import static mockit.asm.jvmConstants.Access.ABSTRACT;
+import static mockit.asm.jvmConstants.Access.BRIDGE;
+import static mockit.asm.jvmConstants.Access.NATIVE;
+import static mockit.asm.jvmConstants.Access.SYNTHETIC;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.*;
-import mockit.asm.metadata.*;
-import mockit.asm.metadata.ClassMetadataReader.*;
-import mockit.asm.types.*;
-import mockit.internal.*;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.asm.metadata.ClassMetadataReader;
+import mockit.asm.metadata.ClassMetadataReader.Attribute;
+import mockit.asm.metadata.ClassMetadataReader.MethodInfo;
+import mockit.asm.types.JavaType;
+import mockit.internal.ClassFile;
 import mockit.internal.faking.FakeMethods.FakeMethod;
-import mockit.internal.util.*;
+import mockit.internal.util.ClassLoad;
 
 /**
  * Responsible for collecting the signatures of all methods defined in a given fake class which are explicitly annotated

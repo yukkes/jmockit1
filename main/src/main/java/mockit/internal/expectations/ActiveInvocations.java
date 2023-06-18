@@ -4,14 +4,25 @@
  */
 package mockit.internal.expectations;
 
-import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.*;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_BOOLEAN;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_BYTE;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_CHAR;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_DOUBLE;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_FLOAT;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_INT;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_LONG;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_SHORT;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_STRING;
+import static mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher.ANY_VALUE;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.argumentMatching.*;
-import mockit.internal.expectations.transformation.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.transformation.ArgumentCapturing;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ClassLoad;
 
 @SuppressWarnings("unused")
 public final class ActiveInvocations {

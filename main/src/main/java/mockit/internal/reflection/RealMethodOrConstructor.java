@@ -4,11 +4,15 @@
  */
 package mockit.internal.reflection;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.ClassLoad;
+import mockit.internal.util.TypeDescriptor;
 
 public final class RealMethodOrConstructor {
     @Nonnull

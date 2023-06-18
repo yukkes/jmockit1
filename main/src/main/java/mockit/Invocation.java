@@ -4,11 +4,13 @@
  */
 package mockit;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Member;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.*;
+import mockit.internal.BaseInvocation;
 
 /**
  * A context object representing the current invocation to a mocked or faked method/constructor, to be passed as the

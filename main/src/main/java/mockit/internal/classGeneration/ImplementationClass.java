@@ -6,11 +6,14 @@ package mockit.internal.classGeneration;
 
 import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.asm.classes.*;
-import mockit.internal.*;
-import mockit.internal.util.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.internal.ClassFile;
+import mockit.internal.util.ClassLoad;
+import mockit.internal.util.GeneratedClasses;
+import mockit.internal.util.Utilities;
 
 /**
  * Allows the creation of new implementation classes for interfaces and abstract classes.

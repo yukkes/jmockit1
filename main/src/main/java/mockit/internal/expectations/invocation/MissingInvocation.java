@@ -4,7 +4,7 @@
  */
 package mockit.internal.expectations.invocation;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 /**
  * Thrown to indicate that one or more expected invocations still had not occurred by the end of the test.

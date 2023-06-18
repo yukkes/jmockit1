@@ -4,13 +4,16 @@
  */
 package mockit.internal.faking;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.faking.FakeMethods.*;
-import mockit.internal.reflection.*;
-import mockit.internal.util.*;
+import mockit.internal.faking.FakeMethods.FakeMethod;
+import mockit.internal.reflection.MethodReflection;
+import mockit.internal.reflection.RealMethodOrConstructor;
+import mockit.internal.util.ClassLoad;
 
 final class FakeState {
     private static final ClassLoader THIS_CL = FakeState.class.getClassLoader();

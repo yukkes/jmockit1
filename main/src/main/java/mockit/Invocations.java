@@ -4,16 +4,34 @@
  */
 package mockit;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.regex.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.argumentMatching.*;
-import mockit.internal.startup.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.TestOnlyPhase;
+import mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.argumentMatching.CaptureMatcher;
+import mockit.internal.expectations.argumentMatching.ClassMatcher;
+import mockit.internal.expectations.argumentMatching.InequalityMatcher;
+import mockit.internal.expectations.argumentMatching.LenientEqualityMatcher;
+import mockit.internal.expectations.argumentMatching.NonNullityMatcher;
+import mockit.internal.expectations.argumentMatching.NullityMatcher;
+import mockit.internal.expectations.argumentMatching.NumericEqualityMatcher;
+import mockit.internal.expectations.argumentMatching.PatternMatcher;
+import mockit.internal.expectations.argumentMatching.ReflectiveMatcher;
+import mockit.internal.expectations.argumentMatching.SamenessMatcher;
+import mockit.internal.expectations.argumentMatching.StringContainmentMatcher;
+import mockit.internal.expectations.argumentMatching.StringPrefixMatcher;
+import mockit.internal.expectations.argumentMatching.StringSuffixMatcher;
+import mockit.internal.startup.Startup;
+import mockit.internal.util.DefaultValues;
 
 /**
  * Provides common API for use inside {@linkplain Expectations expectation} and {@linkplain Verifications verification}

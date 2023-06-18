@@ -4,13 +4,20 @@
  */
 package mockit.integration.springframework;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.injection.*;
-import mockit.internal.state.*;
+import mockit.Injectable;
+import mockit.Invocation;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Tested;
+import mockit.internal.injection.BeanExporter;
+import mockit.internal.injection.TestedClassInstantiations;
+import mockit.internal.state.TestRun;
 
-import org.springframework.beans.factory.support.*;
+import org.springframework.beans.factory.support.AbstractBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 /**
  * If applied, this fake will take over calls to {@link AbstractBeanFactory#getBean(String)} and

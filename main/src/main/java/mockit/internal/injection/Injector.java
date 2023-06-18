@@ -4,23 +4,35 @@
  */
 package mockit.internal.injection;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isFinal;
+import static java.lang.reflect.Modifier.isStatic;
+import static java.lang.reflect.Modifier.isVolatile;
 import static java.util.regex.Pattern.compile;
 
-import static mockit.internal.injection.InjectionPoint.*;
+import static mockit.internal.injection.InjectionPoint.PERSISTENCE_UNIT_CLASS;
+import static mockit.internal.injection.InjectionPoint.convertToLegalJavaIdentifierIfNeeded;
+import static mockit.internal.injection.InjectionPoint.getQualifiedName;
+import static mockit.internal.injection.InjectionPoint.isServlet;
+import static mockit.internal.injection.InjectionPoint.kindOfInjectionPoint;
+import static mockit.internal.injection.InjectionPoint.wrapInProviderIfNeeded;
 import static mockit.internal.injection.InjectionProvider.NULL;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.regex.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
-import javax.persistence.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.Entity;
 
-import mockit.internal.injection.field.*;
-import mockit.internal.injection.full.*;
-import mockit.internal.reflection.*;
-import mockit.internal.util.*;
+import mockit.internal.injection.InjectionPoint.KindOfInjectionPoint;
+import mockit.internal.injection.field.FieldToInject;
+import mockit.internal.injection.full.FullInjection;
+import mockit.internal.reflection.FieldReflection;
+import mockit.internal.util.DefaultValues;
 
 public class Injector {
     private static final Pattern TYPE_NAME = compile("class |interface |java\\.lang\\.");

@@ -1,13 +1,22 @@
 package mockit.asm.controlFlow;
 
-import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.*;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.APPEND_FRAME;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.CHOP_FRAME;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.FULL_FRAME;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.SAME_FRAME;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.SAME_FRAME_EXTENDED;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.SAME_LOCALS_1_STACK_ITEM_FRAME;
+import static mockit.asm.controlFlow.StackMapTableWriter.LocalsAndStackItemsDiff.SAME_LOCALS_1_STACK_ITEM_FRAME_EXTENDED;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.types.*;
-import mockit.asm.util.*;
+import mockit.asm.constantPool.AttributeWriter;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.constantPool.UninitializedTypeTableItem;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.types.JavaType;
+import mockit.asm.util.ByteVector;
 
 /**
  * Writes the "StackMapTable" method attribute (or "StackMap" for classfiles older than Java 6).

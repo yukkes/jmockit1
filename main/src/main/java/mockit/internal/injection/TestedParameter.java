@@ -4,11 +4,14 @@
  */
 package mockit.internal.injection;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.Tested;
+import mockit.internal.state.ParameterNames;
+import mockit.internal.util.TestMethod;
+import mockit.internal.util.TypeConversion;
 
 final class TestedParameter extends TestedObject {
     @Nonnull

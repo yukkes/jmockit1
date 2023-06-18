@@ -4,11 +4,13 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.util.*;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.expectations.argumentMatching.*;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.argumentMatching.EqualityMatcher;
+import mockit.internal.expectations.argumentMatching.LenientEqualityMatcher;
 
 final class ArgumentValuesAndMatchersWithoutVarargs extends ArgumentValuesAndMatchers {
     ArgumentValuesAndMatchersWithoutVarargs(@Nonnull InvocationArguments signature, @Nonnull Object[] values) {

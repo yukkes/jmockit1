@@ -4,13 +4,21 @@
  */
 package mockit.internal.expectations.transformation;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
-import static mockit.internal.util.TypeConversionBytecode.*;
+import static mockit.asm.jvmConstants.Opcodes.ACONST_NULL;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
+import static mockit.asm.jvmConstants.Opcodes.SIPUSH;
+import static mockit.internal.util.TypeConversionBytecode.generateCastOrUnboxing;
+import static mockit.internal.util.TypeConversionBytecode.isPrimitiveWrapper;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
+import mockit.asm.methods.MethodWriter;
+import mockit.asm.types.ArrayType;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.ObjectType;
+import mockit.asm.types.ReferenceType;
 
 final class Capture {
     @Nonnull

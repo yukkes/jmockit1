@@ -4,12 +4,13 @@
  */
 package mockit.coverage.reporting.lineCoverage;
 
-import java.io.*;
+import java.io.PrintWriter;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.coverage.lines.*;
-import mockit.coverage.reporting.parsing.*;
+import mockit.coverage.lines.PerFileLineCoverage;
+import mockit.coverage.reporting.parsing.LineParser;
 
 public final class LineCoverageOutput {
     @Nonnull

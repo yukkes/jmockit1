@@ -4,11 +4,16 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
+import mockit.internal.expectations.invocation.InvocationConstraints;
+import mockit.internal.expectations.invocation.UnexpectedInvocation;
 
 final class ReplayPhase extends Phase {
     @Nonnull

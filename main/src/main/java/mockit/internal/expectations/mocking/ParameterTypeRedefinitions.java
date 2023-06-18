@@ -4,13 +4,16 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.TestMethod;
 
 public final class ParameterTypeRedefinitions extends TypeRedefinitions {
     @Nonnull

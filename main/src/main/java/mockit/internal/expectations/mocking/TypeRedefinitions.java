@@ -4,12 +4,14 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.state.*;
+import mockit.internal.state.TestRun;
 
 public class TypeRedefinitions {
     @Nonnull

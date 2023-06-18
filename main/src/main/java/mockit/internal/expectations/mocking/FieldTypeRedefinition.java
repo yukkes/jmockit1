@@ -4,11 +4,11 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.reflect.*;
+import java.lang.reflect.TypeVariable;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.state.*;
+import mockit.internal.state.TestRun;
 
 final class FieldTypeRedefinition extends TypeRedefinition {
     private boolean usePartialMocking;

@@ -1,8 +1,10 @@
 package mockit.asm.constantPool;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.jvmConstants.*;
+import mockit.asm.jvmConstants.ConstantPoolTypes;
 
 /**
  * A constant pool item of a given {@linkplain ConstantPoolTypes type}.

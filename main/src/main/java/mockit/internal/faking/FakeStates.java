@@ -4,13 +4,18 @@
  */
 package mockit.internal.faking;
 
-import java.util.*;
-import java.util.Map.*;
-import java.util.regex.*;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.ClassLoad;
 
 /**
  * Holds state associated with fake class containing {@linkplain mockit.Mock annotated fakes}.

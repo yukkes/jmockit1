@@ -1,6 +1,7 @@
 package mockit.asm.types;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public final class ObjectType extends ReferenceType {
     @Nonnull

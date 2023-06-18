@@ -1,16 +1,43 @@
 package mockit.asm.methods;
 
-import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.*;
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.FIELDORMETH;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.IINC_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.IMPLVAR;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.INDYMETH;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.ITFMETH;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.LABEL;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.LABELW;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.LDCW_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.LDC_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.LOOK_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.MANA_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.NOARG;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.SBYTE;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.SHORT;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.TABL_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.TYPE_INSN;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.VAR;
+import static mockit.asm.jvmConstants.JVMInstruction.InstructionType.WIDE_INSN;
+import static mockit.asm.jvmConstants.Opcodes.IINC;
+import static mockit.asm.jvmConstants.Opcodes.ILOAD;
+import static mockit.asm.jvmConstants.Opcodes.ILOAD_0;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEINTERFACE;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEVIRTUAL;
+import static mockit.asm.jvmConstants.Opcodes.ISTORE;
+import static mockit.asm.jvmConstants.Opcodes.ISTORE_0;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.annotations.*;
-import mockit.asm.classes.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.util.*;
+import mockit.asm.AnnotatedReader;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.jvmConstants.ConstantPoolTypes;
+import mockit.asm.jvmConstants.JVMInstruction;
+import mockit.asm.util.MethodHandle;
 
 @SuppressWarnings("OverlyComplexClass")
 public final class MethodReader extends AnnotatedReader {

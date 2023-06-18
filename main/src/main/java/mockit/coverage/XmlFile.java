@@ -4,14 +4,20 @@
  */
 package mockit.coverage;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.util.Map.*;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.coverage.data.*;
-import mockit.coverage.lines.*;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.data.FileCoverageData;
+import mockit.coverage.lines.LineCoverageData;
+import mockit.coverage.lines.PerFileLineCoverage;
 
 /**
  * Generates a XML file containing the coverage data gathered by the test run. The XML schema used is the one

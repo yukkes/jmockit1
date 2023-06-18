@@ -4,13 +4,14 @@
  */
 package mockit.internal.expectations;
 
-import static mockit.internal.expectations.state.ExecutingTest.*;
+import static mockit.internal.expectations.state.ExecutingTest.isInstanceMethodWithStandardBehavior;
 
-import java.util.*;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
 
 public final class RecordPhase extends TestOnlyPhase {
     RecordPhase(@Nonnull PhasedExecutionState executionState) {

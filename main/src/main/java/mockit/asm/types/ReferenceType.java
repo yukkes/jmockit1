@@ -1,8 +1,10 @@
 package mockit.asm.types;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ACONST_NULL;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public abstract class ReferenceType extends JavaType {
     /**

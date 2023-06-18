@@ -4,11 +4,13 @@
  */
 package mockit.coverage.reporting;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 public final class OutputFile extends PrintWriter {
     private static final Pattern PATH_SEPARATOR = Pattern.compile("/");

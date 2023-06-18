@@ -1,18 +1,47 @@
 package mockit.asm.methods;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.DLOAD;
+import static mockit.asm.jvmConstants.Opcodes.DSTORE;
+import static mockit.asm.jvmConstants.Opcodes.GOTO;
+import static mockit.asm.jvmConstants.Opcodes.GOTO_W;
+import static mockit.asm.jvmConstants.Opcodes.IINC;
+import static mockit.asm.jvmConstants.Opcodes.ILOAD;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEDYNAMIC;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEINTERFACE;
+import static mockit.asm.jvmConstants.Opcodes.ISTORE;
+import static mockit.asm.jvmConstants.Opcodes.LDC;
+import static mockit.asm.jvmConstants.Opcodes.LDC2_W;
+import static mockit.asm.jvmConstants.Opcodes.LDC_W;
+import static mockit.asm.jvmConstants.Opcodes.LLOAD;
+import static mockit.asm.jvmConstants.Opcodes.LOOKUPSWITCH;
+import static mockit.asm.jvmConstants.Opcodes.LSTORE;
+import static mockit.asm.jvmConstants.Opcodes.MULTIANEWARRAY;
+import static mockit.asm.jvmConstants.Opcodes.SIPUSH;
+import static mockit.asm.jvmConstants.Opcodes.TABLESWITCH;
+import static mockit.asm.jvmConstants.Opcodes.WIDE;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.annotations.*;
-import mockit.asm.classes.*;
-import mockit.asm.constantPool.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.exceptionHandling.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.types.*;
-import mockit.asm.util.*;
+import mockit.asm.SignatureWriter;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.classes.ClassWriter;
+import mockit.asm.constantPool.ClassMemberItem;
+import mockit.asm.constantPool.DynamicItem;
+import mockit.asm.constantPool.Item;
+import mockit.asm.constantPool.LongValueItem;
+import mockit.asm.constantPool.StringItem;
+import mockit.asm.controlFlow.CFGAnalysis;
+import mockit.asm.controlFlow.Frame;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.controlFlow.StackMapTableWriter;
+import mockit.asm.exceptionHandling.ExceptionHandling;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.jvmConstants.Opcodes;
+import mockit.asm.types.JavaType;
+import mockit.asm.util.ByteVector;
+import mockit.asm.util.MethodHandle;
 
 /**
  * A {@link MethodVisitor} that generates methods in bytecode form. Each visit method of this class appends the bytecode

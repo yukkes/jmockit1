@@ -4,12 +4,19 @@
  */
 package mockit.internal.util;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ASTORE;
+import static mockit.asm.jvmConstants.Opcodes.CHECKCAST;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESTATIC;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEVIRTUAL;
+import static mockit.asm.jvmConstants.Opcodes.POP;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.PrimitiveType;
+import mockit.asm.types.ReferenceType;
 
 public final class TypeConversionBytecode {
     private TypeConversionBytecode() {

@@ -4,11 +4,14 @@
  */
 package mockit.internal.capturing;
 
-import static mockit.internal.util.GeneratedClasses.*;
+import static mockit.internal.util.GeneratedClasses.isExternallyGeneratedSubclass;
+import static mockit.internal.util.GeneratedClasses.isGeneratedClass;
 
-import java.security.*;
+import java.security.ProtectionDomain;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 final class CapturedType {
     private static final ProtectionDomain JMOCKIT_DOMAIN = CapturedType.class.getProtectionDomain();

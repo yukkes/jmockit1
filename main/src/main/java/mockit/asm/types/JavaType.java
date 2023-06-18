@@ -1,8 +1,10 @@
 package mockit.asm.types;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 /**
  * A Java field or method type. This class can be used to make it easier to manipulate type and method descriptors.

@@ -1,9 +1,12 @@
 package mockit.asm.fields;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.classes.*;
+import mockit.asm.AnnotatedReader;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassVisitor;
 
 public final class FieldReader extends AnnotatedReader {
     @Nonnull

@@ -4,16 +4,25 @@
  */
 package mockit.coverage.reporting;
 
-import java.io.*;
-import java.util.*;
-import java.util.Map.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.coverage.data.*;
-import mockit.coverage.reporting.packages.*;
-import mockit.coverage.reporting.sourceFiles.*;
+import mockit.coverage.Configuration;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.data.FileCoverageData;
+import mockit.coverage.reporting.packages.IndexPage;
+import mockit.coverage.reporting.sourceFiles.FileCoverageReport;
+import mockit.coverage.reporting.sourceFiles.InputFile;
 
 public final class CoverageReport {
     @Nonnull

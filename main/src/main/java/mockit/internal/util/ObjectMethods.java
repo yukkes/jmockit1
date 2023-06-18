@@ -4,7 +4,8 @@
  */
 package mockit.internal.util;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class ObjectMethods {
     private ObjectMethods() {

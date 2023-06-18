@@ -6,9 +6,10 @@ package mockit.internal.reflection;
 
 import static mockit.internal.util.Utilities.ensureThatMemberIsAccessible;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class FieldReflection {
     private FieldReflection() {

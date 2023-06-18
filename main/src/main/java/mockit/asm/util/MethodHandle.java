@@ -1,6 +1,7 @@
 package mockit.asm.util;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 /**
  * A reference to a method.

@@ -1,12 +1,17 @@
 package mockit.asm.exceptionHandling;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.util.*;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.controlFlow.Edge;
+import mockit.asm.controlFlow.FrameTypeMask;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.util.ByteVector;
 
 public final class ExceptionHandling {
     @Nonnull

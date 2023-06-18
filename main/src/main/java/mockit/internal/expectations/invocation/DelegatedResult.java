@@ -4,19 +4,24 @@
  */
 package mockit.internal.expectations.invocation;
 
-import static mockit.internal.reflection.MethodReflection.*;
+import static mockit.internal.reflection.MethodReflection.JAVA_LANG;
+import static mockit.internal.reflection.MethodReflection.findNonPrivateHandlerMethod;
+import static mockit.internal.reflection.MethodReflection.invoke;
 
-import java.lang.reflect.*;
-import java.util.concurrent.locks.*;
+import java.lang.reflect.Method;
+import java.util.concurrent.locks.ReentrantLock;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.asm.types.*;
-import mockit.internal.expectations.*;
-import mockit.internal.reflection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.Delegate;
+import mockit.Invocation;
+import mockit.asm.types.JavaType;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.reflection.ParameterReflection;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.MethodFormatter;
+import mockit.internal.util.TypeDescriptor;
 
 final class DelegatedResult extends InvocationResult {
     private static final Object[] NO_ARGS = {};

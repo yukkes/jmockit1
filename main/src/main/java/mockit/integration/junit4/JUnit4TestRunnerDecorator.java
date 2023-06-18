@@ -4,19 +4,25 @@
  */
 package mockit.integration.junit4;
 
-import static mockit.internal.util.StackTrace.*;
+import static mockit.internal.util.StackTrace.filterStackTrace;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.integration.*;
-import mockit.internal.expectations.*;
-import mockit.internal.faking.*;
-import mockit.internal.state.*;
+import mockit.integration.TestRunnerDecorator;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.faking.FakeInvocation;
+import mockit.internal.state.SavePoint;
+import mockit.internal.state.TestRun;
 
-import org.junit.*;
-import org.junit.runners.model.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.runners.model.FrameworkMethod;
 
 final class JUnit4TestRunnerDecorator extends TestRunnerDecorator {
     @Nullable

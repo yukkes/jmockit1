@@ -4,14 +4,18 @@
  */
 package mockit.coverage.lines;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.controlFlow.*;
-import mockit.coverage.*;
+import mockit.asm.controlFlow.Label;
+import mockit.coverage.CallPoint;
 
 /**
  * Coverage data gathered for a single executable line of code in a source file.

@@ -1,10 +1,13 @@
 package mockit.asm.methods;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.util.*;
+import mockit.asm.constantPool.AttributeWriter;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.util.ByteVector;
 
 /**
  * Writes the bytecode for the "LineNumberTable" method code attribute.

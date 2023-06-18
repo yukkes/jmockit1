@@ -4,12 +4,17 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.argumentMatching.*;
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
+import mockit.internal.expectations.invocation.InvocationArguments;
 
 public abstract class BaseVerificationPhase extends TestOnlyPhase {
     @Nonnull

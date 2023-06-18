@@ -4,17 +4,31 @@
  */
 package mockit.coverage.modification;
 
-import static mockit.asm.jvmConstants.Access.*;
+import static mockit.asm.jvmConstants.Access.ABSTRACT;
+import static mockit.asm.jvmConstants.Access.ANNOTATION;
+import static mockit.asm.jvmConstants.Access.ENUM;
+import static mockit.asm.jvmConstants.Access.FINAL;
+import static mockit.asm.jvmConstants.Access.INTERFACE;
+import static mockit.asm.jvmConstants.Access.STATIC;
+import static mockit.asm.jvmConstants.Access.SUPER;
+import static mockit.asm.jvmConstants.Access.SYNTHETIC;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.fields.*;
-import mockit.asm.methods.*;
-import mockit.coverage.data.*;
-import mockit.internal.*;
+import mockit.asm.classes.ClassInfo;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.classes.ClassWriter;
+import mockit.asm.classes.WrappingClassVisitor;
+import mockit.asm.fields.FieldVisitor;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.methods.MethodWriter;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.data.FileCoverageData;
+import mockit.internal.ClassFile;
 
 final class CoverageModifier extends WrappingClassVisitor {
     private static final Map<String, CoverageModifier> INNER_CLASS_MODIFIERS = new HashMap<>();

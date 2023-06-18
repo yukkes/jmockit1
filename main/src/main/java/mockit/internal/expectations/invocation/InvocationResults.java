@@ -4,13 +4,17 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Array;
+import java.util.Iterator;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.expectations.invocation.InvocationResult.*;
+import mockit.Delegate;
+import mockit.internal.expectations.invocation.InvocationResult.DeferredResults;
+import mockit.internal.expectations.invocation.InvocationResult.ReturnValueResult;
+import mockit.internal.expectations.invocation.InvocationResult.ThrowableResult;
 
 public final class InvocationResults {
     @Nonnull

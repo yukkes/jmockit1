@@ -4,15 +4,30 @@
  */
 package mockit.coverage.data;
 
-import java.io.*;
-import java.util.*;
-import java.util.Map.*;
-import java.util.jar.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.internal.util.*;
+import mockit.coverage.CoveragePercentage;
+import mockit.internal.util.Utilities;
 
 /**
  * Coverage data captured for all source files exercised during a test run.

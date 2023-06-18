@@ -4,7 +4,8 @@
  */
 package mockit.internal.expectations;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 final class FailureState {
     @Nonnull

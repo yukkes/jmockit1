@@ -4,18 +4,26 @@
  */
 package mockit.internal;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
-import java.util.*;
-import java.util.concurrent.locks.*;
-import java.util.jar.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.lang.reflect.InvocationHandler;
+import java.net.URL;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.faking.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.mocking.MockedBridge;
+import mockit.internal.faking.FakeBridge;
+import mockit.internal.faking.FakeMethodBridge;
+import mockit.internal.util.ClassLoad;
+import mockit.internal.util.StackTrace;
 
 public abstract class ClassLoadingBridge implements InvocationHandler {
     private static final Object[] EMPTY_ARGS = {};

@@ -4,13 +4,14 @@
  */
 package mockit.internal.injection.field;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.injection.*;
-import mockit.internal.injection.InjectionPoint.*;
+import mockit.internal.injection.InjectionPoint;
+import mockit.internal.injection.InjectionPoint.KindOfInjectionPoint;
+import mockit.internal.injection.InjectionProvider;
 
 public final class FieldToInject extends InjectionProvider {
     @Nonnull

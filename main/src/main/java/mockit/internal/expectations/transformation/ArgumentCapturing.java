@@ -4,13 +4,20 @@
  */
 package mockit.internal.expectations.transformation;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ASTORE;
+import static mockit.asm.jvmConstants.Opcodes.CHECKCAST;
+import static mockit.asm.jvmConstants.Opcodes.ISTORE;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
+import mockit.asm.types.ReferenceType;
 
 public final class ArgumentCapturing {
     private static final Map<Integer, String> varIndexToTypeDesc = new HashMap<>();

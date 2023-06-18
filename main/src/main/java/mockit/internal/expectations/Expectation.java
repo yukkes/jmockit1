@@ -4,10 +4,14 @@
  */
 package mockit.internal.expectations;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.invocation.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
+import mockit.internal.expectations.invocation.InvocationConstraints;
+import mockit.internal.expectations.invocation.InvocationResults;
+import mockit.internal.expectations.invocation.ReturnTypeConversion;
+import mockit.internal.util.TypeDescriptor;
 
 final class Expectation {
     @Nullable

@@ -4,11 +4,12 @@
  */
 package mockit.coverage;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.coverage.data.*;
+import mockit.coverage.data.CoverageData;
 
 final class AccretionFile {
     @Nonnull

@@ -4,9 +4,11 @@
  */
 package mockit.coverage.reporting.parsing;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.reporting.parsing.LineElement.*;
+import mockit.coverage.reporting.parsing.LineElement.ElementType;
 
 /**
  * Parses a source line into one or more consecutive segments, identifying which ones contain Java code and which ones

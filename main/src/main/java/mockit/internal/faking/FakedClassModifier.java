@@ -4,22 +4,43 @@
  */
 package mockit.internal.faking;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isNative;
+import static java.lang.reflect.Modifier.isPrivate;
+import static java.lang.reflect.Modifier.isPublic;
+import static java.lang.reflect.Modifier.isStatic;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ACONST_NULL;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
+import static mockit.asm.jvmConstants.Opcodes.CHECKCAST;
+import static mockit.asm.jvmConstants.Opcodes.DUP;
+import static mockit.asm.jvmConstants.Opcodes.DUP_X1;
+import static mockit.asm.jvmConstants.Opcodes.IFEQ;
+import static mockit.asm.jvmConstants.Opcodes.IFNE;
+import static mockit.asm.jvmConstants.Opcodes.IF_ACMPEQ;
+import static mockit.asm.jvmConstants.Opcodes.ILOAD;
+import static mockit.asm.jvmConstants.Opcodes.INSTANCEOF;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESTATIC;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEVIRTUAL;
+import static mockit.asm.jvmConstants.Opcodes.IRETURN;
+import static mockit.asm.jvmConstants.Opcodes.RETURN;
+import static mockit.asm.jvmConstants.Opcodes.SIPUSH;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.asm.classes.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
-import mockit.internal.*;
-import mockit.internal.faking.FakeMethods.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.MockUp;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.jvmConstants.Access;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.ReferenceType;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.faking.FakeMethods.FakeMethod;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ClassLoad;
 
 /**
  * Responsible for generating all necessary bytecode in the redefined (real) class. Such code will redirect calls made

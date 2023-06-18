@@ -1,11 +1,40 @@
 package mockit.asm.classes;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.CLASS;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.DOUBLE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.DYNAMIC;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FIELD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FLOAT;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.IMETHOD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.INTEGER;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.INVOKE_DYNAMIC;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.LONG;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_HANDLE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_TYPE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.MODULE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.NAME_TYPE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.PACKAGE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.STRING;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.UTF8;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.util.*;
+import mockit.asm.constantPool.ClassMemberItem;
+import mockit.asm.constantPool.DoubleItem;
+import mockit.asm.constantPool.DynamicItem;
+import mockit.asm.constantPool.FloatItem;
+import mockit.asm.constantPool.IntItem;
+import mockit.asm.constantPool.Item;
+import mockit.asm.constantPool.LongItem;
+import mockit.asm.constantPool.MethodHandleItem;
+import mockit.asm.constantPool.ModuleItem;
+import mockit.asm.constantPool.NameAndTypeItem;
+import mockit.asm.constantPool.PackageItem;
+import mockit.asm.constantPool.StringItem;
+import mockit.asm.util.MethodHandle;
 
 /**
  * Copies the constant pool data from a {@link ClassReader} into a {@link ClassWriter}.

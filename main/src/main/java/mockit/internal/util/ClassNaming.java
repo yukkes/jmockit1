@@ -4,7 +4,7 @@
  */
 package mockit.internal.util;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 public final class ClassNaming {
     private ClassNaming() {

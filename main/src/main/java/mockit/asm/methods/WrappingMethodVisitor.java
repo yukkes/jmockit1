@@ -1,10 +1,12 @@
 package mockit.asm.methods;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.annotations.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.util.*;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.util.MethodHandle;
 
 /**
  * Same as {@link MethodVisitor}, except it always wraps a {@link MethodWriter}.

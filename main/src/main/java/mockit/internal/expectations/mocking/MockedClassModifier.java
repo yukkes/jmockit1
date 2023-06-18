@@ -4,25 +4,39 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.ABSTRACT;
+import static java.lang.reflect.Modifier.FINAL;
+import static java.lang.reflect.Modifier.PRIVATE;
+import static java.lang.reflect.Modifier.PROTECTED;
+import static java.lang.reflect.Modifier.PUBLIC;
+import static java.lang.reflect.Modifier.STATIC;
+import static java.lang.reflect.Modifier.isNative;
 
 import static mockit.asm.jvmConstants.Access.ENUM;
 import static mockit.asm.jvmConstants.Access.SYNTHETIC;
-import static mockit.asm.jvmConstants.Opcodes.*;
-import static mockit.internal.expectations.MockingFilters.*;
+import static mockit.asm.jvmConstants.Opcodes.ACONST_NULL;
+import static mockit.asm.jvmConstants.Opcodes.DUP;
+import static mockit.asm.jvmConstants.Opcodes.IF_ACMPEQ;
+import static mockit.asm.jvmConstants.Opcodes.POP;
+import static mockit.internal.expectations.MockingFilters.validateAsMockable;
 import static mockit.internal.util.ObjectMethods.isMethodFromObject;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.HOTSPOT_VM;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
-import mockit.internal.*;
-import mockit.internal.expectations.*;
+import mockit.asm.classes.ClassInfo;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.methods.MethodVisitor;
+import mockit.asm.types.JavaType;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.expectations.ExecutionMode;
 
 final class MockedClassModifier extends BaseClassModifier {
     private static final int METHOD_ACCESS_MASK = PRIVATE + SYNTHETIC + ABSTRACT;

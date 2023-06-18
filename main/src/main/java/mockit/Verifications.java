@@ -4,13 +4,15 @@
  */
 package mockit;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.argumentMatching.*;
-import mockit.internal.state.*;
+import mockit.internal.expectations.BaseVerificationPhase;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher;
+import mockit.internal.state.TestRun;
 
 /**
  * Used to <em>verify</em> a set of expectations on available {@linkplain Mocked mocked} types and/or instances, against

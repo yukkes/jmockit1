@@ -4,11 +4,13 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.argumentMatching.*;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
 
 final class VerifiedExpectation {
     @Nonnull

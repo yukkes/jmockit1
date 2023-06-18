@@ -4,10 +4,15 @@
  */
 package mockit.internal.reflection;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This marker interface exists only to guarantee that JMockit can get the bytecode definition of each Proxy class it

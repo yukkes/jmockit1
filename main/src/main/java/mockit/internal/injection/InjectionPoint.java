@@ -6,22 +6,33 @@ package mockit.internal.injection;
 
 import static java.lang.Character.toUpperCase;
 
-import static mockit.internal.reflection.AnnotationReflection.*;
-import static mockit.internal.reflection.MethodReflection.*;
-import static mockit.internal.reflection.ParameterReflection.*;
-import static mockit.internal.util.ClassLoad.*;
+import static mockit.internal.reflection.AnnotationReflection.readAnnotationAttribute;
+import static mockit.internal.reflection.AnnotationReflection.readAnnotationAttributeIfAvailable;
+import static mockit.internal.reflection.MethodReflection.invokePublicIfAvailable;
+import static mockit.internal.reflection.ParameterReflection.NO_PARAMETERS;
+import static mockit.internal.util.ClassLoad.searchTypeInClasspath;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.Iterator;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.ejb.*;
-import javax.enterprise.inject.*;
-import javax.enterprise.util.*;
-import javax.inject.*;
-import javax.persistence.*;
-import javax.servlet.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.enterprise.inject.Instance;
+import javax.enterprise.util.TypeLiteral;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.servlet.Servlet;
 
 public final class InjectionPoint {
     public enum KindOfInjectionPoint {

@@ -4,14 +4,20 @@
  */
 package mockit.coverage.dataItems;
 
-import java.io.*;
-import java.util.*;
-import java.util.Map.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.coverage.data.*;
+import mockit.coverage.CoveragePercentage;
+import mockit.coverage.data.PerFileCoverage;
 
 public final class PerFileDataCoverage implements PerFileCoverage {
     private static final long serialVersionUID = -4561686103982673490L;

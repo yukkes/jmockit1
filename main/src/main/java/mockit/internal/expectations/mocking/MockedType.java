@@ -4,20 +4,32 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isFinal;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.state.*;
-import mockit.internal.injection.*;
-import mockit.internal.reflection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.Capturing;
+import mockit.Injectable;
+import mockit.Mocked;
+import mockit.internal.expectations.MockingFilters;
+import mockit.internal.expectations.state.CascadingTypes;
+import mockit.internal.expectations.state.ExecutingTest;
+import mockit.internal.injection.InjectionProvider;
+import mockit.internal.reflection.FieldReflection;
+import mockit.internal.state.ParameterNames;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.DefaultValues;
+import mockit.internal.util.TestMethod;
+import mockit.internal.util.TypeConversion;
+import mockit.internal.util.Utilities;
 
 @SuppressWarnings("EqualsAndHashcode")
 public final class MockedType extends InjectionProvider {

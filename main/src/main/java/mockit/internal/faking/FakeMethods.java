@@ -4,20 +4,23 @@
  */
 package mockit.internal.faking;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isNative;
 
-import static mockit.internal.util.ObjectMethods.*;
+import static mockit.internal.util.ObjectMethods.isMethodFromObject;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.*;
-import mockit.internal.reflection.*;
-import mockit.internal.reflection.GenericTypeReflection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.internal.ClassLoadingBridge;
+import mockit.internal.reflection.GenericTypeReflection;
+import mockit.internal.reflection.GenericTypeReflection.GenericSignature;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.Utilities;
 
 /**
  * A container for the fake methods "collected" from a fake class.

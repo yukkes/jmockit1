@@ -4,12 +4,16 @@
  */
 package mockit.coverage.lines;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
+import mockit.coverage.CallPoint;
+import mockit.coverage.Configuration;
 
 public class LineSegmentData implements Serializable {
     private static final long serialVersionUID = -6233980722802474992L;

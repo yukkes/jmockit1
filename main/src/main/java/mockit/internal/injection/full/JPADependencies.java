@@ -4,17 +4,28 @@
  */
 package mockit.internal.injection.full;
 
-import java.io.*;
-import java.lang.annotation.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
 
-import javax.annotation.*;
-import javax.persistence.*;
-import javax.xml.parsers.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import mockit.internal.injection.*;
+import mockit.internal.injection.InjectionPoint;
+import mockit.internal.injection.InjectionProvider;
+import mockit.internal.injection.InjectionState;
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Detects and resolves dependencies belonging to the <code>javax.persistence</code> API, namely

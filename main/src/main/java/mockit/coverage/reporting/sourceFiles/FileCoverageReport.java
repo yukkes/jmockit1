@@ -4,16 +4,20 @@
  */
 package mockit.coverage.reporting.sourceFiles;
 
-import java.io.*;
+import java.io.IOException;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.data.*;
-import mockit.coverage.dataItems.*;
-import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.dataCoverage.*;
-import mockit.coverage.reporting.lineCoverage.*;
-import mockit.coverage.reporting.parsing.*;
+import mockit.coverage.data.FileCoverageData;
+import mockit.coverage.dataItems.PerFileDataCoverage;
+import mockit.coverage.reporting.OutputFile;
+import mockit.coverage.reporting.dataCoverage.DataCoverageOutput;
+import mockit.coverage.reporting.lineCoverage.LineCoverageOutput;
+import mockit.coverage.reporting.parsing.FileParser;
+import mockit.coverage.reporting.parsing.LineElement;
+import mockit.coverage.reporting.parsing.LineParser;
 
 /**
  * Generates an HTML page containing line-by-line coverage information for a single source file.

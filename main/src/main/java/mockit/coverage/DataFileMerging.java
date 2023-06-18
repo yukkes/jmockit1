@@ -4,12 +4,14 @@
  */
 package mockit.coverage;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.coverage.data.*;
+import mockit.coverage.data.CoverageData;
 
 final class DataFileMerging {
     @Nonnull

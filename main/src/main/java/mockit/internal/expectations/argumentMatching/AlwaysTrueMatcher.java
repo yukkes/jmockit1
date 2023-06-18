@@ -4,7 +4,8 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class AlwaysTrueMatcher implements ArgumentMatcher<AlwaysTrueMatcher> {
     public static final ArgumentMatcher<?> ANY_STRING = new AlwaysTrueMatcher(String.class, "String");

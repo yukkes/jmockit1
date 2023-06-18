@@ -4,11 +4,14 @@
  */
 package mockit.coverage.lines;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.controlFlow.*;
+import mockit.asm.controlFlow.Label;
 
 /**
  * Coverage data gathered for a branch inside a line of source code.

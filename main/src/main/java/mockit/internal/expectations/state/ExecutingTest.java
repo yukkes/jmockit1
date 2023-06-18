@@ -4,16 +4,19 @@
  */
 package mockit.internal.expectations.state;
 
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.containsReference;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.*;
-import mockit.internal.expectations.*;
-import mockit.internal.expectations.mocking.*;
+import mockit.internal.BaseInvocation;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.expectations.mocking.MockedType;
+import mockit.internal.expectations.mocking.ParameterTypeRedefinitions;
 
 public final class ExecutingTest {
     @Nullable

@@ -4,15 +4,22 @@
  */
 package mockit.internal.injection.full;
 
-import java.beans.*;
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
-import javax.annotation.sql.*;
-import javax.sql.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.sql.DataSourceDefinition;
+import javax.annotation.sql.DataSourceDefinitions;
+import javax.sql.CommonDataSource;
 
-import mockit.internal.injection.*;
+import mockit.internal.injection.InjectionPoint;
+import mockit.internal.injection.TestedClass;
 
 final class TestDataSource {
     @Nullable

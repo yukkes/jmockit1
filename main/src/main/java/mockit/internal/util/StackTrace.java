@@ -4,9 +4,9 @@
  */
 package mockit.internal.util;
 
-import java.io.*;
+import java.io.IOException;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 /**
  * Provides utility methods to extract and filter stack trace information.

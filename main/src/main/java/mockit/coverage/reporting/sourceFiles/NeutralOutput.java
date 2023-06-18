@@ -4,11 +4,13 @@
  */
 package mockit.coverage.reporting.sourceFiles;
 
-import java.io.*;
+import java.io.PrintWriter;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.reporting.parsing.*;
+import mockit.coverage.reporting.parsing.LineElement;
+import mockit.coverage.reporting.parsing.LineParser;
 
 final class NeutralOutput {
     @Nonnull

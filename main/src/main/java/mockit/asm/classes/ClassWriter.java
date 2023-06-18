@@ -1,16 +1,23 @@
 package mockit.asm.classes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.constantPool.*;
-import mockit.asm.fields.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.methods.*;
-import mockit.asm.util.*;
-import mockit.internal.util.*;
+import mockit.asm.BaseWriter;
+import mockit.asm.SignatureWriter;
+import mockit.asm.constantPool.AttributeWriter;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.constantPool.DynamicItem;
+import mockit.asm.fields.FieldVisitor;
+import mockit.asm.jvmConstants.ClassVersion;
+import mockit.asm.methods.MethodWriter;
+import mockit.asm.util.ByteVector;
+import mockit.asm.util.MethodHandle;
+import mockit.internal.util.ClassLoad;
 
 /**
  * A {@link ClassVisitor} that generates classes in bytecode form, that is, a byte array conforming to the

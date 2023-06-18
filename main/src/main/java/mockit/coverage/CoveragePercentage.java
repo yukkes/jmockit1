@@ -4,7 +4,8 @@
  */
 package mockit.coverage;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public final class CoveragePercentage {
     private CoveragePercentage() {

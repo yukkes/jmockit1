@@ -4,13 +4,16 @@
  */
 package mockit.internal.state;
 
-import java.lang.instrument.*;
-import java.security.*;
-import java.util.*;
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.startup.*;
+import mockit.internal.startup.Startup;
 
 /**
  * Holds a map of internal class names to the corresponding class files (bytecode arrays), for the classes that have

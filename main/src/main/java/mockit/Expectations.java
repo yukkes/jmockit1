@@ -4,11 +4,16 @@
  */
 package mockit;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.*;
+import mockit.internal.expectations.RecordAndReplayExecution;
+import mockit.internal.expectations.RecordPhase;
 
 /**
  * Used to <em>record</em> expectations on {@linkplain Mocked mocked} types and their instances.

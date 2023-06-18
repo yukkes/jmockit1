@@ -6,12 +6,13 @@ package mockit.internal.faking;
 
 import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.asm.classes.*;
-import mockit.internal.*;
-import mockit.internal.capturing.*;
+import mockit.MockUp;
+import mockit.asm.classes.ClassReader;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.capturing.CaptureOfImplementations;
 
 public final class CaptureOfFakedImplementations extends CaptureOfImplementations<Void> {
     private final FakeClassSetup fakeClassSetup;

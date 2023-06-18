@@ -4,12 +4,17 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Array;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.argumentMatching.*;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.argumentMatching.CaptureMatcher;
+import mockit.internal.expectations.argumentMatching.EqualityMatcher;
+import mockit.internal.expectations.argumentMatching.LenientEqualityMatcher;
 
 final class ArgumentValuesAndMatchersWithVarargs extends ArgumentValuesAndMatchers {
     ArgumentValuesAndMatchersWithVarargs(@Nonnull InvocationArguments signature, @Nonnull Object[] values) {

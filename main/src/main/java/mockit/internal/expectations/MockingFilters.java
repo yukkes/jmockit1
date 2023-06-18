@@ -4,11 +4,15 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.asm.types.*;
+import mockit.asm.types.JavaType;
 
 public final class MockingFilters {
     private MockingFilters() {

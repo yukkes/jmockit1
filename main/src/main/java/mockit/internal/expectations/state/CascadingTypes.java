@@ -4,15 +4,17 @@
  */
 package mockit.internal.expectations.state;
 
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.lang.reflect.Type;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
+import mockit.asm.types.JavaType;
 
 public final class CascadingTypes {
     @Nonnull

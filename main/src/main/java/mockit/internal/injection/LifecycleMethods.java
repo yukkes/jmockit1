@@ -4,20 +4,27 @@
  */
 package mockit.internal.injection;
 
-import static mockit.internal.injection.InjectionPoint.*;
-import static mockit.internal.reflection.ParameterReflection.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.injection.InjectionPoint.SERVLET_CLASS;
+import static mockit.internal.injection.InjectionPoint.isServlet;
+import static mockit.internal.reflection.ParameterReflection.getParameterCount;
+import static mockit.internal.util.Utilities.NO_ARGS;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
-import javax.servlet.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.servlet.ServletConfig;
 
-import mockit.internal.reflection.*;
-import mockit.internal.state.*;
+import mockit.internal.reflection.MethodReflection;
+import mockit.internal.state.TestRun;
 
 public final class LifecycleMethods {
     @Nonnull

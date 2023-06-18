@@ -4,9 +4,13 @@
  */
 package mockit.coverage.dataItems;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public abstract class FieldData implements Serializable {
     private static final long serialVersionUID = 8565599590976858508L;

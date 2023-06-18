@@ -4,12 +4,15 @@
  */
 package mockit;
 
-import java.lang.reflect.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.faking.*;
-import mockit.internal.startup.*;
+import mockit.internal.faking.CaptureOfFakedImplementations;
+import mockit.internal.faking.FakeClassSetup;
+import mockit.internal.startup.Startup;
 
 /**
  * A base class used in the creation of a <em>fake</em> for an <em>external</em> type, which is usually a class from

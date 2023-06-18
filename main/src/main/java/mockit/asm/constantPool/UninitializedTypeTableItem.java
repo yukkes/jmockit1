@@ -2,7 +2,8 @@ package mockit.asm.constantPool;
 
 import static mockit.asm.constantPool.TypeTableItem.SpecialType.UNINIT;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 public final class UninitializedTypeTableItem extends TypeTableItem {
     @Nonnegative

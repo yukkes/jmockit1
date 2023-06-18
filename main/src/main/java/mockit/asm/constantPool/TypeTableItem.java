@@ -1,6 +1,7 @@
 package mockit.asm.constantPool;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
 abstract class TypeTableItem extends Item {
     /**

@@ -4,14 +4,16 @@
  */
 package mockit.internal.util;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.asm.metadata.*;
-import mockit.asm.metadata.ClassMetadataReader.*;
-import mockit.internal.*;
-import mockit.internal.state.*;
+import mockit.asm.metadata.ClassMetadataReader;
+import mockit.asm.metadata.ClassMetadataReader.Attribute;
+import mockit.asm.metadata.ClassMetadataReader.MethodInfo;
+import mockit.internal.ClassFile;
+import mockit.internal.state.ParameterNames;
 
 public final class ParameterNameExtractor {
     private static final EnumSet<Attribute> PARAMETERS = EnumSet.of(Attribute.Parameters);

@@ -4,7 +4,8 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * An argument matcher for the recording/verification of expectations.

@@ -4,15 +4,21 @@
  */
 package mockit.internal.util;
 
-import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
-import java.net.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.security.*;
-import java.util.*;
+import java.security.CodeSource;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Miscellaneous utility constants and methods.

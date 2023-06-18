@@ -4,12 +4,16 @@
  */
 package mockit.coverage.modification;
 
-import java.security.*;
-import java.util.*;
+import java.security.ProtectionDomain;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
+import mockit.asm.classes.ClassReader;
 
 public final class ClassModification {
     @Nonnull

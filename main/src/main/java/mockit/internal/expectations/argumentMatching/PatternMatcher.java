@@ -4,9 +4,10 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class PatternMatcher implements ArgumentMatcher<PatternMatcher> {
     @Nonnull

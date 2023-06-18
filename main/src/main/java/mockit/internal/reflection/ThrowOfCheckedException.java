@@ -4,7 +4,7 @@
  */
 package mockit.internal.reflection;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
 final class ThrowOfCheckedException {

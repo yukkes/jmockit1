@@ -4,16 +4,21 @@
  */
 package mockit.internal.injection;
 
-import static mockit.internal.injection.InjectionPoint.*;
+import static mockit.internal.injection.InjectionPoint.getQualifiedName;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
-import java.util.concurrent.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.reflection.*;
+import mockit.internal.reflection.FieldReflection;
+import mockit.internal.reflection.GenericTypeReflection;
 
 /**
  * Holds state used throughout the injection process while it's in progress for a given set of tested objects.

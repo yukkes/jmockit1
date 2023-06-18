@@ -1,9 +1,11 @@
 package mockit.asm.exceptionHandling;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.controlFlow.*;
-import mockit.asm.util.*;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.util.ByteVector;
 
 /**
  * Information about an exception handler block.

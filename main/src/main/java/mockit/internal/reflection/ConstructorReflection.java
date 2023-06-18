@@ -4,12 +4,16 @@
  */
 package mockit.internal.reflection;
 
-import static mockit.internal.reflection.ParameterReflection.*;
+import static mockit.internal.reflection.ParameterReflection.getParameterTypesDescription;
+import static mockit.internal.reflection.ParameterReflection.indexOfFirstRealParameter;
+import static mockit.internal.reflection.ParameterReflection.matchesParameterTypes;
 import static mockit.internal.util.Utilities.ensureThatMemberIsAccessible;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class ConstructorReflection {
     private ConstructorReflection() {

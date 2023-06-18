@@ -4,11 +4,12 @@
  */
 package mockit.internal.injection;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.injection.InjectionPoint.*;
-import mockit.internal.injection.field.*;
-import mockit.internal.injection.full.*;
+import mockit.internal.injection.InjectionPoint.KindOfInjectionPoint;
+import mockit.internal.injection.field.FieldInjection;
+import mockit.internal.injection.full.FullInjection;
 
 public final class BeanExporter {
     @Nonnull

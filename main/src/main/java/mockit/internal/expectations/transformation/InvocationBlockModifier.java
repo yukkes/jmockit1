@@ -4,15 +4,33 @@
  */
 package mockit.internal.expectations.transformation;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
-import static mockit.internal.util.TypeConversionBytecode.*;
+import static mockit.asm.jvmConstants.Opcodes.ALOAD;
+import static mockit.asm.jvmConstants.Opcodes.DCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.FCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.GETFIELD;
+import static mockit.asm.jvmConstants.Opcodes.GETSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.ICONST_0;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESTATIC;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEVIRTUAL;
+import static mockit.asm.jvmConstants.Opcodes.LCONST_0;
+import static mockit.asm.jvmConstants.Opcodes.NEW;
+import static mockit.asm.jvmConstants.Opcodes.NEWARRAY;
+import static mockit.asm.jvmConstants.Opcodes.POP;
+import static mockit.asm.jvmConstants.Opcodes.PUTFIELD;
+import static mockit.asm.jvmConstants.Opcodes.PUTSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.RETURN;
+import static mockit.internal.util.TypeConversionBytecode.isBoxing;
+import static mockit.internal.util.TypeConversionBytecode.isUnboxing;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.controlFlow.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.methods.*;
-import mockit.asm.types.*;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.jvmConstants.JVMInstruction;
+import mockit.asm.methods.MethodWriter;
+import mockit.asm.methods.WrappingMethodVisitor;
+import mockit.asm.types.JavaType;
 
 public final class InvocationBlockModifier extends WrappingMethodVisitor {
     private static final String CLASS_DESC = "mockit/internal/expectations/ActiveInvocations";

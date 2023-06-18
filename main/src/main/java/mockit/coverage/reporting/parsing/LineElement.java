@@ -4,12 +4,15 @@
  */
 package mockit.coverage.reporting.parsing;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class LineElement implements Iterable<LineElement> {
     private static final List<String> CONDITIONAL_OPERATORS = asList("||", "&&", ":", "else", "?");

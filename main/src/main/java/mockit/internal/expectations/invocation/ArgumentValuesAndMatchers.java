@@ -4,11 +4,18 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.argumentMatching.*;
+import mockit.internal.expectations.argumentMatching.AlwaysTrueMatcher;
+import mockit.internal.expectations.argumentMatching.ArgumentMatcher;
+import mockit.internal.expectations.argumentMatching.ArgumentMismatch;
+import mockit.internal.expectations.argumentMatching.EqualityMatcher;
+import mockit.internal.expectations.argumentMatching.ReflectiveMatcher;
 
 abstract class ArgumentValuesAndMatchers {
     @Nonnull

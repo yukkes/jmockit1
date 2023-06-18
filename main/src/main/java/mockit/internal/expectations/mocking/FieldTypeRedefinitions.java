@@ -4,18 +4,21 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isFinal;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.asm.jvmConstants.*;
-import mockit.internal.reflection.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.asm.jvmConstants.Access;
+import mockit.internal.reflection.FieldReflection;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.StackTrace;
 
 @SuppressWarnings("UnnecessaryFullyQualifiedName")
 public final class FieldTypeRedefinitions extends TypeRedefinitions {

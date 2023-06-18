@@ -1,14 +1,20 @@
 package mockit.asm.methods;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.*;
-import mockit.asm.annotations.*;
-import mockit.asm.constantPool.*;
-import mockit.asm.controlFlow.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.types.*;
-import mockit.asm.util.*;
+import mockit.asm.BaseWriter;
+import mockit.asm.annotations.AnnotationVisitor;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.controlFlow.Label;
+import mockit.asm.jvmConstants.ArrayElementType;
+import mockit.asm.jvmConstants.Opcodes;
+import mockit.asm.types.ArrayType;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.MethodType;
+import mockit.asm.types.ObjectType;
+import mockit.asm.util.MethodHandle;
 
 /**
  * A visitor to visit a Java method, in the following order:<br>

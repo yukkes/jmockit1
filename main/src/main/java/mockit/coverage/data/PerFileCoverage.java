@@ -4,9 +4,9 @@
  */
 package mockit.coverage.data;
 
-import java.io.*;
+import java.io.Serializable;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
 
 public interface PerFileCoverage extends Serializable {
     @Nonnegative

@@ -4,17 +4,20 @@
  */
 package mockit.coverage.modification;
 
-import static java.util.regex.Pattern.*;
+import static java.util.regex.Pattern.compile;
 
 import static mockit.internal.util.GeneratedClasses.isExternallyGeneratedSubclass;
 
-import java.net.*;
-import java.security.*;
-import java.util.regex.*;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
+import mockit.coverage.Configuration;
 
 final class ClassSelection {
     private static final String THIS_CLASS_NAME = ClassSelection.class.getName();

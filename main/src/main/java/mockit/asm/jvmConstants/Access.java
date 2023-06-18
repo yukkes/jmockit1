@@ -1,6 +1,6 @@
 package mockit.asm.jvmConstants;
 
-import static mockit.asm.jvmConstants.ClassVersion.*;
+import static mockit.asm.jvmConstants.ClassVersion.V5;
 
 /**
  * Defines the JVM and ASM-specific access flags for classes, fields, methods, and method parameters.

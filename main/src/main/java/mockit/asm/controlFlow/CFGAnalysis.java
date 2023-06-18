@@ -1,12 +1,29 @@
 package mockit.asm.controlFlow;
 
-import static mockit.asm.jvmConstants.Opcodes.*;
+import static mockit.asm.jvmConstants.Opcodes.ATHROW;
+import static mockit.asm.jvmConstants.Opcodes.GETFIELD;
+import static mockit.asm.jvmConstants.Opcodes.GETSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.GOTO;
+import static mockit.asm.jvmConstants.Opcodes.INVOKEDYNAMIC;
+import static mockit.asm.jvmConstants.Opcodes.INVOKESTATIC;
+import static mockit.asm.jvmConstants.Opcodes.IRETURN;
+import static mockit.asm.jvmConstants.Opcodes.NEW;
+import static mockit.asm.jvmConstants.Opcodes.NEWARRAY;
+import static mockit.asm.jvmConstants.Opcodes.PUTFIELD;
+import static mockit.asm.jvmConstants.Opcodes.PUTSTATIC;
+import static mockit.asm.jvmConstants.Opcodes.RETURN;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.jvmConstants.*;
-import mockit.asm.util.*;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.constantPool.Item;
+import mockit.asm.constantPool.LongValueItem;
+import mockit.asm.constantPool.StringItem;
+import mockit.asm.constantPool.TypeOrMemberItem;
+import mockit.asm.jvmConstants.JVMInstruction;
+import mockit.asm.util.ByteVector;
 
 /**
  * The control flow graph analysis algorithm, used to compute the maximum stack size for a method or constructor.

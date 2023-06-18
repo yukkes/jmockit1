@@ -4,14 +4,16 @@
  */
 package mockit.coverage.reporting.lineCoverage;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.coverage.lines.*;
-import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.parsing.*;
+import mockit.coverage.CallPoint;
+import mockit.coverage.lines.LineCoverageData;
+import mockit.coverage.lines.PerFileLineCoverage;
+import mockit.coverage.reporting.ListOfCallPoints;
+import mockit.coverage.reporting.parsing.LineParser;
 
 final class LineCoverageFormatter {
     @Nonnull

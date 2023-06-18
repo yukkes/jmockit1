@@ -4,16 +4,21 @@
  */
 package mockit.coverage.reporting.lineCoverage;
 
-import static java.lang.Character.*;
+import static java.lang.Character.isWhitespace;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
-import mockit.coverage.lines.*;
-import mockit.coverage.reporting.*;
-import mockit.coverage.reporting.parsing.*;
+import mockit.coverage.CallPoint;
+import mockit.coverage.lines.BranchCoverageData;
+import mockit.coverage.lines.LineCoverageData;
+import mockit.coverage.lines.LineSegmentData;
+import mockit.coverage.reporting.ListOfCallPoints;
+import mockit.coverage.reporting.parsing.LineElement;
+import mockit.coverage.reporting.parsing.LineParser;
 
 final class LineSegmentsFormatter {
     @Nullable

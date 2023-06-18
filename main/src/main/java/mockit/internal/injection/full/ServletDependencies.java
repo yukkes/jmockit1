@@ -6,17 +6,31 @@ package mockit.internal.injection.full;
 
 import static java.util.Collections.enumeration;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-import javax.annotation.*;
-import javax.servlet.*;
-import javax.servlet.ServletRegistration.*;
-import javax.servlet.descriptor.*;
-import javax.servlet.http.*;
+import javax.annotation.Nonnull;
+import javax.servlet.Filter;
+import javax.servlet.FilterRegistration;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRegistration;
+import javax.servlet.ServletRegistration.Dynamic;
+import javax.servlet.SessionCookieConfig;
+import javax.servlet.SessionTrackingMode;
+import javax.servlet.descriptor.JspConfigDescriptor;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
-import mockit.internal.injection.*;
+import mockit.internal.injection.InjectionPoint;
+import mockit.internal.injection.InjectionState;
 
 /**
  * Detects and resolves dependencies belonging to the <code>javax.servlet</code> API, namely <code>ServletContext</code>

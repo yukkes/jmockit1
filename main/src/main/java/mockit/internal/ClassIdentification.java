@@ -4,7 +4,8 @@
  */
 package mockit.internal;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Identifies a class by its loader and name rather than by the <code>Class</code> object, which isn't available during

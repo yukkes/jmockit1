@@ -1,8 +1,9 @@
 package mockit.asm.constantPool;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.util.*;
+import mockit.asm.util.ByteVector;
 
 public abstract class AttributeWriter {
     @Nonnull

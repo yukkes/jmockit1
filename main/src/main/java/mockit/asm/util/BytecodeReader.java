@@ -1,12 +1,32 @@
 package mockit.asm.util;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.CLASS;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.DOUBLE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.DYNAMIC;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FIELD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.FLOAT;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.IMETHOD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.INTEGER;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.INVOKE_DYNAMIC;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.LONG;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_HANDLE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_REF;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.METHOD_TYPE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.MODULE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.NAME_TYPE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.PACKAGE;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.STRING;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.UTF8;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import mockit.asm.constantPool.DynamicItem;
 import mockit.asm.jvmConstants.ConstantPoolTypes;
-import mockit.asm.types.*;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.MethodType;
+import mockit.asm.types.ReferenceType;
 
 public class BytecodeReader {
     /**

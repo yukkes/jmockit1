@@ -4,12 +4,13 @@
  */
 package mockit.coverage.reporting;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.List;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.*;
+import mockit.coverage.CallPoint;
 
 public final class ListOfCallPoints {
     @Nonnull

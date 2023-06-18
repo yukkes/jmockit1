@@ -1,11 +1,18 @@
 package mockit.asm.classes;
 
-import static mockit.asm.jvmConstants.ConstantPoolTypes.*;
+import static mockit.asm.jvmConstants.ConstantPoolTypes.INVOKE_DYNAMIC;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
 
-import mockit.asm.constantPool.*;
-import mockit.asm.util.*;
+import mockit.asm.constantPool.AttributeWriter;
+import mockit.asm.constantPool.BootstrapMethodItem;
+import mockit.asm.constantPool.ConstantPoolGeneration;
+import mockit.asm.constantPool.DynamicItem;
+import mockit.asm.constantPool.Item;
+import mockit.asm.constantPool.MethodHandleItem;
+import mockit.asm.util.ByteVector;
+import mockit.asm.util.MethodHandle;
 
 /**
  * Generates the "BootstrapMethods" attribute in a class file being written by a {@link ClassWriter}.

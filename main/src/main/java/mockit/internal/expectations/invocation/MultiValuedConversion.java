@@ -4,13 +4,27 @@
  */
 package mockit.internal.expectations.invocation;
 
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.JAVA8;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.stream.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.stream.Stream;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 final class MultiValuedConversion {
     @Nonnull

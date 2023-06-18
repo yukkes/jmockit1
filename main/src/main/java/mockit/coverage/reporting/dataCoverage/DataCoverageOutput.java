@@ -4,10 +4,16 @@
  */
 package mockit.coverage.reporting.dataCoverage;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.coverage.dataItems.*;
-import mockit.coverage.reporting.parsing.*;
+import mockit.coverage.dataItems.FieldData;
+import mockit.coverage.dataItems.InstanceFieldData;
+import mockit.coverage.dataItems.PerFileDataCoverage;
+import mockit.coverage.dataItems.StaticFieldData;
+import mockit.coverage.reporting.parsing.FileParser;
+import mockit.coverage.reporting.parsing.LineElement;
 
 public final class DataCoverageOutput {
     @Nonnull

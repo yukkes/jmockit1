@@ -4,18 +4,41 @@
  */
 package mockit.internal.util;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyIterator;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.enumeration;
+import static java.util.Collections.unmodifiableSortedMap;
+import static java.util.Collections.unmodifiableSortedSet;
 
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.Utilities.JAVA8;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
+import java.util.PrimitiveIterator;
+import java.util.Spliterators;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.function.DoubleConsumer;
+import java.util.function.IntConsumer;
+import java.util.function.LongConsumer;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
+import mockit.asm.types.ArrayType;
 
 /**
  * Provides default values for each type, typically used for returning default values according to method return types.

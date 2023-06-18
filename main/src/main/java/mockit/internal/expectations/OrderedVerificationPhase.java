@@ -6,11 +6,14 @@ package mockit.internal.expectations;
 
 import static java.util.Collections.emptyList;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
 
 final class OrderedVerificationPhase extends BaseVerificationPhase {
     @Nonnegative

@@ -4,9 +4,11 @@
  */
 package mockit.coverage.reporting.parsing;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class FileParser {
     private static final class PendingClass {

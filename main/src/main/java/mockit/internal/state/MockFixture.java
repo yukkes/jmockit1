@@ -4,24 +4,37 @@
  */
 package mockit.internal.state;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isAbstract;
 
-import static mockit.internal.util.GeneratedClasses.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.util.GeneratedClasses.getMockedClass;
+import static mockit.internal.util.GeneratedClasses.getMockedClassOrInterfaceType;
+import static mockit.internal.util.GeneratedClasses.isGeneratedImplementationClass;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.instrument.*;
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
-import java.util.concurrent.*;
+import java.lang.instrument.ClassDefinition;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.*;
-import mockit.internal.capturing.*;
-import mockit.internal.expectations.mocking.*;
-import mockit.internal.startup.*;
-import mockit.internal.util.*;
+import mockit.internal.ClassFile;
+import mockit.internal.ClassIdentification;
+import mockit.internal.capturing.CaptureTransformer;
+import mockit.internal.expectations.mocking.CaptureOfNewInstances;
+import mockit.internal.expectations.mocking.InstanceFactory;
+import mockit.internal.startup.Startup;
+import mockit.internal.util.ClassLoad;
 
 /**
  * Holds data about redefined/transformed classes, with methods to add/remove and query such data.

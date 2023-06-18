@@ -4,9 +4,10 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import java.util.*;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class LenientEqualityMatcher extends EqualityMatcher {
     @Nonnull

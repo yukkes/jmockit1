@@ -4,21 +4,37 @@
  */
 package mockit.internal.injection.constructor;
 
-import static mockit.internal.injection.InjectionPoint.*;
+import static mockit.internal.injection.InjectionPoint.getQualifiedName;
+import static mockit.internal.injection.InjectionPoint.getTypeOfInjectionPointFromVarargsParameter;
+import static mockit.internal.injection.InjectionPoint.kindOfInjectionPoint;
+import static mockit.internal.injection.InjectionPoint.wrapInProviderIfNeeded;
 import static mockit.internal.injection.InjectionProvider.NULL;
-import static mockit.internal.reflection.ConstructorReflection.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.reflection.ConstructorReflection.invokeAccessible;
+import static mockit.internal.util.Utilities.NO_ARGS;
+import static mockit.internal.util.Utilities.ensureThatMemberIsAccessible;
+import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
-import mockit.internal.injection.*;
-import mockit.internal.injection.full.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.asm.types.JavaType;
+import mockit.internal.injection.InjectionPoint.KindOfInjectionPoint;
+import mockit.internal.injection.InjectionProvider;
+import mockit.internal.injection.InjectionProviders;
+import mockit.internal.injection.InjectionState;
+import mockit.internal.injection.Injector;
+import mockit.internal.injection.TestedClass;
+import mockit.internal.injection.full.FullInjection;
+import mockit.internal.state.ParameterNames;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.MethodFormatter;
+import mockit.internal.util.StackTrace;
 
 public final class ConstructorInjection extends Injector {
     @Nonnull

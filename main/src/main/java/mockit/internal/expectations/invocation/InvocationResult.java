@@ -4,9 +4,10 @@
  */
 package mockit.internal.expectations.invocation;
 
-import java.util.*;
+import java.util.Iterator;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 class InvocationResult {
     InvocationResult next;

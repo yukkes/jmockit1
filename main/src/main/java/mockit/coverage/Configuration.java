@@ -4,9 +4,10 @@
  */
 package mockit.coverage;
 
-import java.io.*;
+import java.io.File;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public final class Configuration {
     private static final String COVERAGE_PREFIX = "coverage-";

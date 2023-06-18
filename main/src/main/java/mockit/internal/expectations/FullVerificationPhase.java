@@ -4,12 +4,16 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.invocation.*;
-import mockit.internal.util.*;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
+import mockit.internal.expectations.invocation.InvocationArguments;
+import mockit.internal.util.ClassLoad;
 
 final class FullVerificationPhase extends UnorderedVerificationPhase {
     @Nonnull

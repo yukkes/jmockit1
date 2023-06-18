@@ -4,12 +4,16 @@
  */
 package mockit.internal;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.reflection.*;
+import mockit.Invocation;
+import mockit.internal.reflection.MethodReflection;
 
 /**
  * Base class for encapsulating state and logic needed by both the Mocking and Faking APIs, but which should not go into

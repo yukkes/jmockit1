@@ -4,16 +4,18 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static mockit.internal.expectations.RecordAndReplayExecution.*;
+import static mockit.internal.expectations.RecordAndReplayExecution.RECORD_OR_REPLAY_LOCK;
+import static mockit.internal.expectations.RecordAndReplayExecution.recordOrReplay;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.*;
-import mockit.internal.expectations.*;
-import mockit.internal.state.*;
-import mockit.internal.util.*;
+import mockit.internal.ClassLoadingBridge;
+import mockit.internal.expectations.ExecutionMode;
+import mockit.internal.state.TestRun;
+import mockit.internal.util.ObjectMethods;
 
 public final class MockedBridge extends ClassLoadingBridge {
     @Nonnull

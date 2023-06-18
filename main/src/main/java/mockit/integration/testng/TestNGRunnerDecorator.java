@@ -4,19 +4,26 @@
  */
 package mockit.integration.testng;
 
-import static mockit.internal.util.StackTrace.*;
+import static mockit.internal.util.StackTrace.filterStackTrace;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.coverage.testRedundancy.*;
-import mockit.integration.*;
-import mockit.internal.state.*;
+import mockit.Expectations;
+import mockit.coverage.testRedundancy.TestCoverage;
+import mockit.integration.TestRunnerDecorator;
+import mockit.internal.state.SavePoint;
+import mockit.internal.state.TestRun;
 
-import org.testng.*;
-import org.testng.annotations.*;
+import org.testng.IExecutionListener;
+import org.testng.IInvokedMethod;
+import org.testng.IInvokedMethodListener;
+import org.testng.ITestNGMethod;
+import org.testng.ITestResult;
+import org.testng.TestException;
+import org.testng.annotations.Test;
 
 /**
  * Provides callbacks to be called by the TestNG 6.2+ test runner for each test execution. JMockit will then assert any

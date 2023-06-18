@@ -4,12 +4,13 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.reflection.*;
+import mockit.Delegate;
+import mockit.internal.reflection.MethodReflection;
 
 public final class ReflectiveMatcher implements ArgumentMatcher<ReflectiveMatcher> {
     @Nonnull

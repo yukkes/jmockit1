@@ -4,14 +4,16 @@
  */
 package mockit.internal.faking;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.Map.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.*;
-import mockit.internal.util.*;
+import mockit.MockUp;
+import mockit.internal.util.ClassLoad;
 
 public final class FakeClasses {
     private static final Method ON_TEAR_DOWN_METHOD;

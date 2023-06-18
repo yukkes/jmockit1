@@ -4,12 +4,15 @@
  */
 package mockit.internal.util;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.types.*;
+import mockit.asm.types.JavaType;
 
 public final class TestMethod {
     @Nonnull

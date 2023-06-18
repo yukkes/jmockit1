@@ -4,12 +4,12 @@
  */
 package mockit.coverage.testRedundancy;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import org.junit.runner.*;
-import org.junit.runner.notification.*;
+import org.junit.runner.Description;
+import org.junit.runner.notification.RunListener;
 
 public final class JUnitListener extends RunListener {
     @Nonnull

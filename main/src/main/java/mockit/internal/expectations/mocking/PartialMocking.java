@@ -4,15 +4,19 @@
  */
 package mockit.internal.expectations.mocking;
 
-import static mockit.internal.util.AutoBoxing.*;
-import static mockit.internal.util.GeneratedClasses.*;
+import static mockit.internal.util.AutoBoxing.isWrapperOfPrimitiveType;
+import static mockit.internal.util.GeneratedClasses.getMockedClass;
+import static mockit.internal.util.GeneratedClasses.isGeneratedImplementationClass;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.expectations.*;
-import mockit.internal.state.*;
+import mockit.internal.expectations.MockingFilters;
+import mockit.internal.state.TestRun;
 
 public final class PartialMocking extends BaseTypeRedefinition {
     @Nonnull

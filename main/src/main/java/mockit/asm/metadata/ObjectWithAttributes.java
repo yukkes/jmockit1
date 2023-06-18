@@ -1,10 +1,11 @@
 package mockit.asm.metadata;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.metadata.ClassMetadataReader.*;
+import mockit.asm.metadata.ClassMetadataReader.AnnotationInfo;
 
 class ObjectWithAttributes {
     @Nullable

@@ -4,12 +4,14 @@
  */
 package mockit.internal.expectations;
 
-import java.util.*;
-import java.util.Map.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.ExpectedInvocation;
 
 final class EquivalentInstances {
     @Nonnull

@@ -4,17 +4,25 @@
  */
 package mockit.internal.reflection;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isPrivate;
+import static java.lang.reflect.Modifier.isStatic;
 
-import static mockit.internal.reflection.ParameterReflection.*;
+import static mockit.internal.reflection.ParameterReflection.acceptsArgumentTypes;
+import static mockit.internal.reflection.ParameterReflection.getParameterTypesDescription;
+import static mockit.internal.reflection.ParameterReflection.hasMoreSpecificTypes;
+import static mockit.internal.reflection.ParameterReflection.indexOfFirstRealParameter;
+import static mockit.internal.reflection.ParameterReflection.matchesParameterTypes;
 
-import java.lang.reflect.*;
-import java.util.regex.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.util.*;
+import mockit.Delegate;
+import mockit.internal.util.StackTrace;
+import mockit.internal.util.Utilities;
 
 public final class MethodReflection {
     @Nonnull

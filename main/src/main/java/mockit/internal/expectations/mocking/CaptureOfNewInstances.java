@@ -4,17 +4,20 @@
  */
 package mockit.internal.expectations.mocking;
 
-import java.lang.instrument.*;
-import java.util.*;
+import java.lang.instrument.ClassDefinition;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.asm.classes.*;
-import mockit.asm.types.*;
-import mockit.internal.*;
-import mockit.internal.capturing.*;
-import mockit.internal.startup.*;
-import mockit.internal.state.*;
+import mockit.asm.classes.ClassReader;
+import mockit.asm.types.JavaType;
+import mockit.internal.BaseClassModifier;
+import mockit.internal.capturing.CaptureOfImplementations;
+import mockit.internal.startup.Startup;
+import mockit.internal.state.MockFixture;
+import mockit.internal.state.TestRun;
 
 public final class CaptureOfNewInstances extends CaptureOfImplementations<MockedType> {
     @Nonnull

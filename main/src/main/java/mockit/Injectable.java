@@ -4,10 +4,12 @@
  */
 package mockit;
 
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
  * Indicates that the value of a mock field or mock parameter will be an isolated {@linkplain Mocked mocked} instance,

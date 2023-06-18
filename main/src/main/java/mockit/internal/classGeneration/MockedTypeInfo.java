@@ -4,12 +4,13 @@
  */
 package mockit.internal.classGeneration;
 
-import java.lang.reflect.*;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.reflection.*;
-import mockit.internal.util.*;
+import mockit.internal.reflection.GenericTypeReflection;
+import mockit.internal.util.Utilities;
 
 public final class MockedTypeInfo {
     @Nonnull

@@ -4,13 +4,17 @@
  */
 package mockit.coverage.dataItems;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.internal.state.*;
+import mockit.internal.state.TestRun;
 
 public final class InstanceFieldData extends FieldData {
     private static final long serialVersionUID = 6991762113575259754L;

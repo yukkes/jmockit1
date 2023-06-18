@@ -6,10 +6,12 @@ package mockit.internal.injection;
 
 import static mockit.internal.util.Utilities.getClassType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 final class MultiValuedProvider extends InjectionProvider {
     @Nonnull

@@ -4,9 +4,11 @@
  */
 package mockit.internal.util;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import mockit.asm.types.*;
+import mockit.asm.types.ArrayType;
+import mockit.asm.types.JavaType;
+import mockit.asm.types.PrimitiveType;
 
 public final class TypeDescriptor {
     private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];

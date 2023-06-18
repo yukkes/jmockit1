@@ -4,11 +4,13 @@
  */
 package mockit.internal.expectations.argumentMatching;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.ObjectMethods;
 
 public final class ArgumentMismatch {
     @Nonnull

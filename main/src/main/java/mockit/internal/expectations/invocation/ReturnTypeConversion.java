@@ -4,21 +4,33 @@
  */
 package mockit.internal.expectations.invocation;
 
-import static java.util.Collections.*;
+import static java.util.Collections.singletonList;
 
-import static mockit.internal.reflection.ConstructorReflection.*;
-import static mockit.internal.reflection.MethodReflection.*;
-import static mockit.internal.util.Utilities.*;
+import static mockit.internal.reflection.ConstructorReflection.newInstanceUsingPublicConstructorIfAvailable;
+import static mockit.internal.reflection.MethodReflection.JAVA_LANG;
+import static mockit.internal.reflection.MethodReflection.invokePublicIfAvailable;
+import static mockit.internal.util.Utilities.JAVA8;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.nio.*;
-import java.util.*;
-import java.util.stream.*;
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.lang.reflect.Array;
+import java.nio.CharBuffer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Optional;
+import java.util.TreeSet;
+import java.util.stream.Stream;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.internal.util.*;
+import mockit.internal.util.AutoBoxing;
+import mockit.internal.util.MethodFormatter;
 
 public final class ReturnTypeConversion {
     private static final Class<?>[] STRING = { String.class };

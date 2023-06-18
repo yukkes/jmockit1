@@ -4,18 +4,20 @@
  */
 package mockit.internal.injection;
 
-import static mockit.internal.util.AutoBoxing.*;
-import static mockit.internal.util.DefaultValues.*;
+import static mockit.internal.util.AutoBoxing.isWrapperOfPrimitiveType;
+import static mockit.internal.util.DefaultValues.defaultValueForPrimitiveType;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.List;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import mockit.*;
-import mockit.internal.injection.field.*;
-import mockit.internal.injection.full.*;
+import mockit.Tested;
+import mockit.internal.injection.field.FieldInjection;
+import mockit.internal.injection.full.FullInjection;
 
 abstract class TestedObject {
     @Nonnull
