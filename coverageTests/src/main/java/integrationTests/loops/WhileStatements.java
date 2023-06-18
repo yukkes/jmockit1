@@ -10,9 +10,9 @@ public class WhileStatements {
     }
 
     void whileBlockInSingleLine(int i) {
-        while (i < 2) {
-            i++;
-        }
+        // @formatter:off
+        while (i < 2) { i++; }
+        // @formatter:on
     }
 
     int whileWithContinue(int i) {
@@ -62,7 +62,8 @@ public class WhileStatements {
         while (true) {
             do {
                 i++;
-            } while (i < j);
+            }
+            while (i < j);
 
             j++;
 
