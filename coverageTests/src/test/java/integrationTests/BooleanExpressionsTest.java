@@ -78,7 +78,7 @@ public final class BooleanExpressionsTest extends CoverageTest {
         assertTrue(tested.simplyReturnsInput(true));
         assertFalse(tested.simplyReturnsInput(false));
 
-        assertLine(53, 1, 1, 2);
+        assertLine(137, 1, 1, 2);
     }
 
     @Test
@@ -101,11 +101,9 @@ public final class BooleanExpressionsTest extends CoverageTest {
         assertTrue(tested.returnsResultPreviouslyComputedFromInput(true, 1));
         assertTrue(tested.returnsResultPreviouslyComputedFromInput(true, -1));
 
-        assertLines(77, 86, 5);
-        assertLine(77, 3, 3, 4, 2, 2);
-        assertLine(80, 2, 2, 4, 3);
-        assertLine(82, 1, 1, 1);
-        assertLine(83, 1, 1, 1);
-        assertLine(86, 1, 1, 4);
+        assertLines(179, 186, 6);
+        assertLine(179, 1, 1, 4, 3);
+        assertLine(182, 1, 1, 1);
+        assertLine(186, 1, 1, 4);
     }
 }
