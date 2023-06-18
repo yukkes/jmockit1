@@ -27,7 +27,7 @@ public final class AbstractClassTest extends CoverageTest {
         tested.returnValue();
 
         assertEquals(1, fileData.lineCoverageInfo.getExecutableLineCount());
-        assertLines(3, 3, 1);
+        assertLines(6, 6, 1);
         assertEquals(100, fileData.lineCoverageInfo.getCoveragePercentage());
     }
 }
