@@ -610,9 +610,12 @@ public final class ExpectationsUsingReturnTypeConversionTest {
      *
      * @param mock2
      *            the mock 2
+     *
+     * @throws Exception
+     *             the exception
      */
     @Test
-    public void convertValueToOptionalOfValue(@Mocked final Java8Collaborator mock2) {
+    public void convertValueToOptionalOfValue(@Mocked final Java8Collaborator mock2) throws Exception {
         assumeTrue(JAVA8);
         new Expectations() {
             {
@@ -623,8 +626,7 @@ public final class ExpectationsUsingReturnTypeConversionTest {
 
         Optional<String> value = mock2.getOptionalValue();
 
-        assertTrue(value.isPresent());
-        assertEquals("Test", value.get());
+        assertEquals("Test", value.orElseThrow(Exception::new));
     }
 
     /**
