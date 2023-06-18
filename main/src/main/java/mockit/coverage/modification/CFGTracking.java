@@ -36,7 +36,6 @@ final class CFGTracking {
     private int foundPotentialBooleanExpressionValue;
     @Nonnegative
     private int ignoreUntilNextSwitch;
-    private boolean foundPotentialAssertFalse;
 
     CFGTracking(@Nonnull PerFileLineCoverage lineCoverageInfo) {
         this.lineCoverageInfo = lineCoverageInfo;
@@ -116,7 +115,6 @@ final class CFGTracking {
             return;
         }
 
-        foundPotentialAssertFalse = false;
         foundPotentialBooleanExpressionValue = 0;
 
         if (!pendingBranches.isEmpty()) {
@@ -134,10 +132,6 @@ final class CFGTracking {
 
             lineExpectingInstructionAfterJump = 0;
         }
-    }
-
-    void registerFindingPotentialAssertFalse() {
-        foundPotentialAssertFalse = true;
     }
 
     boolean hasOnlyOneLabelBeingVisited() {

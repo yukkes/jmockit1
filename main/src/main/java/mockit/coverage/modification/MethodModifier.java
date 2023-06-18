@@ -193,8 +193,6 @@ final class MethodModifier extends WrappingMethodVisitor {
             cfgTracking.registerAssertFoundInCurrentLine();
         }
 
-        cfgTracking.registerFindingPotentialAssertFalse();
-
         if (fieldHasData) {
             generateCallToRegisterFieldCoverage(getField, isStatic, size2, classAndFieldNames);
         }
