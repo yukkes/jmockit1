@@ -12,9 +12,9 @@ public class ForStatements {
     }
 
     void forInSingleLine(int i) {
-        for (; i < 2; i++) {
-            System.gc();
-        }
+        // @formatter:off
+        for (; i < 2; i++) { System.gc(); }
+        // @formatter:on
     }
 
     int forEachArrayElement(int... values) {
