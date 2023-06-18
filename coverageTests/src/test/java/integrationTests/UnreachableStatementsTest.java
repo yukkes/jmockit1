@@ -19,11 +19,11 @@ public final class UnreachableStatementsTest extends CoverageTest {
         } catch (AssertionError ignore) {
         }
 
-        assertLines(7, 10, 2);
-        assertLine(7, 1, 1, 1);
-        assertLine(8, 1, 1, 1);
-        assertLine(9, 1, 0, 0);
-        assertLine(10, 1, 0, 0);
+        assertLines(12, 15, 2);
+        assertLine(12, 1, 1, 1);
+        assertLine(13, 1, 1, 1);
+        assertLine(14, 1, 0, 0);
+        assertLine(15, 1, 0, 0);
     }
 
     @Test
