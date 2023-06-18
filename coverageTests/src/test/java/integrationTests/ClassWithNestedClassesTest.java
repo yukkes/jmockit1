@@ -12,9 +12,9 @@ public final class ClassWithNestedClassesTest extends CoverageTest {
         ClassWithNestedClasses.doSomething();
         ClassWithNestedClasses.methodContainingAnonymousClass(1);
 
-        assertEquals(12, fileData.lineCoverageInfo.getExecutableLineCount());
-        assertEquals(71, fileData.lineCoverageInfo.getCoveragePercentage());
-        assertEquals(14, fileData.lineCoverageInfo.getTotalItems());
-        assertEquals(10, fileData.lineCoverageInfo.getCoveredItems());
+        assertEquals(13, fileData.lineCoverageInfo.getExecutableLineCount());
+        assertEquals(73, fileData.lineCoverageInfo.getCoveragePercentage());
+        assertEquals(15, fileData.lineCoverageInfo.getTotalItems());
+        assertEquals(11, fileData.lineCoverageInfo.getCoveredItems());
     }
 }

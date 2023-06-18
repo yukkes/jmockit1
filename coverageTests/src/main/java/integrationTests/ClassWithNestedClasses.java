@@ -10,6 +10,16 @@ public class ClassWithNestedClasses {
      */
     public static class NestedClass {
 
+        /** The i. */
+        private final int i;
+
+        /**
+         * Instantiates a new nested class.
+         */
+        public NestedClass() {
+            i = 123;
+        }
+
         /**
          * The Class DeeplyNestedClass.
          */
@@ -23,6 +33,22 @@ public class ClassWithNestedClasses {
              */
             void print(String text) {
                 System.out.println(text);
+            }
+        }
+
+        /**
+         * The Class InnerClass.
+         */
+        private final class InnerClass {
+
+            /**
+             * Prints the.
+             *
+             * @param text
+             *            the text
+             */
+            void print(String text) {
+                System.out.println(text + ": " + i);
             }
         }
     }
