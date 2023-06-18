@@ -156,7 +156,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
             } else if (testResult.isSuccess()) {
                 concludeTestExecutionWithExpectedExceptionThrown(testMethodSavePoint, testResult, thrownByTest);
             } else {
-                concludeTestExecutionWithUnexpectedExceptionThrown(testMethodSavePoint, testResult, thrownByTest);
+                concludeTestExecutionWithUnexpectedExceptionThrown(testMethodSavePoint, thrownByTest);
             }
         } finally {
             TestRun.finishCurrentTestExecution();
@@ -225,7 +225,7 @@ public final class TestNGRunnerDecorator extends TestRunnerDecorator
     }
 
     private static void concludeTestExecutionWithUnexpectedExceptionThrown(@Nonnull SavePoint testMethodSavePoint,
-            @Nonnull ITestResult testResult, @Nonnull Throwable thrownByTest) {
+            @Nonnull Throwable thrownByTest) {
         filterStackTrace(thrownByTest);
 
         try {

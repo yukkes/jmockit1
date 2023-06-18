@@ -14,7 +14,7 @@ import mockit.asm.methods.MethodWriter;
 import mockit.asm.types.JavaType;
 
 final class ArgumentMatching {
-    private static final JavaType[] NO_PARAMETERS = new JavaType[0];
+    private static final JavaType[] NO_PARAMETERS = {};
     private static final String ANY_FIELDS = "any anyString anyInt anyBoolean anyLong anyDouble anyFloat anyChar anyShort anyByte";
     private static final String WITH_METHODS = "with(Lmockit/Delegate;)Ljava/lang/Object; "
             + "withAny(Ljava/lang/Object;)Ljava/lang/Object; "
@@ -121,7 +121,8 @@ final class ArgumentMatching {
                     modifier.argumentCapturing.updateCaptureIfAny(nextMatcher, i);
                 }
 
-                matcherStack = matcherStacks[++nextMatcher];
+                nextMatcher++;
+                matcherStack = matcherStacks[nextMatcher];
             }
         }
     }

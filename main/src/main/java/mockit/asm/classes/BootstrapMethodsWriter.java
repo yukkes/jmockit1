@@ -98,8 +98,7 @@ final class BootstrapMethodsWriter extends AttributeWriter {
         methods.setLength(position); // revert to old position
 
         BootstrapMethodItem bsmItem = getBSMItem(hashCode);
-        DynamicItem result = cp.createDynamicItem(INVOKE_DYNAMIC, name, desc, bsmItem.index);
-        return result;
+        return cp.createDynamicItem(INVOKE_DYNAMIC, name, desc, bsmItem.index);
     }
 
     private int putBSMArgs(int hashCode, @Nonnull Object[] bsmArgs) {
@@ -118,7 +117,7 @@ final class BootstrapMethodsWriter extends AttributeWriter {
         Item item = cp.getItem(hashCode);
 
         while (item != null) {
-            if ((item instanceof BootstrapMethodItem) && item.getHashCode() == hashCode) {
+            if (item instanceof BootstrapMethodItem && item.getHashCode() == hashCode) {
                 return (BootstrapMethodItem) item;
             }
 

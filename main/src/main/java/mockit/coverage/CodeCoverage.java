@@ -34,8 +34,8 @@ public final class CodeCoverage implements ClassFileTransformer {
     public static boolean active() {
         String coverageOutput = Configuration.getProperty("output");
         String coverageClasses = Configuration.getProperty("classes");
-        return (coverageOutput != null || coverageClasses != null)
-                && !("none".equals(coverageOutput) || "none".equals(coverageClasses));
+        return (coverageOutput != null || coverageClasses != null) && !"none".equals(coverageOutput)
+                && !"none".equals(coverageClasses);
     }
 
     public CodeCoverage() {
@@ -76,7 +76,6 @@ public final class CodeCoverage implements ClassFileTransformer {
         }
 
         String className = internalClassName.replace('/', '.');
-        byte[] modifiedClassfile = classModification.modifyClass(className, protectionDomain, originalClassfile);
-        return modifiedClassfile;
+        return classModification.modifyClass(className, protectionDomain, originalClassfile);
     }
 }

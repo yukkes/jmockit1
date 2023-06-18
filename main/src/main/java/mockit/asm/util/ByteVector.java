@@ -66,7 +66,8 @@ public final class ByteVector {
     @Nonnull
     public ByteVector putByte(int b) {
         int len = getLengthEnlargingIfNeeded(1);
-        data[len++] = (byte) b;
+        data[len] = (byte) b;
+        len++;
         length = len;
         return this;
     }
@@ -105,8 +106,10 @@ public final class ByteVector {
     public ByteVector put11(int b1, int b2) {
         int len = getLengthEnlargingIfNeeded(2);
         byte[] bytes = data;
-        bytes[len++] = (byte) b1;
-        bytes[len++] = (byte) b2;
+        bytes[len] = (byte) b1;
+        len++;
+        bytes[len] = (byte) b2;
+        len++;
         length = len;
         return this;
     }
@@ -130,9 +133,12 @@ public final class ByteVector {
     public ByteVector put12(int b, int s) {
         int len = getLengthEnlargingIfNeeded(3);
         byte[] bytes = data;
-        bytes[len++] = (byte) b;
-        bytes[len++] = (byte) (s >>> 8);
-        bytes[len++] = (byte) s;
+        bytes[len] = (byte) b;
+        len++;
+        bytes[len] = (byte) (s >>> 8);
+        len++;
+        bytes[len] = (byte) s;
+        len++;
         length = len;
         return this;
     }
@@ -146,10 +152,14 @@ public final class ByteVector {
     public ByteVector putInt(int i) {
         int len = getLengthEnlargingIfNeeded(4);
         byte[] bytes = data;
-        bytes[len++] = (byte) (i >>> 24);
-        bytes[len++] = (byte) (i >>> 16);
-        bytes[len++] = (byte) (i >>> 8);
-        bytes[len++] = (byte) i;
+        bytes[len] = (byte) (i >>> 24);
+        len++;
+        bytes[len] = (byte) (i >>> 16);
+        len++;
+        bytes[len] = (byte) (i >>> 8);
+        len++;
+        bytes[len] = (byte) i;
+        len++;
         length = len;
         return this;
     }
@@ -184,14 +194,17 @@ public final class ByteVector {
         // two loops), we assume the byte length is equal to char length (which is the most frequent case), and we start
         // serializing the string right away.
         // During the serialization, if we find that this assumption is wrong, we continue with the general method.
-        characters[len++] = (byte) (charLength >>> 8);
-        characters[len++] = (byte) charLength;
+        characters[len] = (byte) (charLength >>> 8);
+        len++;
+        characters[len] = (byte) charLength;
+        len++;
 
         for (int i = 0; i < charLength; i++) {
             char c = utf8String.charAt(i);
 
             if (c >= '\001' && c <= '\177') {
-                characters[len++] = (byte) c;
+                characters[len] = (byte) c;
+                len++;
             } else {
                 length = len;
                 encodeUTF8(utf8String, i);
@@ -260,17 +273,20 @@ public final class ByteVector {
             char c = utf8String.charAt(i);
 
             if (c >= '\001' && c <= '\177') {
-                characters[len++] = (byte) c;
+                characters[len] = (byte) c;
             } else {
                 if (c > '\u07FF') {
-                    characters[len++] = (byte) (0xE0 | c >> 12 & 0xF);
-                    characters[len++] = (byte) (0x80 | c >> 6 & 0x3F);
+                    characters[len] = (byte) (0xE0 | c >> 12 & 0xF);
+                    len++;
+                    characters[len] = (byte) (0x80 | c >> 6 & 0x3F);
                 } else {
-                    characters[len++] = (byte) (0xC0 | c >> 6 & 0x1F);
+                    characters[len] = (byte) (0xC0 | c >> 6 & 0x1F);
                 }
+                len++;
 
-                characters[len++] = (byte) (0x80 | c & 0x3F);
+                characters[len] = (byte) (0x80 | c & 0x3F);
             }
+            len++;
         }
 
         length = len;

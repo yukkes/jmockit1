@@ -66,8 +66,7 @@ public final class FakeClasses {
         }
 
         Class<?> fakeClass = ClassLoad.loadByInternalName(fakeClassDesc);
-        MockUp<?> fakeInstance = fakeClassesToFakeInstances.get(fakeClass);
-        return fakeInstance;
+        return fakeClassesToFakeInstances.get(fakeClass);
     }
 
     public void discardStartupFakes() {

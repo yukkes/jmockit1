@@ -23,8 +23,7 @@ public final class TestWebApplicationContext extends StaticWebApplicationContext
     @Nonnull
     public Object getBean(@Nonnull String name) {
         BeanExporter beanExporter = getBeanExporter();
-        Object bean = BeanLookup.getBean(beanExporter, name);
-        return bean;
+        return BeanLookup.getBean(beanExporter, name);
     }
 
     @Nonnull
@@ -42,15 +41,13 @@ public final class TestWebApplicationContext extends StaticWebApplicationContext
     @Nonnull
     public <T> T getBean(@Nonnull String name, @Nullable Class<T> requiredType) {
         BeanExporter beanExporter = getBeanExporter();
-        T bean = BeanLookup.getBean(beanExporter, name, requiredType);
-        return bean;
+        return BeanLookup.getBean(beanExporter, name, requiredType);
     }
 
     @Override
     @Nonnull
     public <T> T getBean(@Nonnull Class<T> requiredType) {
         BeanExporter beanExporter = getBeanExporter();
-        T bean = BeanLookup.getBean(beanExporter, requiredType);
-        return bean;
+        return BeanLookup.getBean(beanExporter, requiredType);
     }
 }

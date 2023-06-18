@@ -122,8 +122,9 @@ public final class InjectionPoint {
     @Override
     @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
     public boolean equals(Object other) {
-        if (this == other)
+        if (this == other) {
             return true;
+        }
 
         InjectionPoint otherIP = (InjectionPoint) other;
 
@@ -156,12 +157,7 @@ public final class InjectionPoint {
             Type parameterizedType = ((ParameterizedType) type).getRawType();
 
             if (parameterizedType == Provider.class) {
-                return new Provider<Object>() {
-                    @Override
-                    public Object get() {
-                        return value;
-                    }
-                };
+                return (Provider<Object>) () -> value;
             }
 
             if (INSTANCE_CLASS != null && parameterizedType == Instance.class) {
@@ -306,7 +302,7 @@ public final class InjectionPoint {
 
                 if (name.isEmpty()) {
                     name = readAnnotationAttributeIfAvailable(annotation, "lookup"); // EJB 3.0 has no "lookup"
-                                                                                     // attribute
+                    // attribute
 
                     if (name == null || name.isEmpty()) {
                         name = readAnnotationAttribute(annotation, "mappedName");
@@ -319,8 +315,7 @@ public final class InjectionPoint {
             }
 
             if ("javax.inject.Named".equals(annotationName) || annotationName.endsWith(".Qualifier")) {
-                String qualifiedName = readAnnotationAttribute(annotation, "value");
-                return qualifiedName;
+                return readAnnotationAttribute(annotation, "value");
             }
         }
 

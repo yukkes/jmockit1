@@ -47,16 +47,20 @@ public final class Utilities {
     }
 
     public static Method getAnnotatedMethod(Class<?> cls, Class<? extends Annotation> annotation) {
-        for (Method method : cls.getMethods())
-            if (method.getAnnotation(annotation) != null)
+        for (Method method : cls.getMethods()) {
+            if (method.getAnnotation(annotation) != null) {
                 return method;
+            }
+        }
         return null;
     }
 
     public static Method getAnnotatedDeclaredMethod(Class<?> cls, Class<? extends Annotation> annotation) {
-        for (Method method : cls.getDeclaredMethods())
-            if (method.getAnnotation(annotation) != null)
+        for (Method method : cls.getDeclaredMethods()) {
+            if (method.getAnnotation(annotation) != null) {
                 return method;
+            }
+        }
         return null;
     }
 
@@ -109,7 +113,6 @@ public final class Utilities {
     @Nonnull
     public static String getClassFileLocationPath(@Nonnull CodeSource codeSource) {
         String locationPath = codeSource.getLocation().getPath();
-        locationPath = URLDecoder.decode(locationPath, StandardCharsets.UTF_8);
-        return locationPath;
+        return URLDecoder.decode(locationPath, StandardCharsets.UTF_8);
     }
 }

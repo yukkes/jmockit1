@@ -113,8 +113,6 @@ final class DelegatedResult extends InvocationResult {
 
         ReturnTypeConversion typeConversion = new ReturnTypeConversion(recordedInvocation, targetReturnType,
                 returnValue);
-        @Nonnull
-        Object convertedReturnValue = typeConversion.getConvertedValue();
-        return convertedReturnValue;
+        return typeConversion.getConvertedValue();
     }
 }

@@ -237,12 +237,18 @@ final class MockedClassModifier extends BaseClassModifier {
         generateCodeToCreateArrayOfObject(6 + argTypes.length);
 
         int i = 0;
-        generateCodeToFillArrayElement(i++, methodAccess);
-        generateCodeToFillArrayElement(i++, className);
-        generateCodeToFillArrayElement(i++, methodName);
-        generateCodeToFillArrayElement(i++, methodDesc);
-        generateCodeToFillArrayElement(i++, methodSignature);
-        generateCodeToFillArrayElement(i++, executionMode.ordinal());
+        generateCodeToFillArrayElement(i, methodAccess);
+        i++;
+        generateCodeToFillArrayElement(i, className);
+        i++;
+        generateCodeToFillArrayElement(i, methodName);
+        i++;
+        generateCodeToFillArrayElement(i, methodDesc);
+        i++;
+        generateCodeToFillArrayElement(i, methodSignature);
+        i++;
+        generateCodeToFillArrayElement(i, executionMode.ordinal());
+        i++;
 
         generateCodeToFillArrayWithParameterValues(argTypes, i, isStatic ? 0 : 1);
         generateCallToInvocationHandler();

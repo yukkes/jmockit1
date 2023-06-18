@@ -38,7 +38,7 @@ import mockit.internal.util.ClassLoad;
 import mockit.internal.util.VisitInterruptedException;
 
 class BaseTypeRedefinition {
-    private static final ClassDefinition[] CLASS_DEFINITIONS = new ClassDefinition[0];
+    private static final ClassDefinition[] CLASS_DEFINITIONS = {};
 
     private static final class MockedClass {
         @Nullable
@@ -172,7 +172,7 @@ class BaseTypeRedefinition {
     }
 
     private void generateNewMockImplementationClassForInterface(@Nonnull final Type interfaceToMock) {
-        ImplementationClass<?> implementationGenerator = new ImplementationClass<Object>(interfaceToMock) {
+        ImplementationClass<?> implementationGenerator = new ImplementationClass<>(interfaceToMock) {
             @Nonnull
             @Override
             protected ClassVisitor createMethodBodyGenerator(@Nonnull ClassReader cr) {
@@ -309,15 +309,13 @@ class BaseTypeRedefinition {
     private Class<?> generateConcreteSubclassForAbstractType(@Nonnull final Type typeToMock) {
         final String subclassName = getNameForConcreteSubclassToCreate();
 
-        Class<?> subclass = new ImplementationClass<Object>(targetClass, subclassName) {
+        return new ImplementationClass<>(targetClass, subclassName) {
             @Nonnull
             @Override
             protected ClassVisitor createMethodBodyGenerator(@Nonnull ClassReader cr) {
                 return new SubclassGenerationModifier(targetClass, typeToMock, cr, subclassName, false);
             }
         }.generateClass();
-
-        return subclass;
     }
 
     @Nonnull

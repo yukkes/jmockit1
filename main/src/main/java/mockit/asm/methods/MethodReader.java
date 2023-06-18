@@ -407,9 +407,12 @@ public final class MethodReader extends AnnotatedReader {
             codeIndex += 6;
             int varIndex = readUnsignedShort();
 
-            typeTable[--typeTableSize] = signatureCodeIndex;
-            typeTable[--typeTableSize] = varIndex;
-            typeTable[--typeTableSize] = startIndex;
+            typeTableSize--;
+            typeTable[typeTableSize] = signatureCodeIndex;
+            typeTableSize--;
+            typeTable[typeTableSize] = varIndex;
+            typeTableSize--;
+            typeTable[typeTableSize] = startIndex;
         }
 
         return typeTable;
@@ -704,8 +707,7 @@ public final class MethodReader extends AnnotatedReader {
     private String getLocalVariableSignature(@Nonnull int[] typeTable, @Nonnegative int start, @Nonnegative int index) {
         for (int i = 0, n = typeTable.length; i < n; i += 3) {
             if (typeTable[i] == start && typeTable[i + 1] == index) {
-                String varSignature = readNonnullUTF8(typeTable[i + 2]);
-                return varSignature;
+                return readNonnullUTF8(typeTable[i + 2]);
             }
         }
 

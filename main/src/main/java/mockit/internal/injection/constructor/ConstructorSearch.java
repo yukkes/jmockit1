@@ -123,28 +123,29 @@ public final class ConstructorSearch {
         }
     }
 
-    private static final Comparator<Constructor<?>> CONSTRUCTOR_COMPARATOR = new Comparator<Constructor<?>>() {
-        @Override
-        public int compare(Constructor<?> c1, Constructor<?> c2) {
-            return compareAccessibility(c1, c2);
-        }
-    };
+    private static final Comparator<Constructor<?>> CONSTRUCTOR_COMPARATOR = ConstructorSearch::compareAccessibility;
 
     private static int compareAccessibility(@Nonnull Constructor<?> c1, @Nonnull Constructor<?> c2) {
         int m1 = getModifiers(c1);
         int m2 = getModifiers(c2);
-        if (m1 == m2)
+        if (m1 == m2) {
             return 0;
-        if (m1 == PUBLIC)
+        }
+        if (m1 == PUBLIC) {
             return -1;
-        if (m2 == PUBLIC)
+        }
+        if (m2 == PUBLIC) {
             return 1;
-        if (m1 == PROTECTED)
+        }
+        if (m1 == PROTECTED) {
             return -1;
-        if (m2 == PROTECTED)
+        }
+        if (m2 == PROTECTED) {
             return 1;
-        if (m2 == PRIVATE)
+        }
+        if (m2 == PRIVATE) {
             return -1;
+        }
         return 1;
     }
 

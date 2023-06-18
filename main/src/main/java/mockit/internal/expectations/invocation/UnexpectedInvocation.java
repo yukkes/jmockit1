@@ -10,6 +10,8 @@ import javax.annotation.Nonnull;
  * Thrown to indicate that one or more unexpected invocations occurred during the test.
  */
 public final class UnexpectedInvocation extends Error {
+    private static final long serialVersionUID = 1L;
+
     public UnexpectedInvocation(@Nonnull String detailMessage) {
         super(detailMessage);
     }

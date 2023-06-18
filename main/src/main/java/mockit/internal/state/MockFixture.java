@@ -162,7 +162,8 @@ public final class MockFixture {
             byte[] modifiedClassfile = classAndBytecode.getValue();
 
             ClassDefinition classDef = new ClassDefinition(modifiedClass, modifiedClassfile);
-            classDefs[i++] = classDef;
+            classDefs[i] = classDef;
+            i++;
 
             addRedefinedClass(classDef);
         }

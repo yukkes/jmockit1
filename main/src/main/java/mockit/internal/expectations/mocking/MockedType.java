@@ -86,9 +86,7 @@ public final class MockedType extends InjectionProvider {
             if (!value.isEmpty()) {
                 Class<?> injectableClass = getClassType();
 
-                if (injectableClass == TypeVariable.class) {
-                    // Not supported, do nothing.
-                } else {
+                if (injectableClass != TypeVariable.class) {
                     return TypeConversion.convertFromString(injectableClass, value);
                 }
             }
@@ -258,11 +256,7 @@ public final class MockedType extends InjectionProvider {
             return null;
         }
 
-        if (providedValue == null) {
-            return value;
-        }
-
-        if (!fieldType.isPrimitive()) {
+        if (providedValue == null || !fieldType.isPrimitive()) {
             return value;
         }
 

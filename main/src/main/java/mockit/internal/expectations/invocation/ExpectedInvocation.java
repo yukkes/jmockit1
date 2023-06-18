@@ -336,13 +336,13 @@ public final class ExpectedInvocation {
 
     @Nonnull
     public String toString(@Nullable Object otherInstance) {
-        String desc = arguments.toString();
+        StringBuilder desc = new StringBuilder().append(arguments.toString());
 
         if (instance != otherInstance && instance != null) {
-            desc += "\n   on mock instance: " + ObjectMethods.objectIdentity(instance);
+            desc.append("\n   on mock instance: ").append(ObjectMethods.objectIdentity(instance));
         }
 
-        return desc;
+        return desc.toString();
     }
 
     @Nonnull

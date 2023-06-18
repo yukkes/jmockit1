@@ -213,7 +213,8 @@ final class FakedClassModifier extends BaseClassModifier {
         generateCodeToCreateArrayOfObject(2);
 
         int i = 0;
-        generateCodeToFillArrayElement(i++, fakeMethods.getFakeClassInternalName());
+        generateCodeToFillArrayElement(i, fakeMethods.getFakeClassInternalName());
+        i++;
         generateCodeToFillArrayElement(i, fakeMethod.getIndexForFakeState());
 
         generateCallToInvocationHandler();
@@ -273,19 +274,26 @@ final class FakedClassModifier extends BaseClassModifier {
         generateCodeToCreateArrayOfObject(6 + argTypes.length);
 
         int i = 0;
-        generateCodeToFillArrayElement(i++, fakeMethods.getFakeClassInternalName());
-        generateCodeToFillArrayElement(i++, classDesc);
-        generateCodeToFillArrayElement(i++, methodAccess);
+        generateCodeToFillArrayElement(i, fakeMethods.getFakeClassInternalName());
+        i++;
+        generateCodeToFillArrayElement(i, classDesc);
+        i++;
+        generateCodeToFillArrayElement(i, methodAccess);
+        i++;
 
         if (fakeMethod.hasInvocationParameterOnly()) {
-            generateCodeToFillArrayElement(i++, methodName);
-            generateCodeToFillArrayElement(i++, methodDesc);
+            generateCodeToFillArrayElement(i, methodName);
+            i++;
+            generateCodeToFillArrayElement(i, methodDesc);
         } else {
-            generateCodeToFillArrayElement(i++, fakeMethod.name);
-            generateCodeToFillArrayElement(i++, fakeMethod.desc);
+            generateCodeToFillArrayElement(i, fakeMethod.name);
+            i++;
+            generateCodeToFillArrayElement(i, fakeMethod.desc);
         }
+        i++;
 
-        generateCodeToFillArrayElement(i++, fakeMethod.getIndexForFakeState());
+        generateCodeToFillArrayElement(i, fakeMethod.getIndexForFakeState());
+        i++;
 
         generateCodeToFillArrayWithParameterValues(argTypes, i, isStatic ? 0 : 1);
         generateCallToInvocationHandler();

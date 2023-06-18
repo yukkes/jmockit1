@@ -66,8 +66,7 @@ final class LocalVariableTableWriter extends AttributeWriter {
         localVarCount++;
 
         char c = desc.charAt(0);
-        int n = index + (c == 'J' || c == 'D' ? 2 : 1);
-        return n;
+        return index + (c == 'J' || c == 'D' ? 2 : 1);
     }
 
     private void addAttribute(@Nonnull ByteVector attribute, @Nonnull String name, @Nonnull String desc,

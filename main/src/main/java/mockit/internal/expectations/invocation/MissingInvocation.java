@@ -10,6 +10,8 @@ import javax.annotation.Nonnull;
  * Thrown to indicate that one or more expected invocations still had not occurred by the end of the test.
  */
 public final class MissingInvocation extends Error {
+    private static final long serialVersionUID = 1L;
+
     public MissingInvocation(@Nonnull String detailMessage) {
         super(detailMessage);
     }

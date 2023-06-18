@@ -41,7 +41,7 @@ public final class ExecutingTest {
     private final CascadingTypes cascadingTypes;
 
     public ExecutingTest() {
-        shouldIgnoreMockingCallbacks = new ThreadLocal<Boolean>() {
+        shouldIgnoreMockingCallbacks = new ThreadLocal<>() {
             @Override
             protected Boolean initialValue() {
                 return false;

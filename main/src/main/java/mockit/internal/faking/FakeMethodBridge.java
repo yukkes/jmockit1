@@ -73,9 +73,7 @@ public final class FakeMethodBridge extends ClassLoadingBridge {
             @Nonnull String fakeOrFakedName, @Nonnull String fakeOrFakedDesc, @Nonnull Object[] fakeArgs)
             throws Throwable {
         Class<?>[] paramClasses = TypeDescriptor.getParameterTypes(fakeOrFakedDesc);
-        Object result = MethodReflection.invokeWithCheckedThrows(fakeClass, fake, fakeOrFakedName, paramClasses,
-                fakeArgs);
-        return result;
+        return MethodReflection.invokeWithCheckedThrows(fakeClass, fake, fakeOrFakedName, paramClasses, fakeArgs);
     }
 
     @Nullable
@@ -84,8 +82,7 @@ public final class FakeMethodBridge extends ClassLoadingBridge {
             @Nonnull Object[] fakeArgs) throws Throwable {
         Class<?>[] paramClasses = TypeDescriptor.getParameterTypes(fakeOrFakedDesc);
         Method fakeMethod = fakeState.getFakeMethod(fakeClass, paramClasses);
-        Object result = MethodReflection.invokeWithCheckedThrows(fake, fakeMethod, fakeArgs);
-        return result;
+        return MethodReflection.invokeWithCheckedThrows(fake, fakeMethod, fakeArgs);
     }
 
     @Nullable

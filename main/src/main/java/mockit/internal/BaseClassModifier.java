@@ -192,7 +192,8 @@ public class BaseClassModifier extends WrappingClassVisitor {
 
         for (JavaType parameterType : parameterTypes) {
             mw.visitInsn(DUP);
-            mw.visitIntInsn(SIPUSH, i++);
+            mw.visitIntInsn(SIPUSH, i);
+            i++;
             mw.visitVarInsn(parameterType.getOpcode(ILOAD), j);
             TypeConversionBytecode.generateCastToObject(mw, parameterType);
             mw.visitInsn(AASTORE);

@@ -103,8 +103,7 @@ final class JPADependencies {
             if (dependencyType == EntityManagerFactory.class
                     && injectionProvider.hasAnnotation(PersistenceUnit.class)) {
                 InjectionPoint injectionPoint = createFactoryInjectionPoint(dependencyKey);
-                EntityManagerFactory emFactory = createAndRegisterEntityManagerFactory(injectionPoint);
-                return emFactory;
+                return createAndRegisterEntityManagerFactory(injectionPoint);
             }
 
             if (dependencyType == EntityManager.class && injectionProvider.hasAnnotation(PersistenceContext.class)) {

@@ -181,8 +181,7 @@ public final class ConstructorInjection extends Injector {
             }
         }
 
-        Object varargArray = newArrayFromList(varargsElementType, varargValues);
-        return varargArray;
+        return newArrayFromList(varargsElementType, varargValues);
     }
 
     @Nonnull

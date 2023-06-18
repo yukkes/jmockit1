@@ -40,8 +40,7 @@ public final class AnnotationReflection {
             throws NoSuchMethodException {
         try {
             Method publicMethod = annotationInstance.getClass().getMethod(attributeName, NO_PARAMETERS);
-            String result = (String) publicMethod.invoke(annotationInstance);
-            return result;
+            return (String) publicMethod.invoke(annotationInstance);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {

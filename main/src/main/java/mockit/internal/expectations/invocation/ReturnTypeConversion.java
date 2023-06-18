@@ -119,15 +119,13 @@ public final class ReturnTypeConversion {
         } else if (returnType == void.class) {
             throw newIncompatibleTypesException();
         } else if (addByteArrayIfApplicable()) {
-            return;
+            // Do nothing
         } else if (returnType.isArray()) {
             addArray();
         } else if (returnType.isAssignableFrom(ListIterator.class)) {
             addListIterator();
-        } else if (addCollectionWithSingleElement()) {
-            return;
-        } else if (JAVA8 && addJava8ObjectIfApplicable()) {
-            return;
+        } else if (addCollectionWithSingleElement() || JAVA8 && addJava8ObjectIfApplicable()) {
+            // Do nothing
         } else if (valueToReturn instanceof CharSequence) {
             addCharSequence((CharSequence) valueToReturn);
         } else {
@@ -222,7 +220,8 @@ public final class ReturnTypeConversion {
         if (returnType == Optional.class) {
             addReturnValue(Optional.of(valueToReturn));
             return true;
-        } else if (returnType.isAssignableFrom(Stream.class)) {
+        }
+        if (returnType.isAssignableFrom(Stream.class)) {
             addReturnValue(singletonList(valueToReturn).stream());
             return true;
         }

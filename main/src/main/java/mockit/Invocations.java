@@ -458,26 +458,27 @@ class Invocations {
     @Nonnull
     protected final <T> T withAny(@Nonnull T arg) {
         ArgumentMatcher<?> matcher;
-        if (arg instanceof String)
+        if (arg instanceof String) {
             matcher = AlwaysTrueMatcher.ANY_STRING;
-        else if (arg instanceof Integer)
+        } else if (arg instanceof Integer) {
             matcher = AlwaysTrueMatcher.ANY_INT;
-        else if (arg instanceof Boolean)
+        } else if (arg instanceof Boolean) {
             matcher = AlwaysTrueMatcher.ANY_BOOLEAN;
-        else if (arg instanceof Character)
+        } else if (arg instanceof Character) {
             matcher = AlwaysTrueMatcher.ANY_CHAR;
-        else if (arg instanceof Double)
+        } else if (arg instanceof Double) {
             matcher = AlwaysTrueMatcher.ANY_DOUBLE;
-        else if (arg instanceof Float)
+        } else if (arg instanceof Float) {
             matcher = AlwaysTrueMatcher.ANY_FLOAT;
-        else if (arg instanceof Long)
+        } else if (arg instanceof Long) {
             matcher = AlwaysTrueMatcher.ANY_LONG;
-        else if (arg instanceof Byte)
+        } else if (arg instanceof Byte) {
             matcher = AlwaysTrueMatcher.ANY_BYTE;
-        else if (arg instanceof Short)
+        } else if (arg instanceof Short) {
             matcher = AlwaysTrueMatcher.ANY_SHORT;
-        else
+        } else {
             matcher = AlwaysTrueMatcher.ANY_VALUE;
+        }
 
         addMatcher(matcher);
         return arg;

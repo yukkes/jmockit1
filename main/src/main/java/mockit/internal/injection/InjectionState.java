@@ -132,8 +132,7 @@ public final class InjectionState {
             InjectionPoint internalInjectionPoint = new InjectionPoint(fieldType, fieldName, qualified);
 
             if (internalInjectionPoint.equals(injectionPoint)) {
-                Object fieldValue = FieldReflection.getFieldValue(internalField, testedObject);
-                return fieldValue;
+                return FieldReflection.getFieldValue(internalField, testedObject);
             }
         }
 
@@ -200,11 +199,10 @@ public final class InjectionState {
             }
 
             if (reflection != null) {
-                if (reflection.areMatchingTypes(dependencyType, dependencyIP.type)) {
-                    found = dependencyObject;
-                } else {
+                if (!reflection.areMatchingTypes(dependencyType, dependencyIP.type)) {
                     continue;
                 }
+                found = dependencyObject;
             }
 
             if (injectionPoint.hasSameName(dependencyIP)) {

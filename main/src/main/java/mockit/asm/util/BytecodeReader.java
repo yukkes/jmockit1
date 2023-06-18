@@ -183,8 +183,10 @@ public class BytecodeReader {
     public final int readUnsignedShort() {
         byte[] b = code;
         int i = codeIndex;
-        int byte0 = (b[i++] & 0xFF) << 8;
-        int byte1 = b[i++] & 0xFF;
+        int byte0 = (b[i] & 0xFF) << 8;
+        i++;
+        int byte1 = b[i] & 0xFF;
+        i++;
         codeIndex = i;
         return byte0 | byte1;
     }
@@ -236,10 +238,14 @@ public class BytecodeReader {
     public final int readInt() {
         byte[] b = code;
         int i = codeIndex;
-        int byte0 = (b[i++] & 0xFF) << 24;
-        int byte1 = (b[i++] & 0xFF) << 16;
-        int byte2 = (b[i++] & 0xFF) << 8;
-        int byte3 = b[i++] & 0xFF;
+        int byte0 = (b[i] & 0xFF) << 24;
+        i++;
+        int byte1 = (b[i] & 0xFF) << 16;
+        i++;
+        int byte2 = (b[i] & 0xFF) << 8;
+        i++;
+        int byte3 = b[i] & 0xFF;
+        i++;
         codeIndex = i;
         return byte0 | byte1 | byte2 | byte3;
     }
@@ -254,8 +260,8 @@ public class BytecodeReader {
      */
     protected final int readInt(@Nonnegative int s4CodeIndex) {
         byte[] b = code;
-        return ((b[s4CodeIndex] & 0xFF) << 24) | ((b[s4CodeIndex + 1] & 0xFF) << 16)
-                | ((b[s4CodeIndex + 2] & 0xFF) << 8) | (b[s4CodeIndex + 3] & 0xFF);
+        return (b[s4CodeIndex] & 0xFF) << 24 | (b[s4CodeIndex + 1] & 0xFF) << 16 | (b[s4CodeIndex + 2] & 0xFF) << 8
+                | b[s4CodeIndex + 3] & 0xFF;
     }
 
     /**
@@ -266,7 +272,7 @@ public class BytecodeReader {
     public final long readLong() {
         long l1 = readInt();
         long l0 = readInt() & 0xFFFFFFFFL;
-        return (l1 << 32) | l0;
+        return l1 << 32 | l0;
     }
 
     /**
@@ -280,7 +286,7 @@ public class BytecodeReader {
     protected final long readLong(@Nonnegative int s8CodeIndex) {
         long l1 = readInt(s8CodeIndex);
         long l0 = readInt(s8CodeIndex + 4) & 0xFFFFFFFFL;
-        return (l1 << 32) | l0;
+        return l1 << 32 | l0;
     }
 
     public final double readDouble() {
@@ -324,13 +330,15 @@ public class BytecodeReader {
         char cc = 0;
 
         while (startIndex < endIndex) {
-            int c = code[startIndex++];
+            int c = code[startIndex];
+            startIndex++;
 
             if (st == 0) {
                 c &= 0xFF;
 
                 if (c < 0x80) { // 0xxxxxxx
-                    buf[strLen++] = (char) c;
+                    buf[strLen] = (char) c;
+                    strLen++;
                 } else if (c < 0xE0 && c > 0xBF) { // 110x xxxx 10xx xxxx
                     cc = (char) (c & 0x1F);
                     st = 1;
@@ -339,10 +347,11 @@ public class BytecodeReader {
                     st = 2;
                 }
             } else if (st == 1) { // byte 2 of 2-byte char or byte 3 of 3-byte char
-                buf[strLen++] = (char) ((cc << 6) | (c & 0x3F));
+                buf[strLen] = (char) (cc << 6 | c & 0x3F);
+                strLen++;
                 st = 0;
             } else { // byte 2 of 3-byte char
-                cc = (char) ((cc << 6) | (c & 0x3F));
+                cc = (char) (cc << 6 | c & 0x3F);
                 st = 1;
             }
         }
@@ -446,8 +455,7 @@ public class BytecodeReader {
     @Nonnull
     public final Object readConstItem() {
         int constIndex = readUnsignedShort();
-        Object cst = readConst(constIndex);
-        return cst;
+        return readConst(constIndex);
     }
 
     @Nonnull
@@ -518,8 +526,9 @@ public class BytecodeReader {
     @Nonnull
     private MethodHandle readMethodHandle(@Nonnegative int bsmCodeIndex) {
         int tag = readUnsignedByte(bsmCodeIndex);
-        if (tag < MethodHandle.Tag.TAG_GETFIELD || tag > MethodHandle.Tag.TAG_INVOKEINTERFACE)
+        if (tag < MethodHandle.Tag.TAG_GETFIELD || tag > MethodHandle.Tag.TAG_INVOKEINTERFACE) {
             throw new IllegalArgumentException("Illegal method-handle tag: " + tag);
+        }
 
         int classIndex = readItem(bsmCodeIndex + 1);
         String owner = readNonnullClass(classIndex);
@@ -539,8 +548,7 @@ public class BytecodeReader {
     @Nullable
     protected final String readClass() {
         int itemCodeIndex = readItem();
-        String classDesc = readUTF8(itemCodeIndex);
-        return classDesc;
+        return readUTF8(itemCodeIndex);
     }
 
     /**
@@ -551,15 +559,13 @@ public class BytecodeReader {
     @Nonnull
     public final String readNonnullClass() {
         int itemCodeIndex = readItem();
-        String classDesc = readNonnullUTF8(itemCodeIndex);
-        return classDesc;
+        return readNonnullUTF8(itemCodeIndex);
     }
 
     @Nonnull
     public final String readNonnullClass(@Nonnegative int u2CodeIndex) {
         int itemCodeIndex = readItem(u2CodeIndex);
-        String classDesc = readNonnullUTF8(itemCodeIndex);
-        return classDesc;
+        return readNonnullUTF8(itemCodeIndex);
     }
 
     /**

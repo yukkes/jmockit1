@@ -14,7 +14,7 @@ import mockit.coverage.CallPoint;
 
 public final class ListOfCallPoints {
     @Nonnull
-    private static final String EOL = System.getProperty("line.separator");
+    private static final String EOL = System.lineSeparator();
     private static final Pattern LESS_THAN_CHAR = Pattern.compile("<");
 
     @Nonnull

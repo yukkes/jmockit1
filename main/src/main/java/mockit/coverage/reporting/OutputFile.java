@@ -48,8 +48,7 @@ public final class OutputFile extends PrintWriter {
     static File getOutputFile(@Nonnull String outputDir, @Nonnull String sourceFilePath) {
         int p = sourceFilePath.lastIndexOf('.');
         String outputFileName = sourceFilePath.substring(0, p) + ".html";
-        File outputFile = new File(outputDir, outputFileName);
-        return outputFile;
+        return new File(outputDir, outputFileName);
     }
 
     @Nonnull

@@ -45,7 +45,7 @@ public final class CaptureTransformer<M> implements ClassFileTransformer {
         this.capturedType = capturedType;
         capturedTypeDesc = JavaType.getInternalName(capturedType.baseType);
         this.captureOfImplementations = captureOfImplementations;
-        transformedClasses = registerTransformedClasses ? new HashMap<ClassIdentification, byte[]>(2)
+        transformedClasses = registerTransformedClasses ? new HashMap<>(2)
                 : Collections.<ClassIdentification, byte[]>emptyMap();
         superTypesSearched = new HashMap<>();
         this.typeMetadata = typeMetadata;
@@ -113,18 +113,15 @@ public final class CaptureTransformer<M> implements ClassFileTransformer {
 
     private boolean searchSuperTypes(@Nullable ClassLoader loader, @Nonnull String superName,
             @Nullable String[] interfaces) {
-        if (!"java/lang/Object".equals(superName) && !superName.startsWith("mockit/")) {
-            if (searchSuperType(loader, superName)) {
-                return true;
-            }
+        if (!"java/lang/Object".equals(superName) && !superName.startsWith("mockit/")
+                && searchSuperType(loader, superName)) {
+            return true;
         }
 
         if (interfaces != null && interfaces.length > 0) {
             for (String itf : interfaces) {
-                if (!itf.startsWith("java/") && !itf.startsWith("javax/")) {
-                    if (searchSuperType(loader, itf)) {
-                        return true;
-                    }
+                if (!itf.startsWith("java/") && !itf.startsWith("javax/") && searchSuperType(loader, itf)) {
+                    return true;
                 }
             }
         }

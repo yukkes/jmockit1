@@ -41,8 +41,9 @@ final class ArgumentValuesAndMatchersWithVarargs extends ArgumentValuesAndMatche
 
             if (expected == null) {
                 Object arg = varargsComparison.getThisArgument(i);
-                if (arg == null)
+                if (arg == null) {
                     continue;
+                }
                 expected = new LenientEqualityMatcher(arg, instanceMap);
             } else if (i == regularArgCount && expected instanceof CaptureMatcher<?>) {
                 actual = varargsComparison.getOtherVarArgs();
@@ -102,7 +103,7 @@ final class ArgumentValuesAndMatchersWithVarargs extends ArgumentValuesAndMatche
         return true;
     }
 
-    private static final Object[] NULL_VARARGS = new Object[0];
+    private static final Object[] NULL_VARARGS = {};
 
     private final class VarargsComparison {
         @Nonnull
@@ -170,21 +171,25 @@ final class ArgumentValuesAndMatchersWithVarargs extends ArgumentValuesAndMatche
 
         @Nullable
         Object getThisArgument(@Nonnegative int parameter) {
-            if (parameter < regularArgCount)
+            if (parameter < regularArgCount) {
                 return values[parameter];
+            }
             int p = parameter - regularArgCount;
-            if (thisVarArgs == null || p >= thisVarArgs.length)
+            if (thisVarArgs == null || p >= thisVarArgs.length) {
                 return null;
+            }
             return thisVarArgs[p];
         }
 
         @Nullable
         Object getOtherArgument(@Nonnegative int parameter) {
-            if (parameter < regularArgCount)
+            if (parameter < regularArgCount) {
                 return otherValues[parameter];
+            }
             int p = parameter - regularArgCount;
-            if (otherVarArgs == null || p >= otherVarArgs.length)
+            if (otherVarArgs == null || p >= otherVarArgs.length) {
                 return null;
+            }
             return otherVarArgs[p];
         }
     }

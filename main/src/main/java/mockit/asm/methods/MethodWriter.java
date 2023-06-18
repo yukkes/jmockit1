@@ -201,9 +201,9 @@ public final class MethodWriter extends MethodVisitor {
             int opt;
 
             if (opcode < ISTORE) { // ILOAD_0
-                opt = 26 + ((opcode - ILOAD) << 2) + varIndex;
+                opt = 26 + (opcode - ILOAD << 2) + varIndex;
             } else { // ISTORE_0
-                opt = 59 + ((opcode - ISTORE) << 2) + varIndex;
+                opt = 59 + (opcode - ISTORE << 2) + varIndex;
             }
 
             code.putByte(opt);
@@ -286,7 +286,7 @@ public final class MethodWriter extends MethodVisitor {
                     nextInsn.markAsTarget();
                 }
 
-                code.putByte(opcode <= 166 ? ((opcode + 1) ^ 1) - 1 : opcode ^ 1);
+                code.putByte(opcode <= 166 ? (opcode + 1 ^ 1) - 1 : opcode ^ 1);
                 code.putShort(8); // jump offset
             }
 

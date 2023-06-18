@@ -56,8 +56,7 @@ public abstract class ImplementationClass<T> {
         final byte[] modifiedClassfile = modifier.toByteArray();
 
         try {
-            @SuppressWarnings("unchecked")
-            Class<T> generatedClass = (Class<T>) new ClassLoader(parentLoader) {
+            return (Class<T>) new ClassLoader(parentLoader) {
                 @Override
                 protected Class<?> findClass(String name) throws ClassNotFoundException {
                     if (!name.equals(generatedClassName)) {
@@ -67,8 +66,6 @@ public abstract class ImplementationClass<T> {
                     return defineClass(name, modifiedClassfile, 0, modifiedClassfile.length);
                 }
             }.findClass(generatedClassName);
-
-            return generatedClass;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Unable to define class: " + generatedClassName, e);
         }

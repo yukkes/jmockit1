@@ -87,8 +87,7 @@ public final class FullInjection {
             return null;
         }
 
-        Object testedInstance = createInstance(testedClass, injector, injectionProvider, injectionPoint);
-        return testedInstance;
+        return createInstance(testedClass, injector, injectionProvider, injectionPoint);
     }
 
     public void setInjectionProvider(@Nullable InjectionProvider injectionProvider) {
@@ -248,13 +247,7 @@ public final class FullInjection {
             };
         }
 
-        return new Provider<Object>() {
-            @Override
-            public Object get() {
-                Object dependency = createNewInstance(providedClass, false);
-                return dependency;
-            }
-        };
+        return (Provider<Object>) () -> createNewInstance(providedClass, false);
     }
 
     @Nullable

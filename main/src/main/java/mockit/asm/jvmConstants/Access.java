@@ -61,7 +61,7 @@ public final class Access {
     }
 
     public static int computeFlag(int access, int baseMask) {
-        int mask = baseMask | DEPRECATED | SYNTHETIC_ATTRIBUTE | ((access & SYNTHETIC_ATTRIBUTE) / TO_SYNTHETIC);
+        int mask = baseMask | DEPRECATED | SYNTHETIC_ATTRIBUTE | (access & SYNTHETIC_ATTRIBUTE) / TO_SYNTHETIC;
         return access & ~mask;
     }
 

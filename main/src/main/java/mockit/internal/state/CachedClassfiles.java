@@ -43,11 +43,11 @@ public final class CachedClassfiles implements ClassFileTransformer {
     public byte[] transform(@Nullable ClassLoader loader, String classDesc,
             @Nullable Class<?> classBeingRedefinedOrRetransformed, @Nullable ProtectionDomain protectionDomain,
             @Nonnull byte[] classfileBuffer) {
-        if (classDesc != null) { // can be null for Java 8 lambdas
-            if (classBeingRedefinedOrRetransformed != null && classBeingRedefinedOrRetransformed == classBeingCached) {
-                addClassfile(loader, classDesc, classfileBuffer);
-                classBeingCached = null;
-            }
+        // can be null for Java 8 lambdas
+        if (classDesc != null && classBeingRedefinedOrRetransformed != null
+                && classBeingRedefinedOrRetransformed == classBeingCached) {
+            addClassfile(loader, classDesc, classfileBuffer);
+            classBeingCached = null;
         }
 
         return null;
@@ -76,8 +76,9 @@ public final class CachedClassfiles implements ClassFileTransformer {
 
         // Discards an invalid numerical suffix from a synthetic Java 8 class, if detected.
         int p = className.indexOf('/');
-        if (p > 0)
+        if (p > 0) {
             className = className.substring(0, p);
+        }
 
         Map<String, byte[]> classfiles = getClassfiles(aClass.getClassLoader());
         return classfiles.get(className.replace('.', '/'));
@@ -121,8 +122,9 @@ public final class CachedClassfiles implements ClassFileTransformer {
     @Nullable
     public static synchronized byte[] getClassfile(@Nonnull Class<?> aClass) {
         byte[] cached = INSTANCE.findClassfile(aClass);
-        if (cached != null)
+        if (cached != null) {
             return cached;
+        }
 
         INSTANCE.classBeingCached = aClass;
         Startup.retransformClass(aClass);

@@ -22,9 +22,11 @@ public final class LenientEqualityMatcher extends EqualityMatcher {
     public boolean matches(@Nullable Object argValue) {
         if (argValue == null) {
             return object == null;
-        } else if (object == null) {
+        }
+        if (object == null) {
             return false;
-        } else if (argValue == object || instanceMap.get(argValue) == object) {
+        }
+        if (argValue == object || instanceMap.get(argValue) == object) {
             return true;
         }
 

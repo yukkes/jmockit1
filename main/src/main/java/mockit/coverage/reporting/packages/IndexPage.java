@@ -129,7 +129,7 @@ public final class IndexPage extends ListWithFilesAndPercentages {
     private void writeTableFirstRowWithColumnTitles() {
         output.println("    <tr>");
         output.write("      <th style='cursor: col-resize' onclick='showHideAllFiles()'>Packages: ");
-        output.print(packageToFiles.keySet().size());
+        output.print(packageToFiles.size());
         output.println("</th>");
         output.write("      <th onclick='location.reload()' style='cursor: n-resize' title='"
                 + "Click on the column title to the right to sort by size (total number of items).'>Files: ");

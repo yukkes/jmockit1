@@ -139,17 +139,17 @@ public final class LineParser {
                 inComments = false;
                 startPos = -1;
                 return true;
-            } else if (c2 == '*') {
-                endCodeElementIfPending();
-                startNewElementIfNotYetStarted();
-                inComments = true;
-                pos += 2;
-
-                if (parseUntilEndOfLineOrEndOfComment()) {
-                    return true;
-                }
-            } else {
+            }
+            if (c2 != '*') {
                 break;
+            }
+            endCodeElementIfPending();
+            startNewElementIfNotYetStarted();
+            inComments = true;
+            pos += 2;
+
+            if (parseUntilEndOfLineOrEndOfComment()) {
+                return true;
             }
         }
 

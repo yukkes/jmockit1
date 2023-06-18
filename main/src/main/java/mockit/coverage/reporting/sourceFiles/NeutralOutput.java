@@ -61,7 +61,8 @@ final class NeutralOutput {
 
             output.write(lineText);
             return true;
-        } else if (previousLineInComments) {
+        }
+        if (previousLineInComments) {
             output.append("</div><span>").append(lineIndentation).println("/*...*/</span></td>");
             output.println("    </tr>");
             previousLineInComments = false;
@@ -87,8 +88,9 @@ final class NeutralOutput {
         int indentationSize = 0;
 
         for (int i = 0; i < lineText.length(); i++, indentationSize++) {
-            if (lineText.charAt(i) > ' ')
+            if (lineText.charAt(i) > ' ') {
                 break;
+            }
         }
 
         lineIndentation = lineText.substring(0, indentationSize);
@@ -112,7 +114,8 @@ final class NeutralOutput {
 
             output.write(lineText);
             return true;
-        } else if (previousLineInImports) {
+        }
+        if (previousLineInImports) {
             output.println("</div><span>import ...</span></pre></td>");
             output.println("    </tr>");
             previousLineInImports = false;

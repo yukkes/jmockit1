@@ -40,7 +40,7 @@ public final class TestedObjectCreation {
 
     @Nonnull
     private static Class<?> generateSubclass(@Nonnull final Type testedType, @Nonnull final Class<?> abstractClass) {
-        Class<?> generatedSubclass = new ImplementationClass<Object>(abstractClass) {
+        Class<?> generatedSubclass = new ImplementationClass<>(abstractClass) {
             @Nonnull
             @Override
             protected ClassVisitor createMethodBodyGenerator(@Nonnull ClassReader cr) {

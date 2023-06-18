@@ -24,7 +24,8 @@ public final class CoveragePercentage {
     public static String percentageColor(@Nonnegative int coveredCount, @Nonnegative int totalCount) {
         if (coveredCount == 0) {
             return "ff0000";
-        } else if (coveredCount == totalCount) {
+        }
+        if (coveredCount == totalCount) {
             return "00ff00";
         }
 

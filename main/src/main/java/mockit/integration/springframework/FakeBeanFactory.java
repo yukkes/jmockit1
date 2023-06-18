@@ -40,8 +40,7 @@ public final class FakeBeanFactory extends MockUp<DefaultListableBeanFactory> {
         }
 
         BeanExporter beanExporter = testedClasses.getBeanExporter();
-        Object bean = BeanLookup.getBean(beanExporter, name);
-        return bean;
+        return BeanLookup.getBean(beanExporter, name);
     }
 
     @Mock
@@ -53,8 +52,7 @@ public final class FakeBeanFactory extends MockUp<DefaultListableBeanFactory> {
         }
 
         BeanExporter beanExporter = testedClasses.getBeanExporter();
-        T bean = BeanLookup.getBean(beanExporter, name, requiredType);
-        return bean;
+        return BeanLookup.getBean(beanExporter, name, requiredType);
     }
 
     @Mock
@@ -66,7 +64,6 @@ public final class FakeBeanFactory extends MockUp<DefaultListableBeanFactory> {
         }
 
         BeanExporter beanExporter = testedClasses.getBeanExporter();
-        T bean = BeanLookup.getBean(beanExporter, requiredType);
-        return bean;
+        return BeanLookup.getBean(beanExporter, requiredType);
     }
 }

@@ -77,9 +77,8 @@ abstract class ArgumentValuesAndMatchers {
 
     private static boolean isNotEqual(@Nullable Object expected, @Nullable Object actual,
             @Nonnull Map<Object, Object> instanceMap) {
-        return actual == null && expected != null || actual != null && expected == null
-                || actual != null && actual != expected && expected != instanceMap.get(actual)
-                        && !EqualityMatcher.areEqualWhenNonNull(actual, expected);
+        return actual == null == (expected != null) || actual != null && actual != expected
+                && expected != instanceMap.get(actual) && !EqualityMatcher.areEqualWhenNonNull(actual, expected);
     }
 
     abstract boolean hasEquivalentMatchers(@Nonnull ArgumentValuesAndMatchers other);
@@ -125,14 +124,9 @@ abstract class ArgumentValuesAndMatchers {
                 if (!EqualityMatcher.areEqual(values[i], other.values[i])) {
                     return -1;
                 }
-            } else if (matcher1 != matcher2) {
-                if (matcher1.getClass() != matcher2.getClass()) {
-                    return -1;
-                }
-
-                if (!matcher1.same((M1) matcher2) && areNonEquivalentMatches(other, matcher1, matcher2, i)) {
-                    return -1;
-                }
+            } else if (matcher1 != matcher2 && (matcher1.getClass() != matcher2.getClass()
+                    || !matcher1.same((M1) matcher2) && areNonEquivalentMatches(other, matcher1, matcher2, i))) {
+                return -1;
             }
         }
 

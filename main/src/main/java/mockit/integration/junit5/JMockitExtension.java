@@ -177,13 +177,14 @@ public final class JMockitExtension extends TestRunnerDecorator implements Befor
         int parameterIndex = parameterContext.getIndex();
         if (parameterValues == null) {
             String warning = initContext.warning;
-            String exceptionMessage = "JMockit failed to provide parameters to JUnit 5 ParameterResolver.";
+            StringBuilder exceptionMessage = new StringBuilder(
+                    "JMockit failed to provide parameters to JUnit 5 ParameterResolver.");
             if (warning != null) {
-                exceptionMessage += "\nAdditional info: " + warning;
+                exceptionMessage.append("\nAdditional info: ").append(warning);
             }
-            exceptionMessage += "\n - Class: " + initContext.displayClass();
-            exceptionMessage += "\n - Method: " + initContext.displayMethod();
-            throw new IllegalStateException(exceptionMessage);
+            exceptionMessage.append("\n - Class: ").append(initContext.displayClass());
+            exceptionMessage.append("\n - Method: ").append(initContext.displayMethod());
+            throw new IllegalStateException(exceptionMessage.toString());
         }
         return parameterValues[parameterIndex];
     }
@@ -263,14 +264,16 @@ public final class JMockitExtension extends TestRunnerDecorator implements Befor
         }
 
         String displayClass() {
-            if (clazz == null)
+            if (clazz == null) {
                 return "<no class reference>";
+            }
             return clazz.getName();
         }
 
         String displayMethod() {
-            if (method == null)
+            if (method == null) {
                 return "<no method reference>";
+            }
             String methodPrefix = isBeforeAllMethod() ? "@BeforeAll " : isBeforeEachMethod() ? "@BeforeEach " : "";
             String args = Arrays.stream(method.getParameterTypes()).map(Class::getName)
                     .collect(Collectors.joining(", "));

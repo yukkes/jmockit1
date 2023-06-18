@@ -23,31 +23,27 @@ final class InterfaceResolution {
     private final NavigableMap<ParameterizedType, Method> interfaceResolutionMethods;
 
     InterfaceResolution() {
-        interfaceResolutionMethods = new TreeMap<>(new Comparator<ParameterizedType>() {
-            @Override
-            public int compare(ParameterizedType t1, ParameterizedType t2) {
-                if (t1 == t2) {
-                    return 0;
-                }
-
-                Type targetType1 = t1.getActualTypeArguments()[0];
-                Type targetType2 = t2.getActualTypeArguments()[0];
-
-                if (targetType1 == targetType2) {
-                    return 0;
-                }
-
-                if (targetType1 instanceof WildcardType) {
-                    if (targetType2 instanceof WildcardType) {
-                        return compareTypesFromResolutionMethods((WildcardType) targetType1,
-                                (WildcardType) targetType2);
-                    }
-
-                    return 1;
-                }
-
-                return -1;
+        interfaceResolutionMethods = new TreeMap<>((t1, t2) -> {
+            if (t1 == t2) {
+                return 0;
             }
+
+            Type targetType1 = t1.getActualTypeArguments()[0];
+            Type targetType2 = t2.getActualTypeArguments()[0];
+
+            if (targetType1 == targetType2) {
+                return 0;
+            }
+
+            if (targetType1 instanceof WildcardType) {
+                if (targetType2 instanceof WildcardType) {
+                    return compareTypesFromResolutionMethods((WildcardType) targetType1, (WildcardType) targetType2);
+                }
+
+                return 1;
+            }
+
+            return -1;
         });
     }
 

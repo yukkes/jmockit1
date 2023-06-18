@@ -86,7 +86,8 @@ public final class ClassModification {
 
             if (previousPath.startsWith(newPath)) {
                 return;
-            } else if (newPath.startsWith(previousPath)) {
+            }
+            if (newPath.startsWith(previousPath)) {
                 protectionDomainsWithUniqueLocations.set(i, newPD);
                 return;
             }

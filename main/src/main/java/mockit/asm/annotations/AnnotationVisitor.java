@@ -218,21 +218,32 @@ public final class AnnotationVisitor {
         putArrayLength(length);
 
         for (int i = 0; i < length; i++) {
-            if (elementType == 'J') {
-                long value = Array.getLong(array, i);
-                putLong(value);
-            } else if (elementType == 'F') {
-                float value = Array.getFloat(array, i);
-                putFloat(value);
-            } else if (elementType == 'D') {
-                double value = Array.getDouble(array, i);
-                putDouble(value);
-            } else if (elementType == 'Z') {
-                boolean value = Array.getBoolean(array, i);
-                putBoolean(value);
-            } else {
-                int value = Array.getInt(array, i);
-                putInteger(elementType, value);
+            switch (elementType) {
+                case 'J': {
+                    long value = Array.getLong(array, i);
+                    putLong(value);
+                    break;
+                }
+                case 'F': {
+                    float value = Array.getFloat(array, i);
+                    putFloat(value);
+                    break;
+                }
+                case 'D': {
+                    double value = Array.getDouble(array, i);
+                    putDouble(value);
+                    break;
+                }
+                case 'Z': {
+                    boolean value = Array.getBoolean(array, i);
+                    putBoolean(value);
+                    break;
+                }
+                default: {
+                    int value = Array.getInt(array, i);
+                    putInteger(elementType, value);
+                    break;
+                }
             }
         }
     }

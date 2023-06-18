@@ -33,10 +33,12 @@ public final class ClassIdentification {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
 
         ClassIdentification other = (ClassIdentification) o;
         return loader == other.loader && name.equals(other.name);

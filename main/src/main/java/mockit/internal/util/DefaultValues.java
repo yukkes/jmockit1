@@ -251,21 +251,26 @@ public final class DefaultValues {
     public static Object defaultValueForPrimitiveType(@Nonnull Class<?> type) {
         if (type == int.class) {
             return ZERO_INT;
-        } else if (type == boolean.class) {
-            return Boolean.FALSE;
-        } else if (type == long.class) {
-            return ZERO_LONG;
-        } else if (type == double.class) {
-            return ZERO_DOUBLE;
-        } else if (type == float.class) {
-            return ZERO_FLOAT;
-        } else if (type == char.class) {
-            return ZERO_CHAR;
-        } else if (type == byte.class) {
-            return ZERO_BYTE;
-        } else {
-            return ZERO_SHORT;
         }
+        if (type == boolean.class) {
+            return Boolean.FALSE;
+        }
+        if (type == long.class) {
+            return ZERO_LONG;
+        }
+        if (type == double.class) {
+            return ZERO_DOUBLE;
+        }
+        if (type == float.class) {
+            return ZERO_FLOAT;
+        }
+        if (type == char.class) {
+            return ZERO_CHAR;
+        }
+        if (type == byte.class) {
+            return ZERO_BYTE;
+        }
+        return ZERO_SHORT;
     }
 
     @Nullable

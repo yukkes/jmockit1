@@ -102,7 +102,8 @@ public final class ClassMetadataReader extends ObjectWithAttributes {
     private int readUnsignedShort(@Nonnegative int codeIndex) {
         byte[] b = code;
         int i = codeIndex;
-        int byte0 = (b[i++] & 0xFF) << 8;
+        int byte0 = (b[i] & 0xFF) << 8;
+        i++;
         int byte1 = b[i] & 0xFF;
         return byte0 | byte1;
     }
@@ -110,9 +111,12 @@ public final class ClassMetadataReader extends ObjectWithAttributes {
     private int readInt(@Nonnegative int codeIndex) {
         byte[] b = code;
         int i = codeIndex;
-        int byte0 = (b[i++] & 0xFF) << 24;
-        int byte1 = (b[i++] & 0xFF) << 16;
-        int byte2 = (b[i++] & 0xFF) << 8;
+        int byte0 = (b[i] & 0xFF) << 24;
+        i++;
+        int byte1 = (b[i] & 0xFF) << 16;
+        i++;
+        int byte2 = (b[i] & 0xFF) << 8;
+        i++;
         int byte3 = b[i] & 0xFF;
         return byte0 | byte1 | byte2 | byte3;
     }
@@ -123,7 +127,8 @@ public final class ClassMetadataReader extends ObjectWithAttributes {
         int codeIndex = 10;
 
         for (int cpItemIndex = 1, n = cpTable.length; cpItemIndex < n; cpItemIndex++) {
-            int tagValue = b[codeIndex++];
+            int tagValue = b[codeIndex];
+            codeIndex++;
             ConstantPoolTag tag = CONSTANT_POOL_TAGS[tagValue];
 
             cpTable[cpItemIndex] = codeIndex;
@@ -352,7 +357,7 @@ public final class ClassMetadataReader extends ObjectWithAttributes {
 
         String annotationTypeDesc = getString(cpTypeIndex);
 
-        int numElementValuePairs = readUnsignedShort(codeIndex);
+        readUnsignedShort(codeIndex);
         codeIndex += 2;
 
         // for (int i = 0; i < numElementValuePairs; i++) {
@@ -419,10 +424,8 @@ public final class ClassMetadataReader extends ObjectWithAttributes {
                 if (attributesToRead.contains(Attribute.Parameters)) {
                     readParameters(codeIndex);
                 }
-            } else if ("Signature".equals(attributeName)) {
-                if (attributesToRead.contains(Attribute.Signature)) {
-                    readSignature(codeIndex);
-                }
+            } else if ("Signature".equals(attributeName) && attributesToRead.contains(Attribute.Signature)) {
+                readSignature(codeIndex);
             }
         }
 
@@ -510,27 +513,32 @@ public final class ClassMetadataReader extends ObjectWithAttributes {
                 char c = memberDesc.charAt(i);
                 i++;
 
-                if (c == ')') {
-                    return sum;
-                }
-
-                if (c == 'L') {
-                    while (memberDesc.charAt(i) != ';')
+                switch (c) {
+                    case ')':
+                        return sum;
+                    case 'L':
+                        while (memberDesc.charAt(i) != ';') {
+                            i++;
+                        }
                         i++;
-                    i++;
-                    sum++;
-                } else if (c == '[') {
-                    while ((c = memberDesc.charAt(i)) == '[')
-                        i++;
-
-                    if (isDoubleSizeType(c)) { // if the array element type is double size...
-                        i++;
-                        sum++; // ...then count it here, otherwise let the outer loop count it
-                    }
-                } else if (isDoubleSizeType(c)) {
-                    sum += 2;
-                } else {
-                    sum++;
+                        sum++;
+                        break;
+                    case '[':
+                        while ((c = memberDesc.charAt(i)) == '[') {
+                            i++;
+                        }
+                        if (isDoubleSizeType(c)) { // if the array element type is double size...
+                            i++;
+                            sum++; // ...then count it here, otherwise let the outer loop count it
+                        }
+                        break;
+                    default:
+                        if (isDoubleSizeType(c)) {
+                            sum += 2;
+                        } else {
+                            sum++;
+                        }
+                        break;
                 }
             }
         }

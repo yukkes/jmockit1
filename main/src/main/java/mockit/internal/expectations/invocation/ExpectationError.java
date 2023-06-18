@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import mockit.internal.util.StackTrace;
 
 final class ExpectationError extends AssertionError {
+    private static final long serialVersionUID = 1L;
     private String message;
 
     @Nonnull

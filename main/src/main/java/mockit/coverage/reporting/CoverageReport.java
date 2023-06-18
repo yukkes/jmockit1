@@ -46,7 +46,7 @@ public final class CoverageReport {
         fileToFileData = coverageData.getFileToFileData();
         packageToFiles = new HashMap<>();
         this.withCallPoints = withCallPoints;
-        sourceFilesNotFound = srcDirs == null ? null : new ArrayList<String>();
+        sourceFilesNotFound = srcDirs == null ? null : new ArrayList<>();
     }
 
     public void generate() throws IOException {

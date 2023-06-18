@@ -17,7 +17,7 @@ import mockit.internal.util.AutoBoxing;
 
 public final class ParameterReflection {
     @Nonnull
-    public static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
+    public static final Class<?>[] NO_PARAMETERS = {};
 
     private ParameterReflection() {
     }
@@ -77,9 +77,7 @@ public final class ParameterReflection {
             Class<?> parType = paramTypes[i];
             Class<?> argType = argTypes[i - firstParameter];
 
-            if (isSameTypeIgnoringAutoBoxing(parType, argType) || parType.isAssignableFrom(argType)) {
-                // OK, move to next parameter.
-            } else {
+            if (!isSameTypeIgnoringAutoBoxing(parType, argType) && !parType.isAssignableFrom(argType)) {
                 return false;
             }
         }
@@ -117,9 +115,7 @@ public final class ParameterReflection {
             Class<?> declaredType = declaredTypes[i];
             Class<?> specifiedType = specifiedTypes[i - firstParameter];
 
-            if (isSameTypeIgnoringAutoBoxing(declaredType, specifiedType)) {
-                // OK, move to next parameter.
-            } else {
+            if (!isSameTypeIgnoringAutoBoxing(declaredType, specifiedType)) {
                 return false;
             }
         }

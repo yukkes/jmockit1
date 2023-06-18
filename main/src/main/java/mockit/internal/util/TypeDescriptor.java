@@ -11,7 +11,7 @@ import mockit.asm.types.JavaType;
 import mockit.asm.types.PrimitiveType;
 
 public final class TypeDescriptor {
-    private static final Class<?>[] NO_PARAMETERS = new Class<?>[0];
+    private static final Class<?>[] NO_PARAMETERS = {};
 
     private TypeDescriptor() {
     }

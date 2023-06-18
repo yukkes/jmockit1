@@ -107,16 +107,21 @@ final class CoverageModifier extends WrappingClassVisitor {
 
     @Nonnull
     private static String getKindOfJavaType(int typeModifiers, @Nonnull String superName) {
-        if ((typeModifiers & ANNOTATION) != 0)
+        if ((typeModifiers & ANNOTATION) != 0) {
             return "ant";
-        if ((typeModifiers & INTERFACE) != 0)
+        }
+        if ((typeModifiers & INTERFACE) != 0) {
             return "itf";
-        if ((typeModifiers & ENUM) != 0)
+        }
+        if ((typeModifiers & ENUM) != 0) {
             return "enm";
-        if ((typeModifiers & ABSTRACT) != 0)
+        }
+        if ((typeModifiers & ABSTRACT) != 0) {
             return "absCls";
-        if (superName.endsWith("Exception") || superName.endsWith("Error"))
+        }
+        if (superName.endsWith("Exception") || superName.endsWith("Error")) {
             return "exc";
+        }
         return "cls";
     }
 

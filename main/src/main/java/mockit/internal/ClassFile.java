@@ -23,6 +23,8 @@ public final class ClassFile {
     }
 
     public static final class NotFoundException extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+
         private NotFoundException(@Nonnull String classNameOrDesc) {
             super("Unable to find class file for " + classNameOrDesc.replace('/', '.'));
         }
@@ -81,7 +83,8 @@ public final class ClassFile {
                     byte[] lengthenedCopy = new byte[bytecode.length + 1000];
                     System.arraycopy(bytecode, 0, lengthenedCopy, 0, len);
                     // noinspection NumericCastThatLosesPrecision
-                    lengthenedCopy[len++] = (byte) last;
+                    lengthenedCopy[len] = (byte) last;
+                    len++;
                     bytecode = lengthenedCopy;
                 }
             }
@@ -129,8 +132,7 @@ public final class ClassFile {
         }
 
         String classDesc = aClass.getName().replace('.', '/');
-        ClassReader reader = readFromFileSavingInCache(classDesc);
-        return reader;
+        return readFromFileSavingInCache(classDesc);
     }
 
     @Nonnull
@@ -179,8 +181,7 @@ public final class ClassFile {
         InputStream classFile = readClassFromClasspath(classDesc);
 
         try {
-            byte[] bytecode = readClass(classFile);
-            return bytecode;
+            return readClass(classFile);
         } catch (IOException e) {
             throw new RuntimeException("Failed to read class file for " + classDesc.replace('/', '.'), e);
         }

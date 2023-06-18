@@ -122,8 +122,6 @@ public final class InvocationResults {
             currentResult = nextResult;
         }
 
-        Object result = resultToBeProduced.produceResult(invokedObject, invocation, constraints, invocationArgs);
-
-        return result;
+        return resultToBeProduced.produceResult(invokedObject, invocation, constraints, invocationArgs);
     }
 }

@@ -237,7 +237,8 @@ public final class LineElement implements Iterable<LineElement> {
 
             if (c == '{') {
                 return 1;
-            } else if (c == '}') {
+            }
+            if (c == '}') {
                 return -1;
             }
         }
@@ -257,7 +258,7 @@ public final class LineElement implements Iterable<LineElement> {
     @Nonnull
     @Override
     public Iterator<LineElement> iterator() {
-        return new Iterator<LineElement>() {
+        return new Iterator<>() {
             @Nullable
             private LineElement current = LineElement.this;
 

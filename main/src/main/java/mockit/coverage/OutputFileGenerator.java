@@ -15,7 +15,7 @@ import mockit.coverage.reporting.CoverageReport;
 
 @SuppressWarnings("DynamicRegexReplaceableByCompiledPattern")
 final class OutputFileGenerator {
-    private static final String[] ALL_SOURCE_DIRS = new String[0];
+    private static final String[] ALL_SOURCE_DIRS = {};
 
     @Nonnull
     private final String[] outputFormats;
@@ -115,8 +115,7 @@ final class OutputFileGenerator {
         }
 
         File outDir = new File(outputDir);
-        boolean dirCreated = outDir.mkdirs();
-        return dirCreated;
+        return outDir.mkdirs();
     }
 
     private void generateAccretionDataFileIfRequested(@Nonnull CoverageData newData) throws IOException {

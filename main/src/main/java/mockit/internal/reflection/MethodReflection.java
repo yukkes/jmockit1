@@ -36,8 +36,7 @@ public final class MethodReflection {
             @Nonnull String methodName, @Nonnull Class<?>[] paramTypes, @Nonnull Object... methodArgs)
             throws Throwable {
         Method method = findSpecifiedMethod(theClass, methodName, paramTypes);
-        T result = invokeWithCheckedThrows(targetInstance, method, methodArgs);
-        return result;
+        return invokeWithCheckedThrows(targetInstance, method, methodArgs);
     }
 
     @Nonnull
@@ -90,8 +89,7 @@ public final class MethodReflection {
             return null;
         }
 
-        T result = invoke(targetInstance, publicMethod, methodArgs);
-        return result;
+        return invoke(targetInstance, publicMethod, methodArgs);
     }
 
     @Nullable
@@ -111,12 +109,12 @@ public final class MethodReflection {
 
             if (cause instanceof Error) {
                 throw (Error) cause;
-            } else if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
-            } else {
-                ThrowOfCheckedException.doThrow((Exception) cause);
-                return null;
             }
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            ThrowOfCheckedException.doThrow((Exception) cause);
+            return null;
         }
     }
 

@@ -246,14 +246,12 @@ public final class Label {
             } else {
                 out.putShort(reference);
             }
+        } else if (wideOffset) {
+            addReference(-1 - source, out.getLength());
+            out.putInt(-1);
         } else {
-            if (wideOffset) {
-                addReference(-1 - source, out.getLength());
-                out.putInt(-1);
-            } else {
-                addReference(source, out.getLength());
-                out.putShort(-1);
-            }
+            addReference(source, out.getLength());
+            out.putShort(-1);
         }
     }
 
@@ -309,11 +307,14 @@ public final class Label {
                 offset = pos - source;
             } else {
                 offset = pos + source + 1;
-                data[reference++] = (byte) (offset >>> 24);
-                data[reference++] = (byte) (offset >>> 16);
+                data[reference] = (byte) (offset >>> 24);
+                reference++;
+                data[reference] = (byte) (offset >>> 16);
+                reference++;
             }
 
-            data[reference++] = (byte) (offset >>> 8);
+            data[reference] = (byte) (offset >>> 8);
+            reference++;
             data[reference] = (byte) offset;
         }
     }

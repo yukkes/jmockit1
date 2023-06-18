@@ -47,7 +47,7 @@ final class MultiValuedConversion {
         } else if (returnType == Object.class) {
             invocationResults.addReturnValueResult(valueToReturn);
         } else if (valueIsArray && addCollectionOrMapWithElementsFromArray()) {
-            return;
+            // Do nothing
         } else if (hasReturnOfDifferentType()) {
             addMultiValuedResult(valueIsArray);
         } else {

@@ -21,8 +21,9 @@ public final class TestRun {
     }
 
     public static void lineExecuted(@Nonnegative int fileIndex, @Nonnegative int line) {
-        if (terminated)
+        if (terminated) {
             return;
+        }
 
         synchronized (LOCK) {
             CoverageData coverageData = CoverageData.instance();
@@ -47,8 +48,9 @@ public final class TestRun {
     }
 
     public static void branchExecuted(@Nonnegative int fileIndex, @Nonnegative int line, @Nonnegative int branchIndex) {
-        if (terminated)
+        if (terminated) {
             return;
+        }
 
         synchronized (LOCK) {
             CoverageData coverageData = CoverageData.instance();
@@ -68,8 +70,9 @@ public final class TestRun {
     }
 
     public static void fieldAssigned(@Nonnull String file, @Nonnull String classAndFieldNames) {
-        if (terminated)
+        if (terminated) {
             return;
+        }
 
         synchronized (LOCK) {
             CoverageData coverageData = CoverageData.instance();
@@ -79,8 +82,9 @@ public final class TestRun {
     }
 
     public static void fieldRead(@Nonnull String file, @Nonnull String classAndFieldNames) {
-        if (terminated)
+        if (terminated) {
             return;
+        }
 
         synchronized (LOCK) {
             CoverageData coverageData = CoverageData.instance();
@@ -91,8 +95,9 @@ public final class TestRun {
 
     public static void fieldAssigned(@Nonnull Object instance, @Nonnull String file,
             @Nonnull String classAndFieldNames) {
-        if (terminated)
+        if (terminated) {
             return;
+        }
 
         synchronized (LOCK) {
             CoverageData coverageData = CoverageData.instance();
@@ -102,8 +107,9 @@ public final class TestRun {
     }
 
     public static void fieldRead(@Nonnull Object instance, @Nonnull String file, @Nonnull String classAndFieldNames) {
-        if (terminated)
+        if (terminated) {
             return;
+        }
 
         synchronized (LOCK) {
             CoverageData coverageData = CoverageData.instance();

@@ -442,7 +442,7 @@ public final class ConstantPoolGeneration {
         }
 
         if (cst instanceof Character) {
-            return newInteger((int) (Character) cst);
+            return newInteger((Character) cst);
         }
 
         if (cst instanceof Boolean) {

@@ -165,8 +165,7 @@ public final class ClassLoad {
             return class1;
         }
 
-        String class2 = actualSuperClass(internalClassName2, internalClassName1);
-        return class2;
+        return actualSuperClass(internalClassName2, internalClassName1);
     }
 
     @Nullable

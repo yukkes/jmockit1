@@ -50,11 +50,13 @@ public abstract class JavaType {
         int size = 0;
 
         while (true) {
-            char c = buf[off++];
+            char c = buf[off];
+            off++;
 
             if (c == ')') {
                 break;
-            } else if (c == 'L') {
+            }
+            if (c == 'L') {
                 off = findNextTypeTerminatorCharacter(buf, off);
                 size++;
             } else if (c != '[') {
@@ -131,25 +133,33 @@ public abstract class JavaType {
         int i = 1;
 
         while (true) {
-            char currentChar = desc.charAt(i++);
+            char currentChar = desc.charAt(i);
+            i++;
 
-            if (currentChar == ')') {
-                char nextChar = desc.charAt(i);
-                return argSize << 2 | (nextChar == 'V' ? 0 : isDoubleSizePrimitiveType(nextChar) ? 2 : 1);
-            } else if (currentChar == 'L') {
-                i = findNextTypeTerminatorCharacter(desc, i);
-                argSize++;
-            } else if (currentChar == '[') {
-                i = findStartOfArrayElementType(desc, i);
-                char arrayElementType = desc.charAt(i);
-
-                if (isDoubleSizePrimitiveType(arrayElementType)) {
-                    argSize--;
+            switch (currentChar) {
+                case ')': {
+                    char nextChar = desc.charAt(i);
+                    return argSize << 2 | (nextChar == 'V' ? 0 : isDoubleSizePrimitiveType(nextChar) ? 2 : 1);
                 }
-            } else if (isDoubleSizePrimitiveType(currentChar)) {
-                argSize += 2;
-            } else {
-                argSize++;
+                case 'L':
+                    i = findNextTypeTerminatorCharacter(desc, i);
+                    argSize++;
+                    break;
+                case '[': {
+                    i = findStartOfArrayElementType(desc, i);
+                    char arrayElementType = desc.charAt(i);
+                    if (isDoubleSizePrimitiveType(arrayElementType)) {
+                        argSize--;
+                    }
+                    break;
+                }
+                default:
+                    if (isDoubleSizePrimitiveType(currentChar)) {
+                        argSize += 2;
+                    } else {
+                        argSize++;
+                    }
+                    break;
             }
         }
     }
@@ -281,13 +291,13 @@ public abstract class JavaType {
                 char typeCode = PrimitiveType.getPrimitiveType(d).getTypeCode();
                 buf.append(typeCode);
                 return;
-            } else if (d.isArray()) {
-                buf.append('[');
-                d = d.getComponentType();
-            } else {
+            }
+            if (!d.isArray()) {
                 ReferenceType.getDescriptor(buf, d);
                 return;
             }
+            buf.append('[');
+            d = d.getComponentType();
         }
     }
 

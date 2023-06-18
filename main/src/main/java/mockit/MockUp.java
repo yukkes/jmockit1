@@ -88,11 +88,10 @@ public class MockUp<T> {
         } else {
             Type[] typesToFake = ((TypeVariable<?>) targetType).getBounds();
 
-            if (typesToFake.length == 1) {
-                new CaptureOfFakedImplementations(this, typesToFake[0]).apply();
-            } else {
+            if (typesToFake.length != 1) {
                 throw new UnsupportedOperationException("Unable to capture more than one base type at once");
             }
+            new CaptureOfFakedImplementations(this, typesToFake[0]).apply();
         }
     }
 

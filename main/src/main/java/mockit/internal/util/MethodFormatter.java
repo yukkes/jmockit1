@@ -220,14 +220,14 @@ public final class MethodFormatter {
     @Nonnull
     private String getArrayBrackets() {
         @SuppressWarnings("NonConstantStringShouldBeStringBuffer")
-        String result = "";
+        StringBuilder result = new StringBuilder();
 
         for (int i = 0; i < arrayDimensions; i++) {
             // noinspection StringContatenationInLoop
-            result += "[]";
+            result.append("[]");
         }
 
-        return result;
+        return result.toString();
     }
 
     public void append(@Nonnull String text) {

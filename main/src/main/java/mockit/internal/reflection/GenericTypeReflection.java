@@ -35,8 +35,7 @@ public final class GenericTypeReflection {
 
     public GenericTypeReflection(@Nonnull Class<?> ownerClass, @Nullable Type genericType, boolean withSignatures) {
         typeParametersToTypeArguments = new HashMap<>(4);
-        typeParametersToTypeArgumentNames = withSignatures ? new HashMap<String, String>(4)
-                : Collections.<String, String>emptyMap();
+        typeParametersToTypeArgumentNames = withSignatures ? new HashMap<>(4) : Collections.<String, String>emptyMap();
         this.withSignatures = withSignatures;
         discoverTypeMappings(ownerClass, genericType);
     }
@@ -220,15 +219,14 @@ public final class GenericTypeReflection {
         while (true) {
             Type componentType = arrayType.getGenericComponentType();
 
-            if (componentType instanceof GenericArrayType) {
-                argName.append('[');
-                // noinspection AssignmentToMethodParameter
-                arrayType = (GenericArrayType) componentType;
-            } else {
+            if (!(componentType instanceof GenericArrayType)) {
                 Class<?> classType = getClassType(componentType);
                 argName.append('L').append(getOwnerClassDesc(classType));
                 return argName.toString();
             }
+            argName.append('[');
+            // noinspection AssignmentToMethodParameter
+            arrayType = (GenericArrayType) componentType;
         }
     }
 
@@ -272,24 +270,29 @@ public final class GenericTypeReflection {
             int endPos;
             char c = parameterTypeDescs.charAt(startPos);
 
-            if (c == 'T') {
-                endPos = parameterTypeDescs.indexOf(';', startPos);
-                currentPos = endPos;
-            } else if (c == 'L') {
-                endPos = advanceToEndOfTypeDesc();
-            } else if (c == '[') {
-                char elemTypeStart = firstCharacterOfArrayElementType();
-
-                if (elemTypeStart == 'T') {
+            switch (c) {
+                case 'T':
                     endPos = parameterTypeDescs.indexOf(';', startPos);
                     currentPos = endPos;
-                } else if (elemTypeStart == 'L') {
+                    break;
+                case 'L':
                     endPos = advanceToEndOfTypeDesc();
-                } else {
-                    endPos = currentPos + 1;
+                    break;
+                case '[': {
+                    char elemTypeStart = firstCharacterOfArrayElementType();
+                    if (elemTypeStart == 'T') {
+                        endPos = parameterTypeDescs.indexOf(';', startPos);
+                        currentPos = endPos;
+                    } else if (elemTypeStart == 'L') {
+                        endPos = advanceToEndOfTypeDesc();
+                    } else {
+                        endPos = currentPos + 1;
+                    }
+                    break;
                 }
-            } else {
-                endPos = currentPos + 1;
+                default:
+                    endPos = currentPos + 1;
+                    break;
             }
 
             currentPos++;
@@ -302,8 +305,9 @@ public final class GenericTypeReflection {
 
             do {
                 currentPos++;
-                if (currentPos == lengthOfParameterTypeDescs)
+                if (currentPos == lengthOfParameterTypeDescs) {
                     break;
+                }
                 c = parameterTypeDescs.charAt(currentPos);
             } while (c != ';' && c != '<');
 
@@ -334,10 +338,11 @@ public final class GenericTypeReflection {
             do {
                 currentPos++;
                 char c = parameterTypeDescs.charAt(currentPos);
-                if (c == '>')
+                if (c == '>') {
                     angleBracketDepth--;
-                else if (c == '<')
+                } else if (c == '<') {
                     angleBracketDepth++;
+                }
             } while (angleBracketDepth > 0);
         }
 
@@ -367,8 +372,9 @@ public final class GenericTypeReflection {
 
         @SuppressWarnings("MethodWithMultipleLoops")
         private boolean areParametersOfSameType(@Nonnull String param1, @Nonnull String param2) {
-            if (param1.equals(param2))
+            if (param1.equals(param2)) {
                 return true;
+            }
 
             int i = -1;
             char c;
@@ -376,8 +382,9 @@ public final class GenericTypeReflection {
                 i++;
                 c = param1.charAt(i);
             } while (c == '[');
-            if (c != 'T')
+            if (c != 'T') {
                 return false;
+            }
 
             String typeVarName1 = param1.substring(i);
             String typeVarName2 = param2.substring(i);
@@ -423,8 +430,9 @@ public final class GenericTypeReflection {
 
     private void addTypeArgumentsIfAvailable(@Nonnull String ownerTypeDesc, @Nonnull String signature) {
         int firstParen = signature.indexOf('(');
-        if (firstParen == 0)
+        if (firstParen == 0) {
             return;
+        }
 
         int p = 1;
         boolean lastMappingFound = false;
@@ -635,11 +643,7 @@ public final class GenericTypeReflection {
         Type resolvedType = typeParametersToTypeArguments.get(typeVarKey);
 
         if (resolvedType != null) {
-            if (resolvedType.equals(concreteType)) {
-                return true;
-            }
-
-            if (concreteType instanceof Class<?>
+            if (resolvedType.equals(concreteType) || concreteType instanceof Class<?>
                     && typeSatisfiesResolvedTypeVariable(resolvedType, (Class<?>) concreteType)) {
                 return true;
             }

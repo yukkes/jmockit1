@@ -22,19 +22,26 @@ public final class TypeConversion {
     public static Object convertFromString(@Nonnull Class<?> targetType, @Nonnull String value) {
         if (targetType == String.class) {
             return value;
-        } else if (isCharacter(targetType)) {
+        }
+        if (isCharacter(targetType)) {
             return value.charAt(0);
-        } else if (targetType.isPrimitive() || isWrapperOfPrimitiveType(targetType)) {
+        }
+        if (targetType.isPrimitive() || isWrapperOfPrimitiveType(targetType)) {
             return newWrapperInstance(targetType, value);
-        } else if (targetType == BigDecimal.class) {
+        }
+        if (targetType == BigDecimal.class) {
             return new BigDecimal(value.trim());
-        } else if (targetType == BigInteger.class) {
+        }
+        if (targetType == BigInteger.class) {
             return new BigInteger(value.trim());
-        } else if (targetType == AtomicInteger.class) {
+        }
+        if (targetType == AtomicInteger.class) {
             return new AtomicInteger(Integer.parseInt(value.trim()));
-        } else if (targetType == AtomicLong.class) {
+        }
+        if (targetType == AtomicLong.class) {
             return new AtomicLong(Long.parseLong(value.trim()));
-        } else if (targetType.isEnum()) {
+        }
+        if (targetType.isEnum()) {
             // noinspection unchecked
             return enumValue(targetType, value);
         }
@@ -53,15 +60,20 @@ public final class TypeConversion {
         try {
             if (targetType == int.class || targetType == Integer.class) {
                 return Integer.valueOf(trimmedValue);
-            } else if (targetType == long.class || targetType == Long.class) {
+            }
+            if (targetType == long.class || targetType == Long.class) {
                 return Long.valueOf(trimmedValue);
-            } else if (targetType == short.class || targetType == Short.class) {
+            }
+            if (targetType == short.class || targetType == Short.class) {
                 return Short.valueOf(trimmedValue);
-            } else if (targetType == byte.class || targetType == Byte.class) {
+            }
+            if (targetType == byte.class || targetType == Byte.class) {
                 return Byte.valueOf(trimmedValue);
-            } else if (targetType == double.class || targetType == Double.class) {
+            }
+            if (targetType == double.class || targetType == Double.class) {
                 return Double.valueOf(trimmedValue);
-            } else if (targetType == float.class || targetType == Float.class) {
+            }
+            if (targetType == float.class || targetType == Float.class) {
                 return Float.valueOf(trimmedValue);
             }
         } catch (NumberFormatException e) {

@@ -81,7 +81,7 @@ import mockit.asm.types.PrimitiveType;
  * is not possible, since actual type values are not always known - cf LOCAL and STACK type kinds).
  */
 public final class Frame {
-    private static final int[] EMPTY_INPUT_STACK = new int[0];
+    private static final int[] EMPTY_INPUT_STACK = {};
 
     @Nonnull
     private final ConstantPoolGeneration cp;
@@ -166,7 +166,8 @@ public final class Frame {
         localIndex = initializeFormalParameterTypes(localIndex, args);
 
         while (localIndex < maxLocals) {
-            inputLocals[localIndex++] = TOP;
+            inputLocals[localIndex] = TOP;
+            localIndex++;
         }
     }
 
@@ -184,10 +185,12 @@ public final class Frame {
     private int initializeFormalParameterTypes(@Nonnegative int localIndex, @Nonnull JavaType[] args) {
         for (JavaType arg : args) {
             int typeEncoding = getTypeEncoding(arg.getDescriptor());
-            inputLocals[localIndex++] = typeEncoding;
+            inputLocals[localIndex] = typeEncoding;
+            localIndex++;
 
             if (typeEncoding == LONG || typeEncoding == DOUBLE) {
-                inputLocals[localIndex++] = TOP;
+                inputLocals[localIndex] = TOP;
+                localIndex++;
             }
         }
 
@@ -1301,12 +1304,13 @@ public final class Frame {
             if (type1 == NULL) {
                 // If type1 is the NULL type, merge(type2, type1) = type2, so there is no change.
                 return false;
-            } else if ((type1 & (DIM | BASE_KIND)) == (type2 & (DIM | BASE_KIND))) {
+            }
+            if ((type1 & (DIM | BASE_KIND)) == (type2 & (DIM | BASE_KIND))) {
                 // If type1 and type2 have the same dimension and same base kind.
                 if ((type2 & BASE_KIND) == OBJECT) {
                     // If type1 is also a reference type, and if type2 and type1 have the same dimension
                     // merge(type2, type1) = dim(type1) | common parent of the element types of type2 and type1.
-                    v = (type1 & DIM) | OBJECT | cp.getMergedType(type1 & BASE_VALUE, type2 & BASE_VALUE);
+                    v = type1 & DIM | OBJECT | cp.getMergedType(type1 & BASE_VALUE, type2 & BASE_VALUE);
                 } else {
                     // If type2 and type1 are array types, but not with the same element type,
                     // merge(type2, type1) = dim(type2) - 1 | java/lang/Object.
@@ -1318,8 +1322,8 @@ public final class Frame {
                 // where uDim is the array dimension of type2, minus 1 if type2 is an array type with a primitive
                 // element
                 // type (and similarly for tDim).
-                int tDim = (((type1 & DIM) == 0 || (type1 & BASE_KIND) == OBJECT) ? 0 : ELEMENT_OF) + (type1 & DIM);
-                int uDim = (((type2 & DIM) == 0 || (type2 & BASE_KIND) == OBJECT) ? 0 : ELEMENT_OF) + (type2 & DIM);
+                int tDim = ((type1 & DIM) == 0 || (type1 & BASE_KIND) == OBJECT ? 0 : ELEMENT_OF) + (type1 & DIM);
+                int uDim = ((type2 & DIM) == 0 || (type2 & BASE_KIND) == OBJECT ? 0 : ELEMENT_OF) + (type2 & DIM);
                 v = Math.min(tDim, uDim) | OBJECT | cp.addNormalType("java/lang/Object");
             } else {
                 // If type1 is any other type, merge(type2, type1) = TOP.

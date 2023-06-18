@@ -21,11 +21,14 @@ public final class ObjectMethods {
             @Nonnull Object[] args) {
         if ("equals(Ljava/lang/Object;)Z".equals(methodNameAndDesc)) {
             return obj == args[0];
-        } else if ("hashCode()I".equals(methodNameAndDesc)) {
+        }
+        if ("hashCode()I".equals(methodNameAndDesc)) {
             return System.identityHashCode(obj);
-        } else if ("toString()Ljava/lang/String;".equals(methodNameAndDesc)) {
+        }
+        if ("toString()Ljava/lang/String;".equals(methodNameAndDesc)) {
             return objectIdentity(obj);
-        } else if (args.length == 1 && methodNameAndDesc.startsWith("compareTo(L") && methodNameAndDesc.endsWith(";)I")
+        }
+        if (args.length == 1 && methodNameAndDesc.startsWith("compareTo(L") && methodNameAndDesc.endsWith(";)I")
                 && obj instanceof Comparable<?>) {
             Object arg = args[0];
 

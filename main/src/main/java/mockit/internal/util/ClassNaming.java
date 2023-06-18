@@ -33,8 +33,9 @@ public final class ClassNaming {
 
         while (nextPos < n) {
             char c = className.charAt(nextPos);
-            if (c < '0' || c > '9')
+            if (c < '0' || c > '9') {
                 return false;
+            }
             nextPos++;
         }
 

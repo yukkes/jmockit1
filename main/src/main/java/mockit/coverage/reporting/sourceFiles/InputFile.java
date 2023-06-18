@@ -61,12 +61,8 @@ public final class InputFile {
             return file;
         }
 
-        File[] subDirs = sourceDir.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File subDir) {
-                return subDir.isDirectory() && !subDir.isHidden() && !subDir.getName().equals(topLevelPackage);
-            }
-        });
+        File[] subDirs = sourceDir.listFiles((FileFilter) subDir -> subDir.isDirectory() && !subDir.isHidden()
+                && !subDir.getName().equals(topLevelPackage));
 
         if (subDirs != null && subDirs.length > 0) {
             for (File subDir : subDirs) {

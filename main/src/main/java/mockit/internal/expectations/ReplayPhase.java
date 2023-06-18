@@ -96,8 +96,7 @@ final class ReplayPhase extends Phase {
 
     @Nullable
     Error endExecution() {
-        Error missingInvocation = getErrorForFirstExpectationThatIsMissing();
-        return missingInvocation;
+        return getErrorForFirstExpectationThatIsMissing();
     }
 
     @Nullable
@@ -105,8 +104,7 @@ final class ReplayPhase extends Phase {
         List<Expectation> notStrictExpectations = executionState.expectations;
 
         // New expectations might get added to the list, so a regular loop would cause a CME.
-        for (int i = 0, n = notStrictExpectations.size(); i < n; i++) {
-            Expectation notStrict = notStrictExpectations.get(i);
+        for (Expectation notStrict : notStrictExpectations) {
             InvocationConstraints constraints = notStrict.constraints;
 
             if (constraints.isInvocationCountLessThanMinimumExpected()) {

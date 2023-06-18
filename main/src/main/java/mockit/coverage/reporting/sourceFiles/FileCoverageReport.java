@@ -76,10 +76,8 @@ public final class FileCoverageReport {
         while ((line = inputFile.nextLine()) != null) {
             boolean lineWithCodeElements = fileParser.parseCurrentLine(line);
 
-            if (lineWithCodeElements) {
-                if (dataCoverage != null) {
-                    dataCoverage.writeCoverageInfoIfLineStartsANewFieldDeclaration(fileParser);
-                }
+            if (lineWithCodeElements && dataCoverage != null) {
+                dataCoverage.writeCoverageInfoIfLineStartsANewFieldDeclaration(fileParser);
             }
 
             if (!neutralOutput.writeLineWithoutCoverageInfo(lineParser)) {

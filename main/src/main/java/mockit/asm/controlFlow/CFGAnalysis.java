@@ -119,7 +119,7 @@ public final class CFGAnalysis {
             }
 
             // If opcode == ATHROW or xRETURN, ends current block (no successor).
-            if ((opcode >= IRETURN && opcode <= RETURN) || opcode == ATHROW) {
+            if (opcode >= IRETURN && opcode <= RETURN || opcode == ATHROW) {
                 noSuccessor();
             }
         }
@@ -178,7 +178,7 @@ public final class CFGAnalysis {
             if (computeFrames) {
                 currentBlock.frame.executeINT(opcode, operand);
             } else if (opcode != NEWARRAY) { // updates stack size only for NEWARRAY (variation = 0 for BIPUSH or
-                                             // SIPUSH)
+                // SIPUSH)
                 updateStackSize(1);
             }
         }
@@ -200,7 +200,7 @@ public final class CFGAnalysis {
             if (computeFrames) {
                 currentBlock.frame.executeTYPE(opcode, code.getLength(), typeItem);
             } else if (opcode == NEW) { // updates stack size for NEW only; no change for ANEWARRAY, CHECKCAST,
-                                        // INSTANCEOF
+                // INSTANCEOF
                 updateStackSize(1);
             }
         }

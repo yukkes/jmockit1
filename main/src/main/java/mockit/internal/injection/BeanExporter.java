@@ -22,8 +22,7 @@ public final class BeanExporter {
     @Nullable
     public Object getBean(@Nonnull String name) {
         InjectionPoint injectionPoint = new InjectionPoint(Object.class, name, true);
-        Object bean = injectionState.getInstantiatedDependency(null, injectionPoint);
-        return bean;
+        return injectionState.getInstantiatedDependency(null, injectionPoint);
     }
 
     @Nullable
@@ -37,17 +36,13 @@ public final class BeanExporter {
 
         if (injectable != null) {
             Object testInstance = injectionState.getCurrentTestClassInstance();
-            @SuppressWarnings("unchecked")
-            T bean = (T) injectable.getValue(testInstance);
-            return bean;
+            return (T) injectable.getValue(testInstance);
         }
 
         FullInjection injection = new FullInjection(injectionState, beanType, beanName);
         Injector injector = new FieldInjection(injectionState, injection);
 
-        @SuppressWarnings("unchecked")
-        T bean = (T) injection.createOrReuseInstance(testedClass, injector, null, beanName);
-        return bean;
+        return (T) injection.createOrReuseInstance(testedClass, injector, null, beanName);
     }
 
     @Nonnull

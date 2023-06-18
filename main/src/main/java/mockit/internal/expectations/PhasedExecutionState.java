@@ -139,9 +139,7 @@ final class PhasedExecutionState {
 
         // Note: new expectations might get added to the list, so a regular loop would cause a CME:
         // noinspection ForLoopReplaceableByForEach
-        for (int i = 0, n = expectations.size(); i < n; i++) {
-            Expectation expectation = expectations.get(i);
-
+        for (Expectation expectation : expectations) {
             if (replayExpectationFound != null && expectation.recordPhase == null) {
                 continue;
             }

@@ -49,12 +49,12 @@ public final class ConstructorReflection {
 
             if (cause instanceof Error) {
                 throw (Error) cause;
-            } else if (cause instanceof RuntimeException) {
-                throw (RuntimeException) cause;
-            } else {
-                ThrowOfCheckedException.doThrow((Exception) cause);
-                throw new IllegalStateException("Should never get here", cause);
             }
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            ThrowOfCheckedException.doThrow((Exception) cause);
+            throw new IllegalStateException("Should never get here", cause);
         }
     }
 

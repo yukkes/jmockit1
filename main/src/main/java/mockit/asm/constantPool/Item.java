@@ -82,7 +82,7 @@ public abstract class Item {
     }
 
     final void setHashCode(int valuesHashCode) {
-        hashCode = 0x7FFFFFFF & (type + valuesHashCode);
+        hashCode = 0x7FFFFFFF & type + valuesHashCode;
     }
 
     /**

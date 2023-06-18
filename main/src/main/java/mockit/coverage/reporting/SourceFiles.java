@@ -46,8 +46,9 @@ final class SourceFiles {
 
     private void addSrcSubDirs(@Nonnull File dir) {
         File[] files = dir.listFiles();
-        if (files == null)
+        if (files == null) {
             return;
+        }
 
         for (File subDir : files) {
             if (subDir.isDirectory()) {

@@ -201,17 +201,18 @@ final class MethodModifier extends WrappingMethodVisitor {
     private void generateCodeToSaveInstanceReferenceOnTheStack(boolean getField, boolean size2) {
         if (getField) {
             mw.visitInsn(DUP);
-        } else if (size2) {
-            mw.visitInsn(DUP2_X1);
-            mw.visitInsn(POP2);
-            mw.visitInsn(DUP_X2);
-            mw.visitInsn(DUP_X2);
-            mw.visitInsn(POP);
         } else {
-            mw.visitInsn(DUP_X1);
-            mw.visitInsn(POP);
-            mw.visitInsn(DUP_X1);
-            mw.visitInsn(DUP_X1);
+            if (size2) {
+                mw.visitInsn(DUP2_X1);
+                mw.visitInsn(POP2);
+                mw.visitInsn(DUP_X2);
+                mw.visitInsn(DUP_X2);
+            } else {
+                mw.visitInsn(DUP_X1);
+                mw.visitInsn(POP);
+                mw.visitInsn(DUP_X1);
+                mw.visitInsn(DUP_X1);
+            }
             mw.visitInsn(POP);
         }
     }

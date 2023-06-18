@@ -20,7 +20,7 @@ import mockit.coverage.data.PerFileCoverage;
 
 public final class PerFileLineCoverage implements PerFileCoverage {
     private static final long serialVersionUID = 6318915843739466316L;
-    private static final int[] NO_EXECUTIONS_YET = new int[0];
+    private static final int[] NO_EXECUTIONS_YET = {};
 
     @Nonnull
     private final Map<Integer, LineCoverageData> lineToLineData = new HashMap<>(128);
@@ -195,8 +195,9 @@ public final class PerFileLineCoverage implements PerFileCoverage {
     }
 
     private void computeValuesIfNeeded() {
-        if (totalSegments >= 0)
+        if (totalSegments >= 0) {
             return;
+        }
         totalSegments = coveredSegments = 0;
 
         for (int line = 1, n = lastLine; line <= n; line++) {

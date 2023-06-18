@@ -29,8 +29,9 @@ final class ArgumentValuesAndMatchersWithoutVarargs extends ArgumentValuesAndMat
 
             if (expected == null) {
                 Object arg = values[i];
-                if (arg == null)
+                if (arg == null) {
                     continue;
+                }
                 expected = new LenientEqualityMatcher(arg, instanceMap);
             }
 

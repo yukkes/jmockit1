@@ -28,7 +28,7 @@ public final class TestRun {
     // Fields with global state
     // ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static final ThreadLocal<Integer> noMockingCount = new ThreadLocal<Integer>() {
+    private static final ThreadLocal<Integer> noMockingCount = new ThreadLocal<>() {
         @Override
         protected Integer initialValue() {
             return 0;
