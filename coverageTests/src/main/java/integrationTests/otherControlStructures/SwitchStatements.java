@@ -46,13 +46,12 @@ public final class SwitchStatements {
     }
 
     void anotherSwitchStatementWithCompactCasesAndDefault(int i) {
+        // @formatter:off
         switch (i) {
-            case 1:
-                System.gc();
-                break;
-            default:
-                System.runFinalization();
+            case 1: System.gc(); break;
+            default: System.runFinalization();
         }
+        // @formatter:on
     }
 
     void switchStatementWithSparseCasesAndNoDefault(char c) {
