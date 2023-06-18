@@ -11,9 +11,9 @@ public final class ClassWithReferenceToNestedClassTest extends CoverageTest {
     public void exerciseOnePathOfTwo() {
         ClassWithReferenceToNestedClass.doSomething();
 
-        assertEquals(2, fileData.lineCoverageInfo.getExecutableLineCount());
-        assertEquals(50, fileData.lineCoverageInfo.getCoveragePercentage());
-        assertEquals(2, fileData.lineCoverageInfo.getTotalItems());
+        assertEquals(4, fileData.lineCoverageInfo.getExecutableLineCount());
+        assertEquals(25, fileData.lineCoverageInfo.getCoveragePercentage());
+        assertEquals(4, fileData.lineCoverageInfo.getTotalItems());
         assertEquals(1, fileData.lineCoverageInfo.getCoveredItems());
     }
 }
