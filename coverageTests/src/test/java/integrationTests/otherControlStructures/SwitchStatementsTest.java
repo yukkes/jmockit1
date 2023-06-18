@@ -12,13 +12,13 @@ public final class SwitchStatementsTest extends CoverageTest {
         tested.switchStatementWithSparseCasesAndDefault('A');
         tested.switchStatementWithSparseCasesAndDefault('\0');
 
-        assertLines(7, 22, 5);
-        assertLine(7, 1, 1, 2);
-        assertLine(9, 1, 1, 1);
-        assertLine(10, 1, 1, 1);
-        assertLine(18, 1, 1, 1);
-        assertLine(20, 1, 0, 0);
-        assertLine(22, 1, 1, 1);
+        assertLines(5, 20, 5);
+        assertLine(5, 1, 1, 2);
+        assertLine(7, 1, 1, 1);
+        assertLine(8, 1, 1, 1);
+        assertLine(15, 1, 1, 1);
+        assertLine(17, 1, 0, 0);
+        assertLine(19, 1, 1, 1);
     }
 
     @Test
