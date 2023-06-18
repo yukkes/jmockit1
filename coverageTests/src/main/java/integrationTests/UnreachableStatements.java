@@ -9,7 +9,6 @@ public final class UnreachableStatements {
      * Non branching method with unreachable lines.
      */
     void nonBranchingMethodWithUnreachableLines() {
-        int a = 1;
         assert false;
         System.gc();
     }

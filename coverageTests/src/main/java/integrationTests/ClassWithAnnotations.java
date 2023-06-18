@@ -1,8 +1,8 @@
 package integrationTests;
 
-import java.beans.*;
+import java.beans.ConstructorProperties;
 
-import javax.sql.*;
+import javax.sql.DataSource;
 
 /**
  * The Class ClassWithAnnotations.

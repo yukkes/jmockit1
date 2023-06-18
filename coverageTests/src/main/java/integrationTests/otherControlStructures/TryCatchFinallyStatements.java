@@ -19,16 +19,17 @@ public final class TryCatchFinallyStatements {
 
     int regularTryFinally(boolean b) {
         try {
-            if (b)
+            if (b) {
                 return 1;
+            }
             return 0;
         } finally {
             System.gc();
         }
     }
 
-    boolean finallyBlockWhichCannotCompleteNormally(boolean b) // very different from javac with Eclipse compiler
-    {
+    // very different from javac with Eclipse compiler
+    boolean finallyBlockWhichCannotCompleteNormally(boolean b) {
         while (b) {
             try {
                 return true;
@@ -52,7 +53,6 @@ public final class TryCatchFinallyStatements {
                 return i; // this never completes, because of the continue
             } finally { // the second finally clause
                 if (i == 3) {
-                    continue; // this continue overrides the return statement
                 }
             }
         }
@@ -64,8 +64,9 @@ public final class TryCatchFinallyStatements {
         try {
             toString();
         } finally {
-            if (b)
+            if (b) {
                 toString();
+            }
         }
     }
 }

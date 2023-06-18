@@ -1,6 +1,6 @@
 package integrationTests;
 
-import java.util.*;
+import java.util.Random;
 
 /**
  * The Interface InterfaceWithExecutableCode.

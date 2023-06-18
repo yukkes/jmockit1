@@ -40,8 +40,9 @@ public final class IfElseStatements {
      *            the b
      */
     void singleLineIf(boolean b) {
-        if (b)
+        if (b) {
             System.gc();
+        }
     }
 
     /**
@@ -51,10 +52,11 @@ public final class IfElseStatements {
      *            the b
      */
     void singleLineIfAndElse(boolean b) {
-        if (b)
+        if (b) {
             System.gc();
-        else
+        } else {
             System.runFinalization();
+        }
     }
 
     /**
@@ -111,10 +113,10 @@ public final class IfElseStatements {
      */
     boolean ifElseWithComplexBooleanCondition(boolean a, boolean b) {
         // noinspection RedundantIfStatement
-        if (a || b)
+        if (a || b) {
             return true;
-        else
-            return false;
+        }
+        return false;
     }
 
     /**
@@ -163,10 +165,8 @@ public final class IfElseStatements {
     int nestedIf(boolean a, boolean b) {
         int i = 1;
 
-        if (a) {
-            if (b) {
-                i = 2;
-            }
+        if (a && b) {
+            i = 2;
         }
 
         return i;
@@ -185,12 +185,11 @@ public final class IfElseStatements {
     int ifElseWithNestedIf(boolean a, boolean b) {
         int i = 1;
 
-        if (a) {
-            if (b) {
-                i = 2;
-            }
-        } else {
+        if (!a) {
             return 3;
+        }
+        if (b) {
+            i = 2;
         }
 
         return i;
@@ -248,10 +247,11 @@ public final class IfElseStatements {
      */
     int anotherSingleLineIfAndElse(boolean b) {
         int r;
-        if (b)
+        if (b) {
             r = 1;
-        else
+        } else {
             r = 2;
+        }
         return r;
     }
 
@@ -264,10 +264,10 @@ public final class IfElseStatements {
      * @return the int
      */
     int yetAnotherSingleLineIfAndElse(boolean b) {
-        if (b)
+        if (b) {
             return 1;
-        else
-            return 2;
+        }
+        return 2;
     }
 
     /**

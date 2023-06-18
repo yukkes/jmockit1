@@ -1,6 +1,8 @@
 package integrationTests.loops;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 public class ForStatements {
     void forInSeparateLines() {
@@ -10,8 +12,9 @@ public class ForStatements {
     }
 
     void forInSingleLine(int i) {
-        for (; i < 2; i++)
+        for (; i < 2; i++) {
             System.gc();
+        }
     }
 
     int forEachArrayElement(int... values) {

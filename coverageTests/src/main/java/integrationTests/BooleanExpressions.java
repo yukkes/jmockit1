@@ -18,7 +18,7 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean eval1(boolean x, boolean y, int z) {
-        return x && (y || z > 0) ? true : false;
+        return x && (y || z > 0);
     }
 
     /**
@@ -82,10 +82,12 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean eval5(boolean a, boolean b, boolean c) {
-        if (a)
+        if (a) {
             return true;
-        if (b || c)
+        }
+        if (b || c) {
             return false;
+        }
 
         return !c;
     }
@@ -158,15 +160,7 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean returnsTrivialResultFromInputAfterIfElse(boolean b, int i) {
-        String s;
-
-        if (b) {
-            s = "one";
-        } else {
-            s = "two";
-        }
-
-        return i != 0 ? true : false; // LOAD 2 IFEQ L1, 1 GOTO L2, L1 0 L2 RETURN
+        return i != 0; // LOAD 2 IFEQ L1, 1 GOTO L2, L1 0 L2 RETURN
     }
 
     /**
@@ -180,12 +174,11 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean returnsResultPreviouslyComputedFromInput(boolean b, int i) {
-        String s = b ? "a" : "b";
         boolean res;
 
-        if (i != 0)
+        if (i != 0) {
             res = true;
-        else {
+        } else {
             res = false;
             System.out.checkError();
         }
@@ -206,9 +199,10 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean methodWithTooManyConditionsForPathAnalysis(int i, int j, boolean b) {
-        if (i > 0 && j < 5 || b && i > 1 || !b && j > 5 || (i <= 3 || j >= 4) && b) {
-            return i + j == 3 ? b : !b;
-        } else if (i < 0 || j < 0) {
+        if (i > 0 && j < 5 || (b ? i > 1 : j > 5) || (i <= 3 || j >= 4) && b) {
+            return i + j == 3 == b;
+        }
+        if (i < 0 || j < 0) {
             return i < j;
         }
 
@@ -224,7 +218,6 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean returnsNegatedInputFromLocalVariable(boolean b) {
-        boolean var = !b;
-        return var; // LOAD 1 IFNE L1, [1 GOTO L2], [L1 0], L2 STORE 2, L3 LOAD 2 RETURN
+        return !b; // LOAD 1 IFNE L1, [1 GOTO L2], [L1 0], L2 STORE 2, L3 LOAD 2 RETURN
     }
 }

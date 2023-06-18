@@ -4,7 +4,6 @@
 
 package integrationTests.data;
 
-@SuppressWarnings({ "ClassWithTooManyFields" })
 public final class ClassWithInstanceFields {
     private final int finalField;
 

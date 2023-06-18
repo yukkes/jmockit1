@@ -1,6 +1,6 @@
 package integrationTests;
 
-import java.util.concurrent.locks.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * The Class ClassWithReferenceToNestedClass.

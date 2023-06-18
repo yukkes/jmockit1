@@ -10,8 +10,9 @@ public class WhileStatements {
     }
 
     void whileBlockInSingleLine(int i) {
-        while (i < 2)
+        while (i < 2) {
             i++;
+        }
     }
 
     int whileWithContinue(int i) {
@@ -75,8 +76,9 @@ public class WhileStatements {
         while (true) {
             i++;
 
-            if (i >= 2)
+            if (i >= 2) {
                 return;
+            }
         }
     }
 
