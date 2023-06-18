@@ -41,11 +41,11 @@ public final class SwitchStatementsTest extends CoverageTest {
         tested.anotherSwitchStatementWithCompactCasesAndDefault(1);
         tested.anotherSwitchStatementWithCompactCasesAndDefault(5);
 
-        assertLines(56, 60, 4);
-        assertLine(56, 1, 1, 2);
-        assertLine(57, 1, 1, 1);
-        assertLine(58, 1, 1, 1);
-        assertLine(60, 1, 1, 2);
+        assertLines(49, 55, 4);
+        assertLine(50, 1, 1, 2);
+        assertLine(51, 1, 1, 1);
+        assertLine(52, 1, 1, 1);
+        assertLine(55, 1, 1, 2);
     }
 
     @Test
@@ -53,13 +53,13 @@ public final class SwitchStatementsTest extends CoverageTest {
         tested.switchStatementWithSparseCasesAndNoDefault('f');
         tested.switchStatementWithSparseCasesAndNoDefault('b');
 
-        assertLines(64, 72, 3);
-        assertLine(64, 1, 1, 2);
-        assertLine(66, 1, 0, 0);
-        assertLine(67, 1, 0, 0);
-        assertLine(69, 1, 1, 1);
-        assertLine(70, 0, 0, 0);
-        assertLine(72, 1, 1, 2);
+        assertLines(58, 66, 3);
+        assertLine(58, 1, 1, 2);
+        assertLine(60, 1, 0, 0);
+        assertLine(61, 1, 0, 0);
+        assertLine(63, 1, 1, 1);
+        assertLine(64, 0, 0, 0);
+        assertLine(66, 1, 1, 2);
     }
 
     @Test
@@ -68,13 +68,13 @@ public final class SwitchStatementsTest extends CoverageTest {
         tested.switchStatementWithCompactCasesAndNoDefault(4);
         tested.switchStatementWithCompactCasesAndNoDefault(5);
 
-        assertLines(76, 84, 4);
-        assertLine(76, 1, 1, 3);
-        assertLine(78, 1, 1, 3);
-        assertLine(79, 1, 0, 0);
-        assertLine(80, 1, 0, 0);
-        assertLine(81, 1, 1, 1);
-        assertLine(84, 1, 1, 3);
+        assertLines(69, 79, 4);
+        assertLine(69, 1, 1, 3);
+        assertLine(72, 1, 1, 3);
+        assertLine(73, 1, 0, 0);
+        assertLine(74, 1, 0, 0);
+        assertLine(75, 1, 1, 1);
+        assertLine(79, 1, 1, 3);
     }
 
     @Test
@@ -82,11 +82,11 @@ public final class SwitchStatementsTest extends CoverageTest {
         tested.switchStatementWithExitInAllCases(1);
         tested.switchStatementWithExitInAllCases(2);
 
-        assertLines(89, 92, 3);
-        assertLine(89, 1, 1, 2);
-        assertLine(90, 1, 1, 1);
-        assertLine(91, 1, 1, 1);
-        assertLine(92, 1, 0, 0);
+        assertLines(83, 89, 3);
+        assertLine(83, 1, 1, 2);
+        assertLine(85, 1, 1, 1);
+        assertLine(87, 1, 1, 1);
+        assertLine(89, 1, 0, 0);
     }
 
     @Test
@@ -94,9 +94,8 @@ public final class SwitchStatementsTest extends CoverageTest {
         tested.switchOnString("A", true);
         tested.switchOnString("M", false);
 
-        assertLines(98, 101, 3);
-        assertLine(98, 1, 1, 2);
-        assertLine(99, 1, 1, 1);
-        // assertLine(101, 3, 2, 1, 0, 1);
+        assertLines(94, 98, 3);
+        assertLine(94, 1, 1, 2);
+        assertLine(98, 1, 1, 1);
     }
 }

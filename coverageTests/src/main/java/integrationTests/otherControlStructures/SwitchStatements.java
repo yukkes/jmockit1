@@ -68,16 +68,13 @@ public final class SwitchStatements {
     boolean switchStatementWithCompactCasesAndNoDefault(int i) {
         boolean b = true;
 
+        // @formatter:off
         switch (i) {
-            case 1:
-                System.gc();
-                return b;
-            case 2:
-                System.runFinalization();
-                return b;
-            case 4:
-                b = false;
+            case 1: System.gc(); return b;
+            case 2: System.runFinalization(); return b;
+            case 4: b = false;
         }
+        // @formatter:on
 
         return b;
     }
