@@ -1,9 +1,9 @@
 package petclinic.vets;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
-import petclinic.util.*;
+import petclinic.util.BaseEntity;
 
 /**
  * A {@linkplain Vet Vet's} specialty (for example, "Dentistry").

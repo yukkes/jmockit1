@@ -1,12 +1,12 @@
 package petclinic.vets;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.inject.*;
-import javax.transaction.*;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 
-import petclinic.util.*;
+import petclinic.util.Database;
 
 /**
  * A domain service class for {@link Vet}-related business operations.

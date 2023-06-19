@@ -1,12 +1,15 @@
 package petclinic.owners;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.*;
+import java.util.List;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import petclinic.util.*;
+import petclinic.util.SUT;
+import petclinic.util.TestUtil;
 
 /**
  * Integration tests for {@link Owner}-related operations, at the application service level. Each test runs in a

@@ -1,13 +1,18 @@
 package tutorial.domain;
 
-import static org.junit.Assert.*;
-import static tutorial.persistence.Database.*;
+import static org.junit.Assert.assertNotEquals;
+import static tutorial.persistence.Database.persist;
 
-import mockit.*;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Tested;
+import mockit.Verifications;
 
-import org.apache.commons.mail.*;
-import org.junit.*;
-import org.junit.rules.*;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class MyBusinessServiceTest.

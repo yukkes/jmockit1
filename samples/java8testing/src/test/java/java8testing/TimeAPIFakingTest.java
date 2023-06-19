@@ -1,12 +1,17 @@
 package java8testing;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import java.time.*;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
-import mockit.*;
+import mockit.Mock;
+import mockit.MockUp;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * The Class TimeAPIFakingTest.

@@ -1,18 +1,27 @@
 package petclinic.pets;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.*;
-
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import javax.validation.ValidationException;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import petclinic.owners.*;
-import petclinic.util.*;
+import petclinic.owners.Owner;
+import petclinic.owners.OwnerData;
+import petclinic.util.SUT;
+import petclinic.util.TestUtil;
 
 /**
  * Integration tests for {@link Pet}-related operations, at the application service level. Each test runs in a database

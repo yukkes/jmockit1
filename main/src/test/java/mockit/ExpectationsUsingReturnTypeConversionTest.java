@@ -1,6 +1,7 @@
 package mockit;
 
 import static java.util.Arrays.asList;
+
 import static mockit.internal.util.Utilities.JAVA8;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

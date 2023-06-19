@@ -1,11 +1,14 @@
 package tutorial.domain;
 
-import static tutorial.persistence.Database.*;
+import static tutorial.persistence.Database.find;
+import static tutorial.persistence.Database.persist;
 
-import java.math.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.List;
 
-import org.apache.commons.mail.*;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
 
 /**
  * This class makes use of several idioms which would prevent unit testing with more "conventional" mocking tools. Its

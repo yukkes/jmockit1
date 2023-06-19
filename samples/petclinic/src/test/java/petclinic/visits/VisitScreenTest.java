@@ -1,15 +1,19 @@
 package petclinic.visits;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-import java.util.*;
+import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.*;
-
-import petclinic.pets.*;
-import petclinic.util.*;
+import petclinic.pets.Pet;
+import petclinic.pets.PetData;
+import petclinic.util.SUT;
+import petclinic.util.TestUtil;
 
 /**
  * Integration tests for {@link Visit}-related operations, at the application service level. Each test runs in a

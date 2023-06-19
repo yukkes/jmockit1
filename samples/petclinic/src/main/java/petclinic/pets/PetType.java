@@ -1,9 +1,10 @@
 package petclinic.pets;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import petclinic.util.*;
+import petclinic.util.BaseEntity;
 
 /**
  * The type of a {@link Pet} (for example, "Dog").

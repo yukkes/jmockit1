@@ -1,10 +1,13 @@
 package jmockit.loginExample.domain.userLogin;
 
-import mockit.*;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.Tested;
+import mockit.Verifications;
 
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 
-import jmockit.loginExample.domain.userAccount.*;
+import jmockit.loginExample.domain.userAccount.UserAccount;
 
 /**
  * A small TestNG test suite for a single class (<code>LoginService</code>), based on

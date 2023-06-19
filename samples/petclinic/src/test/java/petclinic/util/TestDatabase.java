@@ -1,12 +1,17 @@
 package petclinic.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.inject.*;
-import javax.persistence.*;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 
 /**
  * Base test utility class for domain-specific "EntityXData" classes, which allow each test to create the required data

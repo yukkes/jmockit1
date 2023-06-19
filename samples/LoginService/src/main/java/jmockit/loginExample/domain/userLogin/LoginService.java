@@ -1,8 +1,10 @@
 package jmockit.loginExample.domain.userLogin;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import jmockit.loginExample.domain.userAccount.*;
+import jmockit.loginExample.domain.userAccount.UserAccount;
 
 public final class LoginService {
     private static final int MAX_LOGIN_ATTEMPTS = 3;

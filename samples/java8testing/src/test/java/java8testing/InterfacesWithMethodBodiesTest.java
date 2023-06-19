@@ -1,13 +1,22 @@
 package java8testing;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
 
-import mockit.*;
+import mockit.Delegate;
+import mockit.Expectations;
+import mockit.Injectable;
+import mockit.Mock;
+import mockit.Mocked;
+import mockit.Verifications;
+import mockit.VerificationsInOrder;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * The Class InterfacesWithMethodBodiesTest.

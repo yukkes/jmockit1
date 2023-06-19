@@ -1,12 +1,16 @@
 package jmockit.loginExample.domain.userLogin;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
-import mockit.*;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Tested;
 
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import jmockit.loginExample.domain.userAccount.*;
+import jmockit.loginExample.domain.userAccount.UserAccount;
 
 /**
  * Equivalent to {@link LoginServiceNGTest}, but with minimal mocking and no redundant tests.

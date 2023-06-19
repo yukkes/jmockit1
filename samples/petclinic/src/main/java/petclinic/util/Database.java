@@ -1,10 +1,14 @@
 package petclinic.util;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.persistence.*;
-import javax.transaction.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 
 /**
  * Provides access to the application database, allowing transient instances of entity classes to be persisted, and

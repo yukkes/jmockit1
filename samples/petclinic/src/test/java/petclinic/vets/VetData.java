@@ -1,8 +1,8 @@
 package petclinic.vets;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import petclinic.util.*;
+import petclinic.util.TestDatabase;
 
 /**
  * Utility class for creation of {@link Vet} data in the test database, to be used in integration tests.

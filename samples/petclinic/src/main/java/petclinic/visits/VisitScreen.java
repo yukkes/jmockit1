@@ -1,13 +1,15 @@
 package petclinic.visits;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.faces.view.*;
-import javax.inject.*;
-import javax.transaction.*;
+import javax.annotation.Nullable;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.transaction.Transactional;
 
-import petclinic.pets.*;
+import petclinic.pets.Pet;
+import petclinic.pets.PetMaintenance;
 
 /**
  * An application service class that handles {@link Visit}-related operations from the visit screen.

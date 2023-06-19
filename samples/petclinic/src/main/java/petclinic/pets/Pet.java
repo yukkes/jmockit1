@@ -1,15 +1,23 @@
 package petclinic.pets;
 
-import static javax.persistence.TemporalType.*;
+import static javax.persistence.TemporalType.DATE;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
 
-import petclinic.owners.*;
-import petclinic.util.*;
-import petclinic.visits.*;
+import petclinic.owners.Owner;
+import petclinic.util.BaseEntity;
+import petclinic.visits.Visit;
 
 /**
  * A pet.

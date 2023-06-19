@@ -1,12 +1,13 @@
 package petclinic.visits;
 
-import java.util.*;
+import java.util.Date;
 
-import javax.annotation.*;
-import javax.inject.*;
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
 
-import petclinic.pets.*;
-import petclinic.util.*;
+import petclinic.pets.Pet;
+import petclinic.pets.PetData;
+import petclinic.util.TestDatabase;
 
 /**
  * Utility class for creation of {@link Visit} data in the test database, to be used in integration tests.

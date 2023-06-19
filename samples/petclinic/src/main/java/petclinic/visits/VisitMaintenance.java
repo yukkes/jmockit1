@@ -1,13 +1,14 @@
 package petclinic.visits;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.inject.*;
-import javax.transaction.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 
-import petclinic.pets.*;
-import petclinic.util.*;
+import petclinic.pets.Pet;
+import petclinic.util.Database;
 
 /**
  * A domain service class for {@link Visit}-related business operations.

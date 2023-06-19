@@ -1,13 +1,18 @@
 package petclinic.owners;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.validation.constraints.NotNull;
 
-import petclinic.pets.*;
-import petclinic.util.*;
+import petclinic.pets.Pet;
+import petclinic.util.Person;
 
 /**
  * A pet owner.

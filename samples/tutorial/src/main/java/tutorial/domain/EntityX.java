@@ -1,10 +1,11 @@
 package tutorial.domain;
 
-import static javax.persistence.GenerationType.*;
+import java.math.BigDecimal;
 
-import java.math.*;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class EntityX {

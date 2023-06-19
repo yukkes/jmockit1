@@ -1,7 +1,8 @@
 package petclinic.util;
 
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * A person having a first and a last name.

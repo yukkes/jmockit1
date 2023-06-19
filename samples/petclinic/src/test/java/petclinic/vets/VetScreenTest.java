@@ -1,14 +1,14 @@
 package petclinic.vets;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
-import java.util.*;
+import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.*;
-
-import petclinic.util.*;
+import petclinic.util.SUT;
+import petclinic.util.TestUtil;
 
 /**
  * Integration tests for {@link Vet}-related operations, at the application service level. Each test runs in a database

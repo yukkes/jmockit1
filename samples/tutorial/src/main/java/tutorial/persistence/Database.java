@@ -1,9 +1,13 @@
 package tutorial.persistence;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  * This class is a <em>static facade</em> for persistence operations. All methods are <code>static</code>, so it can be

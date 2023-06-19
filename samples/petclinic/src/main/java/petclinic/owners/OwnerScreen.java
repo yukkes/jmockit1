@@ -1,11 +1,12 @@
 package petclinic.owners;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.faces.view.*;
-import javax.inject.*;
-import javax.transaction.*;
+import javax.annotation.Nullable;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.transaction.Transactional;
 
 /**
  * An application service class that handles {@link Owner}-related operations from the owner screen.

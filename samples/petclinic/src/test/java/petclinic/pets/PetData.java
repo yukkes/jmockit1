@@ -1,12 +1,14 @@
 package petclinic.pets;
 
-import java.util.*;
+import java.util.Date;
 
-import javax.annotation.*;
-import javax.inject.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 
-import petclinic.owners.*;
-import petclinic.util.*;
+import petclinic.owners.Owner;
+import petclinic.owners.OwnerData;
+import petclinic.util.TestDatabase;
 
 /**
  * Utility class for creation of {@link Pet} data in the test database, to be used in integration tests.

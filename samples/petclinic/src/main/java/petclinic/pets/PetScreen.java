@@ -1,13 +1,16 @@
 package petclinic.pets;
 
-import java.util.*;
+import java.util.List;
 
-import javax.annotation.*;
-import javax.faces.view.*;
-import javax.inject.*;
-import javax.transaction.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.transaction.Transactional;
 
-import petclinic.owners.*;
+import petclinic.owners.Owner;
+import petclinic.owners.OwnerMaintenance;
 
 /**
  * An application service class that handles {@link Pet}-related operations from the pet screen.
