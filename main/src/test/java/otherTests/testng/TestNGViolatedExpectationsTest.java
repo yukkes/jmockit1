@@ -1,11 +1,12 @@
 package otherTests.testng;
 
-import java.util.*;
+import java.util.IllegalFormatCodePointException;
 
-import mockit.*;
-import mockit.integration.*;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.integration.Collaborator;
 
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 
 // These tests are expected to fail, so they are kept inactive.
 @Test(enabled = false)

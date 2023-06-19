@@ -1,12 +1,14 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
+import mockit.internal.expectations.invocation.UnexpectedInvocation;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class RestrictedFullVerificationsTest.

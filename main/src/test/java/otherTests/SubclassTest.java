@@ -1,11 +1,15 @@
 package otherTests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
-import mockit.*;
+import mockit.Capturing;
+import mockit.Expectations;
+import mockit.Mocked;
 
-import org.junit.*;
-import org.junit.runners.*;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 /**
  * The Class SubclassTest.

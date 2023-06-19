@@ -1,10 +1,10 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import javax.inject.*;
+import javax.inject.Inject;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class StandardDI2Test.

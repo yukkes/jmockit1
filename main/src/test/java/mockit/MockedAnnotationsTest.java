@@ -1,12 +1,18 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Annotation;
 
-import javax.annotation.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Resource;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class MockedAnnotationsTest.

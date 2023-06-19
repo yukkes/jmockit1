@@ -1,10 +1,15 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class DelegateInvocationTest.

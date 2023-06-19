@@ -1,15 +1,20 @@
 package mockit;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
 
-import mockit.internal.expectations.invocation.*;
-
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class ExpectationsWithVarArgsMatchersTest.

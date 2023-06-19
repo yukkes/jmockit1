@@ -1,14 +1,21 @@
 package mockit.integration.springframework;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
-import mockit.*;
+import mockit.Injectable;
+import mockit.Tested;
 
-import org.junit.*;
-import org.junit.rules.*;
-import org.springframework.beans.factory.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.beans.factory.support.*;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 public final class SpringIntegrationTest {
     @BeforeClass

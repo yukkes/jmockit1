@@ -1,8 +1,8 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
 
-import org.junit.*;
+import org.junit.Test;
 
 class BaseTestClass {
     static final class Dependency {

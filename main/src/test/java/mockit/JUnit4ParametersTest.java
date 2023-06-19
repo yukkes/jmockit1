@@ -1,17 +1,19 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-import mockit.integration.*;
+import mockit.integration.MockedClass;
 
-import org.junit.*;
-import org.junit.runner.*;
-import org.junit.runners.*;
-import org.junit.runners.Parameterized.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
-import otherTests.*;
+import otherTests.TestedClass;
 
 /**
  * The Class JUnit4ParametersTest.

@@ -1,11 +1,13 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Observable;
+import java.util.concurrent.Callable;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class CapturingInstancesTest.

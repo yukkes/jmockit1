@@ -1,18 +1,31 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.lang.management.*;
-import java.lang.reflect.*;
-import java.util.concurrent.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import javax.faces.event.*;
-import javax.servlet.*;
-import javax.xml.parsers.*;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
+import javax.servlet.ServletContextListener;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import mockit.internal.*;
+import mockit.internal.ClassFile;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * The Class CapturingImplementationsTest.

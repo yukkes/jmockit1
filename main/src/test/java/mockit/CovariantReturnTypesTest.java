@@ -1,10 +1,12 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertSame;
 
-import javax.swing.*;
+import javax.swing.JFormattedTextField;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class CovariantReturnTypesTest.

@@ -1,16 +1,24 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Constructor;
+import java.util.Date;
+import java.util.List;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlElement;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
+import mockit.internal.expectations.invocation.UnexpectedInvocation;
 
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class PartialMockingTest.

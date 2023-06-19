@@ -1,15 +1,18 @@
 package mockit;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
-import static org.junit.Assert.*;
-
-import java.io.*;
+import java.io.Serializable;
 import java.lang.reflect.Type;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.concurrent.Callable;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class GenericMockedTypesTest.

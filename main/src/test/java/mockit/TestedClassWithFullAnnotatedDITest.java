@@ -1,20 +1,30 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
-import java.sql.*;
-import java.util.logging.*;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.util.logging.Logger;
 
-import javax.annotation.*;
-import javax.annotation.sql.*;
-import javax.ejb.*;
-import javax.enterprise.context.*;
-import javax.inject.*;
-import javax.sql.*;
+import javax.annotation.Resource;
+import javax.annotation.sql.DataSourceDefinition;
+import javax.annotation.sql.DataSourceDefinitions;
+import javax.ejb.EJB;
+import javax.enterprise.context.Conversation;
+import javax.inject.Inject;
+import javax.sql.ConnectionPoolDataSource;
+import javax.sql.DataSource;
+import javax.sql.PooledConnection;
+import javax.sql.XAConnection;
+import javax.sql.XADataSource;
 
-import org.junit.*;
-import org.springframework.beans.factory.annotation.*;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * The Class TestedClassWithFullAnnotatedDITest.

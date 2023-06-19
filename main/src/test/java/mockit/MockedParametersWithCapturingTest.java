@@ -1,10 +1,11 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import java.nio.*;
+import java.nio.CharBuffer;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class MockedParametersWithCapturingTest.

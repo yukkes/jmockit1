@@ -1,14 +1,22 @@
 package otherTests.testng;
 
 import static org.junit.Assert.assertEquals;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
-import mockit.*;
-import mockit.integration.*;
+import mockit.Expectations;
+import mockit.FullVerifications;
+import mockit.Injectable;
+import mockit.Tested;
+import mockit.Verifications;
+import mockit.VerificationsInOrder;
+import mockit.integration.MockedClass;
 
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import otherTests.*;
+import otherTests.TestedClass;
 
 public final class TestNGExpectationsTest {
     @Tested

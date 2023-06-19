@@ -1,16 +1,18 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
-import java.util.concurrent.*;
+import java.util.concurrent.AbstractExecutorService;
 
-import javax.sql.*;
+import javax.sql.DataSource;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
 
-import org.junit.*;
-import org.junit.rules.*;
-import org.w3c.dom.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.w3c.dom.Attr;
 
 /**
  * The Class MockInstanceMatchingTest.

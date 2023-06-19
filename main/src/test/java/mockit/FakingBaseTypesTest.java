@@ -1,14 +1,20 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
-import java.nio.*;
+import java.io.StringReader;
+import java.nio.CharBuffer;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import org.junit.*;
-import org.junit.runners.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 /**
  * The Class FakingBaseTypesTest.

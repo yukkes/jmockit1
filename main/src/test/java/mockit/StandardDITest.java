@@ -1,15 +1,23 @@
 package mockit;
 
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
 
-import java.util.*;
-import java.util.concurrent.*;
+import javax.inject.Inject;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
-import javax.inject.*;
-
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * The Class StandardDITest.

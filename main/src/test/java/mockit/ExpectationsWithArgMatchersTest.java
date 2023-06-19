@@ -1,18 +1,25 @@
 package mockit;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static mockit.ExpectationsWithArgMatchersTest.Delegates.collectionElement;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import static mockit.ExpectationsWithArgMatchersTest.Delegates.*;
-import static org.junit.Assert.*;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
-import java.security.cert.*;
-import java.util.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
 
-import mockit.internal.expectations.invocation.*;
-
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class ExpectationsWithArgMatchersTest.

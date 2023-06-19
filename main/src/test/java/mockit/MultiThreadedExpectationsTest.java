@@ -1,14 +1,16 @@
 package mockit;
 
-import static org.junit.Assert.*;
-import static org.junit.runners.MethodSorters.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
-import java.awt.*;
-import java.util.concurrent.*;
+import java.awt.Graphics2D;
+import java.util.concurrent.Callable;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
-import org.junit.*;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 
 /**
  * The Class MultiThreadedExpectationsTest.

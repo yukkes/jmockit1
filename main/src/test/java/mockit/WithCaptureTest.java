@@ -1,17 +1,24 @@
 package mockit;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import java.math.*;
-import java.util.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
 
-import mockit.internal.expectations.invocation.*;
-
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class WithCaptureTest.

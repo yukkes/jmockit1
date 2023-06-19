@@ -1,19 +1,28 @@
 package mockit;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static mockit.internal.util.Utilities.JAVA8;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assume.assumeTrue;
 
-import static mockit.internal.util.Utilities.*;
-import static org.junit.Assert.*;
-import static org.junit.Assume.*;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
-import java.io.*;
-import java.math.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.stream.*;
-
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class ExpectationsUsingReturnTypeConversionTest.

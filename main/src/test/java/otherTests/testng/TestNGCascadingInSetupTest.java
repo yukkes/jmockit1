@@ -1,10 +1,12 @@
 package otherTests.testng;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
-import mockit.*;
+import mockit.Expectations;
+import mockit.Mocked;
 
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public final class TestNGCascadingInSetupTest {
     static class Foo {

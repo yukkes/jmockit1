@@ -1,10 +1,11 @@
 package mockit.integration.junit4;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import mockit.*;
+import mockit.Mocked;
 
-import org.junit.*;
+import org.junit.Test;
 
 public final class MockDependencyTest {
     @Mocked

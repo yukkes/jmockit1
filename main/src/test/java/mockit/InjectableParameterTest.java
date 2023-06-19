@@ -1,11 +1,14 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.math.*;
-import java.util.concurrent.atomic.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class InjectableParameterTest.

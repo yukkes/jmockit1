@@ -1,12 +1,13 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.util.*;
+import java.util.Date;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
+import mockit.internal.expectations.invocation.UnexpectedInvocation;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class ExpectationsWithInvocationCountsTest.

@@ -2,9 +2,11 @@ package mockit.integration.junit4;
 
 import static org.junit.Assert.assertEquals;
 
-import mockit.*;
+import mockit.Mock;
+import mockit.MockUp;
 
-import org.junit.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 public final class SecondJUnit4DecoratorTest {
     public static final class RealClass3 {

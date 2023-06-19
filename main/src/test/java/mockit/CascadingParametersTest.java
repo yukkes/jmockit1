@@ -1,18 +1,41 @@
 package mockit;
 
-import static org.junit.Assert.*;
-import static org.junit.runners.MethodSorters.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
-import java.io.*;
-import java.lang.management.*;
-import java.net.*;
-import java.nio.channels.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.lang.management.CompilationMXBean;
+import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
 
-import org.junit.*;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 
 /**
  * The Class CascadingParametersTest.

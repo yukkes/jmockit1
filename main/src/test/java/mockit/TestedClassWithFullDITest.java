@@ -1,14 +1,24 @@
 package mockit;
 
-import static org.junit.Assert.*;
-import static org.junit.runners.MethodSorters.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import javax.persistence.*;
-import javax.sql.*;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
-import org.junit.*;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 
 /**
  * The Class TestedClassWithFullDITest.

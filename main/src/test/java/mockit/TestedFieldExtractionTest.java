@@ -1,12 +1,19 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.inject.*;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class TestedFieldExtractionTest.

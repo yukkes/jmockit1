@@ -1,13 +1,18 @@
 package mockit;
 
-import static org.junit.Assert.*;
-import static org.junit.runners.MethodSorters.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
-import javax.annotation.*;
-import javax.inject.*;
+import javax.annotation.Resource;
+import javax.inject.Inject;
 
-import org.junit.*;
-import org.springframework.beans.factory.annotation.*;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * The Class TestedClassWithAnnotatedDITest.

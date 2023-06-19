@@ -1,16 +1,22 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
-import javax.accessibility.*;
-import javax.faces.application.*;
+import javax.accessibility.AccessibleState;
+import javax.faces.application.FacesMessage;
 
-import mockit.MoreFakingTest.ClassWithNested.*;
+import mockit.MoreFakingTest.ClassWithNested.Nested;
 
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class MoreFakingTest.

@@ -1,6 +1,6 @@
 package otherTests;
 
-import mockit.integration.*;
+import mockit.integration.MockedClass;
 
 /**
  * The Class TestedClass.

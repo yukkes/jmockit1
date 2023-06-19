@@ -1,9 +1,11 @@
 package mockit;
 
-import javax.inject.*;
+import javax.inject.Inject;
 
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class TestedFieldWithFailedFullDITest.

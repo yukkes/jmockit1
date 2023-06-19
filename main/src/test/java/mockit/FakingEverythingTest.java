@@ -1,13 +1,17 @@
 package mockit;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.*;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import java.lang.reflect.*;
-import java.util.*;
-
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class FakingEverythingTest.

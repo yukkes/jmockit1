@@ -1,12 +1,23 @@
 package otherTests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import mockit.*;
+import mockit.ClassWithObjectOverrides;
+import mockit.Delegate;
+import mockit.Expectations;
+import mockit.Injectable;
+import mockit.Invocation;
+import mockit.Mock;
+import mockit.Mocked;
+import mockit.Verifications;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class JUnit4Test.

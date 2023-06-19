@@ -1,8 +1,8 @@
 package otherTests;
 
-import mockit.*;
+import mockit.ClassWithObjectOverrides;
 
-import junit.framework.*;
+import junit.framework.TestCase;
 
 /**
  * The Class JUnit38StyleTest.

@@ -1,12 +1,16 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.*;
+import java.util.Observable;
 
-import javax.annotation.*;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * The Class TestedClassWithConstructorDI1Test.

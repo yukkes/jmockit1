@@ -1,19 +1,25 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import java.awt.*;
-import java.lang.reflect.*;
-import java.rmi.*;
-import java.util.concurrent.atomic.*;
+import java.awt.Panel;
+import java.lang.reflect.Constructor;
+import java.rmi.RMISecurityException;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
 import javax.accessibility.AccessibleContext;
-import javax.sound.midi.*;
-import javax.swing.*;
-import javax.swing.plaf.basic.*;
+import javax.sound.midi.Patch;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicColorChooserUI;
 
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.AfterClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class FakingTest.

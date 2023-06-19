@@ -1,8 +1,8 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class TestedClassWithFieldDIByTypeAndNameTest.

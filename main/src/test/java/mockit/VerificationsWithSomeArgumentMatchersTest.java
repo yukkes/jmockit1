@@ -1,11 +1,13 @@
 package mockit;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
-import mockit.internal.expectations.invocation.*;
+import mockit.internal.expectations.invocation.MissingInvocation;
 
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class VerificationsWithSomeArgumentMatchersTest.

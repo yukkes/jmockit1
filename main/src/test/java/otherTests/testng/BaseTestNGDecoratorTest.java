@@ -1,13 +1,18 @@
 package otherTests.testng;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 
-import java.applet.*;
+import java.applet.Applet;
 
-import mockit.*;
+import mockit.Mock;
+import mockit.MockUp;
 
-import org.testng.*;
-import org.testng.annotations.*;
+import org.testng.IHookCallBack;
+import org.testng.IHookable;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 
 public class BaseTestNGDecoratorTest implements IHookable {
     // Makes sure TestNG integration works with test classes which implement IHookable.

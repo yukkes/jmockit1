@@ -1,12 +1,12 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.io.*;
+import java.io.Serializable;
 
 import mockit.MockingMultipleInterfacesTest.Dependency;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class MockingMultipleInterfacesTest.

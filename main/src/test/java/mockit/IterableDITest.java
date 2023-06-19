@@ -1,14 +1,17 @@
 package mockit;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
+import javax.inject.Inject;
 
-import javax.inject.*;
-
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class IterableDITest.

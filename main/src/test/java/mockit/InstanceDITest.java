@@ -1,15 +1,18 @@
 package mockit;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 
-import javax.enterprise.inject.*;
-import javax.inject.*;
-
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class InstanceDITest.

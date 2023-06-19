@@ -1,6 +1,6 @@
 package otherTests;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * The Class BaseClass.

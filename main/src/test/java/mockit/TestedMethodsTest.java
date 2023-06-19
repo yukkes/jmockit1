@@ -1,11 +1,13 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Set;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class TestedMethodsTest.

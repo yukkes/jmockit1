@@ -1,12 +1,19 @@
 package otherTests.testng;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
-import mockit.*;
+import mockit.Capturing;
+import mockit.Expectations;
+import mockit.Injectable;
+import mockit.Mocked;
 
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public final class TestNGSharedMockFieldTest {
     public interface Dependency {

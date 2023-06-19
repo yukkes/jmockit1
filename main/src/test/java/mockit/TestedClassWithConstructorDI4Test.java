@@ -1,18 +1,22 @@
 package mockit;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.util.List;
+import java.util.concurrent.Callable;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
+import javax.inject.Inject;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
-import javax.inject.*;
-import javax.naming.*;
-import javax.sql.*;
-
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * The Class TestedClassWithConstructorDI4Test.

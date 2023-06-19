@@ -1,12 +1,13 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
-import java.io.*;
+import java.io.Writer;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class MockedClassWithSuperClassTest.

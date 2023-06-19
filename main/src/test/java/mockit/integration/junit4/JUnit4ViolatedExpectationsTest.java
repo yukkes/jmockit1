@@ -1,11 +1,13 @@
 package mockit.integration.junit4;
 
-import java.util.*;
+import java.util.IllegalFormatCodePointException;
 
-import mockit.*;
-import mockit.integration.*;
+import mockit.Expectations;
+import mockit.Mocked;
+import mockit.integration.Collaborator;
 
-import org.junit.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
 // These tests are expected to fail, so they are kept inactive.
 @Ignore

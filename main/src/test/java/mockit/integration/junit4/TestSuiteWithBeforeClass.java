@@ -1,10 +1,12 @@
 package mockit.integration.junit4;
 
-import mockit.*;
+import mockit.Mock;
+import mockit.MockUp;
 
-import org.junit.*;
-import org.junit.runner.*;
-import org.junit.runners.*;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
 @Ignore
 @RunWith(Suite.class)

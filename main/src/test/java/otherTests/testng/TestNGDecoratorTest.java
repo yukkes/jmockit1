@@ -1,14 +1,18 @@
 package otherTests.testng;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertSame;
 
-import java.applet.*;
+import java.applet.Applet;
 
-import javax.naming.*;
+import javax.naming.Reference;
 
-import mockit.*;
+import mockit.Mock;
+import mockit.MockUp;
 
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 public final class TestNGDecoratorTest extends BaseTestNGDecoratorTest {
     public static class FakeClass2 extends MockUp<Reference> {

@@ -2,13 +2,18 @@ package otherTests.multicast;
 
 import static java.util.Arrays.asList;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
-import mockit.*;
+import mockit.Expectations;
+import mockit.Injectable;
+import mockit.Mocked;
+import mockit.Tested;
+import mockit.VerificationsInOrder;
 
-import org.junit.*;
+import org.junit.Test;
 
 public final class MessageTest {
     // A general-purpose utility class that waits for background task completion.

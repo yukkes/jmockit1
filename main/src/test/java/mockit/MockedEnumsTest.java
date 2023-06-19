@@ -1,11 +1,14 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
-import java.lang.annotation.*;
-import java.util.concurrent.*;
+import java.lang.annotation.RetentionPolicy;
+import java.util.concurrent.TimeUnit;
 
-import org.junit.*;
+import org.junit.Test;
 
 /**
  * The Class MockedEnumsTest.

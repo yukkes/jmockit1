@@ -1,16 +1,20 @@
 package mockit.integration.junit4;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.util.List;
 
-import mockit.*;
+import mockit.Injectable;
+import mockit.Mocked;
 
-import org.junit.*;
-import org.junit.runner.*;
-import org.junit.runners.*;
-import org.junit.runners.model.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.InitializationError;
 
 @RunWith(JUnit4CustomRunnerTest.CustomRunner.class)
 public final class JUnit4CustomRunnerTest {

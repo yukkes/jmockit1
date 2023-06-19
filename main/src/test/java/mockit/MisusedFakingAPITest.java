@@ -1,12 +1,13 @@
 package mockit;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.applet.*;
-import java.awt.*;
+import java.applet.Applet;
+import java.awt.Component;
 
-import org.junit.*;
-import org.junit.rules.*;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * The Class MisusedFakingAPITest.
