@@ -160,6 +160,14 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean returnsTrivialResultFromInputAfterIfElse(boolean b, int i) {
+        String s;
+
+        if (b) {
+            s = "one";
+        } else {
+            s = "two";
+        }
+
         return i != 0; // LOAD 2 IFEQ L1, 1 GOTO L2, L1 0 L2 RETURN
     }
 
@@ -174,6 +182,7 @@ public final class BooleanExpressions {
      * @return true, if successful
      */
     public boolean returnsResultPreviouslyComputedFromInput(boolean b, int i) {
+        String s = b ? "a" : "b";
         boolean res;
 
         if (i != 0) {
