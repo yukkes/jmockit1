@@ -44,8 +44,8 @@
         <java.version>11</java.version>
         <java.release.version>11</java.release.version>
 
-        <!-- TODO: Remove after parent 40 -->
-        <jacoco.plugin>0.8.10</jacoco.plugin>
+        <!-- TODO: Remove after parent 41 -->
+        <error-prone.version>2.20.0</error-prone.version>
 
         <!-- Reproducible Builds -->
         <project.build.outputTimestamp>1679577617</project.build.outputTimestamp>
