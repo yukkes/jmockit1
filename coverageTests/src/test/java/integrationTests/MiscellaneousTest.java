@@ -1,6 +1,7 @@
 package integrationTests;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

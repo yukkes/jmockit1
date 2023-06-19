@@ -1,6 +1,7 @@
 package integrationTests.loops;
 
 import static java.util.Arrays.asList;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
