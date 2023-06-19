@@ -1,16 +1,19 @@
 package integrationTests;
 
-import static java.lang.annotation.RetentionPolicy.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.beans.ConstructorProperties;
+import java.lang.annotation.Retention;
+import java.lang.reflect.Constructor;
 
-import java.beans.*;
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import mockit.Injectable;
+import mockit.Mocked;
+import mockit.Tested;
 
-import mockit.*;
-
-import org.junit.*;
+import org.junit.Test;
 
 public final class MiscellaneousTest {
     @Test

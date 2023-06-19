@@ -1,8 +1,8 @@
 package integrationTests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
+import org.junit.Test;
 
 public final class ClassWithReferenceToNestedClassTest extends CoverageTest {
     final ClassWithReferenceToNestedClass tested = null;

@@ -1,8 +1,9 @@
 package integrationTests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public final class IfElseStatementsTest extends CoverageTest {
     IfElseStatements tested;

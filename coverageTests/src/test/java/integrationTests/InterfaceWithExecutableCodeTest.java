@@ -1,8 +1,8 @@
 package integrationTests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.*;
+import org.junit.Test;
 
 public final class InterfaceWithExecutableCodeTest extends CoverageTest {
     InterfaceWithExecutableCode tested;

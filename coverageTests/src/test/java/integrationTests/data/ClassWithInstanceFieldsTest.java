@@ -1,8 +1,9 @@
 package integrationTests.data;
 
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Test;
 
-import integrationTests.*;
+import integrationTests.CoverageTest;
 
 public final class ClassWithInstanceFieldsTest extends CoverageTest {
     ClassWithInstanceFields tested;

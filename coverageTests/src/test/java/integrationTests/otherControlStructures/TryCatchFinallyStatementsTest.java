@@ -1,8 +1,8 @@
 package integrationTests.otherControlStructures;
 
-import org.junit.*;
+import org.junit.Test;
 
-import integrationTests.*;
+import integrationTests.CoverageTest;
 
 public final class TryCatchFinallyStatementsTest extends CoverageTest {
     TryCatchFinallyStatements tested;

@@ -1,8 +1,8 @@
 package integrationTests.loops;
 
-import org.junit.*;
+import org.junit.Test;
 
-import integrationTests.*;
+import integrationTests.CoverageTest;
 
 public final class WhileStatementsTest extends CoverageTest {
     WhileStatements tested;

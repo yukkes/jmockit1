@@ -1,14 +1,15 @@
 package integrationTests.loops;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import org.junit.*;
-
-import integrationTests.*;
+import integrationTests.CoverageTest;
 
 public final class ForStatementsTest extends CoverageTest {
     ForStatements tested;

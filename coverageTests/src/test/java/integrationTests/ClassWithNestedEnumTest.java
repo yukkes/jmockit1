@@ -1,6 +1,6 @@
 package integrationTests;
 
-import org.junit.*;
+import org.junit.Test;
 
 public final class ClassWithNestedEnumTest {
     @Test

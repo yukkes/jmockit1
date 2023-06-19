@@ -1,20 +1,31 @@
 package integrationTests;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isFinal;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
 
-import java.lang.reflect.*;
-import java.util.*;
+import javax.annotation.Nonnegative;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import javax.annotation.*;
+import mockit.coverage.CallPoint;
+import mockit.coverage.data.CoverageData;
+import mockit.coverage.data.FileCoverageData;
+import mockit.coverage.dataItems.InstanceFieldData;
+import mockit.coverage.dataItems.PerFileDataCoverage;
+import mockit.coverage.dataItems.StaticFieldData;
+import mockit.coverage.lines.BranchCoverageData;
+import mockit.coverage.lines.LineCoverageData;
+import mockit.coverage.lines.PerFileLineCoverage;
 
-import mockit.coverage.*;
-import mockit.coverage.data.*;
-import mockit.coverage.dataItems.*;
-import mockit.coverage.lines.*;
-
-import org.junit.*;
+import org.junit.Before;
 
 @SuppressWarnings("JUnitTestCaseWithNoTests")
 public class CoverageTest {

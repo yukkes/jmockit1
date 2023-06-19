@@ -1,6 +1,6 @@
 package integrationTests.otherControlStructures;
 
-import org.junit.*;
+import org.junit.Test;
 
 public final class SynchronizedBlocksTest {
     private final SynchronizedBlocks tested = new SynchronizedBlocks();

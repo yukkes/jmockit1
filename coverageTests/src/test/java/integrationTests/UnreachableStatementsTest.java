@@ -1,7 +1,8 @@
 package integrationTests;
 
-import org.junit.*;
-import org.junit.runners.*;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public final class UnreachableStatementsTest extends CoverageTest {
