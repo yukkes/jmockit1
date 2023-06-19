@@ -46,13 +46,18 @@ public final class TryCatchFinallyStatements {
             try {
                 try {
                     i = 1;
-                } finally { // the first finally clause
+                    // the first finally clause
+                } finally {
                     i = 2;
                 }
                 i = 3;
-                return i; // this never completes, because of the continue
-            } finally { // the second finally clause
+                // this never completes, because of the continue
+                return i;
+                // the second finally clause
+            } finally {
                 if (i == 3) {
+                    // this continue overrides the return statement
+                    continue;
                 }
             }
         }

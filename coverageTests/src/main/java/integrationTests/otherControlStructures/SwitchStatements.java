@@ -7,6 +7,7 @@ public final class SwitchStatements {
                 System.gc();
                 break;
             case 'f': {
+                boolean b = true;
                 System.gc();
                 System.runFinalization();
                 break;
@@ -34,6 +35,7 @@ public final class SwitchStatements {
                 System.gc();
                 break;
             case 2: {
+                boolean b = true;
                 System.gc();
                 System.runFinalization();
                 break;

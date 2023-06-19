@@ -63,7 +63,9 @@ public class WhileStatements {
             do {
                 i++;
             }
+            // @formatter:off
             while (i < j);
+            // @formatter:on
 
             j++;
 
