@@ -11,6 +11,6 @@ public final class AnEnumTest extends CoverageTest {
     public void useAnEnum() {
         tested = AnEnum.OneValue;
 
-        assertEquals(50, fileData.lineCoverageInfo.getCoveragePercentage());
+        assertEquals(100, fileData.lineCoverageInfo.getCoveragePercentage());
     }
 }
