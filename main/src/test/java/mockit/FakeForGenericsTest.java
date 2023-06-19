@@ -241,7 +241,7 @@ public final class FakeForGenericsTest {
     /**
      * The Class NonGenericSubclass.
      */
-    final class NonGenericSubclass extends NonGenericSuperclass {
+    static final class NonGenericSubclass extends NonGenericSuperclass {
     }
 
     /**
@@ -272,7 +272,7 @@ public final class FakeForGenericsTest {
     /**
      * The Class AnotherNonGenericSubclass.
      */
-    final class AnotherNonGenericSubclass extends GenericSuperclass<Integer> {
+    static final class AnotherNonGenericSubclass extends GenericSuperclass<Integer> {
     }
 
     /**

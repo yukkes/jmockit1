@@ -62,8 +62,9 @@ public final class TestedAndMockedTest {
          *            the s
          */
         static void validateInput(int i, String s) {
-            if (i <= 0 || s == null)
+            if (i <= 0 || s == null) {
                 throw new IllegalArgumentException();
+            }
         }
 
         /**

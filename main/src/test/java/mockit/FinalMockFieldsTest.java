@@ -29,8 +29,9 @@ public final class FinalMockFieldsTest {
          *            the b
          */
         Collaborator(boolean b) {
-            if (!b)
+            if (!b) {
                 throw new IllegalArgumentException();
+            }
         }
 
         /**
@@ -154,8 +155,9 @@ public final class FinalMockFieldsTest {
          *            the b
          */
         YetAnotherCollaborator(boolean b) {
-            if (!b)
+            if (!b) {
                 throw new IllegalArgumentException();
+            }
         }
 
         /**

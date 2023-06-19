@@ -365,7 +365,7 @@ public final class TestedClassWithFullDITest {
     /**
      * The Interface InterfaceDependency.
      */
-    static interface InterfaceDependency {
+    interface InterfaceDependency {
     }
 
     /**

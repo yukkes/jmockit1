@@ -250,8 +250,9 @@ class TargetClass {
     }
 
     protected void performAction(Runnable action) {
-        if (action != null)
+        if (action != null) {
             action.run();
+        }
     }
 
     protected void validateSomething() {

@@ -680,7 +680,8 @@ public final class ExpectationsWithValuesToReturnTest {
         Object[] expectedValues = { true, "Xyz", 3.6 };
 
         for (Object value : mock.getIterable()) {
-            assertEquals(expectedValues[i++], value);
+            assertEquals(expectedValues[i], value);
+            i++;
         }
     }
 
@@ -809,9 +810,9 @@ public final class ExpectationsWithValuesToReturnTest {
      */
     @Test
     public void recordMultipleListsToBeReturnedFromMethodThatReturnsList(@Mocked final Collaborator mock) {
-        final List<?> firstResult = new ArrayList<Object>();
-        final List<?> secondResult = new ArrayList<Object>();
-        final List<?> thirdResult = new LinkedList<Object>();
+        final List<?> firstResult = new ArrayList<>();
+        final List<?> secondResult = new ArrayList<>();
+        final List<?> thirdResult = new LinkedList<>();
 
         new Expectations() {
             {

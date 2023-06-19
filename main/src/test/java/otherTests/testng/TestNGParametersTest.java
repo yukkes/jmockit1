@@ -81,8 +81,7 @@ public final class TestNGParametersTest {
 
     @DataProvider
     public Object[][] data() {
-        Object[][] data = { { 1, "A" }, { 2, "B" }, { 3, "C" } };
-        return data;
+        return new Object[][] { { 1, "A" }, { 2, "B" }, { 3, "C" } };
     }
 
     @Test(dataProvider = "data")

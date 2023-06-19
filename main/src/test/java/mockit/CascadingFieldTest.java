@@ -695,7 +695,7 @@ public final class CascadingFieldTest {
      * @param <T>
      *            the generic type
      */
-    class Base<T extends Serializable> {
+    static class Base<T extends Serializable> {
         /**
          * Value.
          *

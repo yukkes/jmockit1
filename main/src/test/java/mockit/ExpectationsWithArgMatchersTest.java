@@ -557,7 +557,7 @@ public final class ExpectationsWithArgMatchersTest {
     /**
      * The Class ReusableMatcher.
      */
-    class ReusableMatcher implements Delegate<Integer> {
+    static class ReusableMatcher implements Delegate<Integer> {
 
         /**
          * Checks if is positive.

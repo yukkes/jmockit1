@@ -595,8 +595,9 @@ public final class TestedClassWithFullStandardDITest {
     static void createTemporaryPersistenceXmlFileWithDefaultPersistenceUnit() throws IOException {
         String rootOfClasspath = TestedClass.class.getProtectionDomain().getCodeSource().getLocation().getFile();
         File tempFolder = new File(rootOfClasspath + "META-INF");
-        if (tempFolder.mkdir())
+        if (tempFolder.mkdir()) {
             tempFolder.deleteOnExit();
+        }
 
         persistenceXmlFile = new File(tempFolder, "persistence.xml");
 

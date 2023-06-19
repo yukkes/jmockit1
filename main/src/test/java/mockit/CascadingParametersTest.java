@@ -1164,7 +1164,7 @@ public final class CascadingParametersTest {
     /**
      * The Class AbstractClass.
      */
-    public abstract class AbstractClass implements LevelZero {
+    public abstract static class AbstractClass implements LevelZero {
     }
 
     /**
@@ -1238,6 +1238,8 @@ public final class CascadingParametersTest {
      * The Class CustomException.
      */
     public static final class CustomException extends Throwable {
+
+        private static final long serialVersionUID = 1L;
     }
 
     /**

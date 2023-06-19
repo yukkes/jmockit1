@@ -102,8 +102,9 @@ public final class FakeInvocationProceedTest {
             int result = i;
 
             for (Object arg : args) {
-                if (arg != null)
+                if (arg != null) {
                     result++;
+                }
             }
 
             return result;

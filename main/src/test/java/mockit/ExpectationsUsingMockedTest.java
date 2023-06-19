@@ -166,7 +166,7 @@ public final class ExpectationsUsingMockedTest {
     /**
      * The Class InnerClass.
      */
-    class InnerClass {
+    static class InnerClass {
         /**
          * Gets the value.
          *

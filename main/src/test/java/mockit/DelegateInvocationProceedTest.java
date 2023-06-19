@@ -115,8 +115,9 @@ public final class DelegateInvocationProceedTest {
             int result = i;
 
             for (Object arg : args) {
-                if (arg != null)
+                if (arg != null) {
                     result++;
+                }
             }
 
             return result;

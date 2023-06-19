@@ -350,8 +350,9 @@ public final class InstanceSpecificMockingTest {
 
         @Override
         public int read() throws IOException {
-            if (currentInput == null)
+            if (currentInput == null) {
                 return -1;
+            }
 
             int nextByte = currentInput.read();
 

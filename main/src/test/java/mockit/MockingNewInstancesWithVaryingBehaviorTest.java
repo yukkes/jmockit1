@@ -58,10 +58,11 @@ public final class MockingNewInstancesWithVaryingBehaviorTest {
             @Mock
             void $init(Invocation inv, String pattern) {
                 DateFormat dt = inv.getInvokedInstance();
-                if (DATE_FORMAT.equals(pattern))
+                if (DATE_FORMAT.equals(pattern)) {
                     dateFormat = dt;
-                else if (TIME_FORMAT.equals(pattern))
+                } else if (TIME_FORMAT.equals(pattern)) {
                     hourFormat = dt;
+                }
             }
         };
 
@@ -70,12 +71,14 @@ public final class MockingNewInstancesWithVaryingBehaviorTest {
             String format(Invocation inv, Date d) {
                 assertNotNull(d);
                 DateFormat dt = inv.getInvokedInstance();
-                if (dt == dateFormat)
+                if (dt == dateFormat) {
                     return FORMATTED_DATE;
-                else if (dt == hourFormat)
+                }
+                if (dt == hourFormat) {
                     return FORMATTED_TIME;
-                else
+                } else {
                     return null;
+                }
             }
         };
 

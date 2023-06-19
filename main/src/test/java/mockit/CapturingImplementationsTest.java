@@ -734,13 +734,13 @@ public final class CapturingImplementationsTest {
          * Foo.
          */
         void foo() {
-        };
+        }
 
         /**
          * Bar.
          */
         void bar() {
-        };
+        }
     }
 
     /**

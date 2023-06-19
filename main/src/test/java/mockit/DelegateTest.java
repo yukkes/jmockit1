@@ -184,7 +184,7 @@ public final class DelegateTest {
     @Test
     public void resultFromDelegate(@Mocked final Collaborator collaborator) {
         final boolean bExpected = true;
-        final int[] iExpected = new int[0];
+        final int[] iExpected = {};
         final String sExpected = "test";
 
         new Expectations() {

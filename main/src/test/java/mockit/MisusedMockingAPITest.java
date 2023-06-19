@@ -25,7 +25,7 @@ public final class MisusedMockingAPITest {
 
         /** The name. */
         @SuppressWarnings("RedundantStringConstructorCall")
-        final String name = new String("Blah");
+        final String name = "Blah";
 
         /**
          * Value.
@@ -293,6 +293,8 @@ public final class MisusedMockingAPITest {
      * The Class CustomException.
      */
     static final class CustomException extends Exception {
+
+        private static final long serialVersionUID = 1L;
     }
 
     /**

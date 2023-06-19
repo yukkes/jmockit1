@@ -658,7 +658,7 @@ public final class WithCaptureTest {
                 byte b;
 
                 // noinspection ConstantMathCall
-                dao.doSomething(null, anyBoolean, getData(), Math.abs(-d), f = withCapture(), Long.valueOf("" + l),
+                dao.doSomething(null, anyBoolean, getData(), Math.abs(-d), f = withCapture(), Long.parseLong("" + l),
                         s = withCapture(), Character.forDigit(9, 10), b = withCapture(), anyShort);
 
                 assertEquals(12.25F, f, 0);

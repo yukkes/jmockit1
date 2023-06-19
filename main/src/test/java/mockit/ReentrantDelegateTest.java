@@ -53,8 +53,9 @@ public final class ReentrantDelegateTest {
                 result = new Delegate() {
                     @Mock
                     int delegate(int i) {
-                        if (i > 1)
+                        if (i > 1) {
                             return i;
+                        }
                         return RealClass.nonRecursiveStaticMethod(i + 1);
                     }
                 };
@@ -79,8 +80,9 @@ public final class ReentrantDelegateTest {
                 result = new Delegate() {
                     @Mock
                     int delegate(Invocation inv, int i) {
-                        if (i > 1)
+                        if (i > 1) {
                             return i;
+                        }
                         RealClass it = inv.getInvokedInstance();
                         return it.nonRecursiveMethod(i + 1);
                     }
@@ -106,8 +108,9 @@ public final class ReentrantDelegateTest {
                 result = new Delegate() {
                     @Mock
                     int nonRecursiveMethod(Invocation inv, int i) {
-                        if (i > 1)
+                        if (i > 1) {
                             return i;
+                        }
                         return inv.proceed(i + 1);
                     }
                 };

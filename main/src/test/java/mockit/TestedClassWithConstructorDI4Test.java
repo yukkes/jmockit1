@@ -80,10 +80,12 @@ public final class TestedClassWithConstructorDI4Test {
             this.go = go;
             this.values = values;
             action1 = actions[0];
-            if (actions.length > 1)
+            if (actions.length > 1) {
                 action2 = actions[1];
-            if (actions.length > 2)
+            }
+            if (actions.length > 2) {
                 action3 = actions[2];
+            }
 
             try {
                 // noinspection JNDIResourceOpenedButNotSafelyClosed

@@ -123,7 +123,7 @@ public final class FakeLoginContextTest {
     /**
      * The Class FakeLoginContextWithStubs.
      */
-    final class FakeLoginContextWithStubs extends MockUp<LoginContext> {
+    static final class FakeLoginContextWithStubs extends MockUp<LoginContext> {
 
         /**
          * $init.

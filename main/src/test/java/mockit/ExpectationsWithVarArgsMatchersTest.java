@@ -416,7 +416,7 @@ public final class ExpectationsWithVarArgsMatchersTest {
      */
     @Test
     public void expectInvocationWithNonPrimitiveVarArgs(@Mocked final ReferenceVarArgs varargs) {
-        final String[] strings1 = new String[0];
+        final String[] strings1 = {};
         final String[] strings2 = { "first", "second" };
 
         new Expectations() {
@@ -476,7 +476,7 @@ public final class ExpectationsWithVarArgsMatchersTest {
     @SuppressWarnings("NullArgumentToVariableArgMethod")
     @Test
     public void expectInvocationWithPrimitiveVarArgs(@Mocked final PrimitiveVarArgs varargs) {
-        final String[] strings1 = new String[0];
+        final String[] strings1 = {};
         final String[] strings2 = { "first", "second" };
 
         new Expectations() {
@@ -531,7 +531,7 @@ public final class ExpectationsWithVarArgsMatchersTest {
      */
     @Test
     public void expectInvocationWithPrimitiveVarArgsUsingMatchers(@Mocked final MixedVarArgs varargs) {
-        final String[] strings1 = new String[0];
+        final String[] strings1 = {};
         final String[] strings2 = { "first", "second" };
 
         new Expectations() {

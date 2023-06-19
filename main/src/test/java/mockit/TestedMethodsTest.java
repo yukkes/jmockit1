@@ -190,10 +190,12 @@ public final class TestedMethodsTest {
      */
     @Tested
     Class<? extends BaseServiceImpl<?>> resolveServiceInterfaces(Class<? extends BaseService> baseServiceType) {
-        if (baseServiceType == Service1.class)
+        if (baseServiceType == Service1.class) {
             return ConcreteService1.class;
-        if (baseServiceType == Service2.class)
+        }
+        if (baseServiceType == Service2.class) {
             return ConcreteService2.class;
+        }
         return null;
     }
 
