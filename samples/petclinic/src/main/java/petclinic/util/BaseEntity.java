@@ -13,6 +13,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class BaseEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = IDENTITY)
     protected Integer id;
@@ -32,10 +33,12 @@ public class BaseEntity implements Serializable {
     @SuppressWarnings("NonFinalFieldReferenceInEquals")
     @Override
     public final boolean equals(Object other) {
-        if (this == other)
+        if (this == other) {
             return true;
-        if (!(other instanceof BaseEntity))
+        }
+        if (!(other instanceof BaseEntity)) {
             return false;
+        }
 
         BaseEntity otherEntity = (BaseEntity) other;
 

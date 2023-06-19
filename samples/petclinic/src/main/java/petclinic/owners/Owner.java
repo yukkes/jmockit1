@@ -19,6 +19,7 @@ import petclinic.util.Person;
  */
 @Entity
 public class Owner extends Person {
+    private static final long serialVersionUID = 1L;
     private String address;
     private String city;
     @NotNull

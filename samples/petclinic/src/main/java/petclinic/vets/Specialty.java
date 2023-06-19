@@ -10,6 +10,7 @@ import petclinic.util.BaseEntity;
  */
 @Entity
 public class Specialty extends BaseEntity {
+    private static final long serialVersionUID = 1L;
     @NotNull
     private String name;
 

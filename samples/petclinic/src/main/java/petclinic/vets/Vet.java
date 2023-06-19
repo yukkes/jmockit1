@@ -18,6 +18,7 @@ import petclinic.util.Person;
  */
 @Entity
 public class Vet extends Person {
+    private static final long serialVersionUID = 1L;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(joinColumns = @JoinColumn(name = "vetId"), inverseJoinColumns = @JoinColumn(name = "specialtyId"))
     @OrderBy("name")

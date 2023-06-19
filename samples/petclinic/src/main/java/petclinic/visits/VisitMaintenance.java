@@ -26,13 +26,11 @@ public class VisitMaintenance {
 
     @Nullable
     public Visit findById(int visitId) {
-        Visit visit = db.findById(Visit.class, visitId);
-        return visit;
+        return db.findById(Visit.class, visitId);
     }
 
     @Nonnull
     public List<Visit> findByPetId(int petId) {
-        List<Visit> visits = db.find("select v from Visit v where v.pet.id = ?1", petId);
-        return visits;
+        return db.find("select v from Visit v where v.pet.id = ?1", petId);
     }
 }

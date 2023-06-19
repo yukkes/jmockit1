@@ -52,8 +52,7 @@ public final class Database {
     }
 
     public static <E> E find(Class<E> entityClass, Object entityId) {
-        E entity = workUnit().find(entityClass, entityId);
-        return entity;
+        return workUnit().find(entityClass, entityId);
     }
 
     public static <E> List<E> find(String ql, Object... args) {
@@ -66,9 +65,7 @@ public final class Database {
         }
 
         try {
-            @SuppressWarnings("unchecked")
-            List<E> result = query.getResultList();
-            return result;
+            return query.getResultList();
         } catch (PersistenceException e) {
             Throwable cause = e.getCause();
             throw cause instanceof SQLException ? new RuntimeException(cause) : e;

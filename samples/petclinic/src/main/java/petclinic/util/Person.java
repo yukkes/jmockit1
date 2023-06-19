@@ -9,6 +9,8 @@ import javax.validation.constraints.Size;
  */
 @MappedSuperclass
 public class Person extends BaseEntity {
+    private static final long serialVersionUID = 1L;
+
     @NotNull
     @Size(min = 1)
     protected String firstName;

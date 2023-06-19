@@ -24,6 +24,8 @@ import petclinic.visits.Visit;
  */
 @Entity
 public class Pet extends BaseEntity {
+    private static final long serialVersionUID = 1L;
+
     @ManyToOne
     @JoinColumn(name = "ownerId")
     @NotNull

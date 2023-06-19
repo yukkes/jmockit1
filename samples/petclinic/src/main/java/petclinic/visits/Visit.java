@@ -17,6 +17,8 @@ import petclinic.util.BaseEntity;
  */
 @Entity
 public class Visit extends BaseEntity {
+    private static final long serialVersionUID = 1L;
+
     @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;

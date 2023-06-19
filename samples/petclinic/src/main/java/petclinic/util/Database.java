@@ -33,8 +33,7 @@ public class Database {
      */
     @Nullable
     public <E extends BaseEntity> E findById(@Nonnull Class<E> entityClass, int id) {
-        E entity = em.find(entityClass, id);
-        return entity;
+        return em.find(entityClass, id);
     }
 
     /**
@@ -88,9 +87,7 @@ public class Database {
             query.setParameter(i + 1, qlArgs[i]);
         }
 
-        @SuppressWarnings("unchecked")
-        List<E> resultList = query.getResultList();
-        return resultList;
+        return query.getResultList();
     }
 
     /**

@@ -31,8 +31,7 @@ public class PetMaintenance {
      */
     @Nonnull
     public List<PetType> findPetTypes() {
-        List<PetType> petTypes = db.find("select t from PetType t order by t.name");
-        return petTypes;
+        return db.find("select t from PetType t order by t.name");
     }
 
     public void createPet(@Nonnull Owner owner, @Nonnull Pet data) {
