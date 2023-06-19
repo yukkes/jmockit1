@@ -812,12 +812,7 @@ public final class ExpectationsUsingResultFieldTest {
      */
     @Test
     public void returnsMultipleValuesInSequenceUsingIterable(@Injectable final Collaborator collaborator) {
-        final Iterable<Integer> intValues = new Iterable<Integer>() {
-            @Override
-            public Iterator<Integer> iterator() {
-                return asList(3, 2, 1).iterator();
-            }
-        };
+        final Iterable<Integer> intValues = () -> asList(3, 2, 1).iterator();
 
         new Expectations() {
             {

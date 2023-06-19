@@ -283,20 +283,10 @@ public final class ReentrantFakeTest {
         final StringBuilder first = new StringBuilder();
         final StringBuilder second = new StringBuilder();
 
-        Thread thread1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                first.append(new RealClass().foo());
-            }
-        });
+        Thread thread1 = new Thread(() -> first.append(new RealClass().foo()));
         thread1.start();
 
-        Thread thread2 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                second.append(new RealClass().foo());
-            }
-        });
+        Thread thread2 = new Thread(() -> second.append(new RealClass().foo()));
         thread2.start();
 
         thread1.join();

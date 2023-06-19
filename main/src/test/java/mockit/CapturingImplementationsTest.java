@@ -279,12 +279,9 @@ public final class CapturingImplementationsTest {
     public static void generateDynamicProxyClass() {
         ClassLoader loader = Service3.class.getClassLoader();
         Class<?>[] interfaces = { Service3.class };
-        InvocationHandler invocationHandler = new InvocationHandler() {
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) {
-                fail("Should be mocked out");
-                return null;
-            }
+        InvocationHandler invocationHandler = (proxy, method, args) -> {
+            fail("Should be mocked out");
+            return null;
         };
 
         proxyInstance = (Service3) Proxy.newProxyInstance(loader, interfaces, invocationHandler);

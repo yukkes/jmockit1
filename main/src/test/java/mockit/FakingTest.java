@@ -347,12 +347,9 @@ public final class FakingTest {
             }
         };
 
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                int i = new Panel().getComponentCount();
-                assertEquals(10, i);
-            }
+        SwingUtilities.invokeAndWait(() -> {
+            int i = new Panel().getComponentCount();
+            assertEquals(10, i);
         });
     }
 
