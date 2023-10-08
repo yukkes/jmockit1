@@ -34,6 +34,7 @@ import java.util.concurrent.Future;
 
 import mockit.internal.expectations.invocation.MissingInvocation;
 
+import org.gaul.modernizer_maven_annotations.SuppressModernizer;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 
@@ -1340,6 +1341,7 @@ public final class CascadingParametersTest {
     /**
      * The Interface EnumerationSubInterface.
      */
+    @SuppressModernizer
     public interface EnumerationSubInterface extends Enumeration<Object> {
     }
 
