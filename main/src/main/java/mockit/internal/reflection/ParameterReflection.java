@@ -85,7 +85,7 @@ public final class ParameterReflection {
         return true;
     }
 
-    private static boolean isSameTypeIgnoringAutoBoxing(@Nonnull Class<?> firstType, @Nonnull Class<?> secondType) {
+    static boolean isSameTypeIgnoringAutoBoxing(@Nonnull Class<?> firstType, @Nonnull Class<?> secondType) {
         return firstType == secondType || firstType.isPrimitive() && isWrapperOfPrimitiveType(firstType, secondType)
                 || secondType.isPrimitive() && isWrapperOfPrimitiveType(secondType, firstType);
     }
