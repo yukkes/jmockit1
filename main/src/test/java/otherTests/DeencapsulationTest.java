@@ -7,6 +7,7 @@ import java.util.*;
 
 import mockit.Deencapsulation;
 
+import org.gaul.modernizer_maven_annotations.SuppressModernizer;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -272,6 +273,7 @@ public final class DeencapsulationTest {
     }
 
     @Test
+    @SuppressModernizer
     public void attemptToSetStaticFieldByTypeWithWrongType() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Static field of type StringBuffer not found");
