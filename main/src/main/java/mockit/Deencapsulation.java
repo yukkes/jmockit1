@@ -7,6 +7,7 @@ package mockit;
 import javax.annotation.*;
 
 import mockit.internal.reflection.*;
+import mockit.internal.util.ClassLoad;
 
 /**
  * Provides utility methods that enable access to ("de-encapsulate") otherwise non-accessible fields.
@@ -19,7 +20,7 @@ public final class Deencapsulation {
     }
 
     /**
-     * Gets the value of a non-accessible (eg <code>private</code>) field from a given object.
+     * Gets the value of a non-accessible (eg <tt>private</tt>) field from a given object.
      *
      * @param objectWithField
      *            the instance from which to get the field value
@@ -41,8 +42,8 @@ public final class Deencapsulation {
     }
 
     /**
-     * Gets the value of a non-accessible (eg <code>private</code>) field from a given object, <em>assuming</em> there
-     * is only one field declared in the class of the given object whose type can receive values of the specified field
+     * Gets the value of a non-accessible (eg <tt>private</tt>) field from a given object, <em>assuming</em> there is
+     * only one field declared in the class of the given object whose type can receive values of the specified field
      * type.
      *
      * @param objectWithField
@@ -184,5 +185,129 @@ public final class Deencapsulation {
      */
     public static void setField(@Nonnull Class<?> classWithStaticField, @Nonnull Object fieldValue) {
         FieldReflection.setField(classWithStaticField, null, null, fieldValue);
+    }
+
+    /**
+     * Invokes a non-accessible (eg {@code private}) instance method from a given class with the given arguments.
+     *
+     * @param objectWithMethod
+     *            the instance on which the invocation is to be done
+     * @param methodName
+     *            the name of the method to invoke
+     * @param parameterTypes
+     *            the types of the parameters as declared in the desired method
+     * @param methodArgs
+     *            zero or more parameter values for the invocation
+     * @param <T>
+     *            type to which the returned value should be assignable
+     *
+     * @return the return value from the invoked method
+     *
+     * @throws IllegalArgumentException
+     *             if the desired method is not found
+     *
+     * @see #invoke(Class, String, Object...)
+     */
+    public static <T> T invoke(Object objectWithMethod, String methodName, Class<?>[] parameterTypes,
+            Object... methodArgs) {
+        Class<?> theClass = objectWithMethod.getClass();
+        return MethodReflection.invoke(theClass, objectWithMethod, methodName, parameterTypes, methodArgs);
+    }
+
+    /**
+     * Invokes a non-accessible (eg {@code private}) instance method from a given class with the given arguments.
+     *
+     * @param objectWithMethod
+     *            the instance on which the invocation is to be done
+     * @param methodName
+     *            the name of the method to invoke
+     * @param nonNullArgs
+     *            zero or more non-null parameter values for the invocation; if a null value needs to be passed, the
+     *            {@code Class} object for the corresponding parameter type must be passed instead
+     * @param <T>
+     *            type to which the returned value should be assignable
+     *
+     * @return the return value from the invoked method
+     *
+     * @throws IllegalArgumentException
+     *             if the desired method is not found, or a null reference was provided for a parameter
+     *
+     * @see #invoke(Class, String, Object...)
+     */
+    public static <T> T invoke(Object objectWithMethod, String methodName, Object... nonNullArgs) {
+        Class<?> theClass = objectWithMethod.getClass();
+        return MethodReflection.invoke(theClass, objectWithMethod, methodName, nonNullArgs);
+    }
+
+    /**
+     * Invokes a non-accessible (eg {@code private}) {@code static} method with the given arguments.
+     *
+     * @param classWithStaticMethod
+     *            the class on which the invocation is to be done
+     * @param methodName
+     *            the name of the static method to invoke
+     * @param parameterTypes
+     *            the types of the parameters as declared in the desired method
+     * @param methodArgs
+     *            zero or more parameter values for the invocation
+     * @param <T>
+     *            type to which the returned value should be assignable
+     *
+     * @return the return value from the invoked method
+     *
+     * @see #invoke(String, String, Object...)
+     */
+    public static <T> T invoke(Class<?> classWithStaticMethod, String methodName, Class<?>[] parameterTypes,
+            Object... methodArgs) {
+        return MethodReflection.invoke(classWithStaticMethod, null, methodName, parameterTypes, methodArgs);
+    }
+
+    /**
+     * Invokes a non-accessible (eg {@code private}) {@code static} method with the given arguments.
+     *
+     * @param classWithStaticMethod
+     *            the class on which the invocation is to be done
+     * @param methodName
+     *            the name of the static method to invoke
+     * @param nonNullArgs
+     *            zero or more non-null parameter values for the invocation; if a null value needs to be passed, the
+     *            {@code Class} object for the corresponding parameter type must be passed instead
+     * @param <T>
+     *            type to which the returned value should be assignable
+     *
+     * @return the return value from the invoked method
+     *
+     * @throws IllegalArgumentException
+     *             if the desired method is not found, or a null reference was provided for a parameter
+     *
+     * @see #invoke(String, String, Object...)
+     */
+    public static <T> T invoke(Class<?> classWithStaticMethod, String methodName, Object... nonNullArgs) {
+        return MethodReflection.invoke(classWithStaticMethod, null, methodName, nonNullArgs);
+    }
+
+    /**
+     * Invokes a non-accessible (eg {@code private}) {@code static} method with the given arguments.
+     *
+     * @param classWithStaticMethod
+     *            the (fully qualified) name of the class on which the invocation is to be done; must not be null
+     * @param methodName
+     *            the name of the static method to invoke
+     * @param nonNullArgs
+     *            zero or more non-null parameter values for the invocation; if a null value needs to be passed, the
+     *            {@code Class} object for the corresponding parameter type must be passed instead
+     * @param <T>
+     *            type to which the returned value should be assignable
+     *
+     * @return the return value from the invoked method
+     *
+     * @throws IllegalArgumentException
+     *             if the desired method is not found, or a null reference was provided for a parameter
+     *
+     * @see #invoke(Class, String, Object...)
+     */
+    public static <T> T invoke(String classWithStaticMethod, String methodName, Object... nonNullArgs) {
+        Class<Object> theClass = ClassLoad.loadClass(classWithStaticMethod);
+        return MethodReflection.invoke(theClass, null, methodName, nonNullArgs);
     }
 }
