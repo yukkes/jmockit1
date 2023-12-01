@@ -9,7 +9,6 @@
         <version>1.51.1-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.github.hazendaz.jmockit</groupId>
     <artifactId>jmockit</artifactId>
     <version>1.51.1-SNAPSHOT</version>
 
@@ -131,6 +130,8 @@
                     <links>
                         <link>https://docs.oracle.com/javase/11/docs/api/</link>
                     </links>
+                    <!-- Avoid errors by referencing the sun.reflect package from the InstanceFactory class. -->
+                    <additionalOptions>--ignore-source-errors</additionalOptions>
                 </configuration>
                 <executions>
                     <execution>

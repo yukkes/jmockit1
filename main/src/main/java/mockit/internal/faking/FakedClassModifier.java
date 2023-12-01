@@ -6,7 +6,6 @@ package mockit.internal.faking;
 
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isNative;
-import static java.lang.reflect.Modifier.isPrivate;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.lang.reflect.Modifier.isStatic;
 
@@ -118,12 +117,13 @@ final class FakedClassModifier extends BaseClassModifier {
             return cw.visitMethod(access, name, desc, signature, exceptions);
         }
 
-        if (isPrivate(access)) {
-            String kindOfMember = isConstructor ? "constructor " : "method ";
-            String privateMemberDesc = fakedClass.getSimpleName() + '#' + name + desc;
-            throw new IllegalArgumentException(
-                    "Unsupported fake for private " + kindOfMember + privateMemberDesc + " found");
-        }
+        // Supported fake for private method
+        // if (isPrivate(access)) {
+        // String kindOfMember = isConstructor ? "constructor " : "method ";
+        // String privateMemberDesc = fakedClass.getSimpleName() + '#' + name + desc;
+        // throw new IllegalArgumentException(
+        // "Unsupported fake for private " + kindOfMember + privateMemberDesc + " found");
+        // }
 
         startModifiedMethodVersion(access, name, desc, signature, exceptions);
 

@@ -4,6 +4,7 @@
  */
 package mockit.internal.reflection;
 
+import static mockit.internal.expectations.mocking.InstanceFactory.REFLECTION_FACTORY;
 import static mockit.internal.reflection.ParameterReflection.getParameterTypesDescription;
 import static mockit.internal.reflection.ParameterReflection.indexOfFirstRealParameter;
 import static mockit.internal.reflection.ParameterReflection.matchesParameterTypes;
@@ -15,8 +16,19 @@ import java.lang.reflect.InvocationTargetException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import mockit.internal.util.StackTrace;
+
 public final class ConstructorReflection {
     private ConstructorReflection() {
+    }
+
+    public static final Constructor<?> OBJECT_CONSTRUCTOR;
+    static {
+        try {
+            OBJECT_CONSTRUCTOR = Object.class.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Nonnull
@@ -40,6 +52,9 @@ public final class ConstructorReflection {
 
     @Nonnull
     public static <T> T invokeAccessible(@Nonnull Constructor<T> constructor, @Nonnull Object... initArgs) {
+        if (!constructor.isAccessible()) {
+            constructor.setAccessible(true);
+        }
         try {
             return constructor.newInstance(initArgs);
         } catch (InstantiationException | IllegalAccessException e) {
@@ -100,5 +115,43 @@ public final class ConstructorReflection {
         }
 
         return invokeAccessible(publicConstructor, initArgs);
+    }
+
+    @Nonnull
+    public static <T> T newInstanceUsingPublicDefaultConstructor(@Nonnull Class<T> aClass) {
+        Constructor<T> publicConstructor;
+        try {
+            publicConstructor = aClass.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+
+        return invokeAccessible(publicConstructor);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nonnull
+    public static <T> T newUninitializedInstance(@Nonnull Class<T> aClass) {
+        try {
+            Constructor<?> fakeConstructor = REFLECTION_FACTORY.newConstructorForSerialization(aClass,
+                    OBJECT_CONSTRUCTOR);
+
+            if (fakeConstructor == null) { // can happen on Java 9
+                // noinspection ConstantConditions
+                return null;
+            }
+
+            @SuppressWarnings("unchecked")
+            T newInstance = (T) fakeConstructor.newInstance();
+            return newInstance;
+        } catch (NoClassDefFoundError | ExceptionInInitializerError e) {
+            StackTrace.filterStackTrace(e);
+            e.printStackTrace();
+            throw e;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e.getCause());
+        }
     }
 }

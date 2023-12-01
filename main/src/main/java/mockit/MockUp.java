@@ -4,15 +4,27 @@
  */
 package mockit;
 
+import static java.lang.reflect.Modifier.isAbstract;
+
+import static mockit.internal.util.GeneratedClasses.isGeneratedImplementationClassName;
+
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import mockit.internal.classGeneration.ConcreteSubclass;
 import mockit.internal.faking.CaptureOfFakedImplementations;
 import mockit.internal.faking.FakeClassSetup;
+import mockit.internal.faking.FakedImplementationClass;
+import mockit.internal.reflection.ConstructorReflection;
+import mockit.internal.reflection.MockInvocationHandler;
 import mockit.internal.startup.Startup;
+import mockit.internal.state.TestRun;
 
 /**
  * A base class used in the creation of a <em>fake</em> for an <em>external</em> type, which is usually a class from
@@ -55,7 +67,7 @@ import mockit.internal.startup.Startup;
  * @see #targetType
  * @see <a href="http://jmockit.github.io/tutorial/Faking.html#setUp" target="tutorial">Tutorial</a>
  */
-public class MockUp<T> {
+public abstract class MockUp<T> {
     static {
         Startup.verifyInitialization();
     }
@@ -65,6 +77,13 @@ public class MockUp<T> {
      */
     @Nonnull
     protected final Type targetType;
+
+    @Nullable
+    private final Class<?> fakedClass;
+    @Nullable
+    private Set<Class<?>> classesToRestore;
+    @Nullable
+    private T fakeInstance;
 
     /**
      * Applies the {@linkplain Mock fake methods} defined in the concrete subclass to the class specified through the
@@ -84,14 +103,13 @@ public class MockUp<T> {
         }
 
         if (classToFake != null) {
-            redefineClass(classToFake);
+            fakedClass = redefineClassOrImplementInterface(classToFake);
         } else {
             Type[] typesToFake = ((TypeVariable<?>) targetType).getBounds();
 
-            if (typesToFake.length != 1) {
-                throw new UnsupportedOperationException("Unable to capture more than one base type at once");
-            }
-            new CaptureOfFakedImplementations(this, typesToFake[0]).apply();
+            fakedClass = typesToFake.length > 1
+                    ? new FakedImplementationClass<T>(this).createImplementation(typesToFake)
+                    : new CaptureOfFakedImplementations(this, typesToFake[0]).apply();
         }
     }
 
@@ -119,16 +137,34 @@ public class MockUp<T> {
         } while (true);
     }
 
-    /**
-     * Redefine class.
-     *
-     * @param classToFake
-     *            the class to fake
-     */
-    private void redefineClass(@Nonnull Class<?> classToFake) {
-        if (!classToFake.isInterface()) {
-            new FakeClassSetup(classToFake, this, targetType).redefineMethods();
+    @Nonnull
+    private Class<?> redefineClassOrImplementInterface(@Nonnull Class<T> classToFake) {
+        if (classToFake.isInterface()) {
+            return createInstanceOfFakedImplementationClass(classToFake, targetType);
         }
+
+        Class<T> realClass = classToFake;
+
+        if (isAbstract(classToFake.getModifiers())) {
+            classToFake = new ConcreteSubclass<T>(classToFake).generateClass();
+        }
+
+        classesToRestore = redefineMethods(realClass, classToFake, targetType);
+        return classToFake;
+    }
+
+    @Nonnull
+    private Class<T> createInstanceOfFakedImplementationClass(@Nonnull Class<T> classToFake,
+            @Nullable Type typeToFake) {
+        FakedImplementationClass<T> fakedImplementationClass = new FakedImplementationClass<T>(this);
+        return fakedImplementationClass.createImplementation(classToFake, typeToFake);
+    }
+
+    @Nonnull
+    private Set<Class<?>> redefineMethods(@Nonnull Class<T> realClass, @Nonnull Class<T> classToFake,
+            @Nullable Type genericFakedType) {
+        FakeClassSetup fakeSetup = new FakeClassSetup(realClass, classToFake, genericFakedType, this);
+        return fakeSetup.redefineMethods();
     }
 
     /**
@@ -145,7 +181,84 @@ public class MockUp<T> {
      */
     protected MockUp(@Nonnull Class<?> targetClass) {
         targetType = targetClass;
-        redefineClass(targetClass);
+        if (targetClass.isInterface()) {
+            // noinspection unchecked
+            fakedClass = createInstanceOfFakedImplementationClass((Class<T>) targetClass, targetClass);
+        } else {
+            fakedClass = targetClass;
+            // noinspection unchecked
+            Class<T> realClass = (Class<T>) targetClass;
+            classesToRestore = redefineMethods(realClass, realClass, null);
+            fakeInstance = null;
+        }
+    }
+
+    /**
+     * Applies the {@linkplain Mock fake methods} defined in the fake class to the type specified through the type
+     * parameter, but only affecting the given instance.
+     * <p>
+     * In most cases, the constructor with no parameters should be adequate. This variation can be used when fake data
+     * or behavior is desired only for a particular instance, with other instances remaining unaffected; or when
+     * multiple fake objects carrying different states are desired, with one fake instance per real instance.
+     * <p>
+     * If {@link #getMockInstance()} later gets called on this fake instance, it will return the instance that was given
+     * here.
+     *
+     * @param targetInstance
+     *            a real instance of the type to be faked, meant to be the only one of that type that should be affected
+     *            by this fake instance
+     *
+     * @see #MockUp()
+     * @see #MockUp(Class)
+     */
+    protected MockUp(T targetInstance) {
+        @SuppressWarnings("unchecked")
+        Class<T> classToFake = (Class<T>) targetInstance.getClass();
+        targetType = classToFake;
+        fakedClass = classToFake;
+        classesToRestore = redefineMethods(classToFake, classToFake, classToFake);
+
+        setFakeInstance(targetInstance);
+    }
+
+    private void setFakeInstance(@Nonnull T fakeInstance) {
+        TestRun.getFakeClasses().addFake(this, fakeInstance);
+        this.fakeInstance = fakeInstance;
+    }
+
+    /**
+     * Returns the mock instance exclusively associated with this fake instance. If the faked type was an interface,
+     * then said instance is the one that was automatically created when the fake was applied. If it was a class, and no
+     * such instance is currently associated with this (stateful) fake object, then a new <em>uninitialized</em>
+     * instance of the faked class is created and returned, becoming associated with the fake.
+     * <p>
+     * In any case, for a given fake instance this method will always return the same fake instance.
+     *
+     * @see <a href="http://jmockit.org/tutorial/Faking.html#interfaces" target="tutorial">Tutorial</a>
+     */
+    public final T getMockInstance() {
+        if (fakeInstance == null && fakedClass != null) {
+            @SuppressWarnings("unchecked")
+            T newInstance = (T) createFakeInstance(fakedClass);
+            fakeInstance = newInstance;
+        }
+
+        return fakeInstance;
+    }
+
+    @Nonnull
+    private Object createFakeInstance(@Nonnull Class<?> fakedClass) {
+        String fakedClassName = fakedClass.getName();
+
+        if (isGeneratedImplementationClassName(fakedClassName)) {
+            return ConstructorReflection.newInstanceUsingPublicDefaultConstructor(fakedClass);
+        }
+
+        if (Proxy.isProxyClass(fakedClass)) {
+            return MockInvocationHandler.newMockedInstance(fakedClass);
+        }
+
+        return ConstructorReflection.newUninitializedInstance(fakedClass);
     }
 
     /**

@@ -95,11 +95,12 @@ public final class MisusedFakingAPITest {
      */
     @Test
     public void fakeAPrivateMethod() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Unsupported fake for private method");
-        thrown.expectMessage("Component");
-        thrown.expectMessage("checkCoalescing()");
-        thrown.expectMessage("found");
+        // Enabled to fake a private constructor.
+        // thrown.expect(IllegalArgumentException.class);
+        // thrown.expectMessage("Unsupported fake for private method");
+        // thrown.expectMessage("Component");
+        // thrown.expectMessage("checkCoalescing()");
+        // thrown.expectMessage("found");
 
         new MockUp<Component>() {
             @Mock
@@ -114,10 +115,11 @@ public final class MisusedFakingAPITest {
      */
     @Test
     public void fakeAPrivateConstructor() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Unsupported fake for private constructor");
-        thrown.expectMessage("System#<init>()");
-        thrown.expectMessage("found");
+        // Enabled to fake a private constructor.
+        // thrown.expect(IllegalArgumentException.class);
+        // thrown.expectMessage("Unsupported fake for private constructor");
+        // thrown.expectMessage("System#<init>()");
+        // thrown.expectMessage("found");
 
         new MockUp<System>() {
             @Mock

@@ -40,11 +40,14 @@ public final class FakeClasses {
     @Nonnull
     private final Map<Class<?>, MockUp<?>> fakeClassesToFakeInstances;
     @Nonnull
+    private final Map<Object, MockUp<?>> fakedToFakeInstances;
+    @Nonnull
     public final FakeStates fakeStates;
 
     public FakeClasses() {
         startupFakes = new IdentityHashMap<>(8);
         fakeClassesToFakeInstances = new IdentityHashMap<>();
+        fakedToFakeInstances = new IdentityHashMap<>();
         fakeStates = new FakeStates();
     }
 
@@ -55,6 +58,11 @@ public final class FakeClasses {
     void addFake(@Nonnull MockUp<?> fake) {
         Class<?> fakeClass = fake.getClass();
         fakeClassesToFakeInstances.put(fakeClass, fake);
+    }
+
+    public void addFake(@Nonnull MockUp<?> fake, @Nonnull Object fakedInstance) {
+        MockUp<?> previousFake = fakedToFakeInstances.put(fakedInstance, fake);
+        assert previousFake == null;
     }
 
     @Nonnull
@@ -75,11 +83,22 @@ public final class FakeClasses {
         }
     }
 
+    private void discardFakeInstances(@Nonnull Map<Object, MockUp<?>> previousFakeInstances) {
+        if (!previousFakeInstances.isEmpty()) {
+            fakedToFakeInstances.entrySet().retainAll(previousFakeInstances.entrySet());
+        } else if (!fakedToFakeInstances.isEmpty()) {
+            fakedToFakeInstances.clear();
+        }
+    }
+
     public final class SavePoint {
+        @Nonnull
+        private final Map<Object, MockUp<?>> previousFakeInstances;
         @Nonnull
         private final Map<Class<?>, Boolean> previousFakeClasses;
 
         public SavePoint() {
+            previousFakeInstances = new IdentityHashMap<>(fakedToFakeInstances);
             previousFakeClasses = new IdentityHashMap<>();
 
             for (Entry<Class<?>, MockUp<?>> fakeClassAndInstance : fakeClassesToFakeInstances.entrySet()) {
@@ -89,6 +108,8 @@ public final class FakeClasses {
         }
 
         public void rollback() {
+            discardFakeInstances(previousFakeInstances);
+
             if (previousFakeClasses.isEmpty()) {
                 discardAllFakeInstances();
             } else {

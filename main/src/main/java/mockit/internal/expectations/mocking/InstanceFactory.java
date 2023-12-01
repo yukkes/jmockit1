@@ -4,6 +4,8 @@
  */
 package mockit.internal.expectations.mocking;
 
+import java.lang.reflect.Constructor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -11,11 +13,23 @@ import mockit.internal.util.StackTrace;
 
 import org.objenesis.ObjenesisHelper;
 
+import sun.reflect.ReflectionFactory;
+
 /**
  * Factory for the creation of new mocked instances, and for obtaining/clearing the last instance created. There are
  * separate subclasses dedicated to mocked interfaces and mocked classes.
  */
 public abstract class InstanceFactory {
+    @SuppressWarnings("UseOfSunClasses")
+    public static final ReflectionFactory REFLECTION_FACTORY = ReflectionFactory.getReflectionFactory();
+    public static final Constructor<?> OBJECT_CONSTRUCTOR;
+    static {
+        try {
+            OBJECT_CONSTRUCTOR = Object.class.getConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Nonnull
     private final Class<?> concreteClass;
