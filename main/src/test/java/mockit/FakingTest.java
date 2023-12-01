@@ -270,7 +270,6 @@ public final class FakingTest {
      *             the exception
      */
     @Test
-    // @Ignore("IllegalArgument Invalid type for partial mocking: class java.rmi.RMISecurityException")
     @SuppressWarnings("deprecation")
     public void fakingOfAnnotatedClass() throws Exception {
         new MockUp<RMISecurityException>() {
