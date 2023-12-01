@@ -20,7 +20,7 @@ public final class Deencapsulation {
     }
 
     /**
-     * Gets the value of a non-accessible (eg <tt>private</tt>) field from a given object.
+     * Gets the value of a non-accessible (eg <code>private</code>) field from a given object.
      *
      * @param objectWithField
      *            the instance from which to get the field value
@@ -42,8 +42,8 @@ public final class Deencapsulation {
     }
 
     /**
-     * Gets the value of a non-accessible (eg <tt>private</tt>) field from a given object, <em>assuming</em> there is
-     * only one field declared in the class of the given object whose type can receive values of the specified field
+     * Gets the value of a non-accessible (eg <code>private</code>) field from a given object, <em>assuming</em> there
+     * is only one field declared in the class of the given object whose type can receive values of the specified field
      * type.
      *
      * @param objectWithField
