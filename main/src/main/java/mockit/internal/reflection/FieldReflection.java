@@ -68,7 +68,7 @@ public final class FieldReflection {
     }
 
     @Nonnull
-    private static Field getDeclaredField(@Nonnull Class<?> theClass, @Nonnull String fieldName,
+    public static Field getDeclaredField(@Nonnull Class<?> theClass, @Nonnull String fieldName,
             boolean instanceField) {
         try {
             return theClass.getDeclaredField(fieldName);
