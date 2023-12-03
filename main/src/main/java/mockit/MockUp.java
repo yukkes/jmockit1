@@ -80,6 +80,7 @@ public abstract class MockUp<T> {
 
     @Nullable
     private final Class<?> fakedClass;
+    // TODO 12/2/2023 yukkes Should be restored before Mocking with MockUp.onTearDown()
     @Nullable
     private Set<Class<?>> classesToRestore;
     @Nullable
@@ -156,7 +157,7 @@ public abstract class MockUp<T> {
     @Nonnull
     private Class<T> createInstanceOfFakedImplementationClass(@Nonnull Class<T> classToFake,
             @Nullable Type typeToFake) {
-        FakedImplementationClass<T> fakedImplementationClass = new FakedImplementationClass<T>(this);
+        FakedImplementationClass<T> fakedImplementationClass = new FakedImplementationClass<>(this);
         return fakedImplementationClass.createImplementation(classToFake, typeToFake);
     }
 
@@ -233,6 +234,8 @@ public abstract class MockUp<T> {
      * instance of the faked class is created and returned, becoming associated with the fake.
      * <p>
      * In any case, for a given fake instance this method will always return the same fake instance.
+     *
+     * @return Mocked instances
      *
      * @see <a href="http://jmockit.org/tutorial/Faking.html#interfaces" target="tutorial">Tutorial</a>
      */

@@ -48,14 +48,18 @@ public @interface Mock {
      * <p>
      * A non-negative value is equivalent to setting {@link #minInvocations minInvocations} and {@link #maxInvocations
      * maxInvocations} to that same value.
+     *
+     * @return Number of expected invocations of the mock method
      */
     int invocations() default -1;
 
     /**
      * Minimum number of expected invocations of the mock method, starting from 0 (zero, which is the default).
      *
-     * @see #invocations invocations
-     * @see #maxInvocations maxInvocations
+     * @return Minimum number of expected invocations of the mock method
+     *
+     * @see #invocations
+     * @see #maxInvocations
      */
     int minInvocations() default 0;
 
@@ -63,8 +67,10 @@ public @interface Mock {
      * Maximum number of expected invocations of the mock method, if positive. If zero the mock is not expected to be
      * called at all. A negative value (the default) means there is no expectation on the maximum number of invocations.
      *
-     * @see #invocations invocations
-     * @see #minInvocations minInvocations
+     * @return Maximum number of expected invocations of the mock method
+     *
+     * @see #invocations
+     * @see #minInvocations
      */
     int maxInvocations() default -1;
 }

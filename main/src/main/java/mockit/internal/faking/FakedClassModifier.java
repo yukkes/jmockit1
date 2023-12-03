@@ -117,14 +117,6 @@ final class FakedClassModifier extends BaseClassModifier {
             return cw.visitMethod(access, name, desc, signature, exceptions);
         }
 
-        // Supported fake for private method
-        // if (isPrivate(access)) {
-        // String kindOfMember = isConstructor ? "constructor " : "method ";
-        // String privateMemberDesc = fakedClass.getSimpleName() + '#' + name + desc;
-        // throw new IllegalArgumentException(
-        // "Unsupported fake for private " + kindOfMember + privateMemberDesc + " found");
-        // }
-
         startModifiedMethodVersion(access, name, desc, signature, exceptions);
 
         if (isNative(methodAccess)) {

@@ -115,12 +115,7 @@ public final class MisusedFakingAPITest {
      */
     @Test
     public void fakeAPrivateConstructor() {
-        // Enabled to fake a private constructor.
-        // thrown.expect(IllegalArgumentException.class);
-        // thrown.expectMessage("Unsupported fake for private constructor");
-        // thrown.expectMessage("System#<init>()");
-        // thrown.expectMessage("found");
-
+        // Changed to allow fake private constructors.
         new MockUp<System>() {
             @Mock
             void $init() {

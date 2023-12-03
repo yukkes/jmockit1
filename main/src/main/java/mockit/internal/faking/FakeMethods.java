@@ -226,11 +226,10 @@ final class FakeMethods {
 
         for (FakeMethod fakeMethod : methods) {
             if (fakeMethod.isMatch(access, name, desc, signature)) {
-                // Mocking a native method with the annotation "HotSpotIntrinsicCandidate"
-                // will cause JavaVM to terminate illegally.
-                if (isNative(access) && hasHotSpotIntrinsicCandidateAnnotation(getRealClass(), name, desc)) {
+                // Mocking native methods with IntrinsicCandidate annotations will cause the VM to terminate illegally.
+                if (isNative(access) && hasIntrinsicCandidateAnnotation(getRealClass(), name, desc)) {
                     throw new UnsupportedOperationException(
-                            "Native methods annotated with HotSpotIntrinsicCandidate cannot be mocked: "
+                            "Native methods annotated with IntrinsicCandidate cannot be mocked: "
                                     + getRealClass().getSimpleName() + "#" + name);
                 }
                 return fakeMethod;
@@ -253,7 +252,7 @@ final class FakeMethods {
         return null;
     }
 
-    private boolean hasHotSpotIntrinsicCandidateAnnotation(Class<?> clazz, String methodName, String methodDescriptor) {
+    private boolean hasIntrinsicCandidateAnnotation(Class<?> clazz, String methodName, String methodDescriptor) {
         Class<?>[] parameterTypes = TypeDescriptor.getParameterTypes(methodDescriptor);
 
         try {
@@ -263,7 +262,9 @@ final class FakeMethods {
 
             for (Annotation annotation : annotations) {
                 String annotationName = annotation.annotationType().getSimpleName();
-                if (annotationName.equals("HotSpotIntrinsicCandidate")) {
+                // JDK11: jdk.internal.HotSpotIntrinsicCandidate
+                // JDK17, 21: jdk.internal.vm.annotation.IntrinsicCandidate
+                if (annotationName.contains("IntrinsicCandidate")) {
                     return true;
                 }
             }
