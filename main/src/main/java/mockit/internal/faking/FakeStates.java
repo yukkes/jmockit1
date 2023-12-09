@@ -4,6 +4,7 @@
  */
 package mockit.internal.faking;
 
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -59,6 +60,20 @@ public final class FakeStates {
                     removeFakeStates(fakeClassInternalName);
                 }
             }
+        }
+    }
+
+    public void copyFakeStates(@Nonnull Object previousFake, @Nonnull Object newFake) {
+        List<FakeState> fakeStates = fakesToFakeStates.get(previousFake);
+
+        if (fakeStates != null) {
+            List<FakeState> copiedFakeStates = new ArrayList<>(fakeStates.size());
+
+            for (FakeState fakeState : fakeStates) {
+                copiedFakeStates.add(new FakeState(fakeState));
+            }
+
+            fakesToFakeStates.put(newFake, copiedFakeStates);
         }
     }
 

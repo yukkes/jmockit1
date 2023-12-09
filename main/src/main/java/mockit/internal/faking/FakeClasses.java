@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import mockit.MockUp;
 import mockit.internal.util.ClassLoad;
@@ -75,6 +76,19 @@ public final class FakeClasses {
 
         Class<?> fakeClass = ClassLoad.loadByInternalName(fakeClassDesc);
         return fakeClassesToFakeInstances.get(fakeClass);
+    }
+
+    @Nullable
+    public MockUp<?> findPreviouslyAppliedFake(@Nonnull MockUp<?> newFake) {
+        Class<?> fakeClass = newFake.getClass();
+        MockUp<?> fakeInstance = fakeClassesToFakeInstances.get(fakeClass);
+
+        if (fakeInstance != null) {
+            fakeStates.copyFakeStates(fakeInstance, newFake);
+            return fakeInstance;
+        }
+
+        return null;
     }
 
     public void discardStartupFakes() {

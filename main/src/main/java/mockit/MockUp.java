@@ -12,7 +12,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,6 +19,7 @@ import javax.annotation.Nullable;
 import mockit.internal.classGeneration.ConcreteSubclass;
 import mockit.internal.faking.CaptureOfFakedImplementations;
 import mockit.internal.faking.FakeClassSetup;
+import mockit.internal.faking.FakeClasses;
 import mockit.internal.faking.FakedImplementationClass;
 import mockit.internal.reflection.ConstructorReflection;
 import mockit.internal.reflection.MockInvocationHandler;
@@ -63,6 +63,7 @@ import mockit.internal.state.TestRun;
  *
  * @see #MockUp()
  * @see #MockUp(Class)
+ * @see #getMockInstance()
  * @see #onTearDown()
  * @see #targetType
  * @see <a href="http://jmockit.github.io/tutorial/Faking.html#setUp" target="tutorial">Tutorial</a>
@@ -75,20 +76,18 @@ public abstract class MockUp<T> {
     /**
      * Holds the class or generic type targeted by this fake instance.
      */
-    @Nonnull
     protected final Type targetType;
 
     @Nullable
     private final Class<?> fakedClass;
-    // TODO 12/2/2023 yukkes Should be restored before Mocking with MockUp.onTearDown()
-    @Nullable
-    private Set<Class<?>> classesToRestore;
     @Nullable
     private T fakeInstance;
 
     /**
      * Applies the {@linkplain Mock fake methods} defined in the concrete subclass to the class specified through the
      * type parameter.
+     *
+     * @see #MockUp(Class)
      */
     protected MockUp() {
         targetType = getTypeToFake();
@@ -112,6 +111,12 @@ public abstract class MockUp<T> {
                     ? new FakedImplementationClass<T>(this).createImplementation(typesToFake)
                     : new CaptureOfFakedImplementations(this, typesToFake[0]).apply();
         }
+    }
+
+    @Nullable
+    private MockUp<?> findPreviouslyFakedClassIfFakeAlreadyApplied() {
+        FakeClasses fakeClasses = TestRun.getFakeClasses();
+        return fakeClasses.findPreviouslyAppliedFake(this);
     }
 
     /**
@@ -150,7 +155,7 @@ public abstract class MockUp<T> {
             classToFake = new ConcreteSubclass<T>(classToFake).generateClass();
         }
 
-        classesToRestore = redefineMethods(realClass, classToFake, targetType);
+        redefineMethods(realClass, classToFake, targetType);
         return classToFake;
     }
 
@@ -161,11 +166,10 @@ public abstract class MockUp<T> {
         return fakedImplementationClass.createImplementation(classToFake, typeToFake);
     }
 
-    @Nonnull
-    private Set<Class<?>> redefineMethods(@Nonnull Class<T> realClass, @Nonnull Class<T> classToFake,
+    private void redefineMethods(@Nonnull Class<T> realClass, @Nonnull Class<T> classToFake,
             @Nullable Type genericFakedType) {
         FakeClassSetup fakeSetup = new FakeClassSetup(realClass, classToFake, genericFakedType, this);
-        return fakeSetup.redefineMethods();
+        fakeSetup.redefineMethods();
     }
 
     /**
@@ -179,9 +183,18 @@ public abstract class MockUp<T> {
      *
      * @param targetClass
      *            the target class
+     *
+     * @see #MockUp()
      */
-    protected MockUp(@Nonnull Class<?> targetClass) {
+    protected MockUp(Class<?> targetClass) {
         targetType = targetClass;
+        MockUp<?> previousFake = findPreviouslyFakedClassIfFakeAlreadyApplied();
+
+        if (previousFake != null) {
+            fakedClass = previousFake.fakedClass;
+            return;
+        }
+
         if (targetClass.isInterface()) {
             // noinspection unchecked
             fakedClass = createInstanceOfFakedImplementationClass((Class<T>) targetClass, targetClass);
@@ -189,7 +202,7 @@ public abstract class MockUp<T> {
             fakedClass = targetClass;
             // noinspection unchecked
             Class<T> realClass = (Class<T>) targetClass;
-            classesToRestore = redefineMethods(realClass, realClass, null);
+            redefineMethods(realClass, realClass, null);
             fakeInstance = null;
         }
     }
@@ -217,7 +230,7 @@ public abstract class MockUp<T> {
         Class<T> classToFake = (Class<T>) targetInstance.getClass();
         targetType = classToFake;
         fakedClass = classToFake;
-        classesToRestore = redefineMethods(classToFake, classToFake, classToFake);
+        redefineMethods(classToFake, classToFake, classToFake);
 
         setFakeInstance(targetInstance);
     }
@@ -236,8 +249,6 @@ public abstract class MockUp<T> {
      * In any case, for a given fake instance this method will always return the same fake instance.
      *
      * @return Mocked instances
-     *
-     * @see <a href="http://jmockit.org/tutorial/Faking.html#interfaces" target="tutorial">Tutorial</a>
      */
     public final T getMockInstance() {
         if (fakeInstance == null && fakedClass != null) {
