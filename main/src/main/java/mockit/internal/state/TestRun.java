@@ -174,8 +174,9 @@ public final class TestRun {
     // ////////////////////////////////////////////////////
 
     @SuppressWarnings({ "StaticMethodOnlyUsedInOneClass", "SimplifiableIfStatement" })
-    public static boolean updateFakeState(@Nonnull String fakeClassDesc, int fakeStateIndex) {
-        Object fake = getFake(fakeClassDesc);
+    public static boolean updateFakeState(@Nonnull String fakeClassDesc, @Nullable Object mockedInstance,
+            int fakeStateIndex) {
+        Object fake = getFake(fakeClassDesc, mockedInstance);
 
         if (fakeStateIndex < 0) {
             return true;
@@ -184,9 +185,9 @@ public final class TestRun {
         return getFakeStates().updateFakeState(fake, fakeStateIndex);
     }
 
-    @Nonnull
-    public static Object getFake(@Nonnull String fakeClassDesc) {
-        return INSTANCE.fakeClasses.getFake(fakeClassDesc);
+    @Nullable
+    public static Object getFake(@Nonnull String fakeClassDesc, @Nullable Object mockedInstance) {
+        return INSTANCE.fakeClasses.getFake(fakeClassDesc, mockedInstance);
     }
 
     // Other methods ///////////////////////////////////////////////////////////////////////////////////////////////////

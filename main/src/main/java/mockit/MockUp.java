@@ -12,6 +12,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,6 +64,7 @@ import mockit.internal.state.TestRun;
  *
  * @see #MockUp()
  * @see #MockUp(Class)
+ * @see #MockUp(Object)
  * @see #getMockInstance()
  * @see #onTearDown()
  * @see #targetType
@@ -79,44 +81,61 @@ public abstract class MockUp<T> {
     protected final Type targetType;
 
     @Nullable
-    private final Class<?> fakedClass;
+    private final Class<?> mockedClass;
     @Nullable
-    private T fakeInstance;
+    private T mockInstance;
+    @Nullable
+    private T invokedInstance;
 
     /**
-     * Applies the {@linkplain Mock fake methods} defined in the concrete subclass to the class specified through the
-     * type parameter.
+     * Applies the {@linkplain Mock fake methods} defined in the concrete subclass to the class or interface specified
+     * through the type parameter.
      *
      * @see #MockUp(Class)
+     * @see #MockUp(Object)
      */
     protected MockUp() {
+        MockUp<?> previousMockUp = findPreviouslyFakedClassIfMockUpAlreadyApplied();
+
+        if (previousMockUp != null) {
+            targetType = previousMockUp.targetType;
+            mockedClass = previousMockUp.mockedClass;
+            return;
+        }
+
         targetType = getTypeToFake();
-        Class<T> classToFake = null;
+        Class<T> classToMock = null;
 
         if (targetType instanceof Class<?>) {
             // noinspection unchecked
-            classToFake = (Class<T>) targetType;
+            classToMock = (Class<T>) targetType;
         } else if (targetType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) targetType;
             // noinspection unchecked
-            classToFake = (Class<T>) parameterizedType.getRawType();
+            classToMock = (Class<T>) parameterizedType.getRawType();
         }
 
-        if (classToFake != null) {
-            fakedClass = redefineClassOrImplementInterface(classToFake);
+        if (classToMock != null) {
+            mockedClass = redefineClassOrImplementInterface(classToMock);
         } else {
-            Type[] typesToFake = ((TypeVariable<?>) targetType).getBounds();
+            Type[] typesToMock = ((TypeVariable<?>) targetType).getBounds();
 
-            fakedClass = typesToFake.length > 1
-                    ? new FakedImplementationClass<T>(this).createImplementation(typesToFake)
-                    : new CaptureOfFakedImplementations(this, typesToFake[0]).apply();
+            mockedClass = typesToMock.length > 1
+                    ? new FakedImplementationClass<T>(this).createImplementation(typesToMock)
+                    : new CaptureOfFakedImplementations(this, typesToMock[0]).apply();
         }
     }
 
     @Nullable
-    private MockUp<?> findPreviouslyFakedClassIfFakeAlreadyApplied() {
-        FakeClasses fakeClasses = TestRun.getFakeClasses();
-        return fakeClasses.findPreviouslyAppliedFake(this);
+    private MockUp<?> findPreviouslyFakedClassIfMockUpAlreadyApplied() {
+        FakeClasses mockClasses = TestRun.getFakeClasses();
+        FakeClasses.MockUpInstances mockUpInstances = mockClasses.findPreviouslyAppliedMockUps(this);
+
+        if (mockUpInstances != null && mockUpInstances.hasMockUpsForSingleInstances()) {
+            return mockUpInstances.initialMockUp;
+        }
+
+        return null;
     }
 
     /**
@@ -144,142 +163,155 @@ public abstract class MockUp<T> {
     }
 
     @Nonnull
-    private Class<?> redefineClassOrImplementInterface(@Nonnull Class<T> classToFake) {
-        if (classToFake.isInterface()) {
-            return createInstanceOfFakedImplementationClass(classToFake, targetType);
+    private Class<?> redefineClassOrImplementInterface(@Nonnull Class<T> classToMock) {
+        if (classToMock.isInterface()) {
+            return createInstanceOfMockedImplementationClass(classToMock, targetType);
         }
 
-        Class<T> realClass = classToFake;
+        Class<T> realClass = classToMock;
 
-        if (isAbstract(classToFake.getModifiers())) {
-            classToFake = new ConcreteSubclass<T>(classToFake).generateClass();
+        if (isAbstract(classToMock.getModifiers())) {
+            classToMock = new ConcreteSubclass<T>(classToMock).generateClass();
         }
 
-        redefineMethods(realClass, classToFake, targetType);
-        return classToFake;
+        redefineMethods(realClass, classToMock, targetType);
+        return classToMock;
     }
 
     @Nonnull
-    private Class<T> createInstanceOfFakedImplementationClass(@Nonnull Class<T> classToFake,
-            @Nullable Type typeToFake) {
-        FakedImplementationClass<T> fakedImplementationClass = new FakedImplementationClass<>(this);
-        return fakedImplementationClass.createImplementation(classToFake, typeToFake);
+    private Class<T> createInstanceOfMockedImplementationClass(@Nonnull Class<T> classToMock,
+            @Nullable Type typeToMock) {
+        return new FakedImplementationClass<T>(this).createImplementation(classToMock, typeToMock);
     }
 
-    private void redefineMethods(@Nonnull Class<T> realClass, @Nonnull Class<T> classToFake,
-            @Nullable Type genericFakedType) {
-        FakeClassSetup fakeSetup = new FakeClassSetup(realClass, classToFake, genericFakedType, this);
-        fakeSetup.redefineMethods();
+    private void redefineMethods(@Nonnull Class<T> realClass, @Nonnull Class<T> classToMock,
+            @Nullable Type genericMockedType) {
+        new FakeClassSetup(realClass, classToMock, genericMockedType, this).redefineMethods();
     }
 
     /**
-     * Applies the {@linkplain Mock fake methods} defined in the fake class to the given class.
+     * Applies the {@linkplain Mock mock methods} defined in the mock-up subclass to the given class/interface.
      * <p>
-     * In most cases, the {@linkplain #MockUp() constructor with no parameters} can be used. This variation is useful
-     * when the type to be faked is not known at compile time. For example, it can be used with an {@linkplain Mock
-     * $advice} method and the <code>fakes</code> system property in order to have an aspect-like fake implementation
-     * applicable to any class; it can then be applied at the beginning of the test run with the desired target class
-     * being specified in the test run configuration.
-     *
-     * @param targetClass
-     *            the target class
+     * In most cases, the constructor with no parameters can be used. This variation should be used only when the type
+     * to be faked is not accessible or known from the test code.
      *
      * @see #MockUp()
+     * @see #MockUp(Object)
      */
-    protected MockUp(Class<?> targetClass) {
+    protected MockUp(@SuppressWarnings("NullableProblems") Class<?> targetClass) {
         targetType = targetClass;
-        MockUp<?> previousFake = findPreviouslyFakedClassIfFakeAlreadyApplied();
+        MockUp<?> previousMockUp = findPreviouslyFakedClassIfMockUpAlreadyApplied();
 
-        if (previousFake != null) {
-            fakedClass = previousFake.fakedClass;
+        if (previousMockUp != null) {
+            mockedClass = previousMockUp.mockedClass;
             return;
         }
 
         if (targetClass.isInterface()) {
             // noinspection unchecked
-            fakedClass = createInstanceOfFakedImplementationClass((Class<T>) targetClass, targetClass);
+            mockedClass = createInstanceOfMockedImplementationClass((Class<T>) targetClass, targetClass);
         } else {
-            fakedClass = targetClass;
+            mockedClass = targetClass;
             // noinspection unchecked
             Class<T> realClass = (Class<T>) targetClass;
             redefineMethods(realClass, realClass, null);
-            fakeInstance = null;
+            mockInstance = null;
         }
     }
 
     /**
-     * Applies the {@linkplain Mock fake methods} defined in the fake class to the type specified through the type
+     * Applies the {@linkplain Mock mock methods} defined in the mock-up subclass to the type specified through the type
      * parameter, but only affecting the given instance.
      * <p>
-     * In most cases, the constructor with no parameters should be adequate. This variation can be used when fake data
+     * In most cases, the constructor with no parameters should be adequate. This variation can be used when mock data
      * or behavior is desired only for a particular instance, with other instances remaining unaffected; or when
-     * multiple fake objects carrying different states are desired, with one fake instance per real instance.
+     * multiple mock-up objects carrying different states are desired, with one mock-up instance per real instance.
      * <p>
-     * If {@link #getMockInstance()} later gets called on this fake instance, it will return the instance that was given
-     * here.
+     * If {@link #getMockInstance()} later gets called on this mock-up instance, it will return the instance that was
+     * given here.
      *
      * @param targetInstance
      *            a real instance of the type to be faked, meant to be the only one of that type that should be affected
-     *            by this fake instance
+     *            by this mock-up instance
      *
      * @see #MockUp()
      * @see #MockUp(Class)
      */
     protected MockUp(T targetInstance) {
-        @SuppressWarnings("unchecked")
-        Class<T> classToFake = (Class<T>) targetInstance.getClass();
-        targetType = classToFake;
-        fakedClass = classToFake;
-        redefineMethods(classToFake, classToFake, classToFake);
+        MockUp<?> previousMockUp = findPreviouslyFakedClassIfMockUpAlreadyApplied();
 
-        setFakeInstance(targetInstance);
+        if (previousMockUp != null) {
+            targetType = previousMockUp.targetType;
+            mockedClass = previousMockUp.mockedClass;
+            setMockInstance(targetInstance);
+            return;
+        }
+
+        @SuppressWarnings("unchecked")
+        Class<T> classToMock = (Class<T>) targetInstance.getClass();
+        targetType = classToMock;
+        mockedClass = classToMock;
+        redefineMethods(classToMock, classToMock, classToMock);
+
+        setMockInstance(targetInstance);
     }
 
-    private void setFakeInstance(@Nonnull T fakeInstance) {
-        TestRun.getFakeClasses().addFake(this, fakeInstance);
-        this.fakeInstance = fakeInstance;
+    private void setMockInstance(@Nonnull T mockInstance) {
+        TestRun.getFakeClasses().addFake(this, mockInstance);
+        this.mockInstance = mockInstance;
     }
 
     /**
-     * Returns the mock instance exclusively associated with this fake instance. If the faked type was an interface,
-     * then said instance is the one that was automatically created when the fake was applied. If it was a class, and no
-     * such instance is currently associated with this (stateful) fake object, then a new <em>uninitialized</em>
-     * instance of the faked class is created and returned, becoming associated with the fake.
+     * Returns the mock instance exclusively associated with this mock-up instance. If the mocked type was an interface,
+     * then said instance is the one that was automatically created when the mock-up was applied. If it was a class, and
+     * no such instance is currently associated with this (stateful) mock-up object, then a new <em>uninitialized</em>
+     * instance of the faked class is created and returned, becoming associated with the mock-up. If a regular
+     * <em>initialized</em> instance was desired, then the {@link #MockUp(Object)} constructor should have been used
+     * instead.
      * <p>
-     * In any case, for a given fake instance this method will always return the same fake instance.
+     * In any case, for a given mock-up instance this method will always return the same mock instance.
      *
-     * @return Mocked instances
+     * @see <a href="http://jmockit.github.io/tutorial/Faking.html#interfaces" target="tutorial">Tutorial</a>
      */
     public final T getMockInstance() {
-        if (fakeInstance == null && fakedClass != null) {
-            @SuppressWarnings("unchecked")
-            T newInstance = (T) createFakeInstance(fakedClass);
-            fakeInstance = newInstance;
+        if (invokedInstance == Void.class) {
+            return null;
         }
 
-        return fakeInstance;
+        if (invokedInstance != null) {
+            return invokedInstance;
+        }
+
+        if (mockInstance == null && mockedClass != null) {
+            @SuppressWarnings("unchecked")
+            T newInstance = (T) createMockInstance(mockedClass);
+            setMockInstance(newInstance);
+        }
+
+        // noinspection ConstantConditions
+        return mockInstance;
     }
 
     @Nonnull
-    private Object createFakeInstance(@Nonnull Class<?> fakedClass) {
-        String fakedClassName = fakedClass.getName();
+    private Object createMockInstance(@Nonnull Class<?> mockedClass) {
+        String mockedClassName = mockedClass.getName();
 
-        if (isGeneratedImplementationClassName(fakedClassName)) {
-            return ConstructorReflection.newInstanceUsingPublicDefaultConstructor(fakedClass);
+        if (isGeneratedImplementationClassName(mockedClassName)) {
+            return ConstructorReflection.newInstanceUsingPublicDefaultConstructor(mockedClass);
         }
 
-        if (Proxy.isProxyClass(fakedClass)) {
-            return MockInvocationHandler.newMockedInstance(fakedClass);
+        if (Proxy.isProxyClass(mockedClass)) {
+            return MockInvocationHandler.newMockedInstance(mockedClass);
         }
 
-        return ConstructorReflection.newUninitializedInstance(fakedClass);
+        return ConstructorReflection.newUninitializedInstance(mockedClass);
     }
 
     /**
-     * An empty method that can be overridden in a fake class that wants to be notified whenever the fake is
-     * automatically torn down. Tear down happens when the fake goes out of scope: at the end of the test when applied
-     * inside a test, at the end of the test class when applied before the test class, or at the end of the test run
-     * when applied through the "<code>fakes</code>" system property.
+     * An empty method that can be overridden in a mock-up subclass that wants to be notified whenever the mock-up is
+     * automatically torn down. Tear down happens when the mock-up goes out of scope: at the end of the test when
+     * applied inside a test, at the end of the test class when applied before the test class, or at the end of the test
+     * run when applied through the "<code>mockups</code>" system property.
      * <p>
      * By default, this method does nothing.
      */
