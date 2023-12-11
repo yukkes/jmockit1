@@ -23,6 +23,7 @@ import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -97,6 +98,7 @@ public final class MockLoginContextTest {
         }
     }
 
+    @Ignore("--add-opens java.base/javax.security.auth.login=ALL-UNNAMED")
     @Test
     public void accessMockedInstance() throws Exception {
         final Subject testSubject = new Subject();
